@@ -99,6 +99,9 @@ public class Core {
             System.out.println("Connected to the database.");
 
         } catch(SQLException e) {
+            // Print the stack trace
+            e.printStackTrace();
+
             // Hide the progress dialog
             this.progressDialog.setVisible(false);
 
