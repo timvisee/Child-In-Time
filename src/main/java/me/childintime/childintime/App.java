@@ -1,5 +1,9 @@
 package me.childintime.childintime;
 
+import me.childintime.childintime.util.file.DirectoryUtils;
+
+import java.io.File;
+
 public class App {
 
     /**
@@ -19,6 +23,16 @@ public class App {
     public static final int APP_VERSION_CODE = 1;
 
     /**
+     * Name of the directory to use for this application.
+     */
+    public static final String APP_DIR_NAME = "ChildInTime";
+
+    /**
+     * Core instance.
+     */
+    private static Core core;
+
+    /**
      * Main method, called on start.
      *
      * @param args Start up arguments.
@@ -28,11 +42,20 @@ public class App {
         System.out.println(getFullName(true));
 
         // Create the application core
-        Core core = new Core(false);
+        App.core = new Core(false);
 
         // Initialize the core
         System.out.println("Initializing " + getFullName(true) + "...");
-        core.init();
+        App.core.init();
+    }
+
+    /**
+     * Get the Core instance that is used by this application.
+     *
+     * @return Core instance.
+     */
+    public static Core getCore() {
+        return App.core;
     }
 
     /**
@@ -52,5 +75,23 @@ public class App {
 
         // Return the full name
         return name.toString();
+    }
+
+    /**
+     * Get the application data directory.
+     *
+     * @return The application data directory.
+     */
+    public static File getDirectory() {
+        return new File(DirectoryUtils.getAppDataDirectory(), App.APP_NAME);
+    }
+
+    /**
+     * Get the application data, data directory.
+     *
+     * @return The application data, data directory.
+     */
+    public static File getDataDirectory() {
+        return new File(getDirectory(), "data");
     }
 }

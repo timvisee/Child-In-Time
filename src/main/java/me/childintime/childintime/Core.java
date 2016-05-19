@@ -1,5 +1,6 @@
 package me.childintime.childintime;
 
+import me.childintime.childintime.config.Config;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 
@@ -10,6 +11,11 @@ public class Core {
      * Used for singleton.
      */
     private static Core instance = null;
+
+    /**
+     * Configuration instance.
+     */
+    private Config config;
 
     /**
      * Progress dialog instance.
@@ -52,6 +58,13 @@ public class Core {
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
 
+        // Initialize the configuration
+        this.config = new Config();
+
+        // Load the configuration
+        this.progressDialog.setStatus("Loading configuration...");
+        this.config.load();
+
         // Show a status message
         System.out.println("The application core has been started successfully!");
 
@@ -73,6 +86,15 @@ public class Core {
 
         // Show a status message
         System.out.println("The application core has been destroyed.");
+    }
+
+    /**
+     * Get the configuration instance.
+     *
+     * @return Configuration instance.
+     */
+    public Config getConfig() {
+        return this.config;
     }
 
     /**
