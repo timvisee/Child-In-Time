@@ -1,1 +1,13 @@
 # Configuration file
+
+# Database configuration
+database:
+  host: "127.0.0.1"
+  port: 3306
+  user: root
+  password: ""
+
+# Version information
+version:
+  name: "0.1"
+  code: 1
