@@ -83,22 +83,31 @@ public class Core {
             // Show a message dialog
             JOptionPane.showMessageDialog(null, "Failed to load application configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
-            // TODO: Properly close the application!
+            // Destroy the core
+            destroy();
+            return;
         }
 
         // Connect to the database
         this.progressDialog.setStatus("Connecting to the database...");
 
-        // TODO: Set up the database manager here
-        // TODO: Connect the database manager
-
+        // Set up the database connection
+        // TODO: Clean this stuff up!
         this.database = new Database();
-
         try {
             database.getConnection();
-            this.progressDialog.setStatus("Connected to the database...");
+            System.out.println("Connected to the database.");
+
         } catch(SQLException e) {
-            this.progressDialog.setStatus("Could not connect to the database...");
+            // Hide the progress dialog
+            this.progressDialog.setVisible(false);
+
+            // Show a message dialog
+            JOptionPane.showMessageDialog(null, "Failed to connect to the application database.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+            // Destroy the core
+            destroy();
+            return;
         }
 
         // Show a status message
