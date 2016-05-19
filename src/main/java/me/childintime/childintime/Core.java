@@ -6,6 +6,8 @@ import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;
 
+import java.sql.SQLException;
+
 public class Core {
 
     /**
@@ -18,6 +20,11 @@ public class Core {
      * Configuration instance.
      */
     private Config config;
+
+    /**
+     * Database instance.
+     */
+    private Database database;
 
     /**
      * Progress dialog instance.
@@ -72,8 +79,18 @@ public class Core {
 
         // Connect to the database
         this.progressDialog.setStatus("Connecting to the database...");
+
         // TODO: Set up the database manager here
         // TODO: Connect the database manager
+
+        database = new Database();
+
+        try {
+            database.getConnection();
+            this.progressDialog.setStatus("Connected to the database...");
+        } catch(SQLException e) {
+            this.progressDialog.setStatus("Could not connect to the database...");
+        }
 
         // Show a status message
         System.out.println("The application core has been started, took " + p.getTimeFormatted() + "!");
