@@ -6,6 +6,7 @@ import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;
 
+import javax.swing.*;
 import java.sql.SQLException;
 
 public class Core {
@@ -73,9 +74,17 @@ public class Core {
         // Initialize the configuration
         this.config = new AppConfig();
 
-        // Load the configuration
+        // Load the configuration, and make sure it succeeds
         this.progressDialog.setStatus("Loading configuration...");
-        this.config.load();
+        if(!this.config.load()) {
+            // Hide the progress dialog
+            this.progressDialog.setVisible(false);
+
+            // Show a message dialog
+            JOptionPane.showMessageDialog(null, "Failed to load application configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+            // TODO: Properly close the application!
+        }
 
         // Connect to the database
         this.progressDialog.setStatus("Connecting to the database...");
