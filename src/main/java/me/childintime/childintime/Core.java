@@ -50,7 +50,7 @@ public class Core {
         SwingUtils.useNativeLookAndFeel();
 
         // Initialize and show the progress dialog
-        this.progressDialog = new ProgressDialog(null, ChildInTime.APP_NAME, false, "Initializing...", true);
+        this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
 
         // Show a status message
         System.out.println("The application core has been started successfully!");

@@ -1,6 +1,6 @@
 package me.childintime.childintime;
 
-public class ChildInTime {
+public class App {
 
     /**
      * Application name.
