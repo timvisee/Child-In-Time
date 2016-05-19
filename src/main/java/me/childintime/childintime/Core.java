@@ -44,7 +44,7 @@ public class Core {
      */
     public void init() {
         // Show a status message
-        System.out.println("Initializing " + ChildInTime.getFullName(true) + "...");
+        System.out.println("Starting application core...");
 
         // Set the Swing look and feel to the systems native
         SwingUtils.useNativeLookAndFeel();
@@ -53,10 +53,26 @@ public class Core {
         this.progressDialog = new ProgressDialog(null, ChildInTime.APP_NAME, false, "Initializing...", true);
 
         // Show a status message
-        System.out.println("Initialized successfully!");
+        System.out.println("The application core has been started successfully!");
 
         // Hide the progress dialog
         this.progressDialog.setVisible(false);
+    }
+
+    /**
+     * Destroy the instance after it has been initialized.
+     * This safely closes and destroy all IO handles, and initialized instances.
+     */
+    public void destroy() {
+        // Show a status message
+        System.out.println("Destroying application core...");
+
+        // Destroy the progress dialog if it hasn't been disposed yet
+        if(this.progressDialog != null)
+            this.progressDialog.dispose();
+
+        // Show a status message
+        System.out.println("The application core has been destroyed.");
     }
 
     /**

@@ -31,6 +31,7 @@ public class ChildInTime {
         Core core = new Core(false);
 
         // Initialize the core
+        System.out.println("Initializing " + getFullName(true) + "...");
         core.init();
     }
 
