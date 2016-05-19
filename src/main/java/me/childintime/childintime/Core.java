@@ -59,7 +59,7 @@ public class Core {
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
 
         // Initialize the configuration
-        this.config = new Config();
+        this.config = new AppConfig();
 
         // Load the configuration
         this.progressDialog.setStatus("Loading configuration...");
