@@ -87,6 +87,13 @@
 
     <dependencies>
 
+        <!-- Apache commons IO -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
         <!-- YAML library -->
         <dependency>
             <groupId>org.yaml</groupId>

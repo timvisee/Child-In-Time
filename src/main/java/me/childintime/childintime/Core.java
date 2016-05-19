@@ -1,7 +1,10 @@
 package me.childintime.childintime;
 
+import me.childintime.childintime.config.AppConfig;
+import me.childintime.childintime.config.Config;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
+import me.childintime.childintime.util.time.Profiler;
 
 public class Core {
 
@@ -10,6 +13,11 @@ public class Core {
      * Used for singleton.
      */
     private static Core instance = null;
+
+    /**
+     * Configuration instance.
+     */
+    private Config config;
 
     /**
      * Progress dialog instance.
@@ -43,6 +51,9 @@ public class Core {
      * Initialize the application.
      */
     public void init() {
+        // Start a profiler to measure the initialization time
+        Profiler p = new Profiler(true);
+
         // Show a status message
         System.out.println("Starting application core...");
 
@@ -52,8 +63,15 @@ public class Core {
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
 
+        // Initialize the configuration
+        this.config = new AppConfig();
+
+        // Load the configuration
+        this.progressDialog.setStatus("Loading configuration...");
+        this.config.load();
+
         // Show a status message
-        System.out.println("The application core has been started successfully!");
+        System.out.println("The application core has been started, took " + p.getTimeFormatted() + "!");
 
         // Hide the progress dialog
         this.progressDialog.setVisible(false);
@@ -73,6 +91,15 @@ public class Core {
 
         // Show a status message
         System.out.println("The application core has been destroyed.");
+    }
+
+    /**
+     * Get the configuration instance.
+     *
+     * @return Configuration instance.
+     */
+    public Config getConfig() {
+        return this.config;
     }
 
     /**
