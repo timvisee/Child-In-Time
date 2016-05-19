@@ -2,11 +2,14 @@ package me.childintime.childintime;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
+
+    private boolean integrated = true;
 
     private String hostname;
     private String database;
@@ -16,7 +19,6 @@ public class Database {
     private Connection connection;
 
     public Database() {
-
         ConfigurationSection config = Core.getInstance().getConfig().getConfig().getSection("database");
         hostname = config.getString("hostname");
         database = config.getString("database");
@@ -27,7 +29,14 @@ public class Database {
     public void init() {
 
         try {
-            String driver = "com.mysql.jdbc.Driver";
+            String driver;
+
+            // Load the proper driver class
+            if(!integrated)
+                driver = "com.mysql.jdbc.Driver";
+            else
+                driver = "org.sqlite.JDBC";
+
             Class.forName(driver);
         } catch(ClassNotFoundException e) {
             System.out.println(e.toString());
@@ -45,8 +54,16 @@ public class Database {
 
     public Connection createConnection() throws SQLException {
 
-        String connectionString = "jdbc:mysql://" + hostname + "/" + database + "?" +
-                "user=" + username + "&password=" + password;
+        String connectionString;
+
+        // Define the proper connection string
+        if(!integrated)
+            connectionString = "jdbc:mysql://" + hostname + "/" + database + "?" +
+                    "user=" + username + "&password=" + password;
+        else {
+            File databaseFile = new File(App.getDirectory(), "/db/integrated.db");
+            connectionString = "jdbc:sqlite:" + databaseFile.getAbsolutePath();
+        }
 
         return DriverManager.getConnection(connectionString);
     }
