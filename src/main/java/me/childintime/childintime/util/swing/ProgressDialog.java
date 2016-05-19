@@ -92,14 +92,20 @@ public class ProgressDialog extends JDialog {
      *
      * @param owner Owner window, or null.
      * @param title Progress dialog title.
+     * @param showCancelButton True to show the cancel button.
      * @param status Initial status message.
+     * @param show True to immediately show the progress dialog.
      */
-    public ProgressDialog(Window owner, String title, String status) {
+    public ProgressDialog(Window owner, String title, boolean showCancelButton, String status, boolean show) {
         // Construct
-        this(owner, title, false);
+        this(owner, title, showCancelButton);
 
         // Set the status
         setStatus(status);
+
+        // Show the progress dialog if specified
+        if(show)
+            setVisible(true);
     }
 
     /**
