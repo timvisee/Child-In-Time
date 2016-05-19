@@ -1,4 +1,4 @@
-package me.childintime;
+package me.childintime.childintime;
 
 public class ChildInTime {
 
