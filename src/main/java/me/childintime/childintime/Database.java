@@ -18,10 +18,10 @@ public class Database {
     public Database() {
 
         ConfigurationSection config = Core.getInstance().getConfig().getConfig().getSection("database");
-        this.hostname = config.getString("hostname");
-        this.database = config.getString("database");
-        this.username = config.getString("username");
-        this.password = config.getString("password");
+        hostname = config.getString("hostname");
+        database = config.getString("database");
+        username = config.getString("username");
+        password = config.getString("password");
     }
 
     public void init() {
