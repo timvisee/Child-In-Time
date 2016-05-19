@@ -68,6 +68,9 @@ public class Core {
         // Set the Swing look and feel to the systems native
         SwingUtils.useNativeLookAndFeel();
 
+        // Show the database selection dialog
+        new DatabaseSelectDialog();
+
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
 
