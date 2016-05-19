@@ -1,5 +1,6 @@
 package me.childintime.childintime;
 
+import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
