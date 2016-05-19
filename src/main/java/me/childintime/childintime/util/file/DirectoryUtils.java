@@ -2,6 +2,8 @@ package me.childintime.childintime.util.file;
 
 import java.io.File;
 
+import me.childintime.childintime.util.Platform;
+
 public class DirectoryUtils {
 	
 	// TODO: Windows, use global data storage location
@@ -35,30 +37,5 @@ public class DirectoryUtils {
         
         return workingDir;
     }
-	
-	public enum Platform {
-		WINDOWS,
-		MAC_OS_X,
-		SOLARIS,
-		LINUX,
-		UNKNOWN;
-		
-		public static Platform getPlatform() {
-	        String osName = System.getProperty("os.name").toLowerCase();
-	        
-	        if (osName.contains("win"))
-	            return Platform.WINDOWS;
-	        
-	        if (osName.contains("mac"))
-	            return Platform.MAC_OS_X;
-	        
-	        if (osName.contains("solaris") || osName.contains("sunos"))
-	            return Platform.SOLARIS;
-	        
-	        if (osName.contains("linux") || osName.contains("unix"))
-	            return Platform.LINUX;
-	        
-	        return Platform.UNKNOWN;
-	    }
-	}
+
 }
