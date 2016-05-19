@@ -4,6 +4,7 @@ import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
+import me.childintime.childintime.util.time.Profiler;
 
 public class Core {
 
@@ -50,6 +51,9 @@ public class Core {
      * Initialize the application.
      */
     public void init() {
+        // Start a profiler to measure the initialization time
+        Profiler p = new Profiler(true);
+
         // Show a status message
         System.out.println("Starting application core...");
 
@@ -67,7 +71,7 @@ public class Core {
         this.config.load();
 
         // Show a status message
-        System.out.println("The application core has been started successfully!");
+        System.out.println("The application core has been started, took " + p.getTimeFormatted() + "!");
 
         // Hide the progress dialog
         this.progressDialog.setVisible(false);

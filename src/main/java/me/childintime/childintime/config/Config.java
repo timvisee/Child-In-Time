@@ -1,6 +1,7 @@
 package me.childintime.childintime.config;
 
 import com.timvisee.yamlwrapper.configuration.YamlConfiguration;
+import me.childintime.childintime.util.time.Profiler;
 
 import java.io.File;
 
@@ -49,6 +50,9 @@ public class Config {
      * @return True if succeed, false on failure.
      */
     public boolean load() {
+        // Start a profiler
+        Profiler p = new Profiler(true);
+
         // Make sure the configuration file is configured
         if(this.configFile == null) {
             // Show a status message
@@ -70,11 +74,20 @@ public class Config {
             return false;
         }
 
-        // Load the configuration file
-        this.config = YamlConfiguration.loadConfiguration(this.configFile);
+        // Load the configuration file and make sure it's valid
+        if((this.config = YamlConfiguration.loadConfiguration(this.configFile)) == null) {
+            // Show a status message
+            System.out.println("Failed to load configuration file.");
+
+            // Return the result
+            return false;
+        }
+
+        // File loaded successfully, show status message
+        System.out.println("Configuration loaded successfully, took " + p.getTimeFormatted() + "!");
 
         // Return the result
-        return this.configFile != null && this.config != null;
+        return true;
     }
 
     /**
