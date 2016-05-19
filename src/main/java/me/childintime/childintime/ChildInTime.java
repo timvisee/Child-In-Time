@@ -11,14 +11,10 @@ public class ChildInTime {
      * @param args Start up arguments.
      */
     public static void main(String[] args) {
-        // Show a status message
-        System.out.println("Child in Time has started.");
+        // Create the application core
+        Core core = new Core(false);
 
-        // Use the system's look and feel
-        SwingUtils.useNativeLookAndFeel();
-
-        // Create a progress dialog (test)
-        ProgressDialog dialog = new ProgressDialog(null, "MyApplication", true);
-        dialog.setVisible(true);
+        // Initialize the core
+        core.init();
     }
 }
