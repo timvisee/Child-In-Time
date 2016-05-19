@@ -83,7 +83,7 @@ public class App {
      * @return The application data directory.
      */
     public static File getDirectory() {
-        return new File(DirectoryUtils.getAppDataDirectory(), App.APP_NAME);
+        return new File(DirectoryUtils.getAppDataDirectory(), App.APP_DIR_NAME);
     }
 
     /**
