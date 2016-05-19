@@ -24,10 +24,32 @@ public class ChildInTime {
      * @param args Start up arguments.
      */
     public static void main(String[] args) {
+        // Show a start message
+        System.out.println(getFullName(true));
+
         // Create the application core
         Core core = new Core(false);
 
         // Initialize the core
         core.init();
+    }
+
+    /**
+     * Get the full application name.
+     *
+     * @param version True to include the version, false if not.
+     *
+     * @return Full application name.
+     */
+    public static String getFullName(boolean version) {
+        // Create a string builder for the name
+        StringBuilder name = new StringBuilder(APP_NAME);
+
+        // Append the version if specified
+        if(version)
+            name.append(" v" + APP_VERSION_NAME + " (" + APP_VERSION_CODE + ")");
+
+        // Return the full name
+        return name.toString();
     }
 }
