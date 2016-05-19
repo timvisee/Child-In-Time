@@ -65,7 +65,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>me.ttt.Main</mainClass>
+                            <mainClass>me.childintime.childintime.App</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
