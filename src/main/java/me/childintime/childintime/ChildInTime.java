@@ -1,6 +1,7 @@
 package me.childintime.childintime;
 
 import me.childintime.childintime.util.swing.ProgressDialog;
+import me.childintime.childintime.util.swing.SwingUtils;
 
 public class ChildInTime {
 
@@ -13,8 +14,11 @@ public class ChildInTime {
         // Show a status message
         System.out.println("Child in Time has started.");
 
+        // Use the system's look and feel
+        SwingUtils.useNativeLookAndFeel();
+
         // Create a progress dialog (test)
-        ProgressDialog dialog = new ProgressDialog(null, "MyApplication", "MyStatus");
+        ProgressDialog dialog = new ProgressDialog(null, "MyApplication", true);
         dialog.setVisible(true);
     }
 }
