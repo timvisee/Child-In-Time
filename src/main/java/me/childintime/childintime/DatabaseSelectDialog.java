@@ -109,7 +109,7 @@ public class DatabaseSelectDialog extends JDialog {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 2;
+        c.gridwidth = 3;
         c.insets = new Insets(0, 0, 8, 0);
         container.add(new JLabel("Please select a database:"), c);
 
@@ -122,7 +122,7 @@ public class DatabaseSelectDialog extends JDialog {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 1;
-        c.gridwidth = 1;
+        c.gridwidth = 2;
         c.weightx = 1;
         c.insets = new Insets(0, 0, 0, 0);
         container.add(comboBox, c);
@@ -133,12 +133,52 @@ public class DatabaseSelectDialog extends JDialog {
 
         // Add database configuration button
         c.fill = GridBagConstraints.NONE;
-        c.gridx = 1;
+        c.gridx = 2;
         c.gridy = 1;
         c.gridwidth = 1;
         c.weightx = 0;
         c.insets = new Insets(0, 8, 0, 0);
         container.add(configureButton, c);
+
+        // Add and create user label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(16, 0, 0, 8);
+        container.add(new JLabel("User:"), c);
+
+        // Add and create user textbox
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 2;
+        c.gridwidth = 2;
+        c.weightx = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(16, 0, 0, 0);
+        container.add(new JTextField(), c);
+
+        // Add and create password label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 3;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(8, 0, 0, 8);
+        container.add(new JLabel("Password:"), c);
+
+        // Add and create password textbox
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 3;
+        c.gridwidth = 2;
+        c.weightx = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(8, 0, 0, 0);
+        container.add(new JPasswordField(), c);
 
         // Create the commit buttons panel
         JPanel buttonPanel = new JPanel();
@@ -156,11 +196,11 @@ public class DatabaseSelectDialog extends JDialog {
         // Add the commit buttons panel
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
-        c.gridy = 2;
-        c.gridwidth = 2;
+        c.gridy = 4;
+        c.gridwidth = 3;
         c.weightx = 0;
         c.anchor = GridBagConstraints.EAST;
-        c.insets = new Insets(8, 50, 0, 0);
+        c.insets = new Insets(16, 50, 0, 0);
         container.add(buttonPanel, c);
 
         // Add the container to the dialog
