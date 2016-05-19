@@ -70,6 +70,11 @@ public class Core {
         this.progressDialog.setStatus("Loading configuration...");
         this.config.load();
 
+        // Connect to the database
+        this.progressDialog.setStatus("Connecting to the database...");
+        // TODO: Set up the database manager here
+        // TODO: Connect the database manager
+
         // Show a status message
         System.out.println("The application core has been started, took " + p.getTimeFormatted() + "!");
 
@@ -84,6 +89,8 @@ public class Core {
     public void destroy() {
         // Show a status message
         System.out.println("Destroying application core...");
+
+        // TODO: Destroy the database manager
 
         // Destroy the progress dialog if it hasn't been disposed yet
         if(this.progressDialog != null)
