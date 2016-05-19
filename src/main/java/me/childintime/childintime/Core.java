@@ -83,7 +83,7 @@ public class Core {
         // TODO: Set up the database manager here
         // TODO: Connect the database manager
 
-        database = new Database();
+        this.database = new Database();
 
         try {
             database.getConnection();
