@@ -218,13 +218,12 @@ public class DatabaseEditForm extends JDialog {
     public JPanel createControlButtonPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 3, 8, 8));
+        buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
 
         // Create the buttons to add to the panel
-        JButton okButton = new JButton("Ok");
-        JButton applyButton = new JButton("Toepassen");
-        JButton cancelButton = new JButton("Annuleren");
-        okButton.addActionListener(e -> {
+        JButton saveButton = new JButton("Save");
+        JButton closeButton = new JButton("Close");
+        saveButton.addActionListener(e -> {
             // Save the questions
             if(!applyDatabase())
                 return;
@@ -232,13 +231,11 @@ public class DatabaseEditForm extends JDialog {
             // Close the frame
             dispose();
         });
-        applyButton.addActionListener(e -> applyDatabase());
-        cancelButton.addActionListener(e -> closeFrame());
+        closeButton.addActionListener(e -> closeFrame());
 
         // Add the buttons to the panel
-        buttonPanel.add(okButton);
-        buttonPanel.add(applyButton);
-        buttonPanel.add(cancelButton);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(closeButton);
 
         // Return the button panel
         return buttonPanel;
