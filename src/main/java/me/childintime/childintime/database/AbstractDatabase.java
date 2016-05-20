@@ -10,6 +10,11 @@ public abstract class AbstractDatabase {
     private String name;
 
     /**
+     * Constructor.
+     */
+    public AbstractDatabase() { }
+
+    /**
      * Configuration section to load the database from.
      *
      * @param config Configuration section.

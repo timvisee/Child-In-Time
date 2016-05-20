@@ -12,7 +12,7 @@ public class RemoteDatabase extends AbstractDatabase {
     /**
      * Database port.
      */
-    private int port;
+    private int port = 3306;
 
     /**
      * Database user.
@@ -23,6 +23,26 @@ public class RemoteDatabase extends AbstractDatabase {
      * Database password.
      */
     private String password = null;
+
+    /**
+     * Constructor.
+     */
+    public RemoteDatabase() { }
+
+    /**
+     * Constructor.
+     *
+     * @param host Database host or null.
+     * @param port Database port.
+     * @param user Database user or null.
+     * @param password Database password or null.
+     */
+    public RemoteDatabase(String host, int port, String user, String password) {
+        this.host = host;
+        this.port = port;
+        this.user = user;
+        this.password = password;
+    }
 
     /**
      * Configuration section to load the database from.

@@ -12,6 +12,23 @@ public class IntegratedDatabase extends AbstractDatabase {
     private File file;
 
     /**
+     * Constructor.
+     */
+    public IntegratedDatabase() {
+        // Construct the super
+        super();
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param file File.
+     */
+    public IntegratedDatabase(File file) {
+        this.file = file;
+    }
+
+    /**
      * Configuration section to load the database from.
      *
      * @param config Configuration section.
