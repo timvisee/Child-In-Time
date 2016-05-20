@@ -40,6 +40,9 @@ public class DatabaseManagerForm extends JDialog {
      */
     private JList databaseList;
 
+    /**
+     * Test button instance.
+     */
     private JButton testButton;
 
     /**
@@ -63,9 +66,9 @@ public class DatabaseManagerForm extends JDialog {
     private JButton moveDownButton;
 
     /**
-     * Delete button instance.
+     * Remove button instance.
      */
-    private JButton deleteButton;
+    private JButton removeButton;
 
     /**
      * List of the databases being shown.
@@ -275,7 +278,7 @@ public class DatabaseManagerForm extends JDialog {
         this.editButton = new JButton("Edit");
         this.moveUpButton = new JButton("Move up");
         this.moveDownButton = new JButton("Move down");
-        this.deleteButton = new JButton("Delete");
+        this.removeButton = new JButton("Remove");
 
         // Add the buttons to the panel
         buttonPanel.add(testButton);
@@ -283,13 +286,13 @@ public class DatabaseManagerForm extends JDialog {
         buttonPanel.add(editButton);
         buttonPanel.add(moveUpButton);
         buttonPanel.add(moveDownButton);
-        buttonPanel.add(deleteButton);
+        buttonPanel.add(removeButton);
         testButton.addActionListener(e -> testDatabase());
         addButton.addActionListener(e -> addDatabase());
         editButton.addActionListener(e -> editDatabase());
         moveUpButton.addActionListener(e -> moveDatabasesUp());
         moveDownButton.addActionListener(e -> moveDatabasesDown());
-        deleteButton.addActionListener(e -> deleteDatabases());
+        removeButton.addActionListener(e -> deleteDatabases());
 
         // Return the button panel
         return buttonPanel;
@@ -350,7 +353,7 @@ public class DatabaseManagerForm extends JDialog {
         moveDownButton.setEnabled(canMoveDatabasesDown());
 
         // Enable the delete button if at least one database is selected
-        deleteButton.setEnabled(selected > 0);
+        removeButton.setEnabled(selected > 0);
     }
 
     /**
