@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DatabaseManager {
 
@@ -44,6 +45,22 @@ public class DatabaseManager {
      */
     public List<AbstractDatabase> getDatabases() {
         return this.databases;
+    }
+
+    /**
+     * Get a clone of the list of databases.
+     *
+     * @return Clone of the list of databases.
+     */
+    public List<AbstractDatabase> getDatabasesClone() {
+        // Create a new list to put the clones into
+        List<AbstractDatabase> clones = new ArrayList<>();
+
+        // Clone each database in the databases list, and put it into the clones list
+        clones.addAll(this.databases.stream().map(AbstractDatabase::clone).collect(Collectors.toList()));
+
+        // Return the list of clones
+        return clones;
     }
 
     /**
