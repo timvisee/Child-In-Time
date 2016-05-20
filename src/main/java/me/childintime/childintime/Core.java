@@ -2,6 +2,9 @@ package me.childintime.childintime;
 
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
+import me.childintime.childintime.database.DatabaseConnector;
+import me.childintime.childintime.database.DatabaseManager;
+import me.childintime.childintime.database.DatabaseSelectDialog;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;
@@ -23,9 +26,14 @@ public class Core {
     private Config config;
 
     /**
+     * Database manager instance.
+     */
+    private DatabaseManager databaseManager;
+
+    /**
      * Database instance.
      */
-    private Database database;
+    private DatabaseConnector databaseConnector;
 
     /**
      * Progress dialog instance.
@@ -68,8 +76,15 @@ public class Core {
         // Set the Swing look and feel to the systems native
         SwingUtils.useNativeLookAndFeel();
 
-        // Show the database selection dialog
-        new DatabaseSelectDialog();
+        // Show the database selection dialog and handle the result
+        if(!DatabaseSelectDialog.start(null)) {
+            // Show a message dialog
+            JOptionPane.showMessageDialog(null, "DEBUG: LOGIN FAILED, CLOSING", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+            // Destroy the core
+            destroy();
+            return;
+        }
 
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
@@ -91,14 +106,16 @@ public class Core {
             return;
         }
 
-        // Connect to the database
+        // Initialize and load the database manager
         this.progressDialog.setStatus("Connecting to the database...");
+        this.databaseManager = new DatabaseManager();
+        this.databaseManager.load();
 
         // Set up the database connection
         // TODO: Clean this stuff up!
-        this.database = new Database();
+        this.databaseConnector = new DatabaseConnector();
         try {
-            database.getConnection();
+            databaseConnector.getConnection();
             System.out.println("Connected to the database.");
 
         } catch(SQLException e) {
