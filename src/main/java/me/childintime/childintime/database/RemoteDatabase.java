@@ -4,9 +4,24 @@ import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 
 public class RemoteDatabase extends AbstractDatabase {
 
+    /**
+     * Database host.
+     */
     private String host = null;
+
+    /**
+     * Database port.
+     */
     private int port;
+
+    /**
+     * Database user.
+     */
     private String user = null;
+
+    /**
+     * Database password.
+     */
     private String password = null;
 
     /**
