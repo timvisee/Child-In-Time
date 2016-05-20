@@ -2,7 +2,7 @@ package me.childintime.childintime.database;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 
-public abstract class AbstractDatabase {
+public abstract class AbstractDatabase implements Cloneable {
 
     /**
      * Name.
@@ -116,6 +116,9 @@ public abstract class AbstractDatabase {
     public String toString() {
         return getName();
     }
+
+    @Override
+    public abstract AbstractDatabase clone();
 
     @Override
     public boolean equals(Object obj) {

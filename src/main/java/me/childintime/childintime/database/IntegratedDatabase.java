@@ -90,10 +90,7 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        // Call the super
-        super.clone();
-
+    public IntegratedDatabase clone() {
         // Create a new remote database instance
         IntegratedDatabase clone = new IntegratedDatabase();
 

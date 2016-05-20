@@ -185,10 +185,7 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        // Call the super
-        super.clone();
-
+    public RemoteDatabase clone() {
         // Create a new remote database instance
         RemoteDatabase clone = new RemoteDatabase();
 
