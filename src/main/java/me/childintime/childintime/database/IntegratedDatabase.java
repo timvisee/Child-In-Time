@@ -75,7 +75,7 @@ public class IntegratedDatabase extends AbstractDatabase {
     @Override
     public void save(ConfigurationSection config) {
         // Save the file path
-        config.set("file", file.getAbsolutePath());
+        config.set("file", file != null ? file.getAbsolutePath() : null);
     }
 
     @Override
