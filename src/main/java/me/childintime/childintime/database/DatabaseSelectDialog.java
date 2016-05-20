@@ -286,8 +286,10 @@ public class DatabaseSelectDialog extends JDialog {
 
         // Add an action to the configure button
         this.configureButton.addActionListener(e -> {
-            // TODO: Show a proper database customization dialog here!
-            JOptionPane.showMessageDialog(instance, "TODO: Show database customization window!", App.APP_NAME, JOptionPane.INFORMATION_MESSAGE);
+            // Show the database manager form
+            new DatabaseManagerForm(instance, true, false);
+
+            // TODO: Update the combobox?
         });
 
         // Add an action to the continue button
