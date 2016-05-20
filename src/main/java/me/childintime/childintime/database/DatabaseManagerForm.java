@@ -86,11 +86,8 @@ public class DatabaseManagerForm extends JDialog {
         // Construct the form
         super(owner, FORM_TITLE, ModalityType.APPLICATION_MODAL);
 
-        // TODO: Explicitly use setModal(true); ?
-
         // Load the databases
-        // TODO: Clone here!
-        this.databases = Core.getInstance().getDatabaseManager().getDatabases();
+        this.databases = Core.getInstance().getDatabaseManager().getDatabasesClone();
 
         // Create the form UI
         createUIComponents();
@@ -228,7 +225,6 @@ public class DatabaseManagerForm extends JDialog {
      */
     public JScrollPane createDatabaseList() {
         // Create the default list model
-        // TODO: Configure list model, to properly show databases!
         this.databaseListModel = new DefaultListModel<>();
 
         // Refresh the list of databases to add them to the list model
@@ -292,7 +288,7 @@ public class DatabaseManagerForm extends JDialog {
         editButton.addActionListener(e -> editDatabase());
         moveUpButton.addActionListener(e -> moveDatabasesUp());
         moveDownButton.addActionListener(e -> moveDatabasesDown());
-        removeButton.addActionListener(e -> deleteDatabases());
+        removeButton.addActionListener(e -> removeDatabases());
 
         // Return the button panel
         return buttonPanel;
@@ -559,9 +555,9 @@ public class DatabaseManagerForm extends JDialog {
     }
 
     /**
-     * Delete the selected databases.
+     * Remove the selected databases.
      */
-    public void deleteDatabases() {
+    public void removeDatabases() {
         // Make sure at least one item is selected
         if(getSelectedCount() <= 0)
             return;
@@ -597,7 +593,6 @@ public class DatabaseManagerForm extends JDialog {
      */
     public void applyDatabases() {
         // Store a copy of the databases
-        // TODO: Use a copy here, probably not required? Test this!
         Core.getInstance().getDatabaseManager().setDatabases(this.databases);
 
         // Create a progress dialog and save the database configuration
@@ -607,7 +602,7 @@ public class DatabaseManagerForm extends JDialog {
             // Save the database configuration
             Core.getInstance().getDatabaseManager().save();
 
-            // Dispose the progres dialog
+            // Dispose the progress dialog
             progress.dispose();
 
         } catch (IOException e) {
