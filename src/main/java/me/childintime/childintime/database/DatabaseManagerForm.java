@@ -383,6 +383,9 @@ public class DatabaseManagerForm extends JDialog {
      * Create a new database, ask for the name.
      */
     public void addDatabase() {
+        JOptionPane.showInputDialog(this, "Please select a database type to add:", "Add database",
+                JOptionPane.INFORMATION_MESSAGE, null, DatabaseType.values(), null);
+
         // Ask for the database name
         String databaseName = JOptionPane.showInputDialog(this, "Please enter a name for the database:", "Add database", JOptionPane.INFORMATION_MESSAGE);
 
@@ -425,9 +428,8 @@ public class DatabaseManagerForm extends JDialog {
         // Get the selected database
         AbstractDatabase selected = (AbstractDatabase) this.databaseList.getSelectedValue();
 
-        // TODO: Show the edit form for this database!
         // Show the database edit panel
-        //new DatabaseForm(this, this.app, selected, true);
+        new DatabaseEditForm(this, selected, true);
 
         // Refresh the list
         updateListView();
