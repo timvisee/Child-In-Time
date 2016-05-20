@@ -15,6 +15,16 @@ public abstract class AbstractDatabase implements Cloneable {
     public AbstractDatabase() { }
 
     /**
+     * Constructor.
+     *
+     * @param other Other to clone.
+     */
+    public AbstractDatabase(AbstractDatabase other) {
+        // Copy the name
+        this.name = other.getName();
+    }
+
+    /**
      * Configuration section to load the database from.
      *
      * @param config Configuration section.

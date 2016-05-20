@@ -32,6 +32,28 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     /**
      * Constructor.
      *
+     * @param other Other, to clone.
+     */
+    public RemoteDatabase(AbstractDatabase other) {
+        // Call the super
+        super(other);
+
+        // Clone the fields if the type is the same
+        if(getType().equals(other.getType())) {
+            // Cast the type
+            RemoteDatabase otherRemote = (RemoteDatabase) other;
+
+            // Set the remote database fields
+            this.setHost(otherRemote.getHost());
+            this.setPort(otherRemote.getPort());
+            this.setUser(otherRemote.getUser());
+            this.setPassword(otherRemote.getPassword());
+        }
+    }
+
+    /**
+     * Constructor.
+     *
      * @param host Database host or null.
      * @param port Database port.
      * @param user Database user or null.
@@ -186,20 +208,7 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
 
     @Override
     public RemoteDatabase clone() {
-        // Create a new remote database instance
-        RemoteDatabase clone = new RemoteDatabase();
-
-        // Set the name
-        clone.setName(getName());
-
-        // Set the remote database fields
-        clone.setHost(getHost());
-        clone.setPort(getPort());
-        clone.setUser(getUser());
-        clone.setPassword(getPassword());
-
-        // Return the clone
-        return clone;
+        return new RemoteDatabase(this);
     }
 
     @Override

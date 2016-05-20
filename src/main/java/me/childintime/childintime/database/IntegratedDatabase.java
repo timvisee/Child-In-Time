@@ -22,6 +22,25 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     /**
      * Constructor.
      *
+     * @param other Other, to clone.
+     */
+    public IntegratedDatabase(AbstractDatabase other) {
+        // Call the super
+        super(other);
+
+        // Clone the fields if the type is the same
+        if(getType().equals(other.getType())) {
+            // Cast the type
+            IntegratedDatabase otherIntegrated = (IntegratedDatabase) other;
+
+            // Set the file
+            this.setFile(otherIntegrated.getFile());
+        }
+    }
+
+    /**
+     * Constructor.
+     *
      * @param file File.
      */
     public IntegratedDatabase(File file) {
@@ -89,19 +108,10 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
         return hasFile();
     }
 
+    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public IntegratedDatabase clone() {
-        // Create a new remote database instance
-        IntegratedDatabase clone = new IntegratedDatabase();
-
-        // Set the name
-        clone.setName(getName());
-
-        // Set the integrated database field
-        clone.setFile(getFile());
-
-        // Return the clone
-        return clone;
+        return new IntegratedDatabase(this);
     }
 
     @Override
