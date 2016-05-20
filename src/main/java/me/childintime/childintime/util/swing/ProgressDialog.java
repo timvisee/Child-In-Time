@@ -90,6 +90,49 @@ public class ProgressDialog extends JDialog {
     /**
      * Constructor.
      *
+     * @param owner Owner dialog, or null.
+     * @param title Progress dialog title.
+     * @param showCancelButton True to show the cancel button, false if not.
+     */
+    public ProgressDialog(Dialog owner, String title, boolean showCancelButton) {
+        // Construct the super class
+        super(owner, title);
+
+        // Store the cancel button property
+        this.showCancelButton = showCancelButton;
+
+        // Set the modality type if an owner is set
+        if(owner != null)
+            setModalityType(ModalityType.APPLICATION_MODAL);
+
+        // Do not make this a modal
+        setModal(false);
+
+        // Build the dialog
+        buildUI();
+
+        // Configure the close button behaviour
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        // Make the form non resizable and keep it on top
+        setResizable(false);
+        setAlwaysOnTop(true);
+
+        // Configure the preferred width of the dialog
+        Dimension preferredDialogSize = getPreferredSize();
+        preferredDialogSize.width = this.showCancelButton ? 350 : 300;
+        setPreferredSize(preferredDialogSize);
+
+        // Pack the dialog contents
+        pack();
+
+        // Set the dialog location to the center of the screen
+        setLocationRelativeTo(owner);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param owner Owner window, or null.
      * @param title Progress dialog title.
      * @param showCancelButton True to show the cancel button.
@@ -97,6 +140,27 @@ public class ProgressDialog extends JDialog {
      * @param show True to immediately show the progress dialog.
      */
     public ProgressDialog(Window owner, String title, boolean showCancelButton, String status, boolean show) {
+        // Construct
+        this(owner, title, showCancelButton);
+
+        // Set the status
+        setStatus(status);
+
+        // Show the progress dialog if specified
+        if(show)
+            setVisible(true);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param owner Owner dialog, or null.
+     * @param title Progress dialog title.
+     * @param showCancelButton True to show the cancel button.
+     * @param status Initial status message.
+     * @param show True to immediately show the progress dialog.
+     */
+    public ProgressDialog(Dialog owner, String title, boolean showCancelButton, String status, boolean show) {
         // Construct
         this(owner, title, showCancelButton);
 
