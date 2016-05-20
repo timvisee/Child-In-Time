@@ -38,7 +38,7 @@ public class IntegratedDatabase extends AbstractDatabase {
         super(config);
 
         // Fetch the file from the configuration
-        String rawFile = config.getString("file");
+        String rawFile = config.getString("file", null);
 
         // Determine the file
         if(rawFile != null)

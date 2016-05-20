@@ -136,7 +136,7 @@ public class DatabaseManager {
             ConfigurationSection databaseSection = databasesSection.createSection(String.valueOf(i));
 
             // Save the database
-            database.save(databaseSection);
+            database.saveBase(databaseSection);
         }
 
         // Save the file
