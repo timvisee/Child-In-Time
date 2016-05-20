@@ -60,9 +60,11 @@ public abstract class AbstractDatabase {
             default:
             case INTEGRATED:
                 database = new IntegratedDatabase(dataSection);
+                break;
 
             case REMOTE:
                 database = new RemoteDatabase(dataSection);
+                break;
         }
 
         // Set the database name
