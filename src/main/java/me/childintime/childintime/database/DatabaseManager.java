@@ -47,6 +47,26 @@ public class DatabaseManager {
     }
 
     /**
+     * Set the list of databases.
+     *
+     * @param databases List of databases.
+     */
+    public void setDatabases(List<AbstractDatabase> databases) {
+        this.databases = databases;
+    }
+
+    /**
+     * Get a database by it's index.
+     *
+     * @param i Database index.
+     *
+     * @return Database.
+     */
+    public AbstractDatabase getDatabase(int i) {
+        return this.databases.get(i);
+    }
+
+    /**
      * Get the number of databases.
      *
      * @return Number of databases.
