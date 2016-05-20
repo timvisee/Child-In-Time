@@ -76,16 +76,6 @@ public class Core {
         // Set the Swing look and feel to the systems native
         SwingUtils.useNativeLookAndFeel();
 
-        // Show the database selection dialog and handle the result
-        if(!DatabaseSelectDialog.start(null)) {
-            // Show a message dialog
-            JOptionPane.showMessageDialog(null, "DEBUG: LOGIN FAILED, CLOSING", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-
-            // Destroy the core
-            destroy();
-            return;
-        }
-
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
 
@@ -107,9 +97,22 @@ public class Core {
         }
 
         // Initialize and load the database manager
-        this.progressDialog.setStatus("Connecting to the database...");
+        // TODO: Load defaults if a databases configuration doesn't exist
+        this.progressDialog.setStatus("Loading database configuration...");
         this.databaseManager = new DatabaseManager();
         this.databaseManager.load();
+
+        // Show the database selection dialog and handle the result
+        this.progressDialog.setVisible(false);
+        if(!DatabaseSelectDialog.start(null)) {
+            // Show a message dialog
+            JOptionPane.showMessageDialog(null, "DEBUG: LOGIN FAILED, CLOSING", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+            // Destroy the core
+            destroy();
+            return;
+        }
+        this.progressDialog.setVisible(true);
 
         // Set up the database connection
         // TODO: Clean this stuff up!
@@ -174,5 +177,14 @@ public class Core {
      */
     public ProgressDialog getProgressDialog() {
         return this.progressDialog;
+    }
+
+    /**
+     * Get the database manager instance.
+     *
+     * @return Database manager instance.
+     */
+    public DatabaseManager getDatabaseManager() {
+        return this.databaseManager;
     }
 }
