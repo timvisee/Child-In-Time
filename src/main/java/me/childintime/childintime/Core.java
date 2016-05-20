@@ -106,9 +106,6 @@ public class Core {
         // Show the database selection dialog and handle the result
         this.progressDialog.setVisible(false);
         if(!DatabaseSelectDialog.start(null)) {
-            // Show a message dialog
-            JOptionPane.showMessageDialog(null, "DEBUG: LOGIN FAILED, CLOSING", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-
             // Destroy the core
             destroy();
             return;
