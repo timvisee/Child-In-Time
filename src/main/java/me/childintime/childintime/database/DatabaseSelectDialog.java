@@ -1,9 +1,13 @@
-package me.childintime.childintime;
+package me.childintime.childintime.database;
 
+import me.childintime.childintime.App;
 import me.childintime.childintime.util.Platform;
+import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class DatabaseSelectDialog extends JDialog {
 
@@ -21,6 +25,26 @@ public class DatabaseSelectDialog extends JDialog {
      * Dropdown box component.
      */
     private JComboBox comboBox;
+
+    /**
+     * Defines whether the client logged in successfully.
+     */
+    private boolean success = false;
+
+    /**
+     * Continue button.
+     */
+    private JButton continueButton;
+
+    /**
+     * Quit button.
+     */
+    private JButton quitButton;
+
+    /**
+     * Configure button. (...)
+     */
+    private JButton configureButton;
 
     /**
      * Constructor.
@@ -43,11 +67,16 @@ public class DatabaseSelectDialog extends JDialog {
         if(owner != null)
             setModalityType(ModalityType.APPLICATION_MODAL);
 
-        // Build the dialog
+        // Make this dialog a modal
+        setModal(true);
+
+        // Build the dialog UI
         buildUI();
 
+        // Link all components
+        linkComponents();
+
         // Configure the close button behaviour
-        // TODO: Change this?
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         // Configure the window sizes
@@ -58,6 +87,20 @@ public class DatabaseSelectDialog extends JDialog {
 
         // Bring the window to the front
         toFront();
+    }
+
+    /**
+     *
+     */
+    public static boolean start(Window owner) {
+        // Create a database selector dialog instance
+        DatabaseSelectDialog dialog = new DatabaseSelectDialog(owner, App.APP_NAME);
+
+        // Show the database selector dialog
+        dialog.setVisible(true);
+
+        // Return the result
+        return dialog.isSuccess();
     }
 
     /**
@@ -114,7 +157,7 @@ public class DatabaseSelectDialog extends JDialog {
         container.add(new JLabel("Please select a database:"), c);
 
         // Create database selector
-        DatabaseType[] options = {me.childintime.childintime.DatabaseType.INTEGRATED, me.childintime.childintime.DatabaseType.REMOTE};
+        DatabaseType[] options = {DatabaseType.INTEGRATED, DatabaseType.REMOTE};
         comboBox = new JComboBox(options);
         comboBox.setPreferredSize(new Dimension(comboBox.getPreferredSize().width, 20));
 
@@ -128,8 +171,8 @@ public class DatabaseSelectDialog extends JDialog {
         container.add(comboBox, c);
 
         // Create database configuration button
-        JButton configureButton = new JButton("...");
-        configureButton.setPreferredSize(new Dimension(comboBox.getPreferredSize().height, comboBox.getPreferredSize().height));
+        this.configureButton = new JButton("...");
+        this.configureButton.setPreferredSize(new Dimension(comboBox.getPreferredSize().height, comboBox.getPreferredSize().height));
 
         // Add database configuration button
         c.fill = GridBagConstraints.NONE;
@@ -183,8 +226,12 @@ public class DatabaseSelectDialog extends JDialog {
         // Create the commit buttons panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
-        JButton continueButton = new JButton("Continue");
-        JButton quitButton = new JButton("Quit");
+
+        // Create the continue and quit buttons
+        this.continueButton = new JButton("Continue");
+        this.quitButton = new JButton("Quit");
+
+        // Put the continue and quit buttons on the frame (in the proper order)
         if(!Platform.isMacOsX()) {
             buttonPanel.add(continueButton);
             buttonPanel.add(quitButton);
@@ -212,5 +259,111 @@ public class DatabaseSelectDialog extends JDialog {
         // Request focus on the continue button
         // TODO: Move this somewhere else!
         continueButton.requestFocus();
+    }
+
+    /**
+     * Link all action listeners to it's components.
+     */
+    private void linkComponents() {
+        // Store the current instance
+        final DatabaseSelectDialog instance = this;
+
+        // Create a runnable for the close action
+        Runnable closeAction = () -> {
+            // Show a confirmation dialog
+            int result = JOptionPane.showConfirmDialog(instance, "Are you sure you want to quit?", App.APP_NAME, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            // Make sure the yes button is pressed
+            if(result != JOptionPane.YES_OPTION)
+                return;
+
+            // Set the success status flag
+            instance.success = false;
+
+            // Dispose the dialog
+            instance.dispose();
+        };
+
+        // Add an action to the configure button
+        this.configureButton.addActionListener(e -> {
+            // TODO: Show a proper database customization dialog here!
+            JOptionPane.showMessageDialog(instance, "TODO: Show database customization window!", App.APP_NAME, JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        // Add an action to the continue button
+        continueButton.addActionListener(e -> {
+            // Validate the user input and set the success status flag
+            instance.success = check();
+
+            // Dispose the dialog if the user input is valid
+            if(instance.success)
+                instance.dispose();
+        });
+
+        // Add an action to the quit button
+        quitButton.addActionListener(e -> {
+            // Run the close action
+            closeAction.run();
+        });
+
+        // Handle window close events
+        instance.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) { }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Run the close action
+                closeAction.run();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) { }
+
+            @Override
+            public void windowIconified(WindowEvent e) { }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) { }
+
+            @Override
+            public void windowActivated(WindowEvent e) { }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) { }
+        });
+    }
+
+    /**
+     * Check whether the user successfully logged in
+     *
+     * @return True if succeeded, false if not.
+     */
+    public boolean isSuccess() {
+        return this.success;
+    }
+
+    /**
+     * Test the database connection and check the user credentials.
+     *
+     * @return True if valid, false if not.
+     */
+    public boolean check() {
+        // Create a progress dialog window
+        ProgressDialog progress = new ProgressDialog(this, App.APP_NAME, true, "Connecting to database...", true);
+
+        // TODO: Check database connection (already done in the database configurator?)
+
+        // Validate user credentials, show status message
+        progress.setStatus("Logging in...");
+
+        // Validate user credentials
+        // TODO: Validate the login credentials
+
+        // Dispose the progress dialog since we're done
+        progress.dispose();
+
+        // TODO: Return the proper result
+        return true;
     }
 }

@@ -1,13 +1,15 @@
-package me.childintime.childintime;
+package me.childintime.childintime.database;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
+import me.childintime.childintime.App;
+import me.childintime.childintime.Core;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Database {
+public class DatabaseConnector {
 
     private boolean integrated = true;
 
@@ -18,7 +20,7 @@ public class Database {
 
     private Connection connection;
 
-    public Database() {
+    public DatabaseConnector() {
         ConfigurationSection config = Core.getInstance().getConfig().getConfig().getSection("database");
         hostname = config.getString("hostname");
         database = config.getString("database");
