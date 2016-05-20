@@ -10,6 +10,7 @@ import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class Core {
@@ -150,6 +151,19 @@ public class Core {
     public void destroy() {
         // Show a status message
         System.out.println("Destroying application core...");
+
+        // Show the progress dialog
+        this.progressDialog.setStatus("Quitting...");
+        this.progressDialog.setVisible(true);
+
+        // Save the database configuration
+        this.progressDialog.setStatus("Saving database configuration...");
+        try {
+            this.databaseManager.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to save database configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        }
 
         // TODO: Destroy the database manager
 
