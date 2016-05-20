@@ -5,6 +5,11 @@ import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 public abstract class AbstractDatabase {
 
     /**
+     * Name.
+     */
+    private String name;
+
+    /**
      * Configuration section to load the database from.
      *
      * @param config Configuration section.
@@ -17,8 +22,9 @@ public abstract class AbstractDatabase {
      * @param config Configuration section to save into.
      */
     public final void saveBase(ConfigurationSection config) {
-        // Save the database type
+        // Save the database type and name
         config.set("type", getType().getTypeId());
+        config.set("name", this.name);
 
         // Save the database instance in the data section
         save(config.createConfigurationSection("data"));
@@ -45,16 +51,25 @@ public abstract class AbstractDatabase {
         // Get the data configuration section
         ConfigurationSection dataSection = config.getSection("data");
 
+        // Abstract database
+        AbstractDatabase database;
+
         // Use the proper loader
         assert type != null;
         switch(type) {
             default:
             case INTEGRATED:
-                return new IntegratedDatabase(dataSection);
+                database = new IntegratedDatabase(dataSection);
 
             case REMOTE:
-                return new RemoteDatabase(dataSection);
+                database = new RemoteDatabase(dataSection);
         }
+
+        // Set the database name
+        database.setName(config.getString("name"));
+
+        // Return the database
+        return database;
     }
 
     /**
@@ -71,4 +86,22 @@ public abstract class AbstractDatabase {
      * @return True if properly configured, false if not.
      */
     public abstract boolean isConfigured();
+
+    /**
+     * Get the database name.
+     *
+     * @return Name.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Set the database name.
+     *
+     * @param name Database name.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 }
