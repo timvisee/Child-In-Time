@@ -65,4 +65,10 @@ public class IntegratedDatabase extends AbstractDatabase {
     public DatabaseType getType() {
         return DatabaseType.INTEGRATED;
     }
+
+    @Override
+    public boolean isConfigured() {
+        // Make sure the database file is configured
+        return hasFile();
+    }
 }

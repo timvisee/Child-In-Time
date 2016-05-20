@@ -63,4 +63,12 @@ public abstract class AbstractDatabase {
      * @return Database type.
      */
     public abstract DatabaseType getType();
+
+    /**
+     * Check whether the database is properly configured.
+     * This method will return false if one of the fields, for example, a database host field is left blank.
+     *
+     * @return True if properly configured, false if not.
+     */
+    public abstract boolean isConfigured();
 }

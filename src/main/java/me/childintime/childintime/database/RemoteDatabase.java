@@ -4,10 +4,10 @@ import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 
 public class RemoteDatabase extends AbstractDatabase {
 
-    private String host;
+    private String host = null;
     private int port;
-    private String user;
-    private String password;
+    private String user = null;
+    private String password = null;
 
     /**
      * Configuration section to load the database from.
@@ -19,10 +19,10 @@ public class RemoteDatabase extends AbstractDatabase {
         super(config);
 
         // Fetch the properties
-        this.host = config.getString("host", "localhost");
+        this.host = config.getString("host", null);
         this.port = config.getInt("port", 3306);
-        this.user = config.getString("user", "root");
-        this.password = config.getString("password", "");
+        this.user = config.getString("user", null);
+        this.password = config.getString("password", null);
     }
 
     /**
@@ -32,6 +32,20 @@ public class RemoteDatabase extends AbstractDatabase {
      */
     public String getHost() {
         return this.host;
+    }
+
+    /**
+     * Check whether the host is configured.
+     *
+     * @return True if the host is configured, false if not.
+     */
+    public boolean hasHost() {
+        // Make sure the host isn't null
+        if(host == null)
+            return false;
+
+        // Make sure a valid host has been given
+        return this.host.length() > 0;
     }
 
     /**
@@ -71,6 +85,15 @@ public class RemoteDatabase extends AbstractDatabase {
     }
 
     /**
+     * Check whether the user is configured.
+     *
+     * @return True if configured, false if not.
+     */
+    public boolean hasUser() {
+        return this.user != null;
+    }
+
+    /**
      * Set the user.
      *
      * @param user User.
@@ -86,6 +109,15 @@ public class RemoteDatabase extends AbstractDatabase {
      */
     public String getPassword() {
         return this.password;
+    }
+
+    /**
+     * Check whether a password has been configured.
+     *
+     * @return True if configured, false if not.
+     */
+    public boolean hasPassword() {
+        return this.password != null;
     }
 
     /**
@@ -109,5 +141,11 @@ public class RemoteDatabase extends AbstractDatabase {
     @Override
     public DatabaseType getType() {
         return DatabaseType.REMOTE;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        // Make sure everything that is required, is configured
+        return hasHost() && hasUser();
     }
 }
