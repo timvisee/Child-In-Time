@@ -2,7 +2,7 @@ package me.childintime.childintime.database;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 
-public class RemoteDatabase extends AbstractDatabase {
+public class RemoteDatabase extends AbstractDatabase implements Cloneable {
 
     /**
      * Database host.
@@ -182,5 +182,42 @@ public class RemoteDatabase extends AbstractDatabase {
     public boolean isConfigured() {
         // Make sure everything that is required, is configured
         return hasHost() && hasUser();
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        // Call the super
+        super.clone();
+
+        // Create a new remote database instance
+        RemoteDatabase clone = new RemoteDatabase();
+
+        // Set the name
+        clone.setName(getName());
+
+        // Set the remote database fields
+        clone.setHost(getHost());
+        clone.setPort(getPort());
+        clone.setUser(getUser());
+        clone.setPassword(getPassword());
+
+        // Return the clone
+        return clone;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Equal the parent
+        if(!super.equals(obj))
+            return false;
+
+        // Get the integrated database instance
+        RemoteDatabase database = (RemoteDatabase) obj;
+
+        // Compare all fields
+        return (this.host != null ? this.host.equals(database.getHost()) : database.getHost() == null) &&
+                this.port == database.getPort() &&
+                (this.user != null ? this.user.equals(database.getUser()) : database.getUser() == null) &&
+                (this.password != null ? this.password.equals(database.getPassword()) : database.getPassword() == null);
     }
 }

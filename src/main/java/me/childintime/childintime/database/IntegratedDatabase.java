@@ -4,7 +4,7 @@ import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 
 import java.io.File;
 
-public class IntegratedDatabase extends AbstractDatabase {
+public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
 
     /**
      * Database file to use.
@@ -87,5 +87,36 @@ public class IntegratedDatabase extends AbstractDatabase {
     public boolean isConfigured() {
         // Make sure the database file is configured
         return hasFile();
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        // Call the super
+        super.clone();
+
+        // Create a new remote database instance
+        IntegratedDatabase clone = new IntegratedDatabase();
+
+        // Set the name
+        clone.setName(getName());
+
+        // Set the integrated database field
+        clone.setFile(getFile());
+
+        // Return the clone
+        return clone;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Equal the parent
+        if(!super.equals(obj))
+            return false;
+
+        // Get the integrated database instance
+        IntegratedDatabase database = (IntegratedDatabase) obj;
+
+        // Compare all fields
+        return this.file == database.getFile();
     }
 }

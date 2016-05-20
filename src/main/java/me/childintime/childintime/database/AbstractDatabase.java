@@ -116,4 +116,17 @@ public abstract class AbstractDatabase {
     public String toString() {
         return getName();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Return false if we're not working with a abstract database instance
+        if(!(obj instanceof AbstractDatabase))
+            return false;
+
+        // Get the abstract database instance
+        AbstractDatabase database = (AbstractDatabase) obj;
+
+        // Return true if the type and name are equal
+        return this.name.equals(database.getName()) && this.getType().equals(database.getType());
+    }
 }
