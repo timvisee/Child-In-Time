@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.lang.reflect.InvocationTargetException;
 
 public class DatabaseEditForm extends JDialog {
 
@@ -20,9 +21,14 @@ public class DatabaseEditForm extends JDialog {
     private AbstractDatabase source;
 
     /**
-     * The new database we're creating.
+     * The database type that is currently used.
      */
-    private AbstractDatabase database;
+    private DatabaseType currentType;
+
+    /**
+     * .An array with all the different kinds of databases
+     */
+    private AbstractDatabase[] databases = new AbstractDatabase[DatabaseType.values().length];
 
     /**
      * The database name field.
@@ -35,6 +41,11 @@ public class DatabaseEditForm extends JDialog {
     private JComboBox<DatabaseType> databaseTypeBox;
 
     /**
+     * Defines whether the database changes have been discarded.
+     */
+    private boolean discarded = false;
+
+    /**
      * Constructor.
      *
      * @param owner The parent window.
@@ -45,16 +56,25 @@ public class DatabaseEditForm extends JDialog {
         // Construct the form
         super(owner, FORM_TITLE, ModalityType.DOCUMENT_MODAL);
 
-        // Store the database instance
-        // TODO: Clone here!
+        // Set the source
         this.source = source;
-        this.database = source;
+
+        // Set the current database instance and it's type if the source isn't null
+        if(source != null) {
+            this.currentType = source.getType();
+            this.databases[this.currentType.getIndex()] = source.clone();
+
+        } else {
+            // Create a new integrated database instance, and set it's type
+            this.currentType = DatabaseType.INTEGRATED;
+            this.databases[this.currentType.getIndex()] = new IntegratedDatabase();
+        }
 
         // Create the form UI
-        createUIComponents();
+        buildUi();
 
         // Set the database
-        updateComponents(this.database);
+        updateComponents(this.databases[this.currentType.getIndex()]);
 
         // Make the frame resizable
         this.setResizable(true);
@@ -117,7 +137,7 @@ public class DatabaseEditForm extends JDialog {
     /**
      * Create all UI components for the frame.
      */
-    private void createUIComponents() {
+    private void buildUi() {
         // Set the frame layout
         this.setLayout(new BorderLayout());
 
@@ -174,6 +194,26 @@ public class DatabaseEditForm extends JDialog {
 
         // Create the database type field
         this.databaseTypeBox = new JComboBox<>(DatabaseType.values());
+        this.databaseTypeBox.addActionListener(e -> {
+            // Get the new selected database type
+            DatabaseType selectedType = (DatabaseType) this.databaseTypeBox.getSelectedItem();
+
+            // Update the current database type
+            this.currentType = selectedType;
+
+            // Create a new database type if it doesn't exist
+            if(this.databases[this.currentType.getIndex()] == null)
+                try {
+                    // Create a new instance of the class for the selected database type, clone the source database as far as that's possible
+                    this.databases[selectedType.getIndex()] = selectedType.getTypeClass().getDeclaredConstructor(AbstractDatabase.class).newInstance(this.source);
+
+                } catch(InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+                    ex.printStackTrace();
+                    // TODO: Show an error message
+                }
+
+            // TODO: Update the properties panel?
+        });
 
         // Add the database name field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -224,8 +264,8 @@ public class DatabaseEditForm extends JDialog {
         JButton saveButton = new JButton("Save");
         JButton closeButton = new JButton("Close");
         saveButton.addActionListener(e -> {
-            // Save the questions
-            if(!applyDatabase())
+            // Apply the changes to the database
+            if(!applyChanges())
                 return;
 
             // Close the frame
@@ -242,12 +282,21 @@ public class DatabaseEditForm extends JDialog {
     }
 
     /**
+     * Get the source database.
+     *
+     * @return Source database.
+     */
+    public AbstractDatabase getSource() {
+        return this.source;
+    }
+
+    /**
      * Get the current database.
      *
      * @return Database.
      */
     public AbstractDatabase getDatabase() {
-        return this.database;
+        return this.databases[currentType.getIndex()];
     }
 
     /**
@@ -256,19 +305,16 @@ public class DatabaseEditForm extends JDialog {
      * @param database Database.
      */
     public void updateComponents(AbstractDatabase database) {
+        // Update the used database type
+        this.currentType = database.getType();
+
         // Set the question label
         this.databaseNameField.setText(database.getName());
 
-        // TODO: Set the database type!
+        // Select the proper database type
+        this.databaseTypeBox.setSelectedItem(database.getType());
 
-//        // Set the labels
-//        for(int i = 0; i < ANSWER_COUNT; i++) {
-//            // Set whether the answer is correct
-//            answerRadioButtons[i].setSelected(database.isCorrectAnswerIndex(i));
-//
-//            // Put the answers in the answer fields
-//            answerFields[i].setText(StringUtils.decodeHtml(database.getAnswer(i, false)));
-//        }
+        // TODO: Update the properties window
 
         // Pack the frame
         //pack();
@@ -278,18 +324,24 @@ public class DatabaseEditForm extends JDialog {
     }
 
     /**
-     * Apply and save the database.
+     * Apply the changes to the current database.
      *
-     * @return True if save succeed, false otherwise.
+     * @return True if the changes were valid, false if not.
      */
-    public boolean applyDatabase() {
-        // Make sure the question is valid
-        if(this.databaseNameField.getText().trim().length() <= 0) {
-            JOptionPane.showMessageDialog(this, "Invalid database name.", "Invalid name", JOptionPane.ERROR_MESSAGE);
+    public boolean applyChanges() {
+        // Make sure the database isn't null
+        if(this.getDatabase() == null)
+            // TODO: Create database instance to apply to?
             return false;
-        }
 
-        // TODO: Set the database type, (probably already done)
+        // Apply the name
+        this.getDatabase().setName(this.databaseNameField.getText());
+
+        // Make sure the database type corresponds to the current type
+        // TODO: Should we 'apply' it instead of returning false
+        if(!this.currentType.equals(this.databaseTypeBox.getSelectedItem()))
+            return false;
+
         // TODO: Set the database-type-specific properties
 
         // Save succeed, return the result
@@ -300,23 +352,32 @@ public class DatabaseEditForm extends JDialog {
      * Close the frame. Ask whether the user wants to save the changes.
      */
     public void closeFrame() {
+        // TODO: Stop the closing process, when we fail!
+
         // Only ask to save if there are any unsaved changes
         if(hasUnsavedChanges()) {
             // Ask whether the user wants to save the questions
             switch(JOptionPane.showConfirmDialog(this, "Would you like to save the changes?", "Database changed", JOptionPane.YES_NO_CANCEL_OPTION)) {
-                case JOptionPane.YES_OPTION:
-                    // Save the changes
-                    if(!applyDatabase())
-                        break;
+                case JOptionPane.CANCEL_OPTION:
+                    // Whoops, we don't want to close the frame
+                    return;
 
                 case JOptionPane.NO_OPTION:
-                    // Dispose the frame
-                    this.dispose();
+                    // Set the discarded flag
+                    this.discarded = true;
                     break;
             }
 
-        } else
+            // Dispose the frame
             this.dispose();
+
+        } else {
+            // Set the discarded flag
+            this.discarded = true;
+
+            // Dispose the frame
+            this.dispose();
+        }
     }
 
     /**
@@ -325,9 +386,53 @@ public class DatabaseEditForm extends JDialog {
      * @return True if this database has unsaved changes, false if not.
      */
     public boolean hasUnsavedChanges() {
-        // TODO: Check whether there are any unsaved changes (equal the old and new one)
+        // Get the current database
+        AbstractDatabase database = getDatabase();
 
-        // No unsaved changes detected, return false
-        return false;
+        // Compare the source database with the current database
+        if(this.source == null || database == null) {
+            // Check whether they are equal
+            if(this.source != database)
+                return true;
+
+        } else if(!this.source.equals(database))
+            return true;
+
+        // Apply the changes to the current database
+        applyChanges();
+
+        // Equal the two databases, return the result
+        if(getDatabase() != null)
+            return getDatabase().equals(this.source);
+        return getDatabase() == this.source;
+    }
+
+    /**
+     * Check whether the changes have been discarded.
+     *
+     * @return True if the changes have been discarded.
+     */
+    public boolean isDiscarded() {
+        return this.discarded;
+    }
+
+
+
+    // TODO: Properly configure these methods!
+
+    public static AbstractDatabase createNew(Window owner) {
+        return use(owner, null);
+    }
+
+    public static AbstractDatabase use(Window owner, AbstractDatabase source) {
+        // Create a dialog instance and show it
+        DatabaseEditForm dialog = new DatabaseEditForm(owner, source, true);
+
+        // Return the source if the changes were discarded
+        if(dialog.isDiscarded())
+            return source;
+
+        // Return the new database
+        return dialog.getDatabase();
     }
 }
