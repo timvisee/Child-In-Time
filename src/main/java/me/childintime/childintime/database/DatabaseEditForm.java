@@ -398,13 +398,16 @@ public class DatabaseEditForm extends JDialog {
         } else if(!this.source.equals(database))
             return true;
 
-        // Apply the changes to the current database
-        applyChanges();
+//        // Apply the changes to the current database
+//        applyChanges();
+//
+//        // Equal the two databases, return the result
+//        if(getDatabase() != null)
+//            return getDatabase().equals(this.source);
+//        return getDatabase() == this.source;
 
-        // Equal the two databases, return the result
-        if(getDatabase() != null)
-            return getDatabase().equals(this.source);
-        return getDatabase() == this.source;
+        // No differences, return false
+        return false;
     }
 
     /**
