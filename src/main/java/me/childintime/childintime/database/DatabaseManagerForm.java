@@ -372,38 +372,17 @@ public class DatabaseManagerForm extends JDialog {
      * Create a new database, ask for the name.
      */
     public void addDatabase() {
-        JOptionPane.showInputDialog(this, "Please select a database type to add:", "Add database",
-                JOptionPane.INFORMATION_MESSAGE, null, DatabaseType.values(), null);
+        // Create a new database through the edit panel
+        final AbstractDatabase database = DatabaseEditForm.createNew(this);
 
-        // Ask for the database name
-        String databaseName = JOptionPane.showInputDialog(this, "Please enter a name for the database:", "Add database", JOptionPane.INFORMATION_MESSAGE);
+        // Add the database to the list if it isn't null
+        if(database != null) {
+            // Add the database
+            this.databases.add(database);
 
-        // Make sure a name was entered
-        if(databaseName == null)
-            return;
-
-        // Trim the name
-        databaseName = databaseName.trim();
-
-        // Make sure the name is valid
-        if(databaseName.length() <= 0) {
-            JOptionPane.showMessageDialog(this, "Invalid database name.", "Invalid", JOptionPane.ERROR_MESSAGE);
-            return;
+            // Refresh the list of databases
+            updateListView();
         }
-
-        // Create the database
-        AbstractDatabase database = new IntegratedDatabase();
-        database.setName(databaseName);
-
-        // TODO: Show the edit form for this database!
-//        // Show the database edit panel
-//        new DatabaseForm(this, this.app, database, true);
-
-        // Add the database to the list
-        this.databases.add(database);
-
-        // Refresh the list of databases
-        updateListView();
     }
 
     /**
@@ -415,10 +394,16 @@ public class DatabaseManagerForm extends JDialog {
             return;
 
         // Get the selected database
-        AbstractDatabase selected = (AbstractDatabase) this.databaseList.getSelectedValue();
+        final AbstractDatabase selected = (AbstractDatabase) this.databaseList.getSelectedValue();
 
-        // Show the database edit panel
-        new DatabaseEditForm(this, selected, true);
+        // Show the edit dialog for this database
+        final AbstractDatabase result = DatabaseEditForm.use(this, selected);
+
+        // Set the result, or remove it from the list if it's null
+        if(result != null)
+            this.databases.set(this.databaseList.getSelectedIndex(), result);
+        else
+            this.databases.remove(this.databaseList.getSelectedIndex());
 
         // Refresh the list
         updateListView();
