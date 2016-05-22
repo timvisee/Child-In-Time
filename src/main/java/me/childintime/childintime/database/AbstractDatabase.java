@@ -16,10 +16,15 @@ public abstract class AbstractDatabase implements Cloneable {
 
     /**
      * Constructor.
+     * This constructor allows cross-cloning between different kinds of abstract databases.
      *
-     * @param other Other to clone.
+     * @param other Other to cross-clone.
      */
     public AbstractDatabase(AbstractDatabase other) {
+        // Make sure the other isn't null
+        if(other == null)
+            return;
+
         // Copy the name
         this.name = other.getName();
     }

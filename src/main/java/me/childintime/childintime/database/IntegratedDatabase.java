@@ -21,12 +21,17 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
 
     /**
      * Constructor.
+     * This constructor allows cross-cloning between different kinds of abstract databases.
      *
-     * @param other Other, to clone.
+     * @param other Other to cross-clone.
      */
     public IntegratedDatabase(AbstractDatabase other) {
         // Call the super
         super(other);
+
+        // Make sure the other isn't null
+        if(other == null)
+            return;
 
         // Clone the fields if the type is the same
         if(getType().equals(other.getType())) {
