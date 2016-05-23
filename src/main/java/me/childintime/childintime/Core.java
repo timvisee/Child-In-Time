@@ -4,7 +4,7 @@ import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.database.configuration.DatabaseManager;
-import me.childintime.childintime.database.configuration.gui.window.DatabaseSelectDialog;
+import me.childintime.childintime.gui.window.LoginDialog;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;
@@ -105,7 +105,7 @@ public class Core {
 
         // Show the database selection dialog and handle the result
         this.progressDialog.setVisible(false);
-        if(!DatabaseSelectDialog.start(null)) {
+        if(!LoginDialog.start(null)) {
             // Destroy the core
             destroy();
             return;
