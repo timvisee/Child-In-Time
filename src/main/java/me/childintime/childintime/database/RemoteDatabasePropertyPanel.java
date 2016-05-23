@@ -5,14 +5,117 @@ import java.awt.*;
 
 public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
 
+    /**
+     * Host field.
+     */
+    private JTextField hostField;
+
+    /**
+     * Port field.
+     */
+    private JSpinner portField;
+
+    /**
+     * User field.
+     */
+    private JTextField userField;
+
+    /**
+     * Password field.
+     */
+    private JTextField passwordField;
+
     @Override
     public void buildUi() {
-        setLayout(new GridLayout(4, 1, 8, 8));
+        // Set the layout
+        setLayout(new GridBagLayout());
 
-        add(new JTextField("A"));
-        add(new JTextField("B"));
-        add(new JTextField("C"));
-        add(new JTextField("D"));
+        // Create the grid bag constraints
+        GridBagConstraints c = new GridBagConstraints();
+
+        // Create and add the host label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.insets = new Insets(0, 0, 0, 0);
+        add(new JLabel("Host:"), c);
+
+        // Create the host field
+        this.hostField = new JTextField("MY_HOST");
+
+        // Add the host field
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(0, 16, 0, 0);
+        add(this.hostField, c);
+
+        // Create and add the port label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.insets = new Insets(0, 0, 0, 0);
+        add(new JLabel("Port:"), c);
+
+        // Create the user field
+        this.portField = new JSpinner(new SpinnerNumberModel(3306, 1, 65535, 1));
+
+        // Add the port field
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 1;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(0, 16, 0, 0);
+        add(this.portField, c);
+
+        // Create and add the user label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.insets = new Insets(0, 0, 0, 0);
+        add(new JLabel("User:"), c);
+
+        // Create the user field
+        this.userField = new JTextField("USER");
+
+        // Add the user field
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 2;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(0, 16, 0, 0);
+        add(this.userField, c);
+
+        // Create and add the password label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 3;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.insets = new Insets(0, 0, 0, 0);
+        add(new JLabel("Password:"), c);
+
+        // Create the user field
+        this.passwordField = new JTextField("USER");
+
+        // Add the user field
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 3;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(0, 16, 0, 0);
+        add(this.passwordField, c);
     }
 
     @Override
