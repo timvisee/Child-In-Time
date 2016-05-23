@@ -16,8 +16,7 @@ import java.sql.SQLException;
 public class Core {
 
     /**
-     * This instance.
-     * Used for singleton.
+     * Core instance, used for singleton.
      */
     private static Core instance = null;
 
