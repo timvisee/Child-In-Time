@@ -76,9 +76,15 @@ public class DatabaseEditForm extends JDialog {
             this.databases[this.currentType.getIndex()] = source.clone();
 
         } else {
-            // Create a new integrated database instance, and set it's type
+            // Set the database type
             this.currentType = DatabaseType.INTEGRATED;
-            this.databases[this.currentType.getIndex()] = new IntegratedDatabase();
+
+            // Create an integrated database
+            IntegratedDatabase newDatabase = new IntegratedDatabase();
+            newDatabase.setName("");
+
+            // Set the database
+            this.databases[this.currentType.getIndex()] = newDatabase;
         }
 
         // Create the form UI
