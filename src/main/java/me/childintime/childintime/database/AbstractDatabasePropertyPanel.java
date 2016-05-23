@@ -15,8 +15,11 @@ public abstract class AbstractDatabasePropertyPanel extends JPanel {
      * Apply the properties in the panel to the given database.
      *
      * @param database Database to apply the properties to.
+     *
+     * @return True if anything was applied, false if not.
+     * False will be returned if the given database instance isn't an instance of the database the current property panel is for.
      */
-    public abstract void apply(AbstractDatabase database);
+    public abstract boolean apply(AbstractDatabase database);
 
     /**
      * Get the database type.
