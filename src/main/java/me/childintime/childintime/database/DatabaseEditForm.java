@@ -221,6 +221,9 @@ public class DatabaseEditForm extends JDialog {
         // Create the database type field
         this.databaseTypeBox = new JComboBox<>(DatabaseType.values());
         this.databaseTypeBox.addActionListener(e -> {
+            // Apply the properties
+            applyPropertyPanel();
+
             // Get the new selected database type
             DatabaseType selectedType = (DatabaseType) this.databaseTypeBox.getSelectedItem();
 
