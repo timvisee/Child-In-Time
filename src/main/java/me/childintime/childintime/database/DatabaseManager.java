@@ -15,7 +15,7 @@ public class DatabaseManager {
     /**
      * Databases file name.
      */
-    public static final String FILE_NAME = "dbs.yml";
+    public static final String FILE_NAME = "databases.yml";
 
     /**
      * List of databases.
