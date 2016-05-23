@@ -69,6 +69,11 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
 
         // Create the user field
         this.portField = new JSpinner(new SpinnerNumberModel(3306, 1, 65535, 1));
+
+        // Hide the comma in the port field
+        this.portField.setEditor(new JSpinner.NumberEditor(this.portField, "#"));
+
+        // Align the port field text to the left
         JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) this.portField.getEditor();
         spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
 
