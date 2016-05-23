@@ -130,6 +130,31 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
         return hasFile();
     }
 
+    @Override
+    public boolean prepare() {
+        // Make sure the database configuration is configured successfully
+        if(!isConfigured())
+            return false;
+
+        // Get the database file
+        File file = getFile();
+
+        // Check whether the file exists
+        if(file.exists())
+            return true;
+
+        // Get the parent directory of the file
+        File parent = file.getParentFile();
+
+        // Create the parent directory if it doesn't exist
+        if(!parent.isDirectory())
+            if(!parent.mkdirs())
+                return false;
+
+        // Return the result
+        return true;
+    }
+
     @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public IntegratedDatabase clone() {

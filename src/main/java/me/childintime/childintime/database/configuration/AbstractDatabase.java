@@ -128,6 +128,14 @@ public abstract class AbstractDatabase implements Cloneable {
         this.name = name;
     }
 
+    /**
+     * Prepare the database for use. This step is required before a connection to this database (configuration) is made.
+     * The database must have been fully configured to prepare it.
+     *
+     * @return True on success, false on failure.
+     */
+    public abstract boolean prepare();
+
     @Override
     public String toString() {
         return getName();

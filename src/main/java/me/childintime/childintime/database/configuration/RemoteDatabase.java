@@ -226,6 +226,11 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     }
 
     @Override
+    public boolean prepare() {
+        return isConfigured();
+    }
+
+    @Override
     public RemoteDatabase clone() {
         return new RemoteDatabase(this);
     }
