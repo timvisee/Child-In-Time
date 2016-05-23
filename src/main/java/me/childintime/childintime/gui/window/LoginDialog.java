@@ -275,12 +275,12 @@ public class LoginDialog extends JDialog {
 
         // Create a runnable for the close action
         Runnable closeAction = () -> {
-            // Show a confirmation dialog
-            int result = JOptionPane.showConfirmDialog(instance, "Are you sure you want to quit?", App.APP_NAME, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-            // Make sure the yes button is pressed
-            if(result != JOptionPane.YES_OPTION)
-                return;
+//            // Show a confirmation dialog
+//            int result = JOptionPane.showConfirmDialog(instance, "Are you sure you want to quit?", App.APP_NAME, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+//
+//            // Make sure the yes button is pressed
+//            if(result != JOptionPane.YES_OPTION)
+//                return;
 
             // Set the success status flag
             instance.success = false;
