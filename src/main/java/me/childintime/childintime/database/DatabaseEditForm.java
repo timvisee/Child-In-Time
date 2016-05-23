@@ -374,7 +374,8 @@ public class DatabaseEditForm extends JDialog {
         if(!this.currentType.equals(this.databaseTypeBox.getSelectedItem()))
             return false;
 
-        // TODO: Set the database-type-specific properties
+        // Apply the property panel values
+        applyPropertyPanel();
 
         // Save succeed, return the result
         return true;
@@ -421,6 +422,9 @@ public class DatabaseEditForm extends JDialog {
         // Get the current database
         AbstractDatabase database = getDatabase();
 
+        // Apply the changes
+        applyChanges();
+
         // Compare the source database with the current database
         if(this.source == null || database == null) {
             // Check whether they are equal
@@ -429,14 +433,6 @@ public class DatabaseEditForm extends JDialog {
 
         } else if(!this.source.equals(database))
             return true;
-
-//        // Apply the changes to the current database
-//        applyChanges();
-//
-//        // Equal the two databases, return the result
-//        if(getDatabase() != null)
-//            return getDatabase().equals(this.source);
-//        return getDatabase() == this.source;
 
         // No differences, return false
         return false;
@@ -475,9 +471,8 @@ public class DatabaseEditForm extends JDialog {
      * Update the database property panel.
      */
     public void updatePropertyPanel() {
-        // Apply the properties to the database
-        if(this.propertyPanel != null)
-            this.propertyPanel.apply(getDatabase());
+        // Apply the property panel values
+        applyPropertyPanel();
 
         // Get the selected database type
         DatabaseType selectedType = (DatabaseType) this.databaseTypeBox.getSelectedItem();
@@ -510,5 +505,14 @@ public class DatabaseEditForm extends JDialog {
         } else
             // Update the property panel
             this.propertyPanel.update(getDatabase());
+    }
+
+    /**
+     * Apply the property panel values.
+     */
+    public void applyPropertyPanel() {
+        // Apply the properties to the database
+        if(this.propertyPanel != null)
+            this.propertyPanel.apply(getDatabase());
     }
 }
