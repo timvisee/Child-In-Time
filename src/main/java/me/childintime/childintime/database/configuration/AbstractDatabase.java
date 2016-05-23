@@ -2,6 +2,7 @@ package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.database.DatabaseType;
+import me.childintime.childintime.util.swing.ProgressDialog;
 
 public abstract class AbstractDatabase implements Cloneable {
 
@@ -132,9 +133,11 @@ public abstract class AbstractDatabase implements Cloneable {
      * Prepare the database for use. This step is required before a connection to this database (configuration) is made.
      * The database must have been fully configured to prepare it.
      *
+     * @param progressDialog Progress dialog instance.
+     *
      * @return True on success, false on failure.
      */
-    public abstract boolean prepare();
+    public abstract boolean prepare(ProgressDialog progressDialog);
 
     @Override
     public String toString() {
