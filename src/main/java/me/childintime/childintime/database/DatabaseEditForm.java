@@ -14,7 +14,7 @@ public class DatabaseEditForm extends JDialog {
     /**
      * Frame title.
      */
-    private static final String FORM_TITLE = App.APP_NAME + " - Edit database";
+    private static final String FORM_TITLE = App.APP_NAME + " - Edit database configuration";
 
     /**
      * The source database instance, which is the source.

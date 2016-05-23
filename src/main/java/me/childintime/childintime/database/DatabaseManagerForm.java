@@ -23,7 +23,7 @@ public class DatabaseManagerForm extends JDialog {
     /**
      * Frame title.
      */
-    private static final String FORM_TITLE = App.APP_NAME + " - Database manager";
+    private static final String FORM_TITLE = App.APP_NAME + " - Database configuration manager";
 
     /**
      * The database manager label.
