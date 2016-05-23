@@ -65,8 +65,19 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
     }
 
     @Override
-    public void apply(AbstractDatabase database) {
-        // TODO: Apply properties!
+    public boolean apply(AbstractDatabase database) {
+        // Make sure we're working with the correct kind of database
+        if(!(database instanceof IntegratedDatabase))
+            return false;
+
+        // Get the proper instance
+        IntegratedDatabase integrated = (IntegratedDatabase) database;
+
+        // Apply the file
+        integrated.setFile(this.fileField.getFile());
+
+        // Return the result
+        return true;
     }
 
     @Override
