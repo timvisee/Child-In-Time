@@ -17,4 +17,11 @@ public abstract class AbstractDatabasePropertyPanel extends JPanel {
      * @param database Database to apply the properties to.
      */
     public abstract void apply(AbstractDatabase database);
+
+    /**
+     * Get the database type.
+     *
+     * @return Database type.
+     */
+    public abstract DatabaseType getDatabaseType();
 }
