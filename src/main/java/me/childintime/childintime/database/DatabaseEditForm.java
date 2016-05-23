@@ -83,6 +83,9 @@ public class DatabaseEditForm extends JDialog {
         // Create the form UI
         buildUi();
 
+        // Update the property panel
+        updatePropertyPanel();
+
         // Set the database
         updateComponents(this.databases[this.currentType.getIndex()]);
 
@@ -117,7 +120,8 @@ public class DatabaseEditForm extends JDialog {
         });
 
         // Configure the window size
-        configureSize();
+        // FIXME: Already done?
+        //configureSize();
 
         // Set the window location to the system's default
         this.setLocationByPlatform(true);
@@ -136,17 +140,23 @@ public class DatabaseEditForm extends JDialog {
         setPreferredSize(null);
         setMaximumSize(null);
 
+        // Store the frame width
+        int width = getSize().getSize().width;
+
         // Pack everything
         pack();
 
         // Get the maximum height
         final int maxHeight = getSize().height;
 
+        // Determine the width to use, if the minimum size of the frame is wider, use the new width
+        width = Math.max(getSize().width + 100, width);
+
         // Configure the sizes
         setMinimumSize(new Dimension(getMinimumSize()));
         setMaximumSize(new Dimension(9999, maxHeight));
-        setPreferredSize(new Dimension(getSize().width + 100, maxHeight));
-        setSize(new Dimension(getSize().width + 100, maxHeight));
+        setPreferredSize(new Dimension(width, maxHeight));
+        setSize(new Dimension(width, maxHeight));
     }
 
     /**
