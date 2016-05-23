@@ -23,7 +23,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
     /**
      * Password field.
      */
-    private JTextField passwordField;
+    private JPasswordField passwordField;
 
     @Override
     public void buildUi() {
@@ -69,6 +69,8 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
 
         // Create the user field
         this.portField = new JSpinner(new SpinnerNumberModel(3306, 1, 65535, 1));
+        JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) this.portField.getEditor();
+        spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
 
         // Add the port field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -113,8 +115,8 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.anchor = GridBagConstraints.WEST;
         add(new JLabel("Password:"), c);
 
-        // Create the user field
-        this.passwordField = new JTextField("PASSWORD");
+        // Create the password field
+        this.passwordField = new JPasswordField("PASSWORD");
 
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
