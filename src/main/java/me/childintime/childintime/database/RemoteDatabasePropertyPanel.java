@@ -2,6 +2,7 @@ package me.childintime.childintime.database;
 
 import javax.swing.*;
 import java.awt.*;
+import java.rmi.Remote;
 
 public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
 
@@ -156,8 +157,22 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
     }
 
     @Override
-    public void apply(AbstractDatabase database) {
-        // TODO: Apply properties!
+    public boolean apply(AbstractDatabase database) {
+        // Make sure we're working with the correct kind of database
+        if(!(database instanceof RemoteDatabase))
+            return false;
+
+        // Get the proper instance
+        RemoteDatabase remote = (RemoteDatabase) database;
+
+        // Apply properties
+        remote.setHost(this.hostField.getText());
+        remote.setPort((Integer) this.portField.getValue());
+        remote.setUser(this.userField.getText());
+        remote.setPassword(this.passwordField.getText());
+
+        // Return the result
+        return true;
     }
 
     @Override
