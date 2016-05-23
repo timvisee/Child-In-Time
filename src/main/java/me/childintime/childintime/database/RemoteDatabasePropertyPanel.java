@@ -136,11 +136,31 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
 
     @Override
     public void update(AbstractDatabase database) {
-        // TODO: Update the fields to mimic the database!
+        // Make sure the object isn't null
+        if(database == null)
+            return;
+
+        // Make sure we're using the same type
+        if(!database.getType().equals(getDatabaseType()))
+            return;
+
+        // Cast the database instance
+        RemoteDatabase remote = (RemoteDatabase) database;
+
+        // Update the fields
+        this.hostField.setText(String.valueOf(remote.getHost()));
+        this.portField.setValue(remote.getPort());
+        this.userField.setText(String.valueOf(remote.getUser()));
+        this.passwordField.setText(String.valueOf(remote.getPassword()));
     }
 
     @Override
     public void apply(AbstractDatabase database) {
         // TODO: Apply properties!
+    }
+
+    @Override
+    public DatabaseType getDatabaseType() {
+        return DatabaseType.REMOTE;
     }
 }
