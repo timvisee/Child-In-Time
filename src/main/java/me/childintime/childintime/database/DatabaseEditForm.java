@@ -41,6 +41,16 @@ public class DatabaseEditForm extends JDialog {
     private JComboBox<DatabaseType> databaseTypeBox;
 
     /**
+     * Database property panel wrapper.
+     */
+    private JPanel propertyPanelWrapper;
+
+    /**
+     * Database property panel.
+     */
+    private AbstractDatabasePropertyPanel propertyPanel;
+
+    /**
      * Defines whether the database changes have been discarded.
      */
     private boolean discarded = false;
@@ -122,6 +132,7 @@ public class DatabaseEditForm extends JDialog {
      */
     private void configureSize() {
         // Pack everything
+        // TODO: This doesn't pack again without an update?
         pack();
 
         // Get the maximum height
@@ -146,10 +157,10 @@ public class DatabaseEditForm extends JDialog {
         container.setLayout(new GridBagLayout());
         container.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 
-        // Create the properties panel and set the layout
-        JPanel pnlProperties = new JPanel();
-        pnlProperties.setLayout(new GridBagLayout());
-        pnlProperties.setBorder(BorderFactory.createTitledBorder("Properties"));
+        // Create the property panel wrapper
+        this.propertyPanelWrapper = new JPanel();
+        this.propertyPanelWrapper.setLayout(new BorderLayout());
+        this.propertyPanelWrapper.setBorder(BorderFactory.createTitledBorder("Properties"));
 
         // Construct a grid bag constraints object to specify the placement of all components
         GridBagConstraints c = new GridBagConstraints();
@@ -212,7 +223,32 @@ public class DatabaseEditForm extends JDialog {
                     // TODO: Show an error message
                 }
 
-            // TODO: Update the properties panel?
+            // TODO: Apply the properties to the existing database first, to store it's changes?
+
+            // Update the properties panel
+            try {
+                this.propertyPanel = selectedType.getPropertyPanelClass().newInstance();
+
+            } catch (InstantiationException | IllegalAccessException ex) {
+                ex.printStackTrace();
+
+                // TODO: Show an error message
+            }
+
+            // Build the property panel
+            this.propertyPanel.buildUi();
+
+            // Update the property panel
+            this.propertyPanel.update(getDatabase());
+
+            // Remove all current components from the property panel wrapper, to remove the existing property panel
+            this.propertyPanelWrapper.removeAll();
+
+            // Add new new property panel
+            this.propertyPanelWrapper.add(this.propertyPanel);
+
+            // Update the frame size
+            configureSize();
         });
 
         // Add the database name field
@@ -232,7 +268,7 @@ public class DatabaseEditForm extends JDialog {
         c.weightx = 1;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 16, 0);
-        container.add(pnlProperties, c);
+        container.add(this.propertyPanelWrapper, c);
 
         // Create the control button panel and add it to the main panel
         JPanel controlsPanel = createControlButtonPanel();
