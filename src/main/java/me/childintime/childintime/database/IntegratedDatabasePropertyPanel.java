@@ -8,7 +8,7 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
     /**
      * File box instance.
      */
-    private TextPropertyField fileField;
+    private FilePropertyField fileField;
 
     @Override
     public void buildUi() {
@@ -30,7 +30,7 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
         add(new JLabel("File:"), c);
 
         // Create the file field
-        this.fileField = new TextPropertyField("MY_FILE_PATH", true);
+        this.fileField = new FilePropertyField("MY_FILE_PATH", true);
         this.fileField.setEmptyAllowed(false);
 
         // Add the file box

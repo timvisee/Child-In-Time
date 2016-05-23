@@ -34,7 +34,7 @@ public class TextPropertyField extends AbstractPropertyField {
     /**
      * Clear button.
      */
-    private JButton clearButton;
+    protected JButton clearButton;
 
     /**
      * Constructor.
