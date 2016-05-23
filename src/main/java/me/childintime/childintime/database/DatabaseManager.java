@@ -155,9 +155,15 @@ public class DatabaseManager {
         // Clear the list of databases
         this.databases.clear();
 
-        // Add an integrated database
-        this.databases.add(new IntegratedDatabase(IntegratedDatabase.DEFAULT_FILE));
-        this.databases.add(new RemoteDatabase());
+        // Create and add an integrated database
+        IntegratedDatabase integrated = new IntegratedDatabase(IntegratedDatabase.DEFAULT_FILE);
+        integrated.setName("Default integrated database");
+        this.databases.add(integrated);
+
+        // Create and add a remote database
+        RemoteDatabase remote = new RemoteDatabase();
+        remote.setName("Default remote database");
+        this.databases.add(remote);
     }
 
     /**
