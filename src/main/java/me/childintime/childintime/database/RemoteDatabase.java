@@ -27,7 +27,10 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     /**
      * Constructor.
      */
-    public RemoteDatabase() { }
+    public RemoteDatabase() {
+        // Construct the super
+        super();
+    }
 
     /**
      * Constructor.
@@ -38,6 +41,9 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     public RemoteDatabase(AbstractDatabase other) {
         // Call the super
         super(other);
+
+        // Set the name
+        setName(getType().toString());
 
         // Make sure the other isn't null
         if(other == null)
@@ -65,6 +71,13 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
      * @param password Database password or null.
      */
     public RemoteDatabase(String host, int port, String user, String password) {
+        // Construct the super
+        super();
+
+        // Set the name
+        setName(getType().toString());
+
+        // Set the fields
         this.host = host;
         this.port = port;
         this.user = user;
@@ -79,6 +92,9 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     public RemoteDatabase(ConfigurationSection config) {
         // Call the super
         super(config);
+
+        // Set the name
+        setName(getType().toString());
 
         // Fetch the properties
         this.host = config.getString("host", null);

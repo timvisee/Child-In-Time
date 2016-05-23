@@ -17,6 +17,9 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     public IntegratedDatabase() {
         // Construct the super
         super();
+
+        // Set the name
+        setName(getType().toString());
     }
 
     /**
@@ -28,6 +31,9 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     public IntegratedDatabase(AbstractDatabase other) {
         // Call the super
         super(other);
+
+        // Set the name
+        setName(getType().toString());
 
         // Make sure the other isn't null
         if(other == null)
@@ -49,6 +55,13 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
      * @param file File.
      */
     public IntegratedDatabase(File file) {
+        // Construct the super
+        super();
+
+        // Set the name
+        setName(getType().toString());
+
+        // Set the file
         this.file = file;
     }
 
@@ -60,6 +73,9 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     public IntegratedDatabase(ConfigurationSection config) {
         // Call the super
         super(config);
+
+        // Set the name
+        setName(getType().toString());
 
         // Fetch the file from the configuration
         String rawFile = config.getString("file", null);
