@@ -29,6 +29,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
     public void buildUi() {
         // Set the layout
         setLayout(new GridBagLayout());
+        setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
         // Create the grid bag constraints
         GridBagConstraints c = new GridBagConstraints();
