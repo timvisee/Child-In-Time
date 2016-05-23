@@ -1,15 +1,16 @@
 package me.childintime.childintime.database;
 
 public enum DatabaseType {
+
     /**
      * Integrated (local) database.
      */
-    INTEGRATED(1, "Integrated database", IntegratedDatabase.class),
+    INTEGRATED(1, "Integrated database", IntegratedDatabase.class, IntegratedDatabasePropertyPanel.class),
 
     /**
      * Remote database.
      */
-    REMOTE(2, "Remote database", RemoteDatabase.class);
+    REMOTE(2, "Remote database", RemoteDatabase.class, RemoteDatabasePropertyPanel.class);
 
     /**
      * Database type ID.
@@ -27,15 +28,21 @@ public enum DatabaseType {
     private Class<? extends AbstractDatabase> typeClass;
 
     /**
+     * Property panel class.
+     */
+    private Class<? extends AbstractDatabasePropertyPanel> propertyPanelClass;
+
+    /**
      * Constructor.
      *
      * @param typeId Database type ID.
      * @param description Description.
      */
-    DatabaseType(int typeId, String description, Class<? extends AbstractDatabase> typeClass) {
+    DatabaseType(int typeId, String description, Class<? extends AbstractDatabase> typeClass, Class<? extends AbstractDatabasePropertyPanel> propertyPanelClass) {
         this.typeId = typeId;
         this.description = description;
         this.typeClass = typeClass;
+        this.propertyPanelClass = propertyPanelClass;
     }
 
     /**
@@ -86,6 +93,15 @@ public enum DatabaseType {
 
         // Unable to find the index, return zero
         return 0;
+    }
+
+    /**
+     * Get the property panel class for this specific database type.
+     *
+     * @return Database property panel class.
+     */
+    public Class<? extends AbstractDatabasePropertyPanel> getPropertyPanelClass() {
+        return this.propertyPanelClass;
     }
 
     @Override
