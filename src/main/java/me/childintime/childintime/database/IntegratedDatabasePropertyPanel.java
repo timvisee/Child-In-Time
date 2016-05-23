@@ -45,11 +45,28 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
 
     @Override
     public void update(AbstractDatabase database) {
-        // TODO: Update the fields to mimic the database!
+        // Make sure the object isn't null
+        if(database == null)
+            return;
+
+        // Make sure we're using the same type
+        if(!database.getType().equals(getDatabaseType()))
+            return;
+
+        // Cast the database instance
+        IntegratedDatabase integrated = (IntegratedDatabase) database;
+
+        // Update the fields
+        this.fileBox.setText(String.valueOf(integrated.getFile()));
     }
 
     @Override
     public void apply(AbstractDatabase database) {
         // TODO: Apply properties!
+    }
+
+    @Override
+    public DatabaseType getDatabaseType() {
+        return DatabaseType.INTEGRATED;
     }
 }
