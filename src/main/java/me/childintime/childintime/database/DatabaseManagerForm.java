@@ -360,13 +360,25 @@ public class DatabaseManagerForm extends JDialog {
         if(getSelectedCount() != 1)
             return;
 
-        // TODO: Test the selected database!
-        JOptionPane.showMessageDialog(this, "Not yet implemented", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-
         // Get the selected database
         AbstractDatabase selected = (AbstractDatabase) this.databaseList.getSelectedValue();
-//        this.app.setCurrentDatabase(selected);
-//        this.app.startDatabase();
+
+        // Make sure the database is successfully configured
+        if(!selected.isConfigured()) {
+            // Edit the selected database
+            DatabaseEditForm.use(this, selected);
+
+            // TODO: Update the selected database!
+        }
+
+        // Show a message if it's still not configured properly
+        if(!selected.isConfigured()) {
+            JOptionPane.showMessageDialog(this, "The database configuration is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // TODO: Feature not yet implemented, show error!
+        JOptionPane.showMessageDialog(this, "Not yet implemented", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
     }
 
     /**
