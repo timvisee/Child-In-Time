@@ -78,6 +78,7 @@ public class FilePropertyField extends TextPropertyField {
         this.browseButton.addActionListener(e -> {
             // Create a file chooser
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setSelectedFile(getFile());
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
             // Show the save dialog, to select a file
