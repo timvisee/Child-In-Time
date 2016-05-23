@@ -25,6 +25,7 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
         c.gridwidth = 1;
         c.weightx = 0;
         c.insets = new Insets(0, 0, 0, 0);
+        c.anchor = GridBagConstraints.WEST;
         add(new JLabel("File:"), c);
 
         // Create the file box
@@ -37,6 +38,7 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
         c.gridwidth = 1;
         c.weightx = 1;
         c.insets = new Insets(0, 16, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
         add(this.fileBox, c);
     }
 
