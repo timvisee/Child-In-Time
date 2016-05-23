@@ -94,16 +94,30 @@ public class DatabaseManager {
 
     /**
      * Load the databases from a file.
+     * The default database configuration will be loaded if the file doesn't exist.
      *
-     * @return True if succeed, false if failed. False will also be returned if the databases file doesn't exist.
+     * @return True if succeed, false if failed.
+     * False will also be returned if the default database configuration was loaded because the file didn't exist.
      */
     public boolean load() {
         // Get the save file
         File file = getSaveFile();
 
         // Make sure the configuration file exists
-        if(!file.exists())
+        if(!file.exists()) {
+            // Load the default database configuration
+            loadDefault();
+
+            // Save the database configuration
+            try {
+                save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Return the result
             return false;
+        }
 
         // Load the configuration
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -128,6 +142,19 @@ public class DatabaseManager {
 
         // Return the result
         return true;
+    }
+
+    /**
+     * Load the default database configuration.
+     * Warning: this might override the current database configuration.
+     */
+    public void loadDefault() {
+        // Clear the list of databases
+        this.databases.clear();
+
+        // Add an integrated database
+        this.databases.add(new IntegratedDatabase());
+        this.databases.add(new RemoteDatabase());
     }
 
     /**
