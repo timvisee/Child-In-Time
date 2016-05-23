@@ -8,7 +8,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
     /**
      * Host field.
      */
-    private JTextField hostField;
+    private TextPropertyField hostField;
 
     /**
      * Port field.
@@ -18,12 +18,12 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
     /**
      * User field.
      */
-    private JTextField userField;
+    private TextPropertyField userField;
 
     /**
      * Password field.
      */
-    private JPasswordField passwordField;
+    private PasswordPropertyField passwordField;
 
     @Override
     public void buildUi() {
@@ -45,7 +45,8 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         add(new JLabel("Host:"), c);
 
         // Create the host field
-        this.hostField = new JTextField("MY_HOST");
+        this.hostField = new TextPropertyField("MY_HOST", true);
+        this.hostField.setEmptyAllowed(false);
 
         // Add the host field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -98,7 +99,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         add(new JLabel("User:"), c);
 
         // Create the user field
-        this.userField = new JTextField("USER");
+        this.userField = new TextPropertyField("USER", true);
 
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -121,7 +122,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         add(new JLabel("Password:"), c);
 
         // Create the password field
-        this.passwordField = new JPasswordField("PASSWORD");
+        this.passwordField = new PasswordPropertyField("PASSWORD", true);
 
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -148,10 +149,10 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         RemoteDatabase remote = (RemoteDatabase) database;
 
         // Update the fields
-        this.hostField.setText(String.valueOf(remote.getHost()));
+        this.hostField.setText(remote.getHost());
         this.portField.setValue(remote.getPort());
-        this.userField.setText(String.valueOf(remote.getUser()));
-        this.passwordField.setText(String.valueOf(remote.getPassword()));
+        this.userField.setText(remote.getUser());
+        this.passwordField.setText(remote.getPassword());
     }
 
     @Override

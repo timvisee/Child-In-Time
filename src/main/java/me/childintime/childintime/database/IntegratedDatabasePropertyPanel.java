@@ -8,7 +8,7 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
     /**
      * File box instance.
      */
-    private JTextField fileBox;
+    private TextPropertyField fileField;
 
     @Override
     public void buildUi() {
@@ -29,8 +29,9 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
         c.anchor = GridBagConstraints.WEST;
         add(new JLabel("File:"), c);
 
-        // Create the file box
-        this.fileBox = new JTextField("MY_FILE_PATH");
+        // Create the file field
+        this.fileField = new TextPropertyField("MY_FILE_PATH", true);
+        this.fileField.setEmptyAllowed(false);
 
         // Add the file box
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -40,7 +41,7 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
         c.weightx = 1;
         c.insets = new Insets(0, 16, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
-        add(this.fileBox, c);
+        add(this.fileField, c);
     }
 
     @Override
@@ -57,7 +58,10 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
         IntegratedDatabase integrated = (IntegratedDatabase) database;
 
         // Update the fields
-        this.fileBox.setText(String.valueOf(integrated.getFile()));
+        if(integrated.hasFile())
+            this.fileField.setText(integrated.getFile().toString());
+        else
+            this.fileField.setText(null);
     }
 
     @Override
