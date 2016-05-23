@@ -360,6 +360,10 @@ public class DatabaseSelectDialog extends JDialog {
      * @return True if valid, false if not.
      */
     public boolean check() {
+        // Validate the configuration of the selected database
+        if(!validateConfiguration())
+            return false;
+
         // Create a progress dialog window
         ProgressDialog progress = new ProgressDialog(this, App.APP_NAME, true, "Connecting to database...", true);
 
@@ -375,6 +379,36 @@ public class DatabaseSelectDialog extends JDialog {
         progress.dispose();
 
         // TODO: Return the proper result
+        return true;
+    }
+
+    /**
+     * Validate the configuration of the selected database, and show it's edit dialog if it hasn't been fully configurated yet.
+     *
+     * @return True if validated, false if not.
+     */
+    public boolean validateConfiguration() {
+        // Get the selected database credentials
+        AbstractDatabase database = (AbstractDatabase) this.comboBox.getSelectedItem();
+        if(database == null) {
+            JOptionPane.showMessageDialog(this, "No database selected.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Check whether the configuration is already valid
+        if(database.isConfigured())
+            return true;
+
+        // Show the database edit form for the current database
+        AbstractDatabase updated = DatabaseEditForm.use(this, database);
+
+        // Check whether the database has been configured properly now
+        if(!updated.isConfigured()) {
+            JOptionPane.showMessageDialog(this, "The database configuration is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // The configuration seems to be valid, return true
         return true;
     }
 }
