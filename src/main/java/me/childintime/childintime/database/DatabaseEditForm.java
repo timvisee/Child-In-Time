@@ -475,13 +475,15 @@ public class DatabaseEditForm extends JDialog {
      * Update the database property panel.
      */
     public void updatePropertyPanel() {
+        // Apply the properties to the database
+        if(this.propertyPanel != null)
+            this.propertyPanel.apply(getDatabase());
+
         // Get the selected database type
         DatabaseType selectedType = (DatabaseType) this.databaseTypeBox.getSelectedItem();
 
         // Determine the panel class
         Class<? extends AbstractDatabasePropertyPanel> propertyPanelClass = selectedType.getPropertyPanelClass();
-
-        // TODO: Apply the properties to the existing database first, to store it's changes?
 
         // Reset the property panel if a different property panel should be shown
         if(!propertyPanelClass.isInstance(this.propertyPanel)) {
