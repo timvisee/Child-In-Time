@@ -291,7 +291,14 @@ public class DatabaseSelectDialog extends JDialog {
             // Show the database manager form
             new DatabaseManagerForm(instance, true, false);
 
-            // TODO: Update the combobox!
+            // Get the selected combo box value
+            AbstractDatabase selected = (AbstractDatabase) this.comboBox.getSelectedItem();
+
+            // Reset the combo box data model
+            comboBox.setModel(new DefaultComboBoxModel<>(Core.getInstance().getDatabaseManager().getDatabases().toArray(new AbstractDatabase[] {})));
+
+            // Set the selected value to it's original
+            comboBox.setSelectedItem(selected);
         });
 
         // Add an action to the continue button
