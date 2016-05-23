@@ -94,9 +94,13 @@ public class LoginDialog extends JDialog {
     }
 
     /**
+     * Show the login dialog.
      *
+     * @param owner Window owner.
+     *
+     * @return The database configuration the user selected, or null if the login was cancelled.
      */
-    public static boolean start(Window owner) {
+    public static AbstractDatabase showDialog(Window owner) {
         // Create a database selector dialog instance
         LoginDialog dialog = new LoginDialog(owner, App.APP_NAME);
 
@@ -104,7 +108,7 @@ public class LoginDialog extends JDialog {
         dialog.setVisible(true);
 
         // Return the result
-        return dialog.isSuccess();
+        return dialog.isSuccess() ? dialog.getSelectedDatabase() : null;
     }
 
     /**
@@ -295,7 +299,7 @@ public class LoginDialog extends JDialog {
             new DatabaseManagerDialog(instance, true, false);
 
             // Get the selected combo box value
-            AbstractDatabase selected = (AbstractDatabase) this.comboBox.getSelectedItem();
+            AbstractDatabase selected = getSelectedDatabase();
 
             // Reset the combo box data model
             comboBox.setModel(new DefaultComboBoxModel<>(Core.getInstance().getDatabaseManager().getDatabases().toArray(new AbstractDatabase[] {})));
@@ -392,7 +396,7 @@ public class LoginDialog extends JDialog {
      */
     public boolean validateConfiguration() {
         // Get the selected database credentials
-        AbstractDatabase database = (AbstractDatabase) this.comboBox.getSelectedItem();
+        AbstractDatabase database = getSelectedDatabase();
         if(database == null) {
             JOptionPane.showMessageDialog(this, "No database selected.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
             return false;
@@ -413,5 +417,14 @@ public class LoginDialog extends JDialog {
 
         // The configuration seems to be valid, return true
         return true;
+    }
+
+    /**
+     * Get the selected database.
+     *
+     * @return The selected database.
+     */
+    public AbstractDatabase getSelectedDatabase() {
+        return (AbstractDatabase) this.comboBox.getSelectedItem();
     }
 }
