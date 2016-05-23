@@ -81,6 +81,9 @@ public class TextPropertyField extends AbstractPropertyField {
      * Build the component UI.
      */
     protected void buildUi() {
+        // Store the current instance
+        final TextPropertyField instance = this;
+
         // Set the layout
         setLayout(new GridBagLayout());
 
@@ -126,6 +129,9 @@ public class TextPropertyField extends AbstractPropertyField {
 
             @Override
             public void focusLost(FocusEvent e) {
+                // Copy the text from the field
+                instance.text = instance.textField.getText();
+
                 // Clear the field if it's empty
                 clearIfEmpty();
             }
