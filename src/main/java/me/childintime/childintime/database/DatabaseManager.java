@@ -105,6 +105,9 @@ public class DatabaseManager {
 
         // Make sure the configuration file exists
         if(!file.exists()) {
+            // Show a status message
+            System.out.println("The database configurations file doesn't exist, loading default configuration...");
+
             // Load the default database configuration
             loadDefault();
 
