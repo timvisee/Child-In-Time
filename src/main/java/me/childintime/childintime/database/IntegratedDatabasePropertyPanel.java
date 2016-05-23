@@ -11,6 +11,11 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
     }
 
     @Override
+    public void update(AbstractDatabase database) {
+        // TODO: Update the fields to mimic the database!
+    }
+
+    @Override
     public void apply(AbstractDatabase database) {
         // TODO: Apply properties!
     }

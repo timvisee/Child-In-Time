@@ -9,6 +9,8 @@ public abstract class AbstractDatabasePropertyPanel extends JPanel {
      */
     public abstract void buildUi();
 
+    public abstract void update(AbstractDatabase database);
+
     /**
      * Apply the properties in the panel to the given database.
      *
