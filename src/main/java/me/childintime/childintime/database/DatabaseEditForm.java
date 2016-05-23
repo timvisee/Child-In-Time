@@ -131,8 +131,12 @@ public class DatabaseEditForm extends JDialog {
      * Properly configure the window sizes for the current content.
      */
     private void configureSize() {
+        // Reset the sizes
+        setMinimumSize(null);
+        setPreferredSize(null);
+        setMaximumSize(null);
+
         // Pack everything
-        // TODO: This doesn't pack again without an update?
         pack();
 
         // Get the maximum height

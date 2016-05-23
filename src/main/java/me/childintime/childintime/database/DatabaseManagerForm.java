@@ -368,6 +368,7 @@ public class DatabaseManagerForm extends JDialog {
 //        this.app.setCurrentDatabase(selected);
 //        this.app.startDatabase();
     }
+
     /**
      * Create a new database, ask for the name.
      */
