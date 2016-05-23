@@ -40,6 +40,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.gridwidth = 1;
         c.weightx = 0;
         c.insets = new Insets(0, 0, 0, 0);
+        c.anchor = GridBagConstraints.WEST;
         add(new JLabel("Host:"), c);
 
         // Create the host field
@@ -52,6 +53,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.gridwidth = 1;
         c.weightx = 1;
         c.insets = new Insets(0, 16, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
         add(this.hostField, c);
 
         // Create and add the port label
@@ -60,7 +62,8 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.gridy = 1;
         c.gridwidth = 1;
         c.weightx = 0;
-        c.insets = new Insets(0, 0, 0, 0);
+        c.insets = new Insets(8, 0, 0, 0);
+        c.anchor = GridBagConstraints.WEST;
         add(new JLabel("Port:"), c);
 
         // Create the user field
@@ -72,7 +75,8 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.gridy = 1;
         c.gridwidth = 1;
         c.weightx = 1;
-        c.insets = new Insets(0, 16, 0, 0);
+        c.insets = new Insets(8, 16, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
         add(this.portField, c);
 
         // Create and add the user label
@@ -81,7 +85,8 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.gridy = 2;
         c.gridwidth = 1;
         c.weightx = 0;
-        c.insets = new Insets(0, 0, 0, 0);
+        c.insets = new Insets(8, 0, 0, 0);
+        c.anchor = GridBagConstraints.WEST;
         add(new JLabel("User:"), c);
 
         // Create the user field
@@ -93,7 +98,8 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.gridy = 2;
         c.gridwidth = 1;
         c.weightx = 1;
-        c.insets = new Insets(0, 16, 0, 0);
+        c.insets = new Insets(8, 16, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
         add(this.userField, c);
 
         // Create and add the password label
@@ -102,11 +108,12 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.gridy = 3;
         c.gridwidth = 1;
         c.weightx = 0;
-        c.insets = new Insets(0, 0, 0, 0);
+        c.insets = new Insets(8, 0, 0, 0);
+        c.anchor = GridBagConstraints.WEST;
         add(new JLabel("Password:"), c);
 
         // Create the user field
-        this.passwordField = new JTextField("USER");
+        this.passwordField = new JTextField("PASSWORD");
 
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -114,7 +121,8 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.gridy = 3;
         c.gridwidth = 1;
         c.weightx = 1;
-        c.insets = new Insets(0, 16, 0, 0);
+        c.insets = new Insets(8, 16, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
         add(this.passwordField, c);
     }
 
