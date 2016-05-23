@@ -1,6 +1,7 @@
 package me.childintime.childintime.database;
 
 import me.childintime.childintime.App;
+import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
 import java.awt.*;
@@ -300,8 +301,13 @@ public class DatabaseEditForm extends JDialog {
         closeButton.addActionListener(e -> closeFrame());
 
         // Add the buttons to the panel
-        buttonPanel.add(saveButton);
-        buttonPanel.add(closeButton);
+        if(!Platform.isMacOsX()) {
+            buttonPanel.add(saveButton);
+            buttonPanel.add(closeButton);
+        } else {
+            buttonPanel.add(closeButton);
+            buttonPanel.add(saveButton);
+        }
 
         // Return the button panel
         return buttonPanel;
