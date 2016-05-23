@@ -1,8 +1,10 @@
-package me.childintime.childintime.database.configuration.gui.window;
+package me.childintime.childintime.gui.window;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
+import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
+import me.childintime.childintime.database.configuration.gui.window.DatabaseModifyDialog;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -11,7 +13,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class DatabaseSelectDialog extends JDialog {
+public class LoginDialog extends JDialog {
 
     /**
      * Unique serial version.
@@ -51,7 +53,7 @@ public class DatabaseSelectDialog extends JDialog {
     /**
      * Constructor.
      */
-    public DatabaseSelectDialog() {
+    public LoginDialog() {
         this(null, App.APP_NAME, true);
     }
 
@@ -61,7 +63,7 @@ public class DatabaseSelectDialog extends JDialog {
      * @param owner Owner window, or null.
      * @param title Progress dialog title.
      */
-    public DatabaseSelectDialog(Window owner, String title) {
+    public LoginDialog(Window owner, String title) {
         // Construct the super class
         super(owner, title);
 
@@ -96,7 +98,7 @@ public class DatabaseSelectDialog extends JDialog {
      */
     public static boolean start(Window owner) {
         // Create a database selector dialog instance
-        DatabaseSelectDialog dialog = new DatabaseSelectDialog(owner, App.APP_NAME);
+        LoginDialog dialog = new LoginDialog(owner, App.APP_NAME);
 
         // Show the database selector dialog
         dialog.setVisible(true);
@@ -129,7 +131,7 @@ public class DatabaseSelectDialog extends JDialog {
      * @param title Progress dialog title.
      * @param show True to immediately show the progress dialog.
      */
-    public DatabaseSelectDialog(Window owner, String title, boolean show) {
+    public LoginDialog(Window owner, String title, boolean show) {
         // Construct
         this(owner, title);
 
@@ -269,7 +271,7 @@ public class DatabaseSelectDialog extends JDialog {
      */
     private void linkComponents() {
         // Store the current instance
-        final DatabaseSelectDialog instance = this;
+        final LoginDialog instance = this;
 
         // Create a runnable for the close action
         Runnable closeAction = () -> {
@@ -290,7 +292,7 @@ public class DatabaseSelectDialog extends JDialog {
         // Add an action to the configure button
         this.configureButton.addActionListener(e -> {
             // Show the database manager form
-            new DatabaseManagerForm(instance, true, false);
+            new DatabaseManagerDialog(instance, true, false);
 
             // Get the selected combo box value
             AbstractDatabase selected = (AbstractDatabase) this.comboBox.getSelectedItem();
@@ -401,7 +403,7 @@ public class DatabaseSelectDialog extends JDialog {
             return true;
 
         // Show the database edit form for the current database
-        AbstractDatabase updated = DatabaseEditForm.use(this, database);
+        AbstractDatabase updated = DatabaseModifyDialog.showModify(this, database);
 
         // Check whether the database has been configured properly now
         if(!updated.isConfigured()) {

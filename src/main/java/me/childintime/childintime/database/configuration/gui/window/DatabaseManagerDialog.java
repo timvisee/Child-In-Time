@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class DatabaseManagerForm extends JDialog {
+public class DatabaseManagerDialog extends JDialog {
 
     /**
      * Frame title.
@@ -84,7 +84,7 @@ public class DatabaseManagerForm extends JDialog {
      * @param show True to show the frame once it has been initialized.
      * @param create Create one.
      */
-    public DatabaseManagerForm(Window owner, boolean show, boolean create) {
+    public DatabaseManagerDialog(Window owner, boolean show, boolean create) {
         // Construct the form
         super(owner, FORM_TITLE, ModalityType.APPLICATION_MODAL);
 
@@ -368,7 +368,7 @@ public class DatabaseManagerForm extends JDialog {
         // Make sure the database is successfully configured
         if(!selected.isConfigured()) {
             // Edit the selected database
-            DatabaseEditForm.use(this, selected);
+            DatabaseModifyDialog.showModify(this, selected);
 
             // TODO: Update the selected database!
         }
@@ -388,7 +388,7 @@ public class DatabaseManagerForm extends JDialog {
      */
     public void addDatabase() {
         // Create a new database through the edit panel
-        final AbstractDatabase database = DatabaseEditForm.createNew(this);
+        final AbstractDatabase database = DatabaseModifyDialog.showCreate(this);
 
         // Add the database to the list if it isn't null
         if(database != null) {
@@ -412,7 +412,7 @@ public class DatabaseManagerForm extends JDialog {
         final AbstractDatabase selected = (AbstractDatabase) this.databaseList.getSelectedValue();
 
         // Show the edit dialog for this database
-        final AbstractDatabase result = DatabaseEditForm.use(this, selected);
+        final AbstractDatabase result = DatabaseModifyDialog.showModify(this, selected);
 
         // Set the result, or remove it from the list if it's null
         if(result != null)

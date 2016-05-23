@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 
-public class DatabaseEditForm extends JDialog {
+public class DatabaseModifyDialog extends JDialog {
 
     /**
      * Frame title.
@@ -67,7 +67,7 @@ public class DatabaseEditForm extends JDialog {
      * @param source The source.
      * @param show True to show the frame once it has been initialized.
      */
-    public DatabaseEditForm(Window owner, AbstractDatabase source, boolean show) {
+    public DatabaseModifyDialog(Window owner, AbstractDatabase source, boolean show) {
         // Construct the form
         super(owner, FORM_TITLE, ModalityType.DOCUMENT_MODAL);
 
@@ -140,6 +140,42 @@ public class DatabaseEditForm extends JDialog {
 
         // Show the form
         this.setVisible(show);
+    }
+
+    /**
+     * Create a new database configuration, and show the modification dialog.
+     * The created database is returned.
+     * Null is returned if the creation process is cancelled.
+     *
+     * @param owner Owner window.
+     *
+     * @return The created database configuration, or null.
+     */
+    public static AbstractDatabase showCreate(Window owner) {
+        return showModify(owner, null);
+    }
+
+    /**
+     * Show the modification dialog for the given database configuration.
+     * The modified database configuration is returned.
+     * The source is returned if the modification process is cancelled.
+     * The source may be null, in order to create a new database configuration.
+     *
+     * @param owner Owner window.
+     * @param source Source database configuration.
+     *
+     * @return A database configuration, or null.
+     */
+    public static AbstractDatabase showModify(Window owner, AbstractDatabase source) {
+        // Create a dialog instance and show it
+        DatabaseModifyDialog dialog = new DatabaseModifyDialog(owner, source, true);
+
+        // Return the source if the changes were discarded
+        if(dialog.isDiscarded())
+            return source;
+
+        // Return the new database
+        return dialog.getDatabase();
     }
 
     /**
@@ -369,6 +405,46 @@ public class DatabaseEditForm extends JDialog {
     }
 
     /**
+     * Update the database property panel.
+     */
+    public void updatePropertyPanel() {
+        // Apply the property panel values
+        applyPropertyPanel();
+
+        // Get the selected database type
+        DatabaseType selectedType = (DatabaseType) this.databaseTypeBox.getSelectedItem();
+
+        // Determine the panel class
+        Class<? extends AbstractDatabasePropertyPanel> propertyPanelClass = selectedType.getPropertyPanelClass();
+
+        // Reset the property panel if a different property panel should be shown
+        if(!propertyPanelClass.isInstance(this.propertyPanel)) {
+            // Instantiate the property panel for the new database type
+            try {
+                this.propertyPanel = selectedType.getPropertyPanelClass().newInstance();
+
+            } catch (InstantiationException | IllegalAccessException ex) {
+                ex.printStackTrace();
+                // TODO: Show an error message
+            }
+
+            // Build and update the property panel
+            this.propertyPanel.buildUi();
+            this.propertyPanel.update(getDatabase());
+
+            // Remove all current panels in the wrapper and add the new property panel
+            this.propertyPanelWrapper.removeAll();
+            this.propertyPanelWrapper.add(this.propertyPanel);
+
+            // Reconfigure the frame sizes
+            configureSize();
+
+        } else
+            // Update the property panel
+            this.propertyPanel.update(getDatabase());
+    }
+
+    /**
      * Apply the changes to the current database.
      *
      * @return True if the changes were valid, false if not.
@@ -392,6 +468,15 @@ public class DatabaseEditForm extends JDialog {
 
         // Save succeed, return the result
         return true;
+    }
+
+    /**
+     * Apply the property panel values.
+     */
+    public void applyPropertyPanel() {
+        // Apply the properties to the database
+        if(this.propertyPanel != null)
+            this.propertyPanel.apply(getDatabase());
     }
 
     /**
@@ -458,74 +543,5 @@ public class DatabaseEditForm extends JDialog {
      */
     public boolean isDiscarded() {
         return this.discarded;
-    }
-
-
-
-    // TODO: Properly configure these methods!
-
-    public static AbstractDatabase createNew(Window owner) {
-        return use(owner, null);
-    }
-
-    public static AbstractDatabase use(Window owner, AbstractDatabase source) {
-        // Create a dialog instance and show it
-        DatabaseEditForm dialog = new DatabaseEditForm(owner, source, true);
-
-        // Return the source if the changes were discarded
-        if(dialog.isDiscarded())
-            return source;
-
-        // Return the new database
-        return dialog.getDatabase();
-    }
-
-    /**
-     * Update the database property panel.
-     */
-    public void updatePropertyPanel() {
-        // Apply the property panel values
-        applyPropertyPanel();
-
-        // Get the selected database type
-        DatabaseType selectedType = (DatabaseType) this.databaseTypeBox.getSelectedItem();
-
-        // Determine the panel class
-        Class<? extends AbstractDatabasePropertyPanel> propertyPanelClass = selectedType.getPropertyPanelClass();
-
-        // Reset the property panel if a different property panel should be shown
-        if(!propertyPanelClass.isInstance(this.propertyPanel)) {
-            // Instantiate the property panel for the new database type
-            try {
-                this.propertyPanel = selectedType.getPropertyPanelClass().newInstance();
-
-            } catch (InstantiationException | IllegalAccessException ex) {
-                ex.printStackTrace();
-                // TODO: Show an error message
-            }
-
-            // Build and update the property panel
-            this.propertyPanel.buildUi();
-            this.propertyPanel.update(getDatabase());
-
-            // Remove all current panels in the wrapper and add the new property panel
-            this.propertyPanelWrapper.removeAll();
-            this.propertyPanelWrapper.add(this.propertyPanel);
-
-            // Reconfigure the frame sizes
-            configureSize();
-
-        } else
-            // Update the property panel
-            this.propertyPanel.update(getDatabase());
-    }
-
-    /**
-     * Apply the property panel values.
-     */
-    public void applyPropertyPanel() {
-        // Apply the properties to the database
-        if(this.propertyPanel != null)
-            this.propertyPanel.apply(getDatabase());
     }
 }
