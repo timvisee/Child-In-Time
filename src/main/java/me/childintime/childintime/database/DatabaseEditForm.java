@@ -229,29 +229,24 @@ public class DatabaseEditForm extends JDialog {
 
             // TODO: Apply the properties to the existing database first, to store it's changes?
 
-            // Update the properties panel
+            // Instantiate the property panel for the new database type
             try {
                 this.propertyPanel = selectedType.getPropertyPanelClass().newInstance();
 
             } catch (InstantiationException | IllegalAccessException ex) {
                 ex.printStackTrace();
-
                 // TODO: Show an error message
             }
 
-            // Build the property panel
+            // Build and update the property panel
             this.propertyPanel.buildUi();
-
-            // Update the property panel
             this.propertyPanel.update(getDatabase());
 
-            // Remove all current components from the property panel wrapper, to remove the existing property panel
+            // Remove all current panels in the wrapper and add the new property panel
             this.propertyPanelWrapper.removeAll();
-
-            // Add new new property panel
             this.propertyPanelWrapper.add(this.propertyPanel);
 
-            // Update the frame size
+            // Reconfigure the frame sizes
             configureSize();
         });
 
