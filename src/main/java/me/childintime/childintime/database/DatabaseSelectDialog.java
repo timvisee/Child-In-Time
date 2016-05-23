@@ -1,6 +1,7 @@
 package me.childintime.childintime.database;
 
 import me.childintime.childintime.App;
+import me.childintime.childintime.Core;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -24,7 +25,7 @@ public class DatabaseSelectDialog extends JDialog {
     /**
      * Dropdown box component.
      */
-    private JComboBox comboBox;
+    private JComboBox<AbstractDatabase> comboBox;
 
     /**
      * Defines whether the client logged in successfully.
@@ -157,8 +158,8 @@ public class DatabaseSelectDialog extends JDialog {
         container.add(new JLabel("Please select a database:"), c);
 
         // Create database selector
-        DatabaseType[] options = {DatabaseType.INTEGRATED, DatabaseType.REMOTE};
-        comboBox = new JComboBox(options);
+        ComboBoxModel<AbstractDatabase> comboBoxModel = new DefaultComboBoxModel<>(Core.getInstance().getDatabaseManager().getDatabases().toArray(new AbstractDatabase[] {}));
+        comboBox = new JComboBox<>(comboBoxModel);
         comboBox.setPreferredSize(new Dimension(comboBox.getPreferredSize().width, 20));
 
         // Add database selector
@@ -172,6 +173,7 @@ public class DatabaseSelectDialog extends JDialog {
 
         // Create database configuration button
         this.configureButton = new JButton("...");
+        //noinspection SuspiciousNameCombination
         this.configureButton.setPreferredSize(new Dimension(comboBox.getPreferredSize().height, comboBox.getPreferredSize().height));
 
         // Add database configuration button
@@ -289,7 +291,7 @@ public class DatabaseSelectDialog extends JDialog {
             // Show the database manager form
             new DatabaseManagerForm(instance, true, false);
 
-            // TODO: Update the combobox?
+            // TODO: Update the combobox!
         });
 
         // Add an action to the continue button
