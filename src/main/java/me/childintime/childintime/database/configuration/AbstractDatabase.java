@@ -133,7 +133,7 @@ public abstract class AbstractDatabase implements Cloneable {
      * Prepare the database for use. This step is required before a connection to this database (configuration) is made.
      * The database must have been fully configured to prepare it.
      *
-     * @param progressDialog Progress dialog instance.
+     * @param progressDialog Progress dialog instance, or null.
      *
      * @return True on success, false on failure.
      */
