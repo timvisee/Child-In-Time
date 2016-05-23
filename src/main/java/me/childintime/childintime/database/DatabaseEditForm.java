@@ -227,27 +227,8 @@ public class DatabaseEditForm extends JDialog {
                     // TODO: Show an error message
                 }
 
-            // TODO: Apply the properties to the existing database first, to store it's changes?
-
-            // Instantiate the property panel for the new database type
-            try {
-                this.propertyPanel = selectedType.getPropertyPanelClass().newInstance();
-
-            } catch (InstantiationException | IllegalAccessException ex) {
-                ex.printStackTrace();
-                // TODO: Show an error message
-            }
-
-            // Build and update the property panel
-            this.propertyPanel.buildUi();
-            this.propertyPanel.update(getDatabase());
-
-            // Remove all current panels in the wrapper and add the new property panel
-            this.propertyPanelWrapper.removeAll();
-            this.propertyPanelWrapper.add(this.propertyPanel);
-
-            // Reconfigure the frame sizes
-            configureSize();
+            // Update the database property panel
+            updatePropertyPanel();
         });
 
         // Add the database name field
@@ -472,5 +453,44 @@ public class DatabaseEditForm extends JDialog {
 
         // Return the new database
         return dialog.getDatabase();
+    }
+
+    /**
+     * Update the database property panel.
+     */
+    public void updatePropertyPanel() {
+        // Get the selected database type
+        DatabaseType selectedType = (DatabaseType) this.databaseTypeBox.getSelectedItem();
+
+        // Determine the panel class
+        Class<? extends AbstractDatabasePropertyPanel> propertyPanelClass = selectedType.getPropertyPanelClass();
+
+        // TODO: Apply the properties to the existing database first, to store it's changes?
+
+        // Reset the property panel if a different property panel should be shown
+        if(!propertyPanelClass.isInstance(this.propertyPanel)) {
+            // Instantiate the property panel for the new database type
+            try {
+                this.propertyPanel = selectedType.getPropertyPanelClass().newInstance();
+
+            } catch (InstantiationException | IllegalAccessException ex) {
+                ex.printStackTrace();
+                // TODO: Show an error message
+            }
+
+            // Build and update the property panel
+            this.propertyPanel.buildUi();
+            this.propertyPanel.update(getDatabase());
+
+            // Remove all current panels in the wrapper and add the new property panel
+            this.propertyPanelWrapper.removeAll();
+            this.propertyPanelWrapper.add(this.propertyPanel);
+
+            // Reconfigure the frame sizes
+            configureSize();
+
+        } else
+            // Update the property panel
+            this.propertyPanel.update(getDatabase());
     }
 }
