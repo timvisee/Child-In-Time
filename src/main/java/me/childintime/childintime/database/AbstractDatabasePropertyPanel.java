@@ -1,6 +1,8 @@
 package me.childintime.childintime.database;
 
-public abstract class AbstractDatabasePropertyPanel {
+import javax.swing.*;
+
+public abstract class AbstractDatabasePropertyPanel extends JPanel {
 
     /**
      * Apply the properties in the panel to the given database.
