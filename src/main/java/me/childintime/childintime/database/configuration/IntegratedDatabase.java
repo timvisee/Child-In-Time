@@ -3,6 +3,7 @@ package me.childintime.childintime.database.configuration;
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.App;
 import me.childintime.childintime.database.DatabaseType;
+import me.childintime.childintime.util.swing.ProgressDialog;
 
 import java.io.File;
 
@@ -128,6 +129,49 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     public boolean isConfigured() {
         // Make sure the database file is configured
         return hasFile();
+    }
+
+    @Override
+    public boolean prepare(ProgressDialog progressDialog) {
+        // Set the status and show the progress dialog
+        if(progressDialog != null) {
+            // Set the status
+            progressDialog.setStatus("Checking database configuration...");
+
+            // Make the dialog visible
+            if(!progressDialog.isVisible())
+                progressDialog.setVisible(true);
+        }
+
+        // Make sure the database configuration is configured successfully
+        if(!isConfigured())
+            return false;
+
+        // Looking for database file
+        if(progressDialog != null)
+            progressDialog.setStatus("Looking for database file...");
+
+        // Get the database file
+        File file = getFile();
+
+        // Check whether the file exists
+        if(file.exists())
+            return true;
+
+        // Get the parent directory of the file
+        File parent = file.getParentFile();
+
+        // Create the database directory
+        if(progressDialog != null)
+            progressDialog.setStatus("Creating required database files...");
+
+        // Create the parent directory if it doesn't exist
+        if(!parent.isDirectory())
+            if(!parent.mkdirs())
+                return false;
+
+        // Return the result
+        return true;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone")

@@ -2,6 +2,7 @@ package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.database.DatabaseType;
+import me.childintime.childintime.util.swing.ProgressDialog;
 
 public class RemoteDatabase extends AbstractDatabase implements Cloneable {
 
@@ -223,6 +224,11 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     public boolean isConfigured() {
         // Make sure everything that is required, is configured
         return hasHost() && hasUser();
+    }
+
+    @Override
+    public boolean prepare(ProgressDialog progressDialog) {
+        return isConfigured();
     }
 
     @Override

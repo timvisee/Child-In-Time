@@ -2,6 +2,7 @@ package me.childintime.childintime;
 
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
+import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.database.configuration.DatabaseManager;
 import me.childintime.childintime.gui.window.LoginDialog;
@@ -103,13 +104,20 @@ public class Core {
         this.databaseManager = new DatabaseManager();
         this.databaseManager.load();
 
-        // Show the database selection dialog and handle the result
+        // Hide the progress dialog before showing the login dialog
         this.progressDialog.setVisible(false);
-        if(!LoginDialog.start(null)) {
+
+        // Show the login dialog, and get the selected database
+        AbstractDatabase workingDatabase = LoginDialog.showDialog(null);
+
+        // Make sure the login succeeded
+        if(workingDatabase == null) {
             // Destroy the core
             destroy();
             return;
         }
+
+        // Show the progress dialog again
         this.progressDialog.setVisible(true);
 
         // Set up the database connection
@@ -162,7 +170,9 @@ public class Core {
             JOptionPane.showMessageDialog(null, "Failed to save database configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
         }
 
-        // TODO: Destroy the database manager
+        // Destroy the database connection
+        if(databaseConnector != null)
+            this.databaseConnector.destroy();
 
         // Destroy the progress dialog if it hasn't been disposed yet
         if(this.progressDialog != null)
