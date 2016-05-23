@@ -1,5 +1,12 @@
 package me.childintime.childintime.database;
 
+import me.childintime.childintime.database.configuration.AbstractDatabase;
+import me.childintime.childintime.database.configuration.IntegratedDatabase;
+import me.childintime.childintime.database.configuration.RemoteDatabase;
+import me.childintime.childintime.database.configuration.gui.propertypanel.AbstractDatabasePropertyPanel;
+import me.childintime.childintime.database.configuration.gui.propertypanel.IntegratedDatabasePropertyPanel;
+import me.childintime.childintime.database.configuration.gui.propertypanel.RemoteDatabasePropertyPanel;
+
 public enum DatabaseType {
 
     /**

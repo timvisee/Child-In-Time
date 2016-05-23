@@ -1,6 +1,7 @@
-package me.childintime.childintime.database;
+package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
+import me.childintime.childintime.database.DatabaseType;
 
 public abstract class AbstractDatabase implements Cloneable {
 

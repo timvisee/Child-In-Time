@@ -1,4 +1,4 @@
-package me.childintime.childintime.database;
+package me.childintime.childintime.database.connector;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.App;

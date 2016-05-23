@@ -1,4 +1,4 @@
-package me.childintime.childintime.database;
+package me.childintime.childintime.gui.component.property;
 
 import javax.swing.*;
 import java.awt.*;

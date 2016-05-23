@@ -2,9 +2,9 @@ package me.childintime.childintime;
 
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
-import me.childintime.childintime.database.DatabaseConnector;
-import me.childintime.childintime.database.DatabaseManager;
-import me.childintime.childintime.database.DatabaseSelectDialog;
+import me.childintime.childintime.database.connector.DatabaseConnector;
+import me.childintime.childintime.database.configuration.DatabaseManager;
+import me.childintime.childintime.database.configuration.gui.window.DatabaseSelectDialog;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;

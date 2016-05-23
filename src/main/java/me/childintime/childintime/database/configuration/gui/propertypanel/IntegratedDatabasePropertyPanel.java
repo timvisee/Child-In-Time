@@ -1,4 +1,9 @@
-package me.childintime.childintime.database;
+package me.childintime.childintime.database.configuration.gui.propertypanel;
+
+import me.childintime.childintime.database.DatabaseType;
+import me.childintime.childintime.database.configuration.AbstractDatabase;
+import me.childintime.childintime.database.configuration.IntegratedDatabase;
+import me.childintime.childintime.gui.component.property.FilePropertyField;
 
 import javax.swing.*;
 import java.awt.*;

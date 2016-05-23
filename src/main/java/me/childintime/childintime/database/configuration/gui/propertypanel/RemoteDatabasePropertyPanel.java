@@ -1,8 +1,13 @@
-package me.childintime.childintime.database;
+package me.childintime.childintime.database.configuration.gui.propertypanel;
+
+import me.childintime.childintime.database.DatabaseType;
+import me.childintime.childintime.database.configuration.AbstractDatabase;
+import me.childintime.childintime.database.configuration.RemoteDatabase;
+import me.childintime.childintime.gui.component.property.PasswordPropertyField;
+import me.childintime.childintime.gui.component.property.TextPropertyField;
 
 import javax.swing.*;
 import java.awt.*;
-import java.rmi.Remote;
 
 public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
 

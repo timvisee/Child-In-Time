@@ -1,7 +1,8 @@
-package me.childintime.childintime.database;
+package me.childintime.childintime.database.configuration.gui.window;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 

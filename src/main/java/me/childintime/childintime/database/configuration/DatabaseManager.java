@@ -1,8 +1,11 @@
-package me.childintime.childintime.database;
+package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import com.timvisee.yamlwrapper.configuration.YamlConfiguration;
 import me.childintime.childintime.App;
+import me.childintime.childintime.database.configuration.AbstractDatabase;
+import me.childintime.childintime.database.configuration.IntegratedDatabase;
+import me.childintime.childintime.database.configuration.RemoteDatabase;
 
 import java.io.File;
 import java.io.IOException;

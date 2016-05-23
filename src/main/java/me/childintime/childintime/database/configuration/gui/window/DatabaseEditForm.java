@@ -1,6 +1,10 @@
-package me.childintime.childintime.database;
+package me.childintime.childintime.database.configuration.gui.window;
 
 import me.childintime.childintime.App;
+import me.childintime.childintime.database.configuration.gui.propertypanel.AbstractDatabasePropertyPanel;
+import me.childintime.childintime.database.DatabaseType;
+import me.childintime.childintime.database.configuration.AbstractDatabase;
+import me.childintime.childintime.database.configuration.IntegratedDatabase;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
