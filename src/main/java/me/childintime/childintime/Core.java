@@ -97,8 +97,9 @@ public class Core {
             return;
         }
 
-        // Initialize and load the database manager
         // TODO: Load defaults if a databases configuration doesn't exist
+
+        // Initialize and load the database manager
         this.progressDialog.setStatus("Loading database configuration...");
         this.databaseManager = new DatabaseManager();
         this.databaseManager.load();
