@@ -1,10 +1,16 @@
 package me.childintime.childintime.database;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
+import me.childintime.childintime.App;
 
 import java.io.File;
 
 public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
+
+    /**
+     * Default database file.
+     */
+    public static final File DEFAULT_FILE = new File(App.getDirectory(), "/db/local.db");
 
     /**
      * Database file to use.

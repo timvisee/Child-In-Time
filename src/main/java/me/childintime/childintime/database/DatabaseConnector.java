@@ -63,6 +63,7 @@ public class DatabaseConnector {
             connectionString = "jdbc:mysql://" + hostname + "/" + database + "?" +
                     "user=" + username + "&password=" + password;
         else {
+            // TODO: Fetch the database file from the selected database configuration!
             File databaseFile = new File(App.getDirectory(), "/db/integrated.db");
             connectionString = "jdbc:sqlite:" + databaseFile.getAbsolutePath();
         }
