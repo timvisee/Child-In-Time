@@ -15,6 +15,13 @@ public class TextPropertyField extends AbstractPropertyField {
     private boolean isPassword = false;
 
     /**
+     * True if an empty value is allowed.
+     * If this is set to false, an empty string will be converted to null when focus is lost.
+     * The field will be left empty if null is not allowed.
+     */
+    private boolean allowEmpty = true;
+
+    /**
      * The property field text.
      */
     private String text = null;
@@ -73,12 +80,24 @@ public class TextPropertyField extends AbstractPropertyField {
     /**
      * Build the component UI.
      */
-    private void buildUi() {
+    protected void buildUi() {
         // Set the layout
         setLayout(new GridBagLayout());
 
         // Create the grid bag constraints
         GridBagConstraints c = new GridBagConstraints();
+
+        // Add a focus listener to the property field
+        this.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                // Enable the field
+                enableField();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) { }
+        });
 
         // Create the text field
         this.textField = !this.isPassword ? new JTextField("") : new JPasswordField("");
@@ -101,15 +120,15 @@ public class TextPropertyField extends AbstractPropertyField {
             @Override
             public void mouseExited(MouseEvent e) { }
         });
-        this.addFocusListener(new FocusListener() {
+        this.textField.addFocusListener(new FocusListener() {
             @Override
-            public void focusGained(FocusEvent e) {
-                // Enable the field
-                enableField();
-            }
+            public void focusGained(FocusEvent e) { }
 
             @Override
-            public void focusLost(FocusEvent e) { }
+            public void focusLost(FocusEvent e) {
+                // Clear the field if it's empty
+                clearIfEmpty();
+            }
         });
 
         // Create the clear button
@@ -191,6 +210,38 @@ public class TextPropertyField extends AbstractPropertyField {
     }
 
     /**
+     * Check whether an empty field is allowed.
+     *
+     * @return True if an empty field is allowed.
+     */
+    public boolean isEmptyAllowed() {
+        return this.allowEmpty;
+    }
+
+    /**
+     * Set whether an empty field is allowed.
+     *
+     * @param allowEmpty True if allowed, false if not.
+     */
+    public void setEmptyAllowed(boolean allowEmpty) {
+        // Set the flag
+        this.allowEmpty = allowEmpty;
+
+        // Clear the field if it's empty
+        clearIfEmpty();
+    }
+
+    /**
+     * Check whether the property field is empty.
+     * If the field is null, true is returned.
+     *
+     * @return True if empty, false if not.
+     */
+    public boolean isEmpty() {
+        return isNull() || getText().isEmpty();
+    }
+
+    /**
      * Enable the field for editing.
      * This will reset the null state, and select all the text inside the field.
      */
@@ -202,5 +253,15 @@ public class TextPropertyField extends AbstractPropertyField {
         // Focus the field and select all
         this.textField.grabFocus();
         this.textField.selectAll();
+    }
+
+    /**
+     * Clear the field if it's empty.
+     * This sets the field to null if it's empty, if null is not allowed the field is left blank.
+     */
+    public void clearIfEmpty() {
+        // Clear the field if it's empty, and empty is allowed
+        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && getText().isEmpty())
+            setNull(true);
     }
 }
