@@ -1,8 +1,11 @@
 package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
+import me.childintime.childintime.App;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.util.swing.ProgressDialog;
+
+import javax.swing.*;
 
 public class RemoteDatabase extends AbstractDatabase implements Cloneable {
 
@@ -229,6 +232,17 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     @Override
     public boolean prepare(ProgressDialog progressDialog) {
         return isConfigured();
+    }
+
+    @Override
+    public boolean test() {
+        // TODO: Implement this!
+
+        // Feature not implemented yet, show a message
+        JOptionPane.showMessageDialog(null, "Unable to test database configuration, feature not implemented yet.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+        // Return the result
+        return false;
     }
 
     @Override

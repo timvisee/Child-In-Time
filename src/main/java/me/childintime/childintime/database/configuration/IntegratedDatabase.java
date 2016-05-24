@@ -5,6 +5,7 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
+import javax.swing.*;
 import java.io.File;
 
 public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
@@ -172,6 +173,17 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
 
         // Return the result
         return true;
+    }
+
+    @Override
+    public boolean test() {
+        // TODO: Implement this!
+
+        // Feature not implemented yet, show a message
+        JOptionPane.showMessageDialog(null, "Unable to test database configuration, feature not implemented yet.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+        // Return the result
+        return false;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone")
