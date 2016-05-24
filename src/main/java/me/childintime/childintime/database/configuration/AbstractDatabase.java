@@ -139,6 +139,14 @@ public abstract class AbstractDatabase implements Cloneable {
      */
     public abstract boolean prepare(ProgressDialog progressDialog);
 
+    /**
+     * Test the database configuration.
+     * This will check whether a database connection could be made to the configured database.
+     *
+     * @return True on success, false on failure.
+     */
+    public abstract boolean test();
+
     @Override
     public String toString() {
         return getName();
