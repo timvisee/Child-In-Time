@@ -344,14 +344,14 @@ public class DatabaseManagerDialog extends JDialog {
 
         // Enable the edit button if one item is selected
         editButton.setEnabled(selected == 1);
-        testButton.setEnabled(selected == 1);
+
+        // Enable the test and delete buttons if at least one database is selected
+        testButton.setEnabled(selected > 0);
+        removeButton.setEnabled(selected > 0);
 
         // Enable the move buttons if at least one database is selected and if the databases can move in that direction
         moveUpButton.setEnabled(canMoveDatabasesUp());
         moveDownButton.setEnabled(canMoveDatabasesDown());
-
-        // Enable the delete button if at least one database is selected
-        removeButton.setEnabled(selected > 0);
     }
 
     /**
