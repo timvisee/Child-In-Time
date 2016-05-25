@@ -6,6 +6,7 @@ import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.IntegratedDatabase;
 import me.childintime.childintime.util.Platform;
+import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -312,14 +313,14 @@ public class DatabaseModifyDialog extends JDialog {
 
         // Create the control button panel and add it to the main panel
         JPanel controlsPanel = createControlButtonPanel();
-        c.fill = GridBagConstraints.NONE;
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 4;
         c.gridwidth = 2;
         c.weightx = 1;
         c.weighty = 0;
         c.insets = new Insets(8, 0, 0, 0);
-        c.anchor = GridBagConstraints.EAST;
+        c.anchor = GridBagConstraints.CENTER;
         container.add(controlsPanel, c);
 
         // Add the container to the frame
@@ -332,11 +333,22 @@ public class DatabaseModifyDialog extends JDialog {
      * @return Button panel.
      */
     public JPanel createControlButtonPanel() {
-        // Create a panel to put the buttons in and set it's layout
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
+        // Create a grid bag constraints instance
+        GridBagConstraints c = new GridBagConstraints();
 
-        // Create the buttons to add to the panel
+        // Create the button panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridBagLayout());
+
+        // Create a commit button panel
+        JPanel commitPanel = new JPanel();
+        commitPanel.setLayout(new GridLayout(1, 2, 8, 8));
+
+        // Create an action button panel
+        JPanel actionPanel = new JPanel();
+        actionPanel.setLayout(new GridLayout(1, 1, 8, 8));
+
+        // Create the commit buttons
         JButton saveButton = new JButton("Save");
         JButton closeButton = new JButton("Close");
         saveButton.addActionListener(e -> {
@@ -349,14 +361,56 @@ public class DatabaseModifyDialog extends JDialog {
         });
         closeButton.addActionListener(e -> closeFrame());
 
-        // Add the buttons to the panel
+        // Add the commit buttons to the panel, use the proper order based on the operating system
         if(!Platform.isMacOsX()) {
-            buttonPanel.add(saveButton);
-            buttonPanel.add(closeButton);
+            commitPanel.add(saveButton);
+            commitPanel.add(closeButton);
         } else {
-            buttonPanel.add(closeButton);
-            buttonPanel.add(saveButton);
+            commitPanel.add(closeButton);
+            commitPanel.add(saveButton);
         }
+
+        // Create and add the test button
+        JButton testButton = new JButton("Test");
+        testButton.addActionListener(e -> {
+            // Create a progress dialog
+            ProgressDialog progressDialog = new ProgressDialog(this, "Testing...", false, "Applying changes...", true);
+
+            // Apply the changes
+            applyChanges();
+
+            // Get the database
+            AbstractDatabase database = getDatabase();
+
+            // Make sure the configuration is valid
+            progressDialog.setStatus("Validating configuration...");
+            if(!database.isConfigured()) {
+                // Show the option pane
+                JOptionPane.showMessageDialog(progressDialog, "The database configuration is missing some required properties.", "Database configuration incomplete", JOptionPane.ERROR_MESSAGE);
+
+                // Dispose the progress dialog and return
+                progressDialog.dispose();
+                return;
+            }
+
+            // Test the database connection
+            database.test(this, progressDialog);
+
+            // Dispose the progress dialog
+            progressDialog.dispose();
+        });
+        actionPanel.add(testButton);
+
+        // Add the button panels
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.anchor = GridBagConstraints.WEST;
+        buttonPanel.add(actionPanel, c);
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.EAST;
+        c.insets = new Insets(0, 32, 0, 0);
+        buttonPanel.add(commitPanel, c);
 
         // Return the button panel
         return buttonPanel;
