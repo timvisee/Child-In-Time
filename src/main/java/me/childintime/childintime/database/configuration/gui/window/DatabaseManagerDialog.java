@@ -364,6 +364,9 @@ public class DatabaseManagerDialog extends JDialog {
         if(getSelectedCount() == 0)
             return false;
 
+        // Create a progress dialog for testing
+        ProgressDialog progressDialog = new ProgressDialog(this, "Testing database configurations...", false, "Testing database configurations...", true);
+
         // Get the list of selected databases
         List selected = this.databaseList.getSelectedValuesList();
 
@@ -379,21 +382,31 @@ public class DatabaseManagerDialog extends JDialog {
             // Make sure the database is successfully configured
             if(!database.isConfigured()) {
                 // Edit the selected database
-                DatabaseModifyDialog.showModify(this, database);
+                DatabaseModifyDialog.showModify(progressDialog, database);
 
                 // TODO: Update the selected database!
             }
 
             // Show a message if it's still not configured properly
             if(!database.isConfigured()) {
-                JOptionPane.showMessageDialog(this, "The database configuration '" + database.getName() + "' is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+                // Show a status message
+                JOptionPane.showMessageDialog(progressDialog, "The database configuration '" + database.getName() + "' is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+                // Dispose the progress dialog and return the result
+                progressDialog.dispose();
                 return false;
             }
 
             // Test the database
-            if(!database.test())
+            if(!database.test(this, progressDialog)) {
+                // Dispose the progress dialog and return the result
+                progressDialog.dispose();
                 return false;
+            }
         }
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
 
         // Everything seems to be fine, return the result
         return true;
