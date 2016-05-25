@@ -4,6 +4,8 @@ import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
+import java.awt.*;
+
 public abstract class AbstractDatabase implements Cloneable {
 
     /**
@@ -143,9 +145,12 @@ public abstract class AbstractDatabase implements Cloneable {
      * Test the database configuration.
      * This will check whether a database connection could be made to the configured database.
      *
+     * @param parent Parent window, may be null.
+     * @param progressDialog Progress dialog, may be null.
+     *
      * @return True on success, false on failure.
      */
-    public abstract boolean test();
+    public abstract boolean test(Window parent, ProgressDialog progressDialog);
 
     @Override
     public String toString() {
