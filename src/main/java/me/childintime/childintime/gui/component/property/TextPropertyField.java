@@ -180,6 +180,7 @@ public class TextPropertyField extends AbstractPropertyField {
         this.clearButton.setMaximumSize(buttonDimensions);
         this.clearButton.setSize(buttonDimensions);
         this.clearButton.setBorder(null);
+        this.clearButton.setFocusable(false);
 
         // Fix button styling on Mac OS X
         if(Platform.isMacOsX()) {

@@ -81,6 +81,7 @@ public class FilePropertyField extends TextPropertyField {
         this.browseButton.setMaximumSize(this.clearButton.getPreferredSize());
         this.browseButton.setSize(this.clearButton.getPreferredSize());
         this.browseButton.setBorder(null);
+        this.browseButton.setFocusable(false);
 
         // Fix button styling on Mac OS X
         if(Platform.isMacOsX()) {
