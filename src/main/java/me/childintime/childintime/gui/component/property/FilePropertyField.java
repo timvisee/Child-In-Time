@@ -74,7 +74,17 @@ public class FilePropertyField extends TextPropertyField {
 
         // Create the clear button
         this.browseButton = new JButton("...");
-        this.browseButton.setPreferredSize(this.clearButton.getPreferredSize());
+
+        // Define the size of the clear button
+        final int buttonSize = this.clearButton.getPreferredSize().height;
+        final Dimension buttonDimensions = new Dimension(buttonSize, buttonSize);
+        this.clearButton.setPreferredSize(buttonDimensions);
+        this.clearButton.setMinimumSize(buttonDimensions);
+        this.clearButton.setMaximumSize(buttonDimensions);
+        this.clearButton.setSize(buttonDimensions);
+        this.clearButton.setBorder(null);
+
+        // Add an action listener to the browse button
         this.browseButton.addActionListener(e -> {
             // Create a file chooser
             JFileChooser fileChooser = new JFileChooser();
