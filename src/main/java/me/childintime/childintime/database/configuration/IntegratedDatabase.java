@@ -6,6 +6,7 @@ import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 
 public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
@@ -176,11 +177,29 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     }
 
     @Override
-    public boolean test() {
+    public boolean test(Window parent, ProgressDialog progressDialog) {
+        // Set the status
+        if(progressDialog != null)
+            progressDialog.setStatus("Testing '" + getName() + "'...");
+
         // TODO: Implement this!
 
+        // Temporarily hide the progress dialog
+        boolean progressDialogVisible = false;
+        if(progressDialog != null) {
+            // Store the visibility state
+            progressDialogVisible = progressDialog.isVisible();
+
+            // Hide the dialog
+            progressDialog.setVisible(false);
+        }
+
         // Feature not implemented yet, show a message
-        JOptionPane.showMessageDialog(null, "Unable to test database configuration, feature not implemented yet.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(parent, "Unable to test database configuration, feature not implemented yet.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+        // Show the progress dialog again
+        if(progressDialogVisible)
+            progressDialog.setVisible(true);
 
         // Return the result
         return false;
