@@ -243,22 +243,11 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
 
         // TODO: Implement this!
 
-        // Temporarily hide the progress dialog
-        boolean progressDialogVisible = false;
-        if(progressDialog != null) {
-            // Store the visibility state
-            progressDialogVisible = progressDialog.isVisible();
-
-            // Hide the dialog
-            progressDialog.setVisible(false);
-        }
+        // Determine the parent window to use
+        final Component messageParent = progressDialog != null ? progressDialog : parent;
 
         // Feature not implemented yet, show a message
-        JOptionPane.showMessageDialog(parent, "Unable to test database configuration, feature not implemented yet.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-
-        // Show the progress dialog again
-        if(progressDialogVisible)
-            progressDialog.setVisible(true);
+        JOptionPane.showMessageDialog(messageParent, "Unable to test database configuration, feature not implemented yet.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
         // Return the result
         return false;
