@@ -355,32 +355,48 @@ public class DatabaseManagerDialog extends JDialog {
     }
 
     /**
-     * Test the selected database.
+     * Test the selected databases.
+     *
+     * @return True if all tests succeeded, false if not. If no database is selected, false will be returned.
      */
-    public void testDatabase() {
-        // Make sure just one item is selected
-        if(getSelectedCount() != 1)
-            return;
+    public boolean testDatabase() {
+        // Make sure just one or more databases are selected
+        if(getSelectedCount() == 0)
+            return false;
 
-        // Get the selected database
-        AbstractDatabase selected = (AbstractDatabase) this.databaseList.getSelectedValue();
+        // Get the list of selected databases
+        List selected = this.databaseList.getSelectedValuesList();
 
-        // Make sure the database is successfully configured
-        if(!selected.isConfigured()) {
-            // Edit the selected database
-            DatabaseModifyDialog.showModify(this, selected);
+        // Loop through the databases
+        for(Object databaseObject : selected) {
+            // Make sure the instance is valid
+            if(!(databaseObject instanceof AbstractDatabase))
+                continue;
 
-            // TODO: Update the selected database!
+            // Cast the database object
+            AbstractDatabase database = (AbstractDatabase) databaseObject;
+
+            // Make sure the database is successfully configured
+            if(!database.isConfigured()) {
+                // Edit the selected database
+                DatabaseModifyDialog.showModify(this, database);
+
+                // TODO: Update the selected database!
+            }
+
+            // Show a message if it's still not configured properly
+            if(!database.isConfigured()) {
+                JOptionPane.showMessageDialog(this, "The database configuration '" + database.getName() + "' is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            // Test the database
+            if(!database.test())
+                return false;
         }
 
-        // Show a message if it's still not configured properly
-        if(!selected.isConfigured()) {
-            JOptionPane.showMessageDialog(this, "The database configuration is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // TODO: Feature not yet implemented, show error!
-        JOptionPane.showMessageDialog(this, "Not yet implemented", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        // Everything seems to be fine, return the result
+        return true;
     }
 
     /**
