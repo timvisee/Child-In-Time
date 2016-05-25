@@ -245,7 +245,6 @@ public class TextPropertyField extends AbstractPropertyField {
         this.text = text;
 
         // Set the field content
-        // TODO: Show null state if field is null!
         if(this.text != null)
             this.textField.setText(this.text);
         else
