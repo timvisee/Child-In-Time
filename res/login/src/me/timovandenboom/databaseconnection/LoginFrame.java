@@ -9,11 +9,12 @@ public class LoginFrame extends JFrame{
     public LoginFrame(){
 
         this.loginPanel = new LoginPanel();
-        setSize(500, 500);
+        setSize(300, 200);
         setTitle("Database Connector");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        setResizable(false);
         add(this.loginPanel);
     }
 

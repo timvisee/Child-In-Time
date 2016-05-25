@@ -344,43 +344,72 @@ public class DatabaseManagerDialog extends JDialog {
 
         // Enable the edit button if one item is selected
         editButton.setEnabled(selected == 1);
-        testButton.setEnabled(selected == 1);
+
+        // Enable the test and delete buttons if at least one database is selected
+        testButton.setEnabled(selected > 0);
+        removeButton.setEnabled(selected > 0);
 
         // Enable the move buttons if at least one database is selected and if the databases can move in that direction
         moveUpButton.setEnabled(canMoveDatabasesUp());
         moveDownButton.setEnabled(canMoveDatabasesDown());
-
-        // Enable the delete button if at least one database is selected
-        removeButton.setEnabled(selected > 0);
     }
 
     /**
-     * Test the selected database.
+     * Test the selected databases.
+     *
+     * @return True if all tests succeeded, false if not. If no database is selected, false will be returned.
      */
-    public void testDatabase() {
-        // Make sure just one item is selected
-        if(getSelectedCount() != 1)
-            return;
+    public boolean testDatabase() {
+        // Make sure just one or more databases are selected
+        if(getSelectedCount() == 0)
+            return false;
 
-        // Get the selected database
-        AbstractDatabase selected = (AbstractDatabase) this.databaseList.getSelectedValue();
+        // Create a progress dialog for testing
+        ProgressDialog progressDialog = new ProgressDialog(this, "Testing database configurations...", false, "Testing database configurations...", true);
 
-        // Make sure the database is successfully configured
-        if(!selected.isConfigured()) {
-            // Edit the selected database
-            DatabaseModifyDialog.showModify(this, selected);
+        // Get the list of selected databases
+        List selected = this.databaseList.getSelectedValuesList();
 
-            // TODO: Update the selected database!
+        // Loop through the databases
+        for(Object databaseObject : selected) {
+            // Make sure the instance is valid
+            if(!(databaseObject instanceof AbstractDatabase))
+                continue;
+
+            // Cast the database object
+            AbstractDatabase database = (AbstractDatabase) databaseObject;
+
+            // Make sure the database is successfully configured
+            if(!database.isConfigured()) {
+                // Edit the selected database
+                DatabaseModifyDialog.showModify(progressDialog, database);
+
+                // TODO: Update the selected database!
+            }
+
+            // Show a message if it's still not configured properly
+            if(!database.isConfigured()) {
+                // Show a status message
+                JOptionPane.showMessageDialog(progressDialog, "The database configuration '" + database.getName() + "' is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+                // Dispose the progress dialog and return the result
+                progressDialog.dispose();
+                return false;
+            }
+
+            // Test the database
+            if(!database.test(this, progressDialog)) {
+                // Dispose the progress dialog and return the result
+                progressDialog.dispose();
+                return false;
+            }
         }
 
-        // Show a message if it's still not configured properly
-        if(!selected.isConfigured()) {
-            JOptionPane.showMessageDialog(this, "The database configuration is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        // Dispose the progress dialog
+        progressDialog.dispose();
 
-        // TODO: Feature not yet implemented, show error!
-        JOptionPane.showMessageDialog(this, "Not yet implemented", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        // Everything seems to be fine, return the result
+        return true;
     }
 
     /**
