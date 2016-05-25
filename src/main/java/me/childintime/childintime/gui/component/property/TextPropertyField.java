@@ -1,5 +1,7 @@
 package me.childintime.childintime.gui.component.property;
 
+import com.timvisee.swingtoolbox.border.ComponentBorder;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -29,7 +31,7 @@ public class TextPropertyField extends AbstractPropertyField {
     /**
      * Text field.
      */
-    private JTextField textField;
+    protected JTextField textField;
 
     /**
      * Clear button.
@@ -146,24 +148,25 @@ public class TextPropertyField extends AbstractPropertyField {
 
         // Define the size of the clear button
         final int buttonSize = this.textField.getPreferredSize().height;
-        final Dimension buttonDimensions = new Dimension(buttonSize, buttonSize);
+        final Dimension buttonDimensions = new Dimension(buttonSize - 4, buttonSize - 4);
         this.clearButton.setPreferredSize(buttonDimensions);
         this.clearButton.setMinimumSize(buttonDimensions);
         this.clearButton.setMaximumSize(buttonDimensions);
         this.clearButton.setSize(buttonDimensions);
         this.clearButton.setBorder(null);
 
-        // Add the components
+        // Create a component border, and install the action buttons into the text field
+        ComponentBorder cb = new ComponentBorder(this.clearButton, ComponentBorder.Edge.RIGHT, ComponentBorder.CENTER);
+        cb.setGap(10);
+        cb.setAdjustInsets(true);
+        cb.install(this.textField);
+
+        // Add the text field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
         c.weightx = 1;
         add(this.textField, c);
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
-        c.gridy = 0;
-        c.weightx = 0;
-        add(this.clearButton, c);
     }
 
     @Override
