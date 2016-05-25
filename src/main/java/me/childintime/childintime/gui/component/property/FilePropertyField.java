@@ -76,10 +76,12 @@ public class FilePropertyField extends TextPropertyField {
         this.browseButton = new JButton("...");
 
         // Define the size of the clear button
-        this.clearButton.setPreferredSize(new Dimension(this.clearButton.getPreferredSize().height, this.clearButton.getPreferredSize().height));
-        this.clearButton.setMinimumSize(new Dimension(this.clearButton.getPreferredSize().height, this.clearButton.getPreferredSize().height));
-        this.clearButton.setMaximumSize(new Dimension(this.clearButton.getPreferredSize().height, this.clearButton.getPreferredSize().height));
-        this.clearButton.setSize(new Dimension(this.clearButton.getPreferredSize().height, this.clearButton.getPreferredSize().height));
+        final int buttonSize = this.clearButton.getPreferredSize().height;
+        final Dimension buttonDimensions = new Dimension(buttonSize, buttonSize);
+        this.clearButton.setPreferredSize(buttonDimensions);
+        this.clearButton.setMinimumSize(buttonDimensions);
+        this.clearButton.setMaximumSize(buttonDimensions);
+        this.clearButton.setSize(buttonDimensions);
         this.clearButton.setBorder(null);
 
         // Add an action listener to the browse button
