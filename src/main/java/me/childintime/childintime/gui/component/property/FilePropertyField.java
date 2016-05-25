@@ -1,6 +1,7 @@
 package me.childintime.childintime.gui.component.property;
 
 import com.timvisee.swingtoolbox.border.ComponentBorder;
+import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,6 +81,14 @@ public class FilePropertyField extends TextPropertyField {
         this.browseButton.setMaximumSize(this.clearButton.getPreferredSize());
         this.browseButton.setSize(this.clearButton.getPreferredSize());
         this.browseButton.setBorder(null);
+
+        // Fix button styling on Mac OS X
+        if(Platform.isMacOsX()) {
+            this.browseButton.putClientProperty("JButton.sizeVariant", "mini");
+            this.browseButton.putClientProperty("JButton.buttonType", "square");
+            this.browseButton.setMargin(new Insets(0, 0, 0, 0));
+            this.browseButton.setFont(new Font(this.browseButton.getFont().getFontName(), Font.PLAIN, this.browseButton.getFont().getSize() - 3));
+        }
 
         // Add an action listener to the browse button
         this.browseButton.addActionListener(e -> {

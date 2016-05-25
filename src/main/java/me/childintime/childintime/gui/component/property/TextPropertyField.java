@@ -1,6 +1,7 @@
 package me.childintime.childintime.gui.component.property;
 
 import com.timvisee.swingtoolbox.border.ComponentBorder;
+import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
 import java.awt.*;
@@ -162,6 +163,7 @@ public class TextPropertyField extends AbstractPropertyField {
         // Create the action button panel
         JPanel actionButtonPanel = new JPanel();
         actionButtonPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 0, 0));
+        actionButtonPanel.setOpaque(false);
 
         // Create the clear button
         this.clearButton = new JButton("✖");
@@ -178,6 +180,14 @@ public class TextPropertyField extends AbstractPropertyField {
         this.clearButton.setMaximumSize(buttonDimensions);
         this.clearButton.setSize(buttonDimensions);
         this.clearButton.setBorder(null);
+
+        // Fix button styling on Mac OS X
+        if(Platform.isMacOsX()) {
+            this.clearButton.putClientProperty("JButton.sizeVariant", "mini");
+            this.clearButton.putClientProperty("JButton.buttonType", "square");
+            this.clearButton.setMargin(new Insets(0, 0, 0, 0));
+            this.clearButton.setFont(new Font(this.clearButton.getFont().getFontName(), Font.PLAIN, this.clearButton.getFont().getSize() - 3));
+        }
 
         // Add the button to the panel
         actionButtonPanel.add(this.clearButton);
