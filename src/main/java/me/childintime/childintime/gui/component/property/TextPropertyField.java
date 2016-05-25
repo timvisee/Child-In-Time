@@ -157,7 +157,7 @@ public class TextPropertyField extends AbstractPropertyField {
 
         // Create a component border, and install the action buttons into the text field
         ComponentBorder cb = new ComponentBorder(this.clearButton, ComponentBorder.Edge.RIGHT, ComponentBorder.CENTER);
-        cb.setGap(10);
+        cb.setGap(2);
         cb.setAdjustInsets(true);
         cb.install(this.textField);
 
