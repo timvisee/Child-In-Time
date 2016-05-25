@@ -146,6 +146,9 @@ public class TextPropertyField extends AbstractPropertyField {
 
         // Define the size of the clear button
         this.clearButton.setPreferredSize(new Dimension(this.textField.getPreferredSize().height, this.textField.getPreferredSize().height));
+        this.clearButton.setMinimumSize(new Dimension(this.textField.getPreferredSize().height, this.textField.getPreferredSize().height));
+        this.clearButton.setMaximumSize(new Dimension(this.textField.getPreferredSize().height, this.textField.getPreferredSize().height));
+        this.clearButton.setSize(new Dimension(this.textField.getPreferredSize().height, this.textField.getPreferredSize().height));
         this.clearButton.setBorder(null);
 
         // Add the components
