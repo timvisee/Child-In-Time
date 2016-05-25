@@ -139,26 +139,10 @@ public class TextPropertyField extends AbstractPropertyField {
             }
         });
 
-        // Create the clear button
-        this.clearButton = new JButton("✖");
-        this.clearButton.addActionListener(e -> {
-            // Set the value to null
-            setNull(true);
-        });
-
-        // Define the size of the clear button
-        final int buttonSize = this.textField.getPreferredSize().height;
-        final Dimension buttonDimensions = new Dimension(buttonSize - 4, buttonSize - 4);
-        this.clearButton.setPreferredSize(buttonDimensions);
-        this.clearButton.setMinimumSize(buttonDimensions);
-        this.clearButton.setMaximumSize(buttonDimensions);
-        this.clearButton.setSize(buttonDimensions);
-        this.clearButton.setBorder(null);
-
         // Create a component border, and install the action buttons into the text field
-        ComponentBorder cb = new ComponentBorder(this.clearButton, ComponentBorder.Edge.RIGHT, ComponentBorder.CENTER);
+        ComponentBorder cb = new ComponentBorder(getActionButtonPanel(), ComponentBorder.Edge.RIGHT, ComponentBorder.CENTER);
         cb.setGap(2);
-        cb.setAdjustInsets(true);
+        cb.setAdjustInsets(false);
         cb.install(this.textField);
 
         // Add the text field
@@ -167,6 +151,39 @@ public class TextPropertyField extends AbstractPropertyField {
         c.gridy = 0;
         c.weightx = 1;
         add(this.textField, c);
+    }
+
+    /**
+     * Get the action button panel.
+     *
+     * @return Action button panel.
+     */
+    public JPanel getActionButtonPanel() {
+        // Create the action button panel
+        JPanel actionButtonPanel = new JPanel();
+        actionButtonPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 0, 0));
+
+        // Create the clear button
+        this.clearButton = new JButton("✖");
+        this.clearButton.addActionListener(e -> {
+            // Set the value to null
+            setNull(true);
+        });
+
+        // Define the size of the clear button
+        final int buttonSize = this.textField.getPreferredSize().height - 4;
+        final Dimension buttonDimensions = new Dimension(buttonSize, buttonSize);
+        this.clearButton.setPreferredSize(buttonDimensions);
+        this.clearButton.setMinimumSize(buttonDimensions);
+        this.clearButton.setMaximumSize(buttonDimensions);
+        this.clearButton.setSize(buttonDimensions);
+        this.clearButton.setBorder(null);
+
+        // Add the button to the panel
+        actionButtonPanel.add(this.clearButton);
+
+        // Return the button panel
+        return actionButtonPanel;
     }
 
     @Override
