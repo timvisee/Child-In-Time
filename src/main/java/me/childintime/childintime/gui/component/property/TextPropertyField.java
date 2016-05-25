@@ -201,7 +201,7 @@ public class TextPropertyField extends AbstractPropertyField {
             this.clearButton.putClientProperty("JButton.sizeVariant", "mini");
             this.clearButton.putClientProperty("JButton.buttonType", "square");
             this.clearButton.setMargin(new Insets(0, 0, 0, 0));
-            this.clearButton.setFont(new Font(this.clearButton.getFont().getFontName(), Font.PLAIN, this.clearButton.getFont().getSize() - 3));
+            this.clearButton.setFont(new Font(this.clearButton.getFont().getFontName(), Font.PLAIN, this.clearButton.getFont().getSize() - 2));
         }
 
         // Add the button to the panel

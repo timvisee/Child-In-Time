@@ -88,7 +88,7 @@ public class FilePropertyField extends TextPropertyField {
             this.browseButton.putClientProperty("JButton.sizeVariant", "mini");
             this.browseButton.putClientProperty("JButton.buttonType", "square");
             this.browseButton.setMargin(new Insets(0, 0, 0, 0));
-            this.browseButton.setFont(new Font(this.browseButton.getFont().getFontName(), Font.PLAIN, this.browseButton.getFont().getSize() - 3));
+            this.browseButton.setFont(new Font(this.browseButton.getFont().getFontName(), Font.PLAIN, this.browseButton.getFont().getSize() - 2));
         }
 
         // Add an action listener to the browse button
