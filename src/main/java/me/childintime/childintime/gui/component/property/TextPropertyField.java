@@ -5,10 +5,7 @@ import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 public class TextPropertyField extends AbstractPropertyField {
 
@@ -137,6 +134,23 @@ public class TextPropertyField extends AbstractPropertyField {
 
                 // Clear the field if it's empty
                 clearIfEmpty();
+            }
+        });
+
+        // Set the field back to null when the escape key is pressed
+        this.textField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.textField.getActionMap().put("Escape", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Make sure null is allowed
+                if(!isNullAllowed())
+                    return;
+
+                // Transfer the focus to some other component
+                transferFocus();
+
+                // Set the field to null
+                setNull(true);
             }
         });
 
