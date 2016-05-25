@@ -67,24 +67,19 @@ public class FilePropertyField extends TextPropertyField {
     }
 
     @Override
-    protected void buildUi() {
-        // Build the UI
-        super.buildUi();
-
-        // Create the grid bag constraints
-        GridBagConstraints c = new GridBagConstraints();
+    public JPanel getActionButtonPanel() {
+        // Create the super action button panel
+        JPanel actionButtonPanel = super.getActionButtonPanel();
 
         // Create the clear button
-        this.browseButton = new JButton("...");
+        this.browseButton = new JButton("…");
 
         // Define the size of the clear button
-        final int buttonSize = this.clearButton.getPreferredSize().height;
-        final Dimension buttonDimensions = new Dimension(buttonSize, buttonSize);
-        this.clearButton.setPreferredSize(buttonDimensions);
-        this.clearButton.setMinimumSize(buttonDimensions);
-        this.clearButton.setMaximumSize(buttonDimensions);
-        this.clearButton.setSize(buttonDimensions);
-        this.clearButton.setBorder(null);
+        this.browseButton.setPreferredSize(this.clearButton.getPreferredSize());
+        this.browseButton.setMinimumSize(this.clearButton.getPreferredSize());
+        this.browseButton.setMaximumSize(this.clearButton.getPreferredSize());
+        this.browseButton.setSize(this.clearButton.getPreferredSize());
+        this.browseButton.setBorder(null);
 
         // Add an action listener to the browse button
         this.browseButton.addActionListener(e -> {
@@ -104,11 +99,11 @@ public class FilePropertyField extends TextPropertyField {
                 setFile(selectedFile);
         });
 
-        // Create a component border and install the action buttons into the text field
-        ComponentBorder cb = new ComponentBorder(this.browseButton, ComponentBorder.Edge.RIGHT, ComponentBorder.CENTER);
-        cb.setGap(2);
-        cb.setAdjustInsets(true);
-        cb.install(this.textField);
+        // Add the button
+        actionButtonPanel.add(this.browseButton);
+
+        // Return the action button panel
+        return actionButtonPanel;
     }
 
     /**
