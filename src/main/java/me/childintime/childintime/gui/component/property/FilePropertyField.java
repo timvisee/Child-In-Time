@@ -1,5 +1,8 @@
 package me.childintime.childintime.gui.component.property;
 
+import com.timvisee.swingtoolbox.border.ComponentBorder;
+import me.childintime.childintime.util.Platform;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -65,24 +68,28 @@ public class FilePropertyField extends TextPropertyField {
     }
 
     @Override
-    protected void buildUi() {
-        // Build the UI
-        super.buildUi();
-
-        // Create the grid bag constraints
-        GridBagConstraints c = new GridBagConstraints();
+    public JPanel getActionButtonPanel() {
+        // Create the super action button panel
+        JPanel actionButtonPanel = super.getActionButtonPanel();
 
         // Create the clear button
-        this.browseButton = new JButton("...");
+        this.browseButton = new JButton("…");
 
         // Define the size of the clear button
-        final int buttonSize = this.clearButton.getPreferredSize().height;
-        final Dimension buttonDimensions = new Dimension(buttonSize, buttonSize);
-        this.clearButton.setPreferredSize(buttonDimensions);
-        this.clearButton.setMinimumSize(buttonDimensions);
-        this.clearButton.setMaximumSize(buttonDimensions);
-        this.clearButton.setSize(buttonDimensions);
-        this.clearButton.setBorder(null);
+        this.browseButton.setPreferredSize(this.clearButton.getPreferredSize());
+        this.browseButton.setMinimumSize(this.clearButton.getPreferredSize());
+        this.browseButton.setMaximumSize(this.clearButton.getPreferredSize());
+        this.browseButton.setSize(this.clearButton.getPreferredSize());
+        this.browseButton.setBorder(null);
+        this.browseButton.setFocusable(false);
+
+        // Fix button styling on Mac OS X
+        if(Platform.isMacOsX()) {
+            this.browseButton.putClientProperty("JButton.sizeVariant", "mini");
+            this.browseButton.putClientProperty("JButton.buttonType", "square");
+            this.browseButton.setMargin(new Insets(0, 0, 0, 0));
+            this.browseButton.setFont(new Font(this.browseButton.getFont().getFontName(), Font.PLAIN, this.browseButton.getFont().getSize() - 2));
+        }
 
         // Add an action listener to the browse button
         this.browseButton.addActionListener(e -> {
@@ -102,12 +109,11 @@ public class FilePropertyField extends TextPropertyField {
                 setFile(selectedFile);
         });
 
-        // Add the components
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 2;
-        c.gridy = 0;
-        c.weightx = 0;
-        add(this.browseButton, c);
+        // Add the button
+        actionButtonPanel.add(this.browseButton);
+
+        // Return the action button panel
+        return actionButtonPanel;
     }
 
     /**

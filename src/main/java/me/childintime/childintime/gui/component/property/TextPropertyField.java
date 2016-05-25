@@ -1,11 +1,11 @@
 package me.childintime.childintime.gui.component.property;
 
+import com.timvisee.swingtoolbox.border.ComponentBorder;
+import me.childintime.childintime.util.Platform;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 public class TextPropertyField extends AbstractPropertyField {
 
@@ -29,7 +29,7 @@ public class TextPropertyField extends AbstractPropertyField {
     /**
      * Text field.
      */
-    private JTextField textField;
+    protected JTextField textField;
 
     /**
      * Clear button.
@@ -137,6 +137,48 @@ public class TextPropertyField extends AbstractPropertyField {
             }
         });
 
+        // Set the field back to null when the escape key is pressed
+        this.textField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.textField.getActionMap().put("Escape", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Make sure null is allowed
+                if(!isNullAllowed())
+                    return;
+
+                // Transfer the focus to some other component
+                transferFocus();
+
+                // Set the field to null
+                setNull(true);
+            }
+        });
+
+        // Create a component border, and install the action buttons into the text field
+        ComponentBorder cb = new ComponentBorder(getActionButtonPanel(), ComponentBorder.Edge.RIGHT, ComponentBorder.CENTER);
+        cb.setGap(2);
+        cb.setAdjustInsets(false);
+        cb.install(this.textField);
+
+        // Add the text field
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        add(this.textField, c);
+    }
+
+    /**
+     * Get the action button panel.
+     *
+     * @return Action button panel.
+     */
+    public JPanel getActionButtonPanel() {
+        // Create the action button panel
+        JPanel actionButtonPanel = new JPanel();
+        actionButtonPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 0, 0));
+        actionButtonPanel.setOpaque(false);
+
         // Create the clear button
         this.clearButton = new JButton("✖");
         this.clearButton.addActionListener(e -> {
@@ -145,25 +187,28 @@ public class TextPropertyField extends AbstractPropertyField {
         });
 
         // Define the size of the clear button
-        final int buttonSize = this.textField.getPreferredSize().height;
+        final int buttonSize = this.textField.getPreferredSize().height - 4;
         final Dimension buttonDimensions = new Dimension(buttonSize, buttonSize);
         this.clearButton.setPreferredSize(buttonDimensions);
         this.clearButton.setMinimumSize(buttonDimensions);
         this.clearButton.setMaximumSize(buttonDimensions);
         this.clearButton.setSize(buttonDimensions);
         this.clearButton.setBorder(null);
+        this.clearButton.setFocusable(false);
 
-        // Add the components
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 1;
-        add(this.textField, c);
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
-        c.gridy = 0;
-        c.weightx = 0;
-        add(this.clearButton, c);
+        // Fix button styling on Mac OS X
+        if(Platform.isMacOsX()) {
+            this.clearButton.putClientProperty("JButton.sizeVariant", "mini");
+            this.clearButton.putClientProperty("JButton.buttonType", "square");
+            this.clearButton.setMargin(new Insets(0, 0, 0, 0));
+            this.clearButton.setFont(new Font(this.clearButton.getFont().getFontName(), Font.PLAIN, this.clearButton.getFont().getSize() - 2));
+        }
+
+        // Add the button to the panel
+        actionButtonPanel.add(this.clearButton);
+
+        // Return the button panel
+        return actionButtonPanel;
     }
 
     @Override
