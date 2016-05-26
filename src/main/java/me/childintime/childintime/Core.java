@@ -22,6 +22,11 @@ public class Core {
     private static Core instance = null;
 
     /**
+     * Application startup arguments.
+     */
+    private String[] starupArgs = null;
+
+    /**
      * Configuration instance.
      */
     private Config config;
@@ -53,11 +58,15 @@ public class Core {
     /**
      * Constructor.
      *
+     * @param args
      * @param init True to immediately initialize the core.
      */
-    public Core(boolean init) {
+    public Core(String[] args, boolean init) {
         // Set the core instance
         Core.instance = this;
+
+        // Store the start up arguments
+        this.starupArgs = args != null ? args : new String[]{};
 
         // Initialize
         if(init)
@@ -206,6 +215,15 @@ public class Core {
 
         // Show a status message
         System.out.println("The application core has been destroyed.");
+    }
+
+    /**
+     * Get the application startup arguments.
+     *
+     * @return Application startup arguments.
+     */
+    public String[] getStarupArgs() {
+        return this.starupArgs;
     }
 
     /**
