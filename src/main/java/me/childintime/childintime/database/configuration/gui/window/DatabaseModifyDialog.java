@@ -374,7 +374,7 @@ public class DatabaseModifyDialog extends JDialog {
         JButton testButton = new JButton("Test");
         testButton.addActionListener(e -> {
             // Create a progress dialog
-            ProgressDialog progressDialog = new ProgressDialog(this, "Testing...", false, "Applying changes...", true);
+            ProgressDialog progressDialog = new ProgressDialog(this, "Testing database...", false, "Applying changes...", true);
 
             // Apply the changes
             applyChanges();
@@ -393,11 +393,19 @@ public class DatabaseModifyDialog extends JDialog {
                 return;
             }
 
-            // Test the database connection
-            database.test(this, progressDialog);
-
             // Dispose the progress dialog
             progressDialog.dispose();
+
+            // Test the database connection
+            if(database.test(this, progressDialog)) {
+                // Show a success message
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Successfully connected to the database..",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
         });
         actionPanel.add(testButton);
 

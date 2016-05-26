@@ -185,7 +185,8 @@ public abstract class AbstractDatabase implements Cloneable {
      *
      * @return True on success, false on failure.
      */
-    public boolean test(Window parent, ProgressDialog progressDialog) {// Set the status
+    public boolean test(Window parent, ProgressDialog progressDialog) {
+        // Set the status
         if(progressDialog != null)
             progressDialog.setStatus("Testing '" + getName() + "'...");
 
