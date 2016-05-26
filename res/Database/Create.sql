@@ -1,5 +1,15 @@
+# TODO: Create user table (username, mail, password_hash, ...)
+# TODO: Insert default user (admin, admin) ?
+# TODO: Insert default parkours
+# TODO: Don't drop the database, only create it (and it's tables) if they don't exist (... IF NOT EXISTS ...)
+# TODO: Compare script with MySQLs script files (what useful stuff are they using)
+
+
+
+# Create the Child-In-Time table, and select it
+# TODO: Remove this in production
 DROP DATABASE IF EXISTS `childintime`;
-CREATE DATABASE `childintime`;
+CREATE DATABASE IF NOT EXISTS `childintime`;
 USE childintime;
 
 create table `school` (
@@ -7,7 +17,7 @@ create table `school` (
     	`name` TEXT NOT NULL,
     	`commune` TEXT NOT NULL,
     	PRIMARY KEY (`id`)
- );
+);
 
 create table `teacher` (
 	`id` INT NOT NULL AUTO_INCREMENT,
@@ -140,3 +150,5 @@ CALL createMetaTable('measurement');
 
 # Drop the create meta table procedure, we aren't using it anymore
 DROP PROCEDURE createMetaTable;
+
+# Insert data
