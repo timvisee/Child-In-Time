@@ -2,9 +2,12 @@ package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.database.DatabaseType;
+import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
+import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public abstract class AbstractDatabase implements Cloneable {
 
@@ -140,6 +143,38 @@ public abstract class AbstractDatabase implements Cloneable {
      * @return True on success, false on failure.
      */
     public abstract boolean prepare(ProgressDialog progressDialog);
+
+    /**
+     * Create a new database connection with the configured credentials.
+     *
+     * @param progressDialog Progress dialog.
+     *
+     * @return Database connector.
+     *
+     * @throws Exception Exception if an error occurred while connecting to the database.
+     */
+    public DatabaseConnector createConnection(ProgressDialog progressDialog) throws Exception {
+        // Prepare the database
+        if(!prepare(progressDialog))
+            throw new Exception("Failed to prepare database.");
+
+        // Set the status
+        if(progressDialog != null)
+            progressDialog.setStatus("Connecting to '" + getName() + "'...");
+
+        // Create a new database connector
+        DatabaseConnector connector = new DatabaseConnector(this);
+
+        // Create a connection
+        connector.createConnection();
+
+        // Set the status
+        if(progressDialog != null)
+            progressDialog.setStatus("Connected to '" + getName() + "'.");
+
+        // Return the connector
+        return connector;
+    }
 
     /**
      * Test the database configuration.
