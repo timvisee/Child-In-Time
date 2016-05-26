@@ -50,6 +50,17 @@ public class Config {
      * @return True if succeed, false on failure.
      */
     public boolean load() {
+        return load(true);
+    }
+
+    /**
+     * Load the configuration file.
+     *
+     * @param create Create the configuration file if it doesn't exist.
+     *
+     * @return True if succeed, false on failure.
+     */
+    public boolean load(boolean create) {
         // Start a profiler
         Profiler p = new Profiler(true);
 
@@ -67,11 +78,29 @@ public class Config {
 
         // Make sure the configuration file exists
         if (!this.configFile.exists()) {
+            // Show an error if the file shouldn't be created either
+            if(!create) {
+                // Show a status message
+                System.out.println("Failed to load configuration file, file doesn't exist.");
+
+                // Return the result
+                return false;
+            }
+
             // Show a status message
-            System.out.println("Failed to load configuration file, file doesn't exist.");
+            System.out.println("Configuration file doesn't exist, creating it now...");
+
+            // Create the parent directory if it doesn't exist
+            if(!this.configFile.getParentFile().isDirectory() && !this.configFile.getParentFile().mkdirs()) {
+                // Show a status message
+                System.out.println("Failed to create the configuration directory.");
+
+                // Return the result
+                return false;
+            }
 
             // Return the result
-            return false;
+            return true;
         }
 
         // Load the configuration file and make sure it's valid
@@ -102,7 +131,7 @@ public class Config {
         setConfigFile(configFile);
 
         // Load the configuration file and return the result
-        return load();
+        return load(true);
     }
 
     /**

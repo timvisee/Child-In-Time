@@ -85,7 +85,7 @@ public class Core {
 
         // Load the configuration, and make sure it succeeds
         this.progressDialog.setStatus("Loading configuration...");
-        if(!this.config.load()) {
+        if(!this.config.load(true)) {
             // Hide the progress dialog
             this.progressDialog.setVisible(false);
 
