@@ -1,7 +1,6 @@
 package me.childintime.childintime.database.object;
 
 import java.util.HashMap;
-import java.util.List;
 
 public abstract class AbstractDatabaseObject {
 
@@ -11,8 +10,8 @@ public abstract class AbstractDatabaseObject {
     public abstract boolean hasField(DatabaseFieldsInterface field);
 
     public abstract boolean fetchFields(DatabaseFieldsInterface[] fields);
-    public abstract boolean fetchField(DatabaseFieldsInterface field);
+    public abstract boolean fetchField(DatabaseFieldsInterface fields);
 
-    public abstract List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception;
-    public abstract Object getField(DatabaseFieldsInterface field) throws Exception;
+    public abstract Object getFields(DatabaseFieldsInterface[] fields);
+    public abstract Object getField(DatabaseFieldsInterface fields);
 }
