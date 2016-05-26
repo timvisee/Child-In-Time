@@ -40,11 +40,12 @@ create table `student` (
 );
 
 create table `bodystate` (
-	`student_id` INT NOT NULL,
+	`id` INT NOT NULL AUTO_INCREMENT,
+			`student_id` INT NOT NULL,
     	`date` DATE NOT NULL,
     	`length` SMALLINT NOT NULL,
     	`weight` SMALLINT NOT NULL,
-    	PRIMARY KEY (`student_id`, `date`),
+    	PRIMARY KEY (`id`),
     	FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)
 );
 
