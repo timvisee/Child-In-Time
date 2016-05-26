@@ -152,6 +152,10 @@ public abstract class AbstractDatabase implements Cloneable {
      */
     public abstract boolean test(Window parent, ProgressDialog progressDialog);
 
+    public abstract String getDatabaseDriverString();
+
+    public abstract String getDatabaseConnectionString();
+
     @Override
     public String toString() {
         return getName();
