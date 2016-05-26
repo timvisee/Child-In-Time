@@ -21,6 +21,7 @@ public class LoginPanel extends JPanel{
     private ClickListener listener;
 
     public LoginPanel(){
+
         setLayout(null);
         createLabels();
         createTextFields();
