@@ -122,7 +122,8 @@ public class Core {
 
         // Set up the database connection
         // TODO: Clean this stuff up!
-        this.databaseConnector = new DatabaseConnector();
+        this.databaseConnector = new DatabaseConnector(workingDatabase);
+
         try {
             databaseConnector.getConnection();
             System.out.println("Connected to the database.");

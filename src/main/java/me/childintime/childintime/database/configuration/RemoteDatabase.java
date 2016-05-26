@@ -254,6 +254,16 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     }
 
     @Override
+    public String getDatabaseDriverString() {
+        return "com.mysql.jdbc.Driver";
+    }
+
+    @Override
+    public String getDatabaseConnectionString() {
+        return "jdbc:mysql://" + host + "/?user=" + user + "&password=" + password;
+    }
+
+    @Override
     public RemoteDatabase clone() {
         return new RemoteDatabase(this);
     }
