@@ -1,16 +1,17 @@
 package me.childintime.childintime.database.connector;
 
-import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
-import me.childintime.childintime.App;
-import me.childintime.childintime.Core;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnector {
+
+    /**
+     * Database connection timeout in seconds.
+     */
+    public static final int CONNECTION_TIMEOUT = 10;
 
     private AbstractDatabase database;
 
@@ -21,7 +22,6 @@ public class DatabaseConnector {
     }
 
     public void init() {
-
         try {
             String driver = database.getDatabaseDriverString();
             Class.forName(driver);
@@ -30,18 +30,46 @@ public class DatabaseConnector {
         }
     }
 
-    public void getConnection() throws SQLException {
-        if(connection == null) {
+    /**
+     * Get the database connection.
+     * This will return the last connection that was created on this database connector.
+     * A new connection will be created automatically if no connection was made yet.
+     *
+     * @return Database connection.
+     *
+     * @throws SQLException
+     */
+    public Connection getConnection() throws SQLException {
+        // Create a new connection none was created yet
+        if(this.connection == null) {
+            // Initialize
             init();
-            connection = createConnection();
-        } else if(!connection.isValid(0)) {
-            connection = createConnection();
+
+            // Create and return a new connection
+            return createConnection();
         }
+
+        // Create and return a new connection if the it is invalid
+        else if(!this.connection.isValid(CONNECTION_TIMEOUT))
+            return createConnection();
+
+        // Return the connection
+        return this.connection;
     }
 
+    /**
+     * Create a new database connection.
+     *
+     * @return Connection.
+     *
+     * @throws SQLException
+     */
     public Connection createConnection() throws SQLException {
+        // Create the connection and explicitly save it
+        this.connection = DriverManager.getConnection(database.getDatabaseConnectionString());
 
-        return DriverManager.getConnection(database.getDatabaseConnectionString());
+        // Return the connection
+        return this.connection;
     }
 
     public void destroy() {
