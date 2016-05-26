@@ -1,6 +1,5 @@
 package me.childintime.childintime;
 
-import jdk.nashorn.internal.scripts.JO;
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
@@ -12,7 +11,6 @@ import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -22,6 +20,11 @@ public class Core {
      * Core instance, used for singleton.
      */
     private static Core instance = null;
+
+    /**
+     * Application startup arguments.
+     */
+    private String[] starupArgs = null;
 
     /**
      * Configuration instance.
@@ -55,11 +58,15 @@ public class Core {
     /**
      * Constructor.
      *
+     * @param args
      * @param init True to immediately initialize the core.
      */
-    public Core(boolean init) {
+    public Core(String[] args, boolean init) {
         // Set the core instance
         Core.instance = this;
+
+        // Store the start up arguments
+        this.starupArgs = args != null ? args : new String[]{};
 
         // Initialize
         if(init)
@@ -84,7 +91,11 @@ public class Core {
 
         // Prepare the application data
         try {
-            prepareData();
+            // Quit the application if the preparation failed
+            if(!new InitialSetup(this.progressDialog).setup()) {
+                destroy();
+                return;
+            }
 
         } catch (Exception e) {
             // Print the stack trace
@@ -93,7 +104,7 @@ public class Core {
             // Show a fancy status message to the user
             JOptionPane.showMessageDialog(this.progressDialog,
                     "Failed to set up application data. The application must now quit.\n\n" +
-                            "Error: " + e.getMessage(),
+                            "Error message: " + e.getMessage(),
                     App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
             // Destroy
@@ -172,32 +183,6 @@ public class Core {
     }
 
     /**
-     * Prepare the application files.
-     */
-    public void prepareData() throws Exception {
-        // Set the status
-        System.out.println("Preparing application data...");
-        this.progressDialog.setStatus("Preparing application data...");
-
-        // Get the application data directory
-        File dataDirectory = App.getDirectory();
-
-        // Check whether the directory exists
-        if(!dataDirectory.isDirectory()) {
-            // Show a status message
-            JOptionPane.showMessageDialog(this.progressDialog, "This is the first time you're starting " + App.APP_NAME + "." +
-                    "Please allow us to set up the application.", "Setting " + App.APP_NAME + " up...", JOptionPane.INFORMATION_MESSAGE);
-
-            // Create the base directory
-            this.progressDialog.setStatus("Creating application directory...");
-            if(!dataDirectory.mkdirs())
-                throw new Exception("Failed to create application directory.");
-        }
-
-        // TODO: Create basic configuration file!
-    }
-
-    /**
      * Destroy the instance after it has been initialized.
      * This safely closes and destroy all IO handles, and initialized instances.
      */
@@ -210,12 +195,14 @@ public class Core {
         this.progressDialog.setVisible(true);
 
         // Save the database configuration
-        this.progressDialog.setStatus("Saving database configuration...");
-        try {
-            this.databaseManager.save();
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to save database configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        if(this.databaseManager != null) {
+            this.progressDialog.setStatus("Saving database configuration...");
+            try {
+                this.databaseManager.save();
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to save database configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+            }
         }
 
         // Destroy the database connection
@@ -228,6 +215,15 @@ public class Core {
 
         // Show a status message
         System.out.println("The application core has been destroyed.");
+    }
+
+    /**
+     * Get the application startup arguments.
+     *
+     * @return Application startup arguments.
+     */
+    public String[] getStarupArgs() {
+        return this.starupArgs;
     }
 
     /**

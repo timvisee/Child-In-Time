@@ -28,6 +28,17 @@ public class App {
     public static final String APP_DIR_NAME = "ChildInTime";
 
     /**
+     * Define whether debug mode is enabled.
+     */
+    public static final boolean APP_DEBUG = true;
+
+    /**
+     * Define whether to clean the application environment on startup to ensure a fresh application instance is started.
+     * This must be disabled in production.
+     */
+    public static final boolean APP_CLEAN_ENVIRONMENT = APP_DEBUG;
+
+    /**
      * Core instance.
      */
     private static Core core;
@@ -42,7 +53,7 @@ public class App {
         System.out.println(getFullName(true));
 
         // Create the application core
-        App.core = new Core(false);
+        App.core = new Core(args, false);
 
         // Initialize the core
         System.out.println("Initializing " + getFullName(true) + "...");
