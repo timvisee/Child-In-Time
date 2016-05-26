@@ -185,7 +185,37 @@ public abstract class AbstractDatabase implements Cloneable {
      *
      * @return True on success, false on failure.
      */
-    public abstract boolean test(Window parent, ProgressDialog progressDialog);
+    public boolean test(Window parent, ProgressDialog progressDialog) {// Set the status
+        if(progressDialog != null)
+            progressDialog.setStatus("Testing '" + getName() + "'...");
+
+        // Determine the parent window to use
+        final Component messageParent = progressDialog != null ? progressDialog : parent;
+
+        // Create a connection
+        try {
+            this.createConnection(null);
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Failed to connect, show a status message
+            JOptionPane.showMessageDialog(
+                    messageParent,
+                    "Failed to connect to the '" + getName()  + "' database.\n\n" +
+                            "Detailed error message:\n" + e.getMessage(),
+                    "Database connection failure",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            // Return the result
+            return false;
+        }
+
+        // Return the result
+        return true;
+    }
 
     public abstract String getDatabaseDriverString();
 

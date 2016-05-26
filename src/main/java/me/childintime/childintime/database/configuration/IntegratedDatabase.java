@@ -177,24 +177,6 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     }
 
     @Override
-    public boolean test(Window parent, ProgressDialog progressDialog) {
-        // Set the status
-        if(progressDialog != null)
-            progressDialog.setStatus("Testing '" + getName() + "'...");
-
-        // TODO: Implement this!
-
-        // Determine the parent window to use
-        final Component messageParent = progressDialog != null ? progressDialog : parent;
-
-        // Feature not implemented yet, show a message
-        JOptionPane.showMessageDialog(messageParent, "Unable to test database configuration, feature not implemented yet.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-
-        // Return the result
-        return false;
-    }
-
-    @Override
     public String getDatabaseDriverString() {
         return "org.sqlite.JDBC";
     }
