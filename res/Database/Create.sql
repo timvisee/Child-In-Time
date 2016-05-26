@@ -134,6 +134,7 @@ CALL createMetaTable('student');
 CALL createMetaTable('teacher');
 CALL createMetaTable('group');
 CALL createMetaTable('school');
+CALL createMetaTable('bodystate');
 CALL createMetaTable('parkour');
 CALL createMetaTable('measurement');
 
