@@ -229,6 +229,9 @@ public class ProgressDialog extends JDialog {
         // Set the status label
         this.statusLabel.setText(status);
 
+        // Force repaint
+        this.repaint();
+
         // Print the status to the console
         System.out.println("Status: " + status);
     }
