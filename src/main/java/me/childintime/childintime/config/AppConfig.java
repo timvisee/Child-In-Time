@@ -12,12 +12,17 @@ public class AppConfig extends Config {
     public static final String CONFIG_FILE_NAME = "config.yml";
 
     /**
+     * Configuration file.
+     */
+    public static final File CONFIG_FILE = new File(App.getDirectory(), CONFIG_FILE_NAME);
+
+    /**
      * Constructor.
      * Note: this automatically uses the default configuration file of the application.
      */
     public AppConfig() {
         // Create a configuration file instance
-        this(new File(App.getDirectory(), CONFIG_FILE_NAME));
+        this(CONFIG_FILE);
     }
 
     /**
