@@ -41,13 +41,8 @@ public class DatabaseConnector {
      */
     public Connection getConnection() throws SQLException {
         // Create a new connection none was created yet
-        if(this.connection == null) {
-            // Initialize
-            init();
-
-            // Create and return a new connection
+        if(this.connection == null)
             return createConnection();
-        }
 
         // Create and return a new connection if the it is invalid
         else if(!this.connection.isValid(CONNECTION_TIMEOUT))
@@ -65,6 +60,10 @@ public class DatabaseConnector {
      * @throws SQLException
      */
     public Connection createConnection() throws SQLException {
+        // Initialize on the first connection
+        if(this.connection == null)
+            init();
+
         // Create the connection and explicitly save it
         this.connection = DriverManager.getConnection(database.getDatabaseConnectionString());
 
