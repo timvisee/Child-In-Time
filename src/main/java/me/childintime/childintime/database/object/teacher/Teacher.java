@@ -2,6 +2,10 @@ package me.childintime.childintime.database.object.teacher;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.student.StudentFields;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Teacher extends AbstractDatabaseObject {
 
@@ -36,12 +40,25 @@ public class Teacher extends AbstractDatabaseObject {
     }
 
     @Override
-    public Object[] getFields(DatabaseFieldsInterface[] fields) {
-        return null;
+    public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
+        List<Object> list = new ArrayList<>();
+
+        for (DatabaseFieldsInterface field : fields) {
+            if(!(field instanceof StudentFields))
+                throw new Exception("Invalid field");
+
+            if(!hasField(field))
+                if(!fetchField(field))
+                    throw new Exception("Failed to fetch field");
+
+            list.add(this.hashmap.get(field));
+        }
+
+        return list;
     }
 
     @Override
-    public Object getField(DatabaseFieldsInterface fields) {
-        return null;
+    public Object getField(DatabaseFieldsInterface field) throws Exception {
+        return getFields(new DatabaseFieldsInterface[]{field}).get(0);
     }
 }
