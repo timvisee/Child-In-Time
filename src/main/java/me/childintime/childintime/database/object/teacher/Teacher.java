@@ -27,15 +27,16 @@ public class Teacher extends AbstractDatabaseObject {
     @Override
     public boolean fetchFields(DatabaseFieldsInterface[] fields) {
         return false;
+        // TODO: Implement this
     }
 
     @Override
-    public boolean fetchField(DatabaseFieldsInterface fields) {
-        return false;
+    public boolean fetchField(DatabaseFieldsInterface field) {
+        return fetchFields(new DatabaseFieldsInterface[]{field});
     }
 
     @Override
-    public Object getFields(DatabaseFieldsInterface[] fields) {
+    public Object[] getFields(DatabaseFieldsInterface[] fields) {
         return null;
     }
 
