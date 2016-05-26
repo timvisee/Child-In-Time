@@ -194,6 +194,16 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
         return false;
     }
 
+    @Override
+    public String getDatabaseDriverString() {
+        return "org.sqlite.JDBC";
+    }
+
+    @Override
+    public String getDatabaseConnectionString() {
+        return "jdbc:sqlite:" + getFile().getAbsolutePath();
+    }
+
     @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public IntegratedDatabase clone() {

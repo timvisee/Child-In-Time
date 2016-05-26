@@ -3,6 +3,7 @@ package me.childintime.childintime.database.connector;
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.configuration.AbstractDatabase;
 
 import java.io.File;
 import java.sql.Connection;
@@ -11,34 +12,18 @@ import java.sql.SQLException;
 
 public class DatabaseConnector {
 
-    private boolean integrated = true;
-
-    private String hostname;
-    private String database;
-    private String username;
-    private String password;
+    private AbstractDatabase database;
 
     private Connection connection;
 
-    public DatabaseConnector() {
-        ConfigurationSection config = Core.getInstance().getConfig().getConfig().getSection("database");
-        hostname = config.getString("hostname");
-        database = config.getString("database");
-        username = config.getString("username");
-        password = config.getString("password");
+    public DatabaseConnector(AbstractDatabase database) {
+        this.database = database;
     }
 
     public void init() {
 
         try {
-            String driver;
-
-            // Load the proper driver class
-            if(!integrated)
-                driver = "com.mysql.jdbc.Driver";
-            else
-                driver = "org.sqlite.JDBC";
-
+            String driver = database.getDatabaseDriverString();
             Class.forName(driver);
         } catch(ClassNotFoundException e) {
             System.out.println(e.toString());
@@ -56,19 +41,7 @@ public class DatabaseConnector {
 
     public Connection createConnection() throws SQLException {
 
-        String connectionString;
-
-        // Define the proper connection string
-        if(!integrated)
-            connectionString = "jdbc:mysql://" + hostname + "/" + database + "?" +
-                    "user=" + username + "&password=" + password;
-        else {
-            // TODO: Fetch the database file from the selected database configuration!
-            File databaseFile = new File(App.getDirectory(), "/db/integrated.db");
-            connectionString = "jdbc:sqlite:" + databaseFile.getAbsolutePath();
-        }
-
-        return DriverManager.getConnection(connectionString);
+        return DriverManager.getConnection(database.getDatabaseConnectionString());
     }
 
     public void destroy() {
