@@ -365,7 +365,7 @@ public class DatabaseManagerDialog extends JDialog {
             return false;
 
         // Create a progress dialog for testing
-        ProgressDialog progressDialog = new ProgressDialog(this, "Testing database configurations...", false, "Testing database configurations...", true);
+        ProgressDialog progressDialog = new ProgressDialog(this, "Testing database...", false, "Testing database configurations...", true);
 
         // Get the list of selected databases
         List selected = this.databaseList.getSelectedValuesList();
@@ -407,6 +407,14 @@ public class DatabaseManagerDialog extends JDialog {
 
         // Dispose the progress dialog
         progressDialog.dispose();
+
+        // Show a success message
+        JOptionPane.showMessageDialog(
+                this,
+                "Successfully connected to the selected database" + (getSelectedCount() > 1 ? "s" : "") + ".",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE
+        );
 
         // Everything seems to be fine, return the result
         return true;

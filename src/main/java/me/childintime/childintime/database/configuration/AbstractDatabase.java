@@ -2,9 +2,12 @@ package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.database.DatabaseType;
+import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
+import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public abstract class AbstractDatabase implements Cloneable {
 
@@ -142,6 +145,38 @@ public abstract class AbstractDatabase implements Cloneable {
     public abstract boolean prepare(ProgressDialog progressDialog);
 
     /**
+     * Create a new database connection with the configured credentials.
+     *
+     * @param progressDialog Progress dialog.
+     *
+     * @return Database connector.
+     *
+     * @throws Exception Exception if an error occurred while connecting to the database.
+     */
+    public DatabaseConnector createConnection(ProgressDialog progressDialog) throws Exception {
+        // Prepare the database
+        if(!prepare(progressDialog))
+            throw new Exception("Failed to prepare database.");
+
+        // Set the status
+        if(progressDialog != null)
+            progressDialog.setStatus("Connecting to '" + getName() + "'...");
+
+        // Create a new database connector
+        DatabaseConnector connector = new DatabaseConnector(this);
+
+        // Create a connection
+        connector.createConnection();
+
+        // Set the status
+        if(progressDialog != null)
+            progressDialog.setStatus("Connected to '" + getName() + "'.");
+
+        // Return the connector
+        return connector;
+    }
+
+    /**
      * Test the database configuration.
      * This will check whether a database connection could be made to the configured database.
      *
@@ -150,7 +185,38 @@ public abstract class AbstractDatabase implements Cloneable {
      *
      * @return True on success, false on failure.
      */
-    public abstract boolean test(Window parent, ProgressDialog progressDialog);
+    public boolean test(Window parent, ProgressDialog progressDialog) {
+        // Set the status
+        if(progressDialog != null)
+            progressDialog.setStatus("Testing '" + getName() + "'...");
+
+        // Determine the parent window to use
+        final Component messageParent = progressDialog != null ? progressDialog : parent;
+
+        // Create a connection, and destroy it after use
+        try {
+            this.createConnection(null).destroy();
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Failed to connect, show a status message
+            JOptionPane.showMessageDialog(
+                    messageParent,
+                    "Failed to connect to the '" + getName()  + "' database.\n\n" +
+                            "Detailed error message:\n" + e.getMessage(),
+                    "Database connection failure",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            // Return the result
+            return false;
+        }
+
+        // Return the result
+        return true;
+    }
 
     public abstract String getDatabaseDriverString();
 

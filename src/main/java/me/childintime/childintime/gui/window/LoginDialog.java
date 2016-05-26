@@ -279,13 +279,6 @@ public class LoginDialog extends JDialog {
 
         // Create a runnable for the close action
         Runnable closeAction = () -> {
-//            // Show a confirmation dialog
-//            int result = JOptionPane.showConfirmDialog(instance, "Are you sure you want to quit?", App.APP_NAME, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-//
-//            // Make sure the yes button is pressed
-//            if(result != JOptionPane.YES_OPTION)
-//                return;
-
             // Set the success status flag
             instance.success = false;
 
@@ -411,7 +404,7 @@ public class LoginDialog extends JDialog {
 
         // Check whether the database has been configured properly now
         if(!updated.isConfigured()) {
-            JOptionPane.showMessageDialog(this, "The database configuration is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "The selected database is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
