@@ -1,6 +1,5 @@
 package me.childintime.childintime;
 
-import jdk.nashorn.internal.scripts.JO;
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
@@ -12,7 +11,6 @@ import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -84,7 +82,11 @@ public class Core {
 
         // Prepare the application data
         try {
-            prepareData();
+            // Quit the application if the preparation failed
+            if(!new InitialSetup(this.progressDialog).setup()) {
+                destroy();
+                return;
+            }
 
         } catch (Exception e) {
             // Print the stack trace
@@ -93,7 +95,7 @@ public class Core {
             // Show a fancy status message to the user
             JOptionPane.showMessageDialog(this.progressDialog,
                     "Failed to set up application data. The application must now quit.\n\n" +
-                            "Error: " + e.getMessage(),
+                            "Error message: " + e.getMessage(),
                     App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
             // Destroy
@@ -169,32 +171,6 @@ public class Core {
 
         // Hide the progress dialog
         this.progressDialog.setVisible(false);
-    }
-
-    /**
-     * Prepare the application files.
-     */
-    public void prepareData() throws Exception {
-        // Set the status
-        System.out.println("Preparing application data...");
-        this.progressDialog.setStatus("Preparing application data...");
-
-        // Get the application data directory
-        File dataDirectory = App.getDirectory();
-
-        // Check whether the directory exists
-        if(!dataDirectory.isDirectory()) {
-            // Show a status message
-            JOptionPane.showMessageDialog(this.progressDialog, "This is the first time you're starting " + App.APP_NAME + "." +
-                    "Please allow us to set up the application.", "Setting " + App.APP_NAME + " up...", JOptionPane.INFORMATION_MESSAGE);
-
-            // Create the base directory
-            this.progressDialog.setStatus("Creating application directory...");
-            if(!dataDirectory.mkdirs())
-                throw new Exception("Failed to create application directory.");
-        }
-
-        // TODO: Create basic configuration file!
     }
 
     /**
