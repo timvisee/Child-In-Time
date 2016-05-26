@@ -186,12 +186,14 @@ public class Core {
         this.progressDialog.setVisible(true);
 
         // Save the database configuration
-        this.progressDialog.setStatus("Saving database configuration...");
-        try {
-            this.databaseManager.save();
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to save database configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        if(this.databaseManager != null) {
+            this.progressDialog.setStatus("Saving database configuration...");
+            try {
+                this.databaseManager.save();
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to save database configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+            }
         }
 
         // Destroy the database connection
