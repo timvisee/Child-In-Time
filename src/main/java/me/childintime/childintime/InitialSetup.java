@@ -2,14 +2,22 @@ package me.childintime.childintime;
 
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class InitialSetup {
+
+    /**
+     * Startup flag to hide the environment cleaning warning.
+     */
+    public static final String FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING = "-hideCleanEnvironmentWarning";
 
     /**
      * Progress dialog instance.
@@ -44,6 +52,9 @@ public class InitialSetup {
      * @boolean True on success, false if the initial setup failed and the application should quit.
      */
     public boolean setup() {
+        // Clean the environment
+        cleanApplicationEnvironment();
+
         // Set up the application directory
         if(!setupApplicationDirectory())
             return false;
@@ -57,6 +68,42 @@ public class InitialSetup {
 
         // Everything seems to be fine, return true
         return true;
+    }
+
+    /**
+     * Clean and refresh the application environment for developers.
+     * This deletes all application files and configurations from previous versions.
+     * This ensures that a fresh application instance is used for development.
+     */
+    private void cleanApplicationEnvironment() {
+        // Show a status message
+        this.progressDialog.setStatus("Confirming environment cleanup...");
+
+        // Show a warning
+        if(!Arrays.asList(Core.getInstance().getStarupArgs()).contains(FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING))
+            JOptionPane.showMessageDialog(
+                    this.progressDialog,
+                    "<html>The developer option Clean Environment is enabled.\n\n" +
+                            "All previous application files and configurations will be deleted,\n" +
+                            "to ensure that you're using a fresh application instance for development.\n\n" +
+                            "Start the application with the '" + FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING + "' argument to hide this warning.\n\n" +
+                            "This feature must be disabled in production.",
+                    App.APP_NAME + " - Developer mode",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+        // Show a status message
+        this.progressDialog.setStatus("Refreshing application environment...");
+
+        // Delete the application directory
+        try {
+            if(App.getDirectory().exists())
+                FileUtils.deleteDirectory(App.getDirectory());
+
+        } catch(IOException e) {
+            showError("Failed to refresh application environment.");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -133,7 +180,7 @@ public class InitialSetup {
         if(this.changed) {
             this.progressDialog.setStatus("Waiting on JVM...");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch(InterruptedException e) {
                 e.printStackTrace();
             }
