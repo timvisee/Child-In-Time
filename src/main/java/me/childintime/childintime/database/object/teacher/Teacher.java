@@ -11,7 +11,9 @@ public class Teacher extends AbstractDatabaseObject {
         for (DatabaseFieldsInterface field : fields) {
             if (!(field instanceof TeacherFields))
                 return false;
-            // TODO: Check fields
+
+            if(this.hashmap.containsKey(field))
+                return false;
         }
 
         return true;

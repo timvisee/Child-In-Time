@@ -11,7 +11,9 @@ public class Student extends AbstractDatabaseObject {
         for (DatabaseFieldsInterface field : fields) {
             if (!(field instanceof StudentFields))
                 return false;
-            // TODO: Check fields
+
+            if(this.hashmap.containsKey(field))
+                return false;
         }
 
         return true;
