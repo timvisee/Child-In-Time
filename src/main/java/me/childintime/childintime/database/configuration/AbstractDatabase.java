@@ -193,9 +193,9 @@ public abstract class AbstractDatabase implements Cloneable {
         // Determine the parent window to use
         final Component messageParent = progressDialog != null ? progressDialog : parent;
 
-        // Create a connection
+        // Create a connection, and destroy it after use
         try {
-            this.createConnection(null);
+            this.createConnection(null).destroy();
 
         } catch(Exception e) {
             // Print the stack trace
