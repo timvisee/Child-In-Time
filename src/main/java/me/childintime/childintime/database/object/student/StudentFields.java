@@ -4,16 +4,20 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
 public enum StudentFields implements DatabaseFieldsInterface {
 
-    ID ("id"),
-    FIRST_NAME ("name");
+    ID("id"),
+    FIRST_NAME("first_name"),
+    LAST_NAME("last_name"),
+    GENDER("gender"),
+    BIRTHDATE("birthdate"),
+    GROUP_ID("group_id");
 
-    private String fieldname;
+    private String id;
 
-    StudentFields(String fieldname) {
-        this.fieldname = fieldname;
+    StudentFields(String id) {
+        this.id = id;
     }
 
     public String getFieldName() {
-        return fieldname;
+        return id;
     }
 }
