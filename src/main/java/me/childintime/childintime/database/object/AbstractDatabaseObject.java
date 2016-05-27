@@ -8,7 +8,23 @@ public abstract class AbstractDatabaseObject {
     /**
      * Hashmap containing cached fields from the database object.
      */
-    protected HashMap<DatabaseFieldsInterface, Object> hashmap;
+    protected HashMap<DatabaseFieldsInterface, Object> cachedFields;
+
+    /**
+     * Get a hashmap of cached fields.
+     *
+     * @return Hashmap of cached fields.
+     */
+    public HashMap<DatabaseFieldsInterface, Object> getCachedFields() {
+        return this.cachedFields;
+    }
+
+    /**
+     * Clear the cached database object fields.
+     */
+    public void flushCache() {
+        this.cachedFields.clear();
+    }
 
     /**
      * Check whether the given database object fields are cached.
@@ -70,11 +86,4 @@ public abstract class AbstractDatabaseObject {
      * @throws Exception Throws if an error occurred.
      */
     public abstract Object getField(DatabaseFieldsInterface field) throws Exception;
-
-    /**
-     * Clear the cached database object fields.
-     */
-    public void clear() {
-        this.hashmap.clear();
-    }
 }
