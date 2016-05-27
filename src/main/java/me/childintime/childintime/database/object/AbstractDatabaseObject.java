@@ -15,4 +15,11 @@ public abstract class AbstractDatabaseObject {
 
     public abstract List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception;
     public abstract Object getField(DatabaseFieldsInterface field) throws Exception;
+
+    /**
+     * Clear the cached database object fields.
+     */
+    public void clear() {
+        this.hashmap.clear();
+    }
 }
