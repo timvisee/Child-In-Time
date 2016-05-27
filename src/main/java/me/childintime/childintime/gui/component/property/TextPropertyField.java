@@ -150,7 +150,8 @@ public class TextPropertyField extends AbstractPropertyField {
                 transferFocus();
 
                 // Set the field to null
-                setNull(true);
+                if(!isNull())
+                    setNull(true);
             }
         });
 
