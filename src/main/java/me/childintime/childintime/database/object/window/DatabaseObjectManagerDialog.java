@@ -64,16 +64,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JButton editButton;
 
     /**
-     * Move up button instance.
-     */
-    private JButton moveUpButton;
-
-    /**
-     * Move down button instance.
-     */
-    private JButton moveDownButton;
-
-    /**
      * Remove button instance.
      */
     private JButton removeButton;
@@ -272,25 +262,19 @@ public class DatabaseObjectManagerDialog extends JDialog {
     public JPanel createManageButtonPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(5, 1, 10, 10));
+        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
 
         // Create the buttons to add to the panel
         this.addButton = new JButton("Add");
         this.editButton = new JButton("Edit");
-        this.moveUpButton = new JButton("Move up");
-        this.moveDownButton = new JButton("Move down");
         this.removeButton = new JButton("Remove");
 
         // Add the buttons to the panel
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
-        buttonPanel.add(moveUpButton);
-        buttonPanel.add(moveDownButton);
         buttonPanel.add(removeButton);
         addButton.addActionListener(e -> addDatabase());
         editButton.addActionListener(e -> editDatabase());
-        moveUpButton.addActionListener(e -> moveDatabasesUp());
-        moveDownButton.addActionListener(e -> moveDatabasesDown());
         removeButton.addActionListener(e -> removeDatabases());
 
         // Return the button panel
@@ -348,10 +332,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Enable the test and delete buttons if at least one database is selected
         removeButton.setEnabled(selected > 0);
-
-        // Enable the move buttons if at least one database is selected and if the databases can move in that direction
-        moveUpButton.setEnabled(canMoveDatabasesUp());
-        moveDownButton.setEnabled(canMoveDatabasesDown());
     }
 
     /**
