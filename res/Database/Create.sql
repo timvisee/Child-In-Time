@@ -8,18 +8,18 @@
 
 # Create the Child-In-Time table, and select it
 # TODO: Remove this in production
-DROP DATABASE IF EXISTS `childintime`;
 CREATE DATABASE IF NOT EXISTS `childintime`;
 USE childintime;
 
-create table `school` (
+
+CREATE TABLE IF NOT EXISTS `school` (
 `id` INT NOT NULL AUTO_INCREMENT,
     	`name` TEXT NOT NULL,
     	`commune` TEXT NOT NULL,
     	PRIMARY KEY (`id`)
 );
 
-create table `teacher` (
+CREATE TABLE IF NOT EXISTS `teacher` (
 	`id` INT NOT NULL AUTO_INCREMENT,
     	`first_name` TEXT NOT NULL,
     	`last_name` TEXT NOT NULL,
@@ -29,7 +29,7 @@ create table `teacher` (
     	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)
 );
 
-CREATE TABLE `group` (
+CREATE TABLE IF NOT EXISTS `group` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`name` TEXT NOT NULL,
     	`school_id` INT NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE `group` (
     	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)
 );
 
-create table `student` (
+CREATE TABLE IF NOT EXISTS `student` (
 	`id` INT NOT NULL AUTO_INCREMENT,
     	`first_name` TEXT NOT NULL,
     	`last_name` TEXT NOT NULL,
@@ -49,7 +49,7 @@ create table `student` (
 
 );
 
-create table `bodystate` (
+CREATE TABLE IF NOT EXISTS `bodystate` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 			`student_id` INT NOT NULL,
     	`date` DATE NOT NULL,
@@ -59,13 +59,13 @@ create table `bodystate` (
     	FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)
 );
 
-create table `parkour` (
+CREATE TABLE IF NOT EXISTS `parkour` (
 	`id` INT NOT NULL AUTO_INCREMENT,
     	`description` TEXT NULL,
     	PRIMARY KEY (`id`)
 );
 
-create table `measurement` (
+CREATE TABLE IF NOT EXISTS `measurement` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`student_id` INT NOT NULL,
 	`date` DATE NOT NULL,
@@ -76,7 +76,7 @@ create table `measurement` (
 		FOREIGN KEY (`parkour_id`) REFERENCES `parkour`(`id`)
 );
 
-create table `group_teacher` (
+CREATE TABLE IF NOT EXISTS `group_teacher` (
 	`group_id` INT NOT NULL,
     	`teacher_id` INT NOT NULL,
     	PRIMARY KEY (`group_id`, `teacher_id`),
@@ -92,18 +92,18 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 	BEGIN
 
 		# Build the _meta_data statement
-		SET @metaDataStatement = CONCAT('CREATE TABLE `', tableName, '_meta_data` (
+		SET @metaDataStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_data` (
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`field` TEXT NOT NULL,
 			`type` SMALLINT NOT NULL,
 			`value` TEXT NULL,
-			`', tableName, '_id` int(9) NOT NULL,
+			`', tableName, '_id` INT NOT NULL,
 			PRIMARY KEY (`id`),
 			FOREIGN KEY (`', tableName, '_id`) REFERENCES `', tableName, '`(`id`)
 		);');
 
 		# Build the _meta_field statement
-		SET @metaFieldStatement = CONCAT('CREATE TABLE `', tableName, '_meta_field` (
+		SET @metaFieldStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_field` (
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`name` TEXT NOT NULL,
 			`type` SMALLINT NOT NULL,
@@ -113,7 +113,7 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 		);');
 
 		# Build the _meta_value statement
-		SET @metaValueStatement = CONCAT('CREATE TABLE `', tableName, '_meta_value` (
+		SET @metaValueStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_value` (
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`value` TEXT NOT NULL,
 			`field_id` INT NOT NULL,
