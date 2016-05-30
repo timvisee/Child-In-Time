@@ -28,11 +28,7 @@ public enum StudentFields implements DatabaseFieldsInterface {
         this.fieldName = fieldName;
     }
 
-    /**
-     * Get the field name in the database of this field.
-     *
-     * @return Field name in the database.
-     */
+    @Override
     public String getFieldName() {
         return this.fieldName;
     }
