@@ -46,7 +46,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Data list model instance.
      */
-    private DefaultListModel<AbstractDatabaseObject> dataListModel;
+    private DefaultListModel<AbstractDatabaseObject> objectsListModel;
 
     /**
      * Data list instance.
@@ -177,7 +177,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         pnlMain.add(new JLabel("Databases:"), c);
 
         // Create the database manager list and add it to the main panel
-        JScrollPane databaseList = createDatabaseList();
+        JScrollPane databaseList = buildUiList();
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 1;
@@ -225,19 +225,19 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Create a list to manage the databases in.
+     * Create a list to manage the database objects in.
      *
      * @return Scroll pane with list.
      */
-    public JScrollPane createDatabaseList() {
+    public JScrollPane buildUiList() {
         // Create the default list model
-        this.dataListModel = new DefaultListModel<>();
+        this.objectsListModel = new DefaultListModel<>();
 
-        // Refresh the list of databases to add them to the list model
-        updateListView();
+        // Refresh the list of databases objects and add them to the list
+        updateUiList();
 
         // Create the list and create an empty border
-        this.objectList = new JList<>(this.dataListModel);
+        this.objectList = new JList<>(this.objectsListModel);
         this.objectList.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Update the button panel on selection change
@@ -254,14 +254,14 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Update the list view to show the list of databases.
+     * Update the UI list with the current list of database objects.
      */
-    public void updateListView() {
-        // Clear all current items
-        this.dataListModel.clear();
+    public void updateUiList() {
+        // Clear all current database objects.
+        this.objectsListModel.clear();
 
-        // Add the items
-        this.objects.forEach(this.dataListModel::addElement);
+        // Add the items to the list model
+        this.objects.forEach(this.objectsListModel::addElement);
     }
 
     /**
@@ -367,7 +367,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             this.objects.add(database);
 
             // Refresh the list of databases
-            updateListView();
+            updateUiList();
         }
     }
 
@@ -392,7 +392,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             this.objects.remove(this.objectList.getSelectedIndex());
 
         // Refresh the list
-        updateListView();
+        updateUiList();
     }
 
     /**
@@ -412,7 +412,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
                 indices[i]--;
 
         // Update the list
-        updateListView();
+        updateUiList();
 
         // Set the selected indices
         this.objectList.setSelectedIndices(indices);
@@ -449,7 +449,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
                 indices[i]++;
 
         // Update the list
-        updateListView();
+        updateUiList();
 
         // Set the selected indices
         this.objectList.setSelectedIndices(indices);
@@ -547,7 +547,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             this.objects.remove((AbstractDatabase) database);
 
         // Refresh the list
-        updateListView();
+        updateUiList();
     }
 
     /**
