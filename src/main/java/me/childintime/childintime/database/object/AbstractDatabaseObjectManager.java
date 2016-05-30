@@ -24,6 +24,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of objects.
      */
+    // TODO: Add fields parameter here too, which will be used when new data is fetched?
     public abstract List<AbstractDatabaseObject> getObjects();
 
     /**
