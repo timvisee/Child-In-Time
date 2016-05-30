@@ -289,7 +289,7 @@ public class LoginDialog extends JDialog {
         // Add an action to the configure button
         this.configureButton.addActionListener(e -> {
             // Show the database manager form
-            new DatabaseManagerDialog(instance, true, false);
+            new DatabaseManagerDialog(instance, true);
 
             // Get the selected combo box value
             AbstractDatabase selected = getSelectedDatabase();
