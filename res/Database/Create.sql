@@ -93,7 +93,7 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 
 		# Build the _meta_data statement
 		SET @metaDataStatement = CONCAT('CREATE TABLE `', tableName, '_meta_data` (
-			`id` INT NOT NULL,
+			`id` INT NOT NULL AUTO_INCREMENT,
 			`field` TEXT NOT NULL,
 			`type` SMALLINT NOT NULL,
 			`value` TEXT NULL,
@@ -104,7 +104,7 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 
 		# Build the _meta_field statement
 		SET @metaFieldStatement = CONCAT('CREATE TABLE `', tableName, '_meta_field` (
-			`id` INT NOT NULL,
+			`id` INT NOT NULL AUTO_INCREMENT,
 			`name` TEXT NOT NULL,
 			`type` SMALLINT NOT NULL,
 			`default` TEXT NULL,
@@ -114,7 +114,7 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 
 		# Build the _meta_value statement
 		SET @metaValueStatement = CONCAT('CREATE TABLE `', tableName, '_meta_value` (
-			`id` INT NOT NULL,
+			`id` INT NOT NULL AUTO_INCREMENT,
 			`value` TEXT NOT NULL,
 			`field_id` INT NOT NULL,
 			PRIMARY KEY (`id`),
