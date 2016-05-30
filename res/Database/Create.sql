@@ -11,6 +11,11 @@
 CREATE DATABASE IF NOT EXISTS `childintime`;
 USE childintime;
 
+CREATE TABLE IF NOT EXISTS `user` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`username` TEXT NOT NULL,
+	`password_hash` TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS `school` (
 `id` INT NOT NULL AUTO_INCREMENT,
