@@ -82,9 +82,8 @@ public class DatabaseManagerDialog extends JDialog {
      *
      * @param owner Owner dialog.
      * @param show True to show the frame once it has been initialized.
-     * @param create Create one.
      */
-    public DatabaseManagerDialog(Window owner, boolean show, boolean create) {
+    public DatabaseManagerDialog(Window owner, boolean show) {
         // Construct the form
         super(owner, FORM_TITLE, ModalityType.APPLICATION_MODAL);
 
@@ -92,7 +91,7 @@ public class DatabaseManagerDialog extends JDialog {
         this.databases = Core.getInstance().getDatabaseManager().getDatabasesClone();
 
         // Create the form UI
-        createUIComponents();
+        buildUi();
 
         // Do not close the window when pressing the red cross, execute the close method instead
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -130,19 +129,14 @@ public class DatabaseManagerDialog extends JDialog {
         this.setLocationByPlatform(true);
         this.setLocationRelativeTo(owner);
 
-        // Create a new database
-        // TODO: Create a database
-        if(create)
-            addDatabase();
-
         // Show the form
         this.setVisible(show);
     }
 
     /**
-     * Create all UI components for the frame.
+     * Build the UI components for this window.
      */
-    private void createUIComponents() {
+    private void buildUi() {
         // Construct a grid bag constraints object to specify the placement of all components
         GridBagConstraints c = new GridBagConstraints();
 
