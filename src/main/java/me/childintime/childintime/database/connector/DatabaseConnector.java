@@ -13,14 +13,28 @@ public class DatabaseConnector {
      */
     public static final int CONNECTION_TIMEOUT = 10;
 
+    /**
+     * Abstract database instance, containing the configuration.
+     */
     private AbstractDatabase database;
 
+    /**
+     * Database connection instance.
+     */
     private Connection connection;
 
+    /**
+     * Constructor.
+     *
+     * @param database Database configuration.
+     */
     public DatabaseConnector(AbstractDatabase database) {
         this.database = database;
     }
 
+    /**
+     * Initialize.
+     */
     public void init() {
         try {
             String driver = database.getDatabaseDriverString();
@@ -71,6 +85,9 @@ public class DatabaseConnector {
         return this.connection;
     }
 
+    /**
+     * Destroy the database connector.
+     */
     public void destroy() {
         if(connection != null) {
             try {
