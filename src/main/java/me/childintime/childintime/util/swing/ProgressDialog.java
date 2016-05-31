@@ -48,6 +48,21 @@ public class ProgressDialog extends JDialog {
     private boolean showCancelButton = false;
 
     /**
+     * Define whether to show the progress.
+     */
+    private boolean showProgress = false;
+
+    /**
+     * The progress value.
+     */
+    private int progressValue = 0;
+
+    /**
+     * The progress maximum.
+     */
+    private int progressMax = 0;
+
+    /**
      * Constructor.
      *
      * @param owner Owner window, or null.
@@ -195,9 +210,7 @@ public class ProgressDialog extends JDialog {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(8, 2, 0, 2));
         progressBar = new JProgressBar();
-        progressBar.setIndeterminate(true);
-        progressBar.setMinimum(0);
-        progressBar.setMaximum(1000);
+        setShowProgress(true);
         buttonPanel.add(progressBar);
         progressBar.setPreferredSize(new Dimension(progressBar.getPreferredSize().width, 20));
         if(this.showCancelButton) {
@@ -234,5 +247,71 @@ public class ProgressDialog extends JDialog {
 
         // Print the status to the console
         System.out.println("Status: " + status);
+    }
+
+    /**
+     * Check whether progress is shown.
+     *
+     * @return True if progress is shown, false if not.
+     */
+    public boolean isShowProgress() {
+        return this.showProgress;
+    }
+
+    /**
+     * Set whether progress is shown.
+     *
+     * @param showProgress True if progress is shown, false if not.
+     */
+    public void setShowProgress(boolean showProgress) {
+        // Set the progress state
+        this.showProgress = showProgress;
+
+        // Update the progress bar
+        this.progressBar.setIndeterminate(!showProgress);
+    }
+
+    /**
+     * Get the current progress value.
+     *
+     * @return Progress value.
+     */
+    public int getProgressValue() {
+        return this.progressValue;
+    }
+
+    /**
+     * Set the current progress value.
+     *
+     * @param progressValue Progress value.
+     */
+    public void setProgressValue(int progressValue) {
+        // Update the value
+        this.progressValue = progressValue;
+
+        // Set the progress bar value
+        this.progressBar.setValue(progressValue);
+    }
+
+    /**
+     * Get the progress maximum.
+     *
+     * @return Progress maximum.
+     */
+    public int getProgressMax() {
+        return this.progressMax;
+    }
+
+    /**
+     * Set the progress maximum.
+     *
+     * @param progressMax Progress maximum.
+     */
+    public void setProgressMax(int progressMax) {
+        // Update the maximum
+        this.progressMax = progressMax;
+
+        // Set the progress bar maximum
+        this.progressBar.setMaximum(progressMax);
     }
 }
