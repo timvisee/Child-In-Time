@@ -137,6 +137,10 @@ public class DatabaseBuilder {
         fillTableBodyState();
         this.progressDialog.increaseProgressValue();
 
+        // Fill the parkour table
+        fillTableParkour();
+        this.progressDialog.increaseProgressValue();
+
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -903,6 +907,39 @@ public class DatabaseBuilder {
                         "  (NULL, '2015-12-26', 117, 40, 11)," +
                         "  (NULL, '2016-04-08', 116, 35, 6)," +
                         "  (NULL, '2016-04-03', 107, 49, 8);"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Fill the parkour table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableParkour() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "LOCK TABLES `parkour` WRITE;" +
+                        "INSERT INTO `parkour` VALUES" +
+                        "  (NULL, 'Parkour 1')," +
+                        "  (NULL, 'Parkour 2')," +
+                        "  (NULL, 'Parkour 3');" +
+                        "UNLOCK TABLES;"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "INSERT INTO `parkour` VALUES" +
+                        "  (NULL, 'Parkour 1')," +
+                        "  (NULL, 'Parkour 2')," +
+                        "  (NULL, 'Parkour 3');"
                 );
                 break;
         }
