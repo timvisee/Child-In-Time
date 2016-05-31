@@ -233,7 +233,7 @@ public class InitialSetup {
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                buttons.toArray(new String[]{}),
+                buttons.toArray(),
                 buttons.get(!Platform.isMacOsX() ? 0 : 1)
         );
 
