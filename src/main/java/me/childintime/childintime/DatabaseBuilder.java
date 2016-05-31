@@ -133,6 +133,10 @@ public class DatabaseBuilder {
         fillTableStudent();
         this.progressDialog.increaseProgressValue();
 
+        // Fill the body state table
+        fillTableBodyState();
+        this.progressDialog.increaseProgressValue();
+
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -832,6 +836,73 @@ public class DatabaseBuilder {
                         "  (NULL, 'Jonathan', 'Ferguson', 1, '2014-02-06', 9)," +
                         "  (NULL, 'Kathryn', 'Carr', 0, '2006-03-06', 9)," +
                         "  (NULL, 'Sean', 'Reid', 1, '2009-04-20', 9);"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Fill the body state table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableBodyState() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "LOCK TABLES `bodystate` WRITE;" +
+                        "INSERT INTO `bodystate` VALUES" +
+                        "  (NULL, '2016-01-11', 141, 38, 5)," +
+                        "  (NULL, '2015-06-07', 150, 46, 20)," +
+                        "  (NULL, '2016-02-03', 116, 41, 13)," +
+                        "  (NULL, '2015-08-11', 140, 50, 2)," +
+                        "  (NULL, '2016-04-08', 109, 46, 11)," +
+                        "  (NULL, '2016-05-03', 150, 32, 8)," +
+                        "  (NULL, '2016-02-17', 125, 39, 12)," +
+                        "  (NULL, '2015-09-06', 92, 31, 16)," +
+                        "  (NULL, '2015-08-06', 102, 47, 4)," +
+                        "  (NULL, '2016-02-02', 95, 47, 5)," +
+                        "  (NULL, '2015-08-01', 107, 33, 18)," +
+                        "  (NULL, '2015-06-22', 119, 44, 5)," +
+                        "  (NULL, '2015-08-08', 147, 40, 14)," +
+                        "  (NULL, '2015-12-16', 134, 46, 3)," +
+                        "  (NULL, '2016-02-08', 97, 31, 17)," +
+                        "  (NULL, '2015-11-01', 123, 38, 1)," +
+                        "  (NULL, '2015-07-13', 124, 33, 2)," +
+                        "  (NULL, '2015-12-26', 117, 40, 11)," +
+                        "  (NULL, '2016-04-08', 116, 35, 6)," +
+                        "  (NULL, '2016-04-03', 107, 49, 8);" +
+                        "UNLOCK TABLES;"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "INSERT INTO `bodystate` VALUES" +
+                        "  (NULL, '2016-01-11', 141, 38, 5)," +
+                        "  (NULL, '2015-06-07', 150, 46, 20)," +
+                        "  (NULL, '2016-02-03', 116, 41, 13)," +
+                        "  (NULL, '2015-08-11', 140, 50, 2)," +
+                        "  (NULL, '2016-04-08', 109, 46, 11)," +
+                        "  (NULL, '2016-05-03', 150, 32, 8)," +
+                        "  (NULL, '2016-02-17', 125, 39, 12)," +
+                        "  (NULL, '2015-09-06', 92, 31, 16)," +
+                        "  (NULL, '2015-08-06', 102, 47, 4)," +
+                        "  (NULL, '2016-02-02', 95, 47, 5)," +
+                        "  (NULL, '2015-08-01', 107, 33, 18)," +
+                        "  (NULL, '2015-06-22', 119, 44, 5)," +
+                        "  (NULL, '2015-08-08', 147, 40, 14)," +
+                        "  (NULL, '2015-12-16', 134, 46, 3)," +
+                        "  (NULL, '2016-02-08', 97, 31, 17)," +
+                        "  (NULL, '2015-11-01', 123, 38, 1)," +
+                        "  (NULL, '2015-07-13', 124, 33, 2)," +
+                        "  (NULL, '2015-12-26', 117, 40, 11)," +
+                        "  (NULL, '2016-04-08', 116, 35, 6)," +
+                        "  (NULL, '2016-04-03', 107, 49, 8);"
                 );
                 break;
         }
