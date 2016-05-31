@@ -1,5 +1,6 @@
 package me.childintime.childintime.database.connector;
 
+import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 
 import java.sql.Connection;
@@ -79,7 +80,7 @@ public class DatabaseConnector {
             init();
 
         // Create the connection and explicitly save it
-        this.connection = DriverManager.getConnection(database.getDatabaseConnectionString());
+        this.connection = DriverManager.getConnection(database.getDatabaseConnectionUrl());
 
         // Return the connection
         return this.connection;
@@ -98,5 +99,14 @@ public class DatabaseConnector {
                 connection = null;
             }
         }
+    }
+
+    /**
+     * Get the database dialect.
+     *
+     * @return Database dialect.
+     */
+    public DatabaseDialect getDialect() {
+        return this.database.getDialect();
     }
 }
