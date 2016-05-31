@@ -2,6 +2,7 @@ package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.App;
+import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -241,8 +242,13 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     }
 
     @Override
-    public String getDatabaseConnectionString() {
+    public String getDatabaseConnectionUrl() {
         return "jdbc:mysql://" + host + "/?user=" + user + "&password=" + password;
+    }
+
+    @Override
+    public DatabaseDialect getDialect() {
+        return DatabaseDialect.MYSQL;
     }
 
     @Override

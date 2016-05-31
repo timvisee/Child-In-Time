@@ -233,6 +233,13 @@ public abstract class AbstractDatabase implements Cloneable {
      */
     public abstract String getDatabaseConnectionUrl();
 
+    /**
+     * Get the database dialect used by this database configuration.
+     *
+     * @return Database dialect.
+     */
+    public abstract DatabaseDialect getDialect();
+
     @Override
     public String toString() {
         return getName();
