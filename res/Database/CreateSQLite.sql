@@ -22,13 +22,15 @@ CREATE TABLE IF NOT EXISTS `school` (
 );
 
 CREATE TABLE IF NOT EXISTS `teacher` (
-	`id` INTEGER AUTOINCREMENT NOT NULL,
-    	`first_name` TEXT NOT NULL,
-    	`last_name` TEXT NOT NULL,
-    	`is_gym` TINYINT NOT NULL,
-    	`school_id` INT NOT NULL,
-    	PRIMARY KEY (`id`),
-    	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)
+	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
+	`first_name` TEXT NOT NULL,
+	`last_name` TEXT NOT NULL,
+	`gender` TINYINT NOT NULL,
+	`is_gym` TINYINT NOT NULL,
+	`school_id` INT NOT NULL,
+	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`),
+	CHECK(`gender` = 0 OR `gender` = 1),
+	CHECK(`is_gym` = 0 OR `is_gym` = 1)
 );
 
 CREATE TABLE `group` (
