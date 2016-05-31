@@ -170,6 +170,11 @@ DROP PROCEDURE createMetaTable;
 
 # Insert data
 
+LOCK TABLES `user` WRITE;
+INSERT INTO `user` VALUES
+	(NULL, 'admin', MD5('admin'));
+UNLOCK TABLES;
+
 LOCK TABLES `school` WRITE;
 INSERT INTO `school` VALUES
 	(NULL, 'De Wegwijzer', 'Alphen aan den Rijn'),
