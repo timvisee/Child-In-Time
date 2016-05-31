@@ -377,3 +377,8 @@ INSERT INTO `bodystate` VALUES
   (NULL, '2015-12-26', 117, 40, 11),
   (NULL, '2016-04-08', 116, 35, 6),
   (NULL, '2016-04-03', 107, 49, 8);
+
+INSERT INTO `parkour` VALUES
+  (NULL, 'Parkour 1'),
+  (NULL, 'Parkour 2'),
+  (NULL, 'Parkour 3');
