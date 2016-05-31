@@ -28,10 +28,11 @@ public abstract class AbstractDatabaseObjectManager {
      * Get the list of objects.
      * The list of objects will be fetched automatically from the database if they aren't cached yet.
      *
+     * @param fields Database object fields to fetch and cache (using the same query, to improve performance).
+     *
      * @return List of objects.
      */
-    // TODO: Add fields parameter here too, which will be used when new data is fetched?
-    public abstract List<AbstractDatabaseObject> getObjects();
+    public abstract List<AbstractDatabaseObject> getObjects(DatabaseFieldsInterface[] fields);
 
     /**
      * Get the number of objects in the database.
