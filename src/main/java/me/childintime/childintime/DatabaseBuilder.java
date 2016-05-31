@@ -117,6 +117,10 @@ public class DatabaseBuilder {
         fillTableUser();
         this.progressDialog.increaseProgressValue();
 
+        // Fill the school table
+        fillTableSchool();
+        this.progressDialog.increaseProgressValue();
+
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -622,6 +626,39 @@ public class DatabaseBuilder {
                 statement.execute(
                         "INSERT INTO `user` VALUES" +
                         "  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Fill the school table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableSchool() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "LOCK TABLES `school` WRITE;" +
+                        "INSERT INTO `school` VALUES" +
+                        "  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn')," +
+                        "  (NULL, 'De Hobbitburcht', 'Amsterdam')," +
+                        "  (NULL, 'De Stromen', 'Den Haag');" +
+                        "UNLOCK TABLES;"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "INSERT INTO `school` VALUES" +
+                        "  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn')," +
+                        "  (NULL, 'De Hobbitburcht', 'Amsterdam')," +
+                        "  (NULL, 'De Stromen', 'Den Haag');"
                 );
                 break;
         }
