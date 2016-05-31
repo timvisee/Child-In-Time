@@ -33,12 +33,11 @@ CREATE TABLE IF NOT EXISTS `teacher` (
 	CHECK(`is_gym` = 0 OR `is_gym` = 1)
 );
 
-CREATE TABLE `group` (
-	`id` INTEGER AUTOINCREMENT NOT NULL,
+CREATE TABLE IF NOT EXISTS `group` (
+	`id` INT PRIMARY KEY AUTOINCREMENT ,
 	`name` TEXT NOT NULL,
-    	`school_id` INT NOT NULL,
-    	PRIMARY KEY (`id`),
-    	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)
+	`school_id` INT NOT NULL,
+	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `student` (
