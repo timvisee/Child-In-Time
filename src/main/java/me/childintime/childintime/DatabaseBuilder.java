@@ -60,6 +60,10 @@ public class DatabaseBuilder {
         this.progressDialog.setProgressMax(2);
         this.progressDialog.setShowProgress(true);
 
+        // Prepare the database
+        prepare();
+        this.progressDialog.increaseProgressValue();
+
         // Create the user table
         createTableUser();
         this.progressDialog.increaseProgressValue();
@@ -79,6 +83,31 @@ public class DatabaseBuilder {
 
         // Return the result
         return true;
+    }
+
+    /**
+     * Prepare the database.
+     *
+     * @throws SQLException
+     */
+    public void prepare() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;" +
+                        "/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;" +
+                        "/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;" +
+                        "/*!40101 SET NAMES utf8 */;"
+                );
+                break;
+
+            case SQLITE:
+                break;
+        }
     }
 
     /**
