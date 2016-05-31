@@ -386,26 +386,27 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Ask whether the user wants to delete the databases
-        switch(JOptionPane.showConfirmDialog(this, "Are you sure you'd like to delete this database?", "Delete database", JOptionPane.YES_NO_OPTION)) {
+        // TODO: Show a proper message!
+        switch(JOptionPane.showConfirmDialog(this, "Are you sure you'd like to delete this object?", "Delete object", JOptionPane.YES_NO_OPTION)) {
             case JOptionPane.NO_OPTION:
             case JOptionPane.CANCEL_OPTION:
             case JOptionPane.CLOSED_OPTION:
                 return;
         }
 
-        // Delete the selected databases
-        for(Object database : this.objectList.getSelectedValuesList())
+        // Delete the selected database object
+        for(Object databaseObject : this.objectList.getSelectedValuesList())
             //noinspection RedundantCast
-            this.objects.remove((AbstractDatabase) database);
+            this.objects.remove((AbstractDatabaseObject) databaseObject);
 
         // Refresh the list
         updateUiList();
     }
 
     /**
-     * Get the number of selected items.
+     * Get the number of selected database objects.
      *
-     * @return Number of selected items.
+     * @return Number of selected database objects.
      */
     public int getSelectedCount() {
         return this.objectList.getSelectedValuesList().size();
@@ -414,9 +415,11 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Apply and save the databases.
      */
+    // TODO: Create a method that applies the difference between the original list, and the new list, to the database using proper queries.
     public void applyDatabases() {
         // Store a copy of the databases
-        Core.getInstance().getDatabaseManager().setDatabases(this.objects);
+        // TODO: Reimplement this
+        //Core.getInstance().getDatabaseManager().setDatabases(this.objects);
 
         // Create a progress dialog and save the database configuration
         ProgressDialog progress = new ProgressDialog(this, FORM_TITLE, false, "Saving database configuration...", true);
