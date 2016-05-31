@@ -52,13 +52,12 @@ CREATE TABLE IF NOT EXISTS `student` (
 );
 
 CREATE TABLE IF NOT EXISTS `bodystate` (
-	`id` INTEGER AUTOINCREMENT NOT NULL,
-			`student_id` INT NOT NULL,
-    	`date` DATE NOT NULL,
-    	`length` SMALLINT NOT NULL,
-    	`weight` SMALLINT NOT NULL,
-    	PRIMARY KEY (`id`),
-    	FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)
+	`id` INTEGER PRIMARY KEY AUTOINCREMENT ,
+	`date` DATE NOT NULL,
+	`length` INTEGER NOT NULL,
+	`weight` INTEGER NOT NULL,
+	`student_id` INTEGER NOT NULL,
+	FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `parkour` (
