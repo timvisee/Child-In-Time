@@ -6,13 +6,19 @@ import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.database.configuration.DatabaseManager;
 import me.childintime.childintime.gui.window.LoginDialog;
+import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.time.Profiler;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Core {
 
@@ -173,6 +179,59 @@ public class Core {
             // Destroy the core
             destroy();
             return;
+        }
+
+        // Check whether the database contains all required tables
+        try {
+            // Show a status message
+            this.progressDialog.setStatus("Checking database...");
+
+            // Fetch the database meta data
+            DatabaseMetaData dbm = this.databaseConnector.getConnection().getMetaData();
+            ResultSet tables = dbm.getTables(null, null, "user", null);
+
+            // Check whether the required table exists
+            if(!tables.next()) {
+                // Create a list with the buttons to show in the option dialog
+                List<String> buttons = new ArrayList<>();
+                buttons.add("Setup Database");
+                buttons.add("Quit");
+
+                // Reverse the button list if we're on a Mac OS X system
+                if(Platform.isMacOsX())
+                    Collections.reverse(buttons);
+
+                // Show the option dialog
+                final int option = JOptionPane.showOptionDialog(
+                        this.progressDialog,
+                        "The current database is empty and is not ready to be used.\n" +
+                                "Would you like to set up the database using the default configuration?",
+                        "Empty database",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        buttons.toArray(),
+                        buttons.get(!Platform.isMacOsX() ? 0 : 1)
+                );
+
+                // Make sure the setup option is pressed
+                if(option != (!Platform.isMacOsX() ? 0 : 1)) {
+                    // TODO: Return to the login dialog, the database setup process is cancelled!
+                    JOptionPane.showMessageDialog(this.progressDialog, "Should show login dialog again, not working yet!");
+                    System.exit(0);
+                }
+
+                // Build the database
+                // TODO: Handle this properly!
+                try {
+                    new DatabaseBuilder(this.databaseConnector, this.progressDialog).build();
+                } catch(SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch(SQLException e) {
+            e.printStackTrace();
         }
 
         // Show a status message
