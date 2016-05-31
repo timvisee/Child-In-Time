@@ -290,9 +290,9 @@ UNLOCK TABLES;
 
 LOCK TABLES `parkour` WRITE;
 INSERT INTO `parkour` VALUES
-  (NULL, NULL),
-  (NULL, NULL),
-  (NULL, NULL);
+  (NULL, 'Parkour 1'),
+  (NULL, 'Parkour 2'),
+  (NULL, 'Parkour 3');
 UNLOCK TABLES;
 
 LOCK TABLES `measurement` WRITE;
