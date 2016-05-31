@@ -309,3 +309,16 @@ INSERT INTO `school` VALUES
   (NULL, 'De Wegwijzer', 'Alphen aan den Rijn'),
   (NULL, 'De Hobbitburcht', 'Amsterdam'),
   (NULL, 'De Stromen', 'Den Haag');
+
+INSERT INTO `teacher` VALUES
+  (NULL, 'Henk', 'Hoornald', 1, 1, 1),
+  (NULL, 'Henry', 'Hunter', 1, 1, 1),
+  (NULL, 'Phillip', 'Ward', 1, 0, 1),
+  (NULL, 'Carlos', 'Ryan', 1, 0, 1),
+  (NULL, 'Karen', 'Diaz', 0, 1, 2),
+  (NULL, 'Paula', 'Black', 0, 0, 2),
+  (NULL, 'Julie', 'Sims', 0, 0, 2),
+  (NULL, 'Laura', 'Garcia', 0, 1, 3),
+  (NULL, 'Mark', 'Romero', 1, 0, 3),
+  (NULL, 'Ashley', 'Jacobs', 0, 0, 3),
+  (NULL, 'Linda', 'Jackson', 0, 0, 3);
