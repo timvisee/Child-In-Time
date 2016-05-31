@@ -68,6 +68,10 @@ public class DatabaseBuilder {
         createTableUser();
         this.progressDialog.increaseProgressValue();
 
+        // Create the school table
+        createTableSchool();
+        this.progressDialog.increaseProgressValue();
+
         // Fill the user table
         fillTableUser();
         this.progressDialog.increaseProgressValue();
@@ -138,6 +142,40 @@ public class DatabaseBuilder {
                         "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "    `username` TEXT NOT NULL," +
                         "    `password_hash` TEXT NOT NULL" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the school table.
+     *
+     * @throws SQLException
+     */
+    public void createTableSchool() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `school` (" +
+                        "    `id` INT NOT NULL AUTO_INCREMENT," +
+                        "    `name` TEXT NOT NULL," +
+                        "    `commune` TEXT NOT NULL," +
+                        "    PRIMARY KEY (`id`)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `school` (" +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "    `name` TEXT NOT NULL," +
+                        "    `commune` TEXT NOT NULL" +
                         ");"
                 );
                 break;
