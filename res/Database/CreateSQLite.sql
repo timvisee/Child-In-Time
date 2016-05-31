@@ -83,71 +83,26 @@ CREATE TABLE IF NOT EXISTS `group_teacher` (
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
 );
 
-/* Drop the create meta table statement if it already exists */
-DROP PROCEDURE IF EXISTS createMetaTable;
+CREATE TABLE IF NOT EXISTS `user_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `user_id` INTEGER NOT NULL,
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+);
 
-/* Create the create meta table statement, to easily create metadata tables */
-CREATE PROCEDURE createMetaTable( IN tableName VARCHAR (30))
-BEGIN
+CREATE TABLE IF NOT EXISTS `user_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);
 
-# Build the _meta_data statement
-SET @metaDataStatement = CONCAT('CREATE TABLE `', tableName, '_meta_data` (
-			`id` INT NOT NULL,
-			`field` TEXT NOT NULL,
-			`type` SMALLINT NOT NULL,
-			`value` TEXT NULL,
-			`', tableName, '_id` int(9) NOT NULL,
-			PRIMARY KEY (`id`),
-			FOREIGN KEY (`', tableName, '_id`) REFERENCES `', tableName, '`(`id`)
-		);');
-
-# Build the _meta_field statement
-SET @metaFieldStatement = CONCAT('CREATE TABLE `', tableName, '_meta_field` (
-			`id` INT NOT NULL,
-			`name` TEXT NOT NULL,
-			`type` SMALLINT NOT NULL,
-			`default` TEXT NULL,
-			`allow_null` TINYINT DEFAULT 1 NOT NULL,
-			PRIMARY KEY (`id`)
-		);');
-
-# Build the _meta_value statement
-SET @metaValueStatement = CONCAT('CREATE TABLE `', tableName, '_meta_value` (
-			`id` INT NOT NULL,
-			`value` TEXT NOT NULL,
-			`field_id` INT NOT NULL,
-			PRIMARY KEY (`id`),
-			FOREIGN KEY (`field_id`) REFERENCES `', tableName, '_meta_field`(`id`)
-		);');
-
-# Prepare the statements
-PREPARE metaDataPrepared FROM @metaDataStatement;
-PREPARE metaFieldPrepared FROM @metaFieldStatement;
-PREPARE metaValuePrepared FROM @metaValueStatement;
-
-# Execute the statements
-EXECUTE metaDataPrepared;
-EXECUTE metaFieldPrepared;
-EXECUTE metaValuePrepared;
-
-# Deallocate the statements
-DEALLOCATE PREPARE metaDataPrepared;
-DEALLOCATE PREPARE metaFieldPrepared;
-DEALLOCATE PREPARE metaValuePrepared;
-
-END;
-;
-
-/* Create meta data tables for database objects */
-CALL createMetaTable('student');
-CALL createMetaTable('teacher');
-CALL createMetaTable('group');
-CALL createMetaTable('school');
-CALL createMetaTable('bodystate');
-CALL createMetaTable('parkour');
-CALL createMetaTable('measurement');
-
-/* Drop the create meta table procedure, we aren't using it anymore */
-DROP PROCEDURE createMetaTable;
-
-/* Insert data */
+CREATE TABLE IF NOT EXISTS `user_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `user_meta_field` (`id`)
+);
