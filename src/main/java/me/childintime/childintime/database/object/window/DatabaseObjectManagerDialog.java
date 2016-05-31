@@ -3,9 +3,7 @@ package me.childintime.childintime.database.object.window;
 import com.sun.istack.internal.NotNull;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.DatabaseManager;
-import me.childintime.childintime.database.configuration.gui.window.DatabaseModifyDialog;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.util.Platform;
@@ -20,8 +18,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class DatabaseObjectManagerDialog extends JDialog {
@@ -30,18 +26,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * The database object manager this dialog is used for.
      */
     private AbstractDatabaseObjectManager objectManager;
-
-    /**
-     * Frame title.
-     */
-    // TODO: Fetch the 'type' name from the object manager instance, to determine a proper window title.
-    private static final String FORM_TITLE = App.APP_NAME + " - Manager";
-
-    /**
-     * The main label.
-     */
-    // TODO: Fetch the 'type' name from the object manager instance, to determine a proper label.
-    private JLabel mainLabel = new JLabel("Add, edit or delete databases.");
 
     /**
      * Data list model instance.
@@ -82,7 +66,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public DatabaseObjectManagerDialog(Window owner, @NotNull AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
-        super(owner, FORM_TITLE, ModalityType.APPLICATION_MODAL);
+        super(owner, App.APP_NAME + " - " + objectManager.getTypeName() + " manager", ModalityType.APPLICATION_MODAL);
 
         // Set the database object manager
         this.objectManager = objectManager;
@@ -150,7 +134,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
         JPanel pnlMain = new JPanel();
         pnlMain.setLayout(new GridBagLayout());
 
-        // Configure the placement of the questions label, and add it to the questions panel
+        // Create the main label
+        final JLabel mainLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + ".");
+
+        // Add the main label
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
@@ -422,7 +409,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         //Core.getInstance().getDatabaseManager().setDatabases(this.objects);
 
         // Create a progress dialog and save the database configuration
-        ProgressDialog progress = new ProgressDialog(this, FORM_TITLE, false, "Saving database configuration...", true);
+        ProgressDialog progress = new ProgressDialog(this, "Working...", false, "Saving database configuration...", true);
 
         try {
             // Save the database configuration
