@@ -28,19 +28,9 @@ public class Student extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean hasField(DatabaseFieldsInterface field) {
-        return hasFields(new DatabaseFieldsInterface[]{field});
-    }
-
-    @Override
     public boolean fetchFields(DatabaseFieldsInterface[] fields) {
         return false;
         // TODO: Implement this
-    }
-
-    @Override
-    public boolean fetchField(DatabaseFieldsInterface field) {
-        return fetchFields(new DatabaseFieldsInterface[]{field});
     }
 
     @Override
@@ -60,11 +50,6 @@ public class Student extends AbstractDatabaseObject {
         }
 
         return list;
-    }
-
-    @Override
-    public Object getField(DatabaseFieldsInterface field) throws Exception {
-        return getFields(new DatabaseFieldsInterface[]{field}).get(0);
     }
 
     @Override
