@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS `student` (
     	PRIMARY KEY (`id`),
     	FOREIGN KEY (`group_id`) REFERENCES `group`(`id`),
 		  CHECK (`gender` = 0 or `gender` = 1)
-
 );
 
 CREATE TABLE IF NOT EXISTS `bodystate` (

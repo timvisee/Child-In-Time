@@ -41,15 +41,14 @@ CREATE TABLE IF NOT EXISTS `group` (
 );
 
 CREATE TABLE IF NOT EXISTS `student` (
-	`id` INTEGER AUTOINCREMENT NOT NULL,
-    	`first_name` TEXT NOT NULL,
-    	`last_name` TEXT NOT NULL,
-    	`gender` TINYINT NOT NULL,
-    	`birthdate` DATE NOT NULL,
-    	`group_id` INT NOT NULL,
-    	PRIMARY KEY (`id`),
-    	FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)
-
+	`id` INTEGER PRIMARY KEY AUTOINCREMENT ,
+	`first_name` TEXT NOT NULL,
+	`last_name` TEXT NOT NULL,
+	`gender` TINYINT NOT NULL,
+	`birthdate` DATE NOT NULL,
+	`group_id` INTEGER NOT NULL,
+	FOREIGN KEY (`group_id`) REFERENCES `group`(`id`),
+	CHECK(`gender` = 0 OR `gender` = 1)
 );
 
 CREATE TABLE IF NOT EXISTS `bodystate` (
