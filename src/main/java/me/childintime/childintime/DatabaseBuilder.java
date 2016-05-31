@@ -121,6 +121,10 @@ public class DatabaseBuilder {
         fillTableSchool();
         this.progressDialog.increaseProgressValue();
 
+        // Fill the teacher table
+        fillTableTeacher();
+        this.progressDialog.increaseProgressValue();
+
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -659,6 +663,55 @@ public class DatabaseBuilder {
                         "  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn')," +
                         "  (NULL, 'De Hobbitburcht', 'Amsterdam')," +
                         "  (NULL, 'De Stromen', 'Den Haag');"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Fill the teacher table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableTeacher() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "LOCK TABLES `teacher` WRITE;" +
+                        "INSERT INTO `teacher` VALUES" +
+                        "  (NULL, 'Henk', 'Hoornald', 1, 1, 1)," +
+                        "  (NULL, 'Henry', 'Hunter', 1, 1, 1)," +
+                        "  (NULL, 'Phillip', 'Ward', 1, 0, 1)," +
+                        "  (NULL, 'Carlos', 'Ryan', 1, 0, 1)," +
+                        "  (NULL, 'Karen', 'Diaz', 0, 1, 2)," +
+                        "  (NULL, 'Paula', 'Black', 0, 0, 2)," +
+                        "  (NULL, 'Julie', 'Sims', 0, 0, 2)," +
+                        "  (NULL, 'Laura', 'Garcia', 0, 1, 3)," +
+                        "  (NULL, 'Mark', 'Romero', 1, 0, 3)," +
+                        "  (NULL, 'Ashley', 'Jacobs', 0, 0, 3)," +
+                        "  (NULL, 'Linda', 'Jackson', 0, 0, 3);" +
+                        "UNLOCK TABLES;"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "INSERT INTO `teacher` VALUES" +
+                        "  (NULL, 'Henk', 'Hoornald', 1, 1, 1)," +
+                        "  (NULL, 'Henry', 'Hunter', 1, 1, 1)," +
+                        "  (NULL, 'Phillip', 'Ward', 1, 0, 1)," +
+                        "  (NULL, 'Carlos', 'Ryan', 1, 0, 1)," +
+                        "  (NULL, 'Karen', 'Diaz', 0, 1, 2)," +
+                        "  (NULL, 'Paula', 'Black', 0, 0, 2)," +
+                        "  (NULL, 'Julie', 'Sims', 0, 0, 2)," +
+                        "  (NULL, 'Laura', 'Garcia', 0, 1, 3)," +
+                        "  (NULL, 'Mark', 'Romero', 1, 0, 3)," +
+                        "  (NULL, 'Ashley', 'Jacobs', 0, 0, 3)," +
+                        "  (NULL, 'Linda', 'Jackson', 0, 0, 3);"
                 );
                 break;
         }
