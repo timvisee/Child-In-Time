@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS `teacher` (
     	`school_id` INT NOT NULL,
     	PRIMARY KEY (`id`),
     	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`),
-			CHECK (`gender` = 0 or `gender` = 1),
-			CHECK (`is_gym` = 0 or `is_gym` = 1)
+			CHECK(`gender` = 0 OR `gender` = 1),
+			CHECK(`is_gym` = 0 OR `is_gym` = 1)
 );
 
 CREATE TABLE IF NOT EXISTS `group` (
