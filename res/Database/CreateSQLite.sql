@@ -66,12 +66,11 @@ CREATE TABLE IF NOT EXISTS `parkour` (
 );
 
 CREATE TABLE IF NOT EXISTS `measurement` (
-  `id`         INTEGER AUTOINCREMENT NOT NULL,
-  `student_id` INT                   NOT NULL,
-  `date`       DATE                  NOT NULL,
-  `time`       TIME                  NOT NULL,
-  `parkour_id` INT                   NOT NULL,
-  PRIMARY KEY (`id`),
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `date`       DATE    NOT NULL,
+  `time`       INTEGER NOT NULL,
+  `parkour_id` INTEGER NOT NULL,
+  `student_id` INTEGER NOT NULL,
   FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
   FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)
 );
