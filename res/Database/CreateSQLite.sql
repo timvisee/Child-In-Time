@@ -9,11 +9,10 @@
 /* Create the Child-In-Time table, and select it */
 /* TODO: Remove this in production */
 
-create table `school` (
-`id` INTEGER AUTOINCREMENT NOT NULL,
-    	`name` TEXT NOT NULL,
-    	`commune` TEXT NOT NULL,
-    	PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS `user` (
+	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
+	`username` TEXT NOT NULL,
+	`password_hash` TEXT NOT NULL
 );
 
 create table `teacher` (
@@ -34,7 +33,7 @@ CREATE TABLE `group` (
     	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)
 );
 
-create table `student` (
+CREATE TABLE IF NOT EXISTS `student` (
 	`id` INTEGER AUTOINCREMENT NOT NULL,
     	`first_name` TEXT NOT NULL,
     	`last_name` TEXT NOT NULL,
@@ -46,7 +45,7 @@ create table `student` (
 
 );
 
-create table `bodystate` (
+CREATE TABLE IF NOT EXISTS `bodystate` (
 	`id` INTEGER AUTOINCREMENT NOT NULL,
 			`student_id` INT NOT NULL,
     	`date` DATE NOT NULL,
@@ -56,13 +55,13 @@ create table `bodystate` (
     	FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)
 );
 
-create table `parkour` (
+CREATE TABLE IF NOT EXISTS `parkour` (
 	`id` INTEGER AUTOINCREMENT NOT NULL,
     	`description` TEXT,
     	PRIMARY KEY (`id`)
 );
 
-create table `measurement` (
+CREATE TABLE IF NOT EXISTS `measurement` (
 	`id` INTEGER AUTOINCREMENT NOT NULL,
 	`student_id` INT NOT NULL,
 	`date` DATE NOT NULL,
@@ -73,7 +72,7 @@ create table `measurement` (
 		FOREIGN KEY (`parkour_id`) REFERENCES `parkour`(`id`)
 );
 
-create table `group_teacher` (
+CREATE TABLE IF NOT EXISTS `group_teacher` (
 	`group_id` INT NOT NULL,
     	`teacher_id` INT NOT NULL,
     	PRIMARY KEY (`group_id`, `teacher_id`),
