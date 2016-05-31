@@ -1,13 +1,43 @@
 package me.childintime.childintime.database.object.parkour;
 
-public enum ParkourFields {
+import me.childintime.childintime.database.object.AbstractDatabaseObject;
+import me.childintime.childintime.database.object.DataType;
+import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
-    ID("id"),
-    DESCRIPTION("description");
+public enum ParkourFields implements DatabaseFieldsInterface{
 
-    private String id;
+    ID("id", false, DataType.INTEGER, null),
+    DESCRIPTION("description", true, DataType.STRING, null);
 
-    ParkourFields(String id) {
-        this.id = id;
+    private String databaseField;
+    private boolean editable;
+    private DataType dataType;
+    private Class<? extends AbstractDatabaseObject> referenceType;
+
+    ParkourFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.databaseField = databaseField;
+        this.editable = editable;
+        this.dataType = dataType;
+        this.referenceType = referenceType;
+    }
+
+    @Override
+    public String getDatabaseField() {
+        return databaseField;
+    }
+
+    @Override
+    public DataType getDataType() {
+        return this.dataType;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return this.editable;
+    }
+
+    @Override
+    public Class<? extends AbstractDatabaseObject> getReferenceType() {
+        return this.referenceType;
     }
 }
