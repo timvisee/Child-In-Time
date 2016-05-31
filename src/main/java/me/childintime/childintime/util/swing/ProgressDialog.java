@@ -294,6 +294,13 @@ public class ProgressDialog extends JDialog {
     }
 
     /**
+     * Increase the progress value by one.
+     */
+    public void increaseProgressValue() {
+        setProgressValue(getProgressValue() + 1);
+    }
+
+    /**
      * Get the progress maximum.
      *
      * @return Progress maximum.
