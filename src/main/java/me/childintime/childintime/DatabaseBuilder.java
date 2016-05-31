@@ -125,6 +125,10 @@ public class DatabaseBuilder {
         fillTableTeacher();
         this.progressDialog.increaseProgressValue();
 
+        // Fill the group table
+        fillTableGroup();
+        this.progressDialog.increaseProgressValue();
+
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -712,6 +716,51 @@ public class DatabaseBuilder {
                         "  (NULL, 'Mark', 'Romero', 1, 0, 3)," +
                         "  (NULL, 'Ashley', 'Jacobs', 0, 0, 3)," +
                         "  (NULL, 'Linda', 'Jackson', 0, 0, 3);"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Fill the group table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableGroup() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "LOCK TABLES `group` WRITE;" +
+                        "INSERT INTO `group` VALUES" +
+                        "  (NULL, 'Groep 1', 1)," +
+                        "  (NULL, 'Groep 2', 1)," +
+                        "  (NULL, 'Groep 3', 1)," +
+                        "  (NULL, 'Groep 1', 2)," +
+                        "  (NULL, 'Groep 2', 2)," +
+                        "  (NULL, 'Groep 3', 2)," +
+                        "  (NULL, 'Groep 1', 3)," +
+                        "  (NULL, 'Groep 2', 3)," +
+                        "  (NULL, 'Groep 3', 3);" +
+                        "UNLOCK TABLES;"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "INSERT INTO `group` VALUES" +
+                        "  (NULL, 'Groep 1', 1)," +
+                        "  (NULL, 'Groep 2', 1)," +
+                        "  (NULL, 'Groep 3', 1)," +
+                        "  (NULL, 'Groep 1', 2)," +
+                        "  (NULL, 'Groep 2', 2)," +
+                        "  (NULL, 'Groep 3', 2)," +
+                        "  (NULL, 'Groep 1', 3)," +
+                        "  (NULL, 'Groep 2', 3)," +
+                        "  (NULL, 'Groep 3', 3);"
                 );
                 break;
         }
