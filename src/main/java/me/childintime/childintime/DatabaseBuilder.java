@@ -145,6 +145,10 @@ public class DatabaseBuilder {
         fillTableMeasurement();
         this.progressDialog.increaseProgressValue();
 
+        // Fill the group/teacher table
+        fillTableGroupTeacher();
+        this.progressDialog.increaseProgressValue();
+
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -1011,6 +1015,51 @@ public class DatabaseBuilder {
                         "  (18, '2015-06-06', 32, 2, 20)," +
                         "  (19, '2016-05-19', 80, 1, 8)," +
                         "  (20, '2015-06-07', 47, 3, 19);"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Fill the group/teacher table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableGroupTeacher() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "LOCK TABLES `group_teacher` WRITE;" +
+                        "INSERT INTO `group_teacher` VALUES" +
+                        "  (1, 1)," +
+                        "  (2, 2)," +
+                        "  (3, 3)," +
+                        "  (4, 1)," +
+                        "  (5, 2)," +
+                        "  (6, 3)," +
+                        "  (7, 1)," +
+                        "  (8, 2)," +
+                        "  (9, 3);" +
+                        "UNLOCK TABLES;"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "INSERT INTO `group_teacher` VALUES" +
+                        "  (1, 1)," +
+                        "  (2, 2)," +
+                        "  (3, 3)," +
+                        "  (4, 1)," +
+                        "  (5, 2)," +
+                        "  (6, 3)," +
+                        "  (7, 1)," +
+                        "  (8, 2)," +
+                        "  (9, 3);"
                 );
                 break;
         }
