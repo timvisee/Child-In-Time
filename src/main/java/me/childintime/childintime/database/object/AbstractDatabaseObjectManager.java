@@ -1,5 +1,6 @@
 package me.childintime.childintime.database.object;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDatabaseObjectManager {
@@ -87,11 +88,20 @@ public abstract class AbstractDatabaseObjectManager {
         if(!hasCache())
             fetchObjects(fields);
 
-        // TODO: Clone the objects
+        // Create a list with clones
+        List<AbstractDatabaseObject> clones = new ArrayList<>();
+
+        // Loop through each database object, and clone it
+        for(AbstractDatabaseObject object : this.objects)
+            try {
+                clones.add(object.clone());
+
+            } catch(CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
 
         // Return the list of cloned objects
-        // TODO: Return the objects
-        return null;
+        return clones;
     }
 
     /**
