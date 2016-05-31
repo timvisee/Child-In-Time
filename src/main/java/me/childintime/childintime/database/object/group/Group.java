@@ -10,7 +10,7 @@ public class Group extends AbstractDatabaseObject {
     /**
      * Database object type name.
      */
-    public static final String TYPE_NAME = "Group";
+    private static final String TYPE_NAME = "Group";
 
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {

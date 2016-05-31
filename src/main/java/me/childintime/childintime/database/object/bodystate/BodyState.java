@@ -10,7 +10,7 @@ public class BodyState extends AbstractDatabaseObject {
     /**
      * Database object type name.
      */
-    public static final String TYPE_NAME = "BodyState";
+    private static final String TYPE_NAME = "BodyState";
 
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {

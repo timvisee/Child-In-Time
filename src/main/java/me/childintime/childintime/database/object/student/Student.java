@@ -11,7 +11,7 @@ public class Student extends AbstractDatabaseObject {
     /**
      * Database object type name.
      */
-    public static final String TYPE_NAME = "Student";
+    private static final String TYPE_NAME = "Student";
 
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {

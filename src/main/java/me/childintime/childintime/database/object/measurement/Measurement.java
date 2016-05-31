@@ -10,7 +10,7 @@ public class Measurement extends AbstractDatabaseObject {
     /**
      * Database object type name.
      */
-    public static final String TYPE_NAME = "Measurement";
+    private static final String TYPE_NAME = "Measurement";
 
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {

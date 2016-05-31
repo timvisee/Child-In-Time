@@ -10,7 +10,7 @@ public class Parkour extends AbstractDatabaseObject {
     /**
      * Database object type name.
      */
-    public static final String TYPE_NAME = "Parkour";
+    private static final String TYPE_NAME = "Parkour";
 
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
