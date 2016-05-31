@@ -333,3 +333,25 @@ INSERT INTO `group` VALUES
   (NULL, 'Groep 1', 3),
   (NULL, 'Groep 2', 3),
   (NULL, 'Groep 3', 3);
+
+INSERT INTO `student` VALUES
+  (NULL, 'George', 'Barnes', 1, '2014-04-17', 1),
+  (NULL, 'Robin', 'Hughes', 0, '2011-01-10', 1),
+  (NULL, 'Anne', 'Diaz', 0, '2015-02-26', 2),
+  (NULL, 'Sandra', 'Knight', 0, '2013-08-27', 2),
+  (NULL, 'Terry', 'Morales', 1, '2015-09-06', 3),
+  (NULL, 'Jimmy', 'Smith', 1, '2013-04-07', 3),
+  (NULL, 'Nicholas', 'Dunn', 1, '2013-09-01', 4),
+  (NULL, 'Raymond', 'Franklin', 1, '2015-12-13', 4),
+  (NULL, 'Maria', 'Barnes', 0, '2005-08-28', 5),
+  (NULL, 'Wayne', 'Graham', 1, '2010-10-20', 5),
+  (NULL, 'Kathy', 'James', 0, '2006-06-05', 6),
+  (NULL, 'Evelyn', 'Elliott', 0, '2008-11-26', 6),
+  (NULL, 'Barbara', 'Parker', 0, '2008-05-03', 7),
+  (NULL, 'Mildred', 'Sanders', 0, '2009-08-22', 7),
+  (NULL, 'Jason', 'Ross', 1, '2007-07-31', 8),
+  (NULL, 'Anna', 'Porter', 0, '2008-12-21', 8),
+  (NULL, 'Karen', 'Wells', 0, '2011-10-05', 8),
+  (NULL, 'Jonathan', 'Ferguson', 1, '2014-02-06', 9),
+  (NULL, 'Kathryn', 'Carr', 0, '2006-03-06', 9),
+  (NULL, 'Sean', 'Reid', 1, '2009-04-20', 9);

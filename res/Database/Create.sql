@@ -264,7 +264,6 @@ INSERT INTO `student` VALUES
   (NULL, 'Sean', 'Reid', 1, '2009-04-20', 9);
 UNLOCK TABLES;
 
-
 LOCK TABLES `bodystate` WRITE;
 INSERT INTO `bodystate` VALUES
   (NULL, '2016-01-11', 141, 38, 5),
