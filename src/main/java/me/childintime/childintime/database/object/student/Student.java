@@ -17,7 +17,7 @@ public class Student extends AbstractDatabaseObject {
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
 
         for(DatabaseFieldsInterface field : fields) {
-            if (!(field instanceof StudentFields))
+            if(!(field instanceof StudentFields))
                 return false;
 
             if(this.cachedFields.containsKey(field))

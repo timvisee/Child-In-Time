@@ -18,7 +18,7 @@ public class Teacher extends AbstractDatabaseObject {
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
 
         for (DatabaseFieldsInterface field : fields) {
-            if (!(field instanceof TeacherFields))
+            if(!(field instanceof TeacherFields))
                 return false;
 
             if(this.cachedFields.containsKey(field))
