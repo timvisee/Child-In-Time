@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `student` (
 	`id` INTEGER PRIMARY KEY AUTOINCREMENT ,
 	`first_name` TEXT NOT NULL,
 	`last_name` TEXT NOT NULL,
-	`gender` TINYINT NOT NULL,
+	`gender` INTEGER NOT NULL,
 	`birthdate` DATE NOT NULL,
 	`group_id` INTEGER NOT NULL,
 	FOREIGN KEY (`group_id`) REFERENCES `group`(`id`),
