@@ -144,10 +144,10 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `user` (" +
-                        "    `id` INT NOT NULL AUTO_INCREMENT," +
-                        "    `username` TEXT NOT NULL," +
-                        "    `password_hash` TEXT NOT NULL," +
-                        "    PRIMARY KEY (`id`)" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT," +
+                        "  `username` TEXT NOT NULL," +
+                        "  `password_hash` TEXT NOT NULL," +
+                        "  PRIMARY KEY (`id`)" +
                         ");"
                 );
                 break;
@@ -155,9 +155,9 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `user` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "    `username` TEXT NOT NULL," +
-                        "    `password_hash` TEXT NOT NULL" +
+                        "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `username` TEXT NOT NULL," +
+                        "  `password_hash` TEXT NOT NULL" +
                         ");"
                 );
                 break;
@@ -178,10 +178,10 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `school` (" +
-                        "    `id` INT NOT NULL AUTO_INCREMENT," +
-                        "    `name` TEXT NOT NULL," +
-                        "    `commune` TEXT NOT NULL," +
-                        "    PRIMARY KEY (`id`)" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT," +
+                        "  `name` TEXT NOT NULL," +
+                        "  `commune` TEXT NOT NULL," +
+                        "  PRIMARY KEY (`id`)" +
                         ");"
                 );
                 break;
@@ -189,9 +189,9 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `school` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "    `name` TEXT NOT NULL," +
-                        "    `commune` TEXT NOT NULL" +
+                        "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `name` TEXT NOT NULL," +
+                        "  `commune` TEXT NOT NULL" +
                         ");"
                 );
                 break;
@@ -212,16 +212,16 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `teacher` (" +
-                        "    `id` INT NOT NULL AUTO_INCREMENT," +
-                        "    `first_name` TEXT NOT NULL," +
-                        "    `last_name` TEXT NOT NULL," +
-                        "    `gender` TINYINT NOT NULL," +
-                        "    `is_gym` TINYINT NOT NULL," +
-                        "    `school_id` INT NOT NULL," +
-                        "    PRIMARY KEY (`id`)," +
-                        "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
-                        "    CHECK(`gender` = 0 OR `gender` = 1)," +
-                        "    CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT," +
+                        "  `first_name` TEXT NOT NULL," +
+                        "  `last_name` TEXT NOT NULL," +
+                        "  `gender` TINYINT NOT NULL," +
+                        "  `is_gym` TINYINT NOT NULL," +
+                        "  `school_id` INT NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
+                        "  CHECK(`gender` = 0 OR `gender` = 1)," +
+                        "  CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
                         ");"
                 );
                 break;
@@ -229,15 +229,15 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `teacher` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "    `first_name` TEXT NOT NULL," +
-                        "    `last_name` TEXT NOT NULL," +
-                        "    `gender` TINYINT NOT NULL," +
-                        "    `is_gym` TINYINT NOT NULL," +
-                        "    `school_id` INT NOT NULL," +
-                        "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
-                        "    CHECK(`gender` = 0 OR `gender` = 1)," +
-                        "    CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
+                        "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `first_name` TEXT NOT NULL," +
+                        "  `last_name` TEXT NOT NULL," +
+                        "  `gender` TINYINT NOT NULL," +
+                        "  `is_gym` TINYINT NOT NULL," +
+                        "  `school_id` INT NOT NULL," +
+                        "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
+                        "  CHECK(`gender` = 0 OR `gender` = 1)," +
+                        "  CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
                         ");"
                 );
                 break;
@@ -258,11 +258,11 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `group` (" +
-                        "    `id` INT NOT NULL AUTO_INCREMENT," +
-                        "    `name` TEXT NOT NULL," +
-                        "    `school_id` INT NOT NULL," +
-                        "    PRIMARY KEY (`id`)," +
-                        "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT," +
+                        "  `name` TEXT NOT NULL," +
+                        "  `school_id` INT NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
                         ");"
                 );
                 break;
@@ -270,10 +270,10 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `group` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "    `name` TEXT NOT NULL," +
-                        "    `school_id` INTEGER NOT NULL," +
-                        "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
+                        "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `name` TEXT NOT NULL," +
+                        "  `school_id` INTEGER NOT NULL," +
+                        "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
                         ");"
                 );
                 break;
@@ -294,15 +294,15 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `student` (" +
-                        "    `id` INT NOT NULL AUTO_INCREMENT," +
-                        "    `first_name` TEXT NOT NULL," +
-                        "    `last_name` TEXT NOT NULL," +
-                        "    `gender` TINYINT NOT NULL," +
-                        "    `birthdate` DATE NOT NULL," +
-                        "    `group_id` INT NOT NULL," +
-                        "    PRIMARY KEY (`id`)," +
-                        "    FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
-                        "    CHECK (`gender` = 0 or `gender` = 1)" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT," +
+                        "  `first_name` TEXT NOT NULL," +
+                        "  `last_name` TEXT NOT NULL," +
+                        "  `gender` TINYINT NOT NULL," +
+                        "  `birthdate` DATE NOT NULL," +
+                        "  `group_id` INT NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
+                        "  CHECK (`gender` = 0 or `gender` = 1)" +
                         ");"
                 );
                 break;
@@ -310,14 +310,14 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `student` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "    `first_name` TEXT NOT NULL," +
-                        "    `last_name` TEXT NOT NULL," +
-                        "    `gender` INTEGER NOT NULL," +
-                        "    `birthdate` DATE NOT NULL," +
-                        "    `group_id` INTEGER NOT NULL," +
-                        "    FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
-                        "    CHECK(`gender` = 0 OR `gender` = 1)" +
+                        "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `first_name` TEXT NOT NULL," +
+                        "  `last_name` TEXT NOT NULL," +
+                        "  `gender` INTEGER NOT NULL," +
+                        "  `birthdate` DATE NOT NULL," +
+                        "  `group_id` INTEGER NOT NULL," +
+                        "  FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
+                        "  CHECK(`gender` = 0 OR `gender` = 1)" +
                         ");"
                 );
                 break;
@@ -338,13 +338,13 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `bodystate` (" +
-                        "    `id` INT NOT NULL AUTO_INCREMENT," +
-                        "    `date` DATE NOT NULL," +
-                        "    `length` SMALLINT NOT NULL," +
-                        "    `weight` SMALLINT NOT NULL," +
-                        "    `student_id` INT NOT NULL," +
-                        "    PRIMARY KEY (`id`)," +
-                        "    FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT," +
+                        "  `date` DATE NOT NULL," +
+                        "  `length` SMALLINT NOT NULL," +
+                        "  `weight` SMALLINT NOT NULL," +
+                        "  `student_id` INT NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
                         ");"
                 );
                 break;
@@ -352,12 +352,12 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `bodystate` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "    `date` DATE NOT NULL," +
-                        "    `length` INTEGER NOT NULL," +
-                        "    `weight` INTEGER NOT NULL," +
-                        "    `student_id` INTEGER NOT NULL," +
-                        "    FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
+                        "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `date` DATE NOT NULL," +
+                        "  `length` INTEGER NOT NULL," +
+                        "  `weight` INTEGER NOT NULL," +
+                        "  `student_id` INTEGER NOT NULL," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
                         ");"
                 );
                 break;
@@ -378,13 +378,13 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `bodystate` (" +
-                        "    `id` INT NOT NULL AUTO_INCREMENT," +
-                        "    `date` DATE NOT NULL," +
-                        "    `length` SMALLINT NOT NULL," +
-                        "    `weight` SMALLINT NOT NULL," +
-                        "    `student_id` INT NOT NULL," +
-                        "    PRIMARY KEY (`id`)," +
-                        "    FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT," +
+                        "  `date` DATE NOT NULL," +
+                        "  `length` SMALLINT NOT NULL," +
+                        "  `weight` SMALLINT NOT NULL," +
+                        "  `student_id` INT NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
                         ");"
                 );
                 break;
@@ -392,8 +392,8 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `parkour` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "    `description` TEXT" +
+                        "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `description` TEXT" +
                         ");"
                 );
                 break;
@@ -415,7 +415,7 @@ public class DatabaseBuilder {
                 statement.execute(
                         "LOCK TABLES `user` WRITE;" +
                         "INSERT INTO `user` VALUES" +
-                        "    (NULL, 'admin', MD5('admin'));" +
+                        "  (NULL, 'admin', MD5('admin'));" +
                         "UNLOCK TABLES;"
                 );
                 break;
@@ -423,7 +423,7 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "INSERT INTO `user` VALUES" +
-                        "    (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');"
+                        "  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');"
                 );
                 break;
         }
