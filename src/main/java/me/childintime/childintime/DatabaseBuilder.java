@@ -517,21 +517,21 @@ public class DatabaseBuilder {
             case MYSQL:
                 // Create the meta data table
                 statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `REPLACE_meta_data` (" +
+                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_data` (" +
                         "  `id`         INT      NOT NULL AUTO_INCREMENT," +
                         "  `field`      TEXT     NOT NULL," +
                         "  `type`       SMALLINT NOT NULL," +
                         "  `value`      TEXT     NULL," +
-                        "  `REPLACE_id` INT      NOT NULL," +
+                        "  `" + tableName + "_id` INT      NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
-                        "  FOREIGN KEY (`REPLACE_id`) REFERENCES `REPLACE` (`id`)" +
+                        "  FOREIGN KEY (`" + tableName + "_id`) REFERENCES `" + tableName + "` (`id`)" +
                         ");"
                 );
                 this.progressDialog.increaseProgressValue();
 
                 // Create the meta data fields table
                 statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `REPLACE_meta_field` (" +
+                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_field` (" +
                         "  `id`         INT               NOT NULL AUTO_INCREMENT," +
                         "  `name`       TEXT              NOT NULL," +
                         "  `type`       SMALLINT          NOT NULL," +
@@ -544,12 +544,12 @@ public class DatabaseBuilder {
 
                 // Create the meta data values table
                 statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `REPLACE_meta_value` (" +
+                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_value` (" +
                         "  `id`       INT  NOT NULL AUTO_INCREMENT," +
                         "  `value`    TEXT NOT NULL," +
                         "  `field_id` INT  NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
-                        "  FOREIGN KEY (`field_id`) REFERENCES `REPLACE_meta_field` (`id`)" +
+                        "  FOREIGN KEY (`field_id`) REFERENCES `" + tableName + "_meta_field` (`id`)" +
                         ");"
                 );
                 this.progressDialog.increaseProgressValue();
@@ -558,20 +558,20 @@ public class DatabaseBuilder {
             case SQLITE:
                 // Create the meta data table
                 statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `user_meta_data` (" +
+                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_data` (" +
                         "  `id`      INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "  `field`   TEXT    NOT NULL," +
                         "  `type`    INTEGER NOT NULL," +
                         "  `value`   TEXT," +
-                        "  `user_id` INTEGER NOT NULL," +
-                        "  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)" +
+                        "  `" + tableName + "_id` INTEGER NOT NULL," +
+                        "  FOREIGN KEY (`" + tableName + "_id`) REFERENCES `" + tableName + "` (`id`)" +
                         ");"
                 );
                 this.progressDialog.increaseProgressValue();
 
                 // Create the meta data fields table
                 statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `user_meta_field` (" +
+                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_field` (" +
                         "  `id`         INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "  `name`       TEXT    NOT NULL," +
                         "  `type`       INTEGER NOT NULL," +
@@ -583,11 +583,11 @@ public class DatabaseBuilder {
 
                 // Create the meta data values table
                 statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `user_meta_value` (" +
+                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_value` (" +
                         "  `id`       INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "  `value`    TEXT    NOT NULL," +
                         "  `field_id` INTEGER NOT NULL," +
-                        "  FOREIGN KEY (`field_id`) REFERENCES `user_meta_field` (`id`)" +
+                        "  FOREIGN KEY (`field_id`) REFERENCES `" + tableName + "_meta_field` (`id`)" +
                         ");"
                 );
                 this.progressDialog.increaseProgressValue();
