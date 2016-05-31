@@ -57,7 +57,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(6);
+        this.progressDialog.setProgressMax(7);
         this.progressDialog.setShowProgress(true);
 
         // Prepare the database
@@ -78,6 +78,10 @@ public class DatabaseBuilder {
 
         // Create the group table
         createTableGroup();
+        this.progressDialog.increaseProgressValue();
+
+        // Create the student table
+        createTableStudent();
         this.progressDialog.increaseProgressValue();
 
         // Fill the user table
@@ -266,6 +270,50 @@ public class DatabaseBuilder {
                         "    `name` TEXT NOT NULL," +
                         "    `school_id` INTEGER NOT NULL," +
                         "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the student table.
+     *
+     * @throws SQLException
+     */
+    public void createTableStudent() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `student` (" +
+                        "    `id` INT NOT NULL AUTO_INCREMENT," +
+                        "    `first_name` TEXT NOT NULL," +
+                        "    `last_name` TEXT NOT NULL," +
+                        "    `gender` TINYINT NOT NULL," +
+                        "    `birthdate` DATE NOT NULL," +
+                        "    `group_id` INT NOT NULL," +
+                        "    PRIMARY KEY (`id`)," +
+                        "    FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
+                        "    CHECK (`gender` = 0 or `gender` = 1)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `student` (" +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT ," +
+                        "    `first_name` TEXT NOT NULL," +
+                        "    `last_name` TEXT NOT NULL," +
+                        "    `gender` TINYINT NOT NULL," +
+                        "    `birthdate` DATE NOT NULL," +
+                        "    `group_id` INTEGER NOT NULL," +
+                        "    FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
+                        "    CHECK(`gender` = 0 OR `gender` = 1)" +
                         ");"
                 );
                 break;
