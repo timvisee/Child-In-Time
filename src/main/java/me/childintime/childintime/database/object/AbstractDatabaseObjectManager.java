@@ -66,4 +66,11 @@ public abstract class AbstractDatabaseObjectManager {
         // Reset the cache
         this.objects = null;
     }
+
+    /**
+     * Get the name of the current database object manager type.
+     *
+     * @return Database object manager type name.
+     */
+    public abstract String getTypeName();
 }
