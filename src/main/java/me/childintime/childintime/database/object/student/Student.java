@@ -11,7 +11,7 @@ public class Student extends AbstractDatabaseObject {
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
 
-        for (DatabaseFieldsInterface field : fields) {
+        for(DatabaseFieldsInterface field : fields) {
             if (!(field instanceof StudentFields))
                 return false;
 
