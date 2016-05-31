@@ -57,7 +57,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(35);
+        this.progressDialog.setProgressMax(44);
         this.progressDialog.setShowProgress(true);
 
         // Prepare the database
