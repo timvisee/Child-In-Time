@@ -1,6 +1,5 @@
 package me.childintime.childintime.database.object;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDatabaseObjectManager {
@@ -8,7 +7,7 @@ public abstract class AbstractDatabaseObjectManager {
     /**
      * List of database objects loaded in this manager.
      */
-    protected List<AbstractDatabaseObject> objects = new ArrayList<>();
+    protected List<AbstractDatabaseObject> objects = null;
 
     // TODO: Create the body of this object!
     // TODO: Shorten the name of this object?
@@ -22,16 +21,24 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of fetched objects.
      */
-    public abstract List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields);
+    public abstract List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface[] fields);
 
     /**
      * Get the list of objects.
      * The list of objects will be fetched automatically from the database if they aren't cached yet.
      *
+     * @param fields Database object fields to fetch and cache (using the same query, to improve performance).
+     *
      * @return List of objects.
      */
-    // TODO: Add fields parameter here too, which will be used when new data is fetched?
-    public abstract List<AbstractDatabaseObject> getObjects();
+    public List<AbstractDatabaseObject> getObjects(DatabaseFieldsInterface[] fields) {
+        // Return the objects if cached
+        if(hasCache())
+            return this.objects;
+
+        // Fetch the objects first, then return
+        return fetchObjects(fields);
+    }
 
     /**
      * Get the number of objects in the database.
@@ -45,10 +52,18 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return True if cached, false if not.
      */
-    public abstract boolean hasCache();
+    public boolean hasCache() {
+        return this.objects != null;
+    }
 
     /**
      * Flush the cached database objects.
      */
-    public abstract void flushCache();
+    public void flushCache() {
+        // Clear the list of objects
+        this.objects.clear();
+
+        // Reset the cache
+        this.objects = null;
+    }
 }

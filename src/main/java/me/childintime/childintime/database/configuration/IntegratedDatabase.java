@@ -14,7 +14,7 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     /**
      * Default database file.
      */
-    public static final File DEFAULT_FILE = new File(App.getDirectory(), "/db/local.db");
+    public static final File DEFAULT_FILE = new File(App.getDirectory(), "/databases/local.db");
 
     /**
      * Database file to use.
