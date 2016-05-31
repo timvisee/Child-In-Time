@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS `measurement` (
 );
 
 CREATE TABLE IF NOT EXISTS `group_teacher` (
-  `group_id`   INT NOT NULL,
-  `teacher_id` INT NOT NULL,
+  `group_id`   INTEGER NOT NULL,
+  `teacher_id` INTEGER NOT NULL,
   PRIMARY KEY (`group_id`, `teacher_id`),
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`),
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
