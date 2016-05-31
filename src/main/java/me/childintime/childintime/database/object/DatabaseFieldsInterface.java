@@ -2,17 +2,16 @@ package me.childintime.childintime.database.object;
 
 public interface DatabaseFieldsInterface {
 
-    /**
-     * Get the table name.
-     *
-     * @return Table name.
-     */
-    String getTableName();
+    String getDatabaseField();
 
     /**
-     * Get the field name in the database of this field.
+     * Check whether this field is editable by the user.
      *
-     * @return Field name in the database.
+     * @return True if editable, false if not.
      */
-    String getFieldName();
+    boolean isEditable();
+
+    DataType getDataType();
+
+    Class<? extends AbstractDatabaseObject> getReferenceType();
 }
