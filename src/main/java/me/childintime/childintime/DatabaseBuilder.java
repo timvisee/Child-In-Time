@@ -57,7 +57,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(8);
+        this.progressDialog.setProgressMax(10);
         this.progressDialog.setShowProgress(true);
 
         // Prepare the database
@@ -86,6 +86,14 @@ public class DatabaseBuilder {
 
         // Create the body state table
         createTableBodyState();
+        this.progressDialog.increaseProgressValue();
+
+        // Create the parkour table
+        createTableParkour();
+        this.progressDialog.increaseProgressValue();
+
+        // Create the measurement table
+        createTableMeasurement();
         this.progressDialog.increaseProgressValue();
 
         // Fill the user table
@@ -394,6 +402,48 @@ public class DatabaseBuilder {
                         "CREATE TABLE IF NOT EXISTS `parkour` (" +
                         "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "  `description` TEXT" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the measurement table.
+     *
+     * @throws SQLException
+     */
+    public void createTableMeasurement() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `measurement` (" +
+                        "  `id`         INT  NOT NULL AUTO_INCREMENT," +
+                        "  `date`       DATE NOT NULL," +
+                        "  `time`       INT  NOT NULL," +
+                        "  `parkour_id` INT  NOT NULL," +
+                        "  `student_id` INT  NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)," +
+                        "  FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `measurement` (" +
+                        "  `id`         INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `date`       DATE    NOT NULL," +
+                        "  `time`       INTEGER NOT NULL," +
+                        "  `parkour_id` INTEGER NOT NULL," +
+                        "  `student_id` INTEGER NOT NULL," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)," +
+                        "  FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)" +
                         ");"
                 );
                 break;
