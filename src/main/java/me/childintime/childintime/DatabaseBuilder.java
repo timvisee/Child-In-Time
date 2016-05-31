@@ -57,7 +57,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(11);
+        this.progressDialog.setProgressMax(35);
         this.progressDialog.setShowProgress(true);
 
         // Prepare the database
@@ -99,6 +99,16 @@ public class DatabaseBuilder {
         // Create the group/teacher table
         createTableGroupTeacher();
         this.progressDialog.increaseProgressValue();
+
+        // Create all required meta data tables
+        createMetaDataTables("user");
+        createMetaDataTables("student");
+        createMetaDataTables("teacher");
+        createMetaDataTables("group");
+        createMetaDataTables("school");
+        createMetaDataTables("bodystate");
+        createMetaDataTables("parkour");
+        createMetaDataTables("measurement");
 
         // Fill the user table
         fillTableUser();
