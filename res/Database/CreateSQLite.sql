@@ -25,18 +25,18 @@ CREATE TABLE IF NOT EXISTS `teacher` (
 	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
 	`first_name` TEXT NOT NULL,
 	`last_name` TEXT NOT NULL,
-	`gender` TINYINT NOT NULL,
-	`is_gym` TINYINT NOT NULL,
-	`school_id` INT NOT NULL,
+	`gender` INTEGER NOT NULL,
+	`is_gym` INTEGER NOT NULL,
+	`school_id` INTEGER NOT NULL,
 	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`),
 	CHECK(`gender` = 0 OR `gender` = 1),
 	CHECK(`is_gym` = 0 OR `is_gym` = 1)
 );
 
 CREATE TABLE IF NOT EXISTS `group` (
-	`id` INT PRIMARY KEY AUTOINCREMENT ,
+	`id` INTEGER PRIMARY KEY AUTOINCREMENT ,
 	`name` TEXT NOT NULL,
-	`school_id` INT NOT NULL,
+	`school_id` INTEGER NOT NULL,
 	FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)
 );
 

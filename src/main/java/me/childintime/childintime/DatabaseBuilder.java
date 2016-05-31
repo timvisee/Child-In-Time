@@ -262,9 +262,9 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `group` (" +
-                        "    `id` INT PRIMARY KEY AUTOINCREMENT ," +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT ," +
                         "    `name` TEXT NOT NULL," +
-                        "    `school_id` INT NOT NULL," +
+                        "    `school_id` INTEGER NOT NULL," +
                         "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
                         ");"
                 );
