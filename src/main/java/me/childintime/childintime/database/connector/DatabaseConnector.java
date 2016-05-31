@@ -1,5 +1,6 @@
 package me.childintime.childintime.database.connector;
 
+import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 
 import java.sql.Connection;
@@ -13,14 +14,28 @@ public class DatabaseConnector {
      */
     public static final int CONNECTION_TIMEOUT = 10;
 
+    /**
+     * Abstract database instance, containing the configuration.
+     */
     private AbstractDatabase database;
 
+    /**
+     * Database connection instance.
+     */
     private Connection connection;
 
+    /**
+     * Constructor.
+     *
+     * @param database Database configuration.
+     */
     public DatabaseConnector(AbstractDatabase database) {
         this.database = database;
     }
 
+    /**
+     * Initialize.
+     */
     public void init() {
         try {
             String driver = database.getDatabaseDriverString();
@@ -65,12 +80,15 @@ public class DatabaseConnector {
             init();
 
         // Create the connection and explicitly save it
-        this.connection = DriverManager.getConnection(database.getDatabaseConnectionString());
+        this.connection = DriverManager.getConnection(database.getDatabaseConnectionUrl());
 
         // Return the connection
         return this.connection;
     }
 
+    /**
+     * Destroy the database connector.
+     */
     public void destroy() {
         if(connection != null) {
             try {
@@ -81,5 +99,14 @@ public class DatabaseConnector {
                 connection = null;
             }
         }
+    }
+
+    /**
+     * Get the database dialect.
+     *
+     * @return Database dialect.
+     */
+    public DatabaseDialect getDialect() {
+        return this.database.getDialect();
     }
 }

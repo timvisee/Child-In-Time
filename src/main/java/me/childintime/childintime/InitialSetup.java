@@ -227,13 +227,13 @@ public class InitialSetup {
                 this.progressDialog,
                         App.APP_NAME + " is missing some required files.\n" +
                         "This is normal if you're using the application for the first time.\n\n" +
-                        "Filed will be updated automatically if a new update has been installed.\n\n" +
+                        "Files will be updated automatically if a new update has been installed.\n\n" +
                         "Please Continue and allow us to set things up for you.",
                 App.APP_NAME + " - Initial setup",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                buttons.toArray(new String[]{}),
+                buttons.toArray(),
                 buttons.get(!Platform.isMacOsX() ? 0 : 1)
         );
 

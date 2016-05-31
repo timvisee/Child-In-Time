@@ -1,6 +1,7 @@
 package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
+import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.util.swing.ProgressDialog;
@@ -218,9 +219,26 @@ public abstract class AbstractDatabase implements Cloneable {
         return true;
     }
 
+    /**
+     * Get the JDBC database driver class reference as string.
+     *
+     * @return JDBC driver class reference.
+     */
     public abstract String getDatabaseDriverString();
 
-    public abstract String getDatabaseConnectionString();
+    /**
+     * Get the JDBC database connection URL.
+     *
+     * @return Connection URL.
+     */
+    public abstract String getDatabaseConnectionUrl();
+
+    /**
+     * Get the database dialect used by this database configuration.
+     *
+     * @return Database dialect.
+     */
+    public abstract DatabaseDialect getDialect();
 
     @Override
     public String toString() {

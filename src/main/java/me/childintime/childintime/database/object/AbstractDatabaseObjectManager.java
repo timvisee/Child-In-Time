@@ -1,5 +1,6 @@
 package me.childintime.childintime.database.object;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDatabaseObjectManager {
@@ -61,6 +62,46 @@ public abstract class AbstractDatabaseObjectManager {
 
         // Fetch the objects first, then return
         return fetchObjects(fields);
+    }
+
+    /**
+     * Get a clone of the list of objects.
+     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     *
+     * @return Clone of the list of objects.
+     */
+    public List<AbstractDatabaseObject> getObjectsClone() {
+        // TODO: Use the default fields here!
+        return getObjectsClone(null);
+    }
+
+    /**
+     * Get a clone of the list of objects.
+     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     *
+     * @param fields Database object fields to fetch and cache (using the same query, to improve performance).
+     *
+     * @return List of objects.
+     */
+    public List<AbstractDatabaseObject> getObjectsClone(DatabaseFieldsInterface[] fields) {
+        // Fetch the objects if they aren't fetched yet
+        if(!hasCache())
+            fetchObjects(fields);
+
+        // Create a list with clones
+        List<AbstractDatabaseObject> clones = new ArrayList<>();
+
+        // Loop through each database object, and clone it
+        for(AbstractDatabaseObject object : this.objects)
+            try {
+                clones.add(object.clone());
+
+            } catch(CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+
+        // Return the list of cloned objects
+        return clones;
     }
 
     /**
