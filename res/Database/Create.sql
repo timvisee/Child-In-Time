@@ -287,11 +287,14 @@ INSERT INTO `measurement` VALUES
 LOCK TABLES `group_teacher` WRITE;
 INSERT INTO `group_teacher` VALUES
 	(1, 1),
-	(1, 2),
-	(2, 1),
-	(2, 3),
-	(3, 2),
-	(3, 3);
+	(2, 2),
+	(3, 3),
+	(4, 1),
+	(5, 2),
+	(6, 3),
+	(7, 1),
+	(8, 2),
+	(9, 3);
 UNLOCK TABLES;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
