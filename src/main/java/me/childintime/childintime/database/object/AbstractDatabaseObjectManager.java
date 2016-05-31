@@ -22,7 +22,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of fetched objects.
      */
-    public abstract List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields);
+    public abstract List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface[] fields);
 
     /**
      * Get the list of objects.
