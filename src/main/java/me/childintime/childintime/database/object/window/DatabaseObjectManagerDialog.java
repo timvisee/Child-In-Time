@@ -3,9 +3,7 @@ package me.childintime.childintime.database.object.window;
 import com.sun.istack.internal.NotNull;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.DatabaseManager;
-import me.childintime.childintime.database.configuration.gui.window.DatabaseModifyDialog;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.util.Platform;
@@ -20,8 +18,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class DatabaseObjectManagerDialog extends JDialog {
@@ -30,18 +26,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * The database object manager this dialog is used for.
      */
     private AbstractDatabaseObjectManager objectManager;
-
-    /**
-     * Frame title.
-     */
-    // TODO: Fetch the 'type' name from the object manager instance, to determine a proper window title.
-    private static final String FORM_TITLE = App.APP_NAME + " - Manager";
-
-    /**
-     * The main label.
-     */
-    // TODO: Fetch the 'type' name from the object manager instance, to determine a proper label.
-    private JLabel mainLabel = new JLabel("Add, edit or delete databases.");
 
     /**
      * Data list model instance.
@@ -82,7 +66,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public DatabaseObjectManagerDialog(Window owner, @NotNull AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
-        super(owner, FORM_TITLE, ModalityType.APPLICATION_MODAL);
+        super(owner, App.APP_NAME + " - " + objectManager.getTypeName() + " manager", ModalityType.APPLICATION_MODAL);
 
         // Set the database object manager
         this.objectManager = objectManager;
@@ -101,7 +85,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                closeFrame();
+                onClose();
             }
 
             @Override
@@ -150,7 +134,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
         JPanel pnlMain = new JPanel();
         pnlMain.setLayout(new GridBagLayout());
 
-        // Configure the placement of the questions label, and add it to the questions panel
+        // Create the main label
+        final JLabel mainLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + ".");
+
+        // Add the main label
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
@@ -179,7 +166,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         pnlMain.add(databaseList, c);
 
         // Create the manage button panel
-        JPanel manageButtonPanel = createManageButtonPanel();
+        JPanel manageButtonPanel = buildUiManageButtonsPanel();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
         c.gridy = 1;
@@ -191,7 +178,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         pnlMain.add(manageButtonPanel, c);
 
         // Create the control button panel
-        JPanel controlButtonPanel = createControlButtonPanel();
+        JPanel controlButtonPanel = buildUiCommitButtonsPanel();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
         c.gridy = 2;
@@ -211,7 +198,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.add(pnlMain, c);
 
         // Update the button panel
-        updateButtons();
+        updateUiButtons();
     }
 
     /**
@@ -231,7 +218,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.objectList.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Update the button panel on selection change
-        this.objectList.addListSelectionListener(e -> updateButtons());
+        this.objectList.addListSelectionListener(e -> updateUiButtons());
         this.objectList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 if(evt.getClickCount() == 2)
@@ -259,7 +246,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      *
      * @return Button panel.
      */
-    public JPanel createManageButtonPanel() {
+    public JPanel buildUiManageButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
@@ -282,11 +269,11 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Create the button panel to control the form.
+     * Create the commit buttons panel to control the form.
      *
      * @return Button panel.
      */
-    public JPanel createControlButtonPanel() {
+    public JPanel buildUiCommitButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
@@ -303,7 +290,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             dispose();
         });
         applyButton.addActionListener(e -> applyDatabases());
-        cancelButton.addActionListener(e -> closeFrame());
+        cancelButton.addActionListener(e -> onClose());
 
         // Add the buttons to the panel in the proper order
         if(!Platform.isMacOsX()) {
@@ -323,7 +310,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Update the state of buttons in the button panel.
      */
-    public void updateButtons() {
+    public void updateUiButtons() {
         // Get the number of selected items
         int selected = getSelectedCount();
 
@@ -422,7 +409,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         //Core.getInstance().getDatabaseManager().setDatabases(this.objects);
 
         // Create a progress dialog and save the database configuration
-        ProgressDialog progress = new ProgressDialog(this, FORM_TITLE, false, "Saving database configuration...", true);
+        ProgressDialog progress = new ProgressDialog(this, "Working...", false, "Saving database configuration...", true);
 
         try {
             // Save the database configuration
@@ -446,9 +433,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Close the frame. Ask whether the user wants to save the changes.
+     * Called when the frame should be closed.
+     * This method determines whether to close the frame, with a confirmation dialog if it contains any unsaved changes.
      */
-    public void closeFrame() {
+    public void onClose() {
         // Only ask to save if there are any unsaved changes
         if(hasUnsavedChanges()) {
             // Ask whether the user wants to save the databases

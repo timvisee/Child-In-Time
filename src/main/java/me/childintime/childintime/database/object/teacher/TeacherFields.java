@@ -8,6 +8,11 @@ public enum TeacherFields implements DatabaseFieldsInterface {
     ;
 
     /**
+     * Database table name.
+     */
+    public static final String DATABASE_TABLE_NAME = "teacher";
+
+    /**
      * Field name in the database of the field.
      */
     private String fieldName;
@@ -19,6 +24,11 @@ public enum TeacherFields implements DatabaseFieldsInterface {
      */
     TeacherFields(String fieldName) {
         this.fieldName = fieldName;
+    }
+
+    @Override
+    public String getTableName() {
+        return DATABASE_TABLE_NAME;
     }
 
     @Override

@@ -17,11 +17,34 @@ public abstract class AbstractDatabaseObjectManager {
      * The given fields will be cached into the objects itself, to prevent further queries from being executed.
      * The fetched list of objects will be cached in this manager for further usage.
      *
+     * @return List of fetched objects.
+     */
+    public List<AbstractDatabaseObject> fetchObjects() {
+        // TODO: Use the default fields here!
+        return fetchObjects(null);
+    }
+
+    /**
+     * Fetch all objects from the database.
+     * The given fields will be cached into the objects itself, to prevent further queries from being executed.
+     * The fetched list of objects will be cached in this manager for further usage.
+     *
      * @param fields Database object fields to fetch and cache (using the same query, to improve performance).
      *
      * @return List of fetched objects.
      */
     public abstract List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface[] fields);
+
+    /**
+     * Get the list of objects.
+     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     *
+     * @return List of objects.
+     */
+    public List<AbstractDatabaseObject> getObjects() {
+        // TODO: Use the default fields here!
+        return getObjects(null);
+    }
 
     /**
      * Get the list of objects.
@@ -66,4 +89,11 @@ public abstract class AbstractDatabaseObjectManager {
         // Reset the cache
         this.objects = null;
     }
+
+    /**
+     * Get the name of the current database object manager type.
+     *
+     * @return Database object manager type name.
+     */
+    public abstract String getTypeName();
 }
