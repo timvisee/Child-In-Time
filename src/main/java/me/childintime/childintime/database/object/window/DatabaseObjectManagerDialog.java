@@ -72,7 +72,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.objectManager = objectManager;
 
         // Fetch the databases
-        this.objects = this.objectManager.getObjects();
+        this.objects = this.objectManager.getObjectsClone();
 
         // Create the form UI
         buildUi();
@@ -105,16 +105,21 @@ public class DatabaseObjectManagerDialog extends JDialog {
         });
 
         // Set the frame sizes
+        // TODO: Figure this out dynamically, using pack().
         this.setMinimumSize(new Dimension(350, 465));
         this.setPreferredSize(new Dimension(400, 450));
         this.setSize(new Dimension(400, 450));
+
+        // Make the explicitly frame resizable
+        this.setResizable(true);
 
         // Set the window location to the system's default
         this.setLocationByPlatform(true);
         this.setLocationRelativeTo(owner);
 
         // Show the form
-        this.setVisible(show);
+        if(show)
+            this.setVisible(true);
     }
 
     /**
@@ -126,9 +131,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Set the frame layout
         this.setLayout(new GridBagLayout());
-
-        // Make the frame non-resizable
-        this.setResizable(true);
 
         // Create the main panel, to put the question and answers in
         JPanel pnlMain = new JPanel();
