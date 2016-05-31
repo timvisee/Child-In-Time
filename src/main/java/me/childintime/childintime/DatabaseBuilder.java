@@ -57,7 +57,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(10);
+        this.progressDialog.setProgressMax(11);
         this.progressDialog.setShowProgress(true);
 
         // Prepare the database
@@ -94,6 +94,10 @@ public class DatabaseBuilder {
 
         // Create the measurement table
         createTableMeasurement();
+        this.progressDialog.increaseProgressValue();
+
+        // Create the group/teacher table
+        createTableGroupTeacher();
         this.progressDialog.increaseProgressValue();
 
         // Fill the user table
@@ -444,6 +448,43 @@ public class DatabaseBuilder {
                         "  `student_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)," +
                         "  FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the group/teacher table.
+     *
+     * @throws SQLException
+     */
+    public void createTableGroupTeacher() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `group_teacher` (" +
+                        "  `group_id`   INT NOT NULL," +
+                        "  `teacher_id` INT NOT NULL," +
+                        "  PRIMARY KEY (`group_id`, `teacher_id`)," +
+                        "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)," +
+                        "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `group_teacher` (" +
+                        "  `group_id`   INTEGER NOT NULL," +
+                        "  `teacher_id` INTEGER NOT NULL," +
+                        "  PRIMARY KEY (`group_id`, `teacher_id`)," +
+                        "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)," +
+                        "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
                         ");"
                 );
                 break;
