@@ -72,6 +72,10 @@ public class DatabaseBuilder {
         createTableSchool();
         this.progressDialog.increaseProgressValue();
 
+        // Create the teacher table
+        createTableTeacher();
+        this.progressDialog.increaseProgressValue();
+
         // Fill the user table
         fillTableUser();
         this.progressDialog.increaseProgressValue();
@@ -183,6 +187,52 @@ public class DatabaseBuilder {
     }
 
     /**
+     * Create the teacher table.
+     *
+     * @throws SQLException
+     */
+    public void createTableTeacher() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `teacher` (" +
+                        "    `id` INT NOT NULL AUTO_INCREMENT," +
+                        "    `first_name` TEXT NOT NULL," +
+                        "    `last_name` TEXT NOT NULL," +
+                        "    `gender` TINYINT NOT NULL," +
+                        "    `is_gym` TINYINT NOT NULL," +
+                        "    `school_id` INT NOT NULL," +
+                        "    PRIMARY KEY (`id`)," +
+                        "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
+                        "    CHECK(`gender` = 0 OR `gender` = 1)," +
+                        "    CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `teacher` (" +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "    `first_name` TEXT NOT NULL," +
+                        "    `last_name` TEXT NOT NULL," +
+                        "    `gender` TINYINT NOT NULL," +
+                        "    `is_gym` TINYINT NOT NULL," +
+                        "    `school_id` INT NOT NULL," +
+                        "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
+                        "    CHECK(`gender` = 0 OR `gender` = 1)," +
+                        "    CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
      * Fill the user table.
      *
      * @throws SQLException
@@ -197,7 +247,7 @@ public class DatabaseBuilder {
                 statement.execute(
                         "LOCK TABLES `user` WRITE;" +
                         "INSERT INTO `user` VALUES" +
-                        "(NULL, 'admin', MD5('admin'));" +
+                        "    (NULL, 'admin', MD5('admin'));" +
                         "UNLOCK TABLES;"
                 );
                 break;
@@ -205,7 +255,7 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "INSERT INTO `user` VALUES" +
-                        "(NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');"
+                        "    (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');"
                 );
                 break;
         }
