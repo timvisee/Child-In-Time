@@ -270,7 +270,7 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `group` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT ," +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "    `name` TEXT NOT NULL," +
                         "    `school_id` INTEGER NOT NULL," +
                         "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
@@ -310,7 +310,7 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `student` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT ," +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "    `first_name` TEXT NOT NULL," +
                         "    `last_name` TEXT NOT NULL," +
                         "    `gender` INTEGER NOT NULL," +
@@ -352,12 +352,48 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `bodystate` (" +
-                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT ," +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "    `date` DATE NOT NULL," +
                         "    `length` INTEGER NOT NULL," +
                         "    `weight` INTEGER NOT NULL," +
                         "    `student_id` INTEGER NOT NULL," +
                         "    FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the parkour table.
+     *
+     * @throws SQLException
+     */
+    public void createTableParkour() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `bodystate` (" +
+                        "    `id` INT NOT NULL AUTO_INCREMENT," +
+                        "    `date` DATE NOT NULL," +
+                        "    `length` SMALLINT NOT NULL," +
+                        "    `weight` SMALLINT NOT NULL," +
+                        "    `student_id` INT NOT NULL," +
+                        "    PRIMARY KEY (`id`)," +
+                        "    FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `parkour` (" +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "    `description` TEXT" +
                         ");"
                 );
                 break;
