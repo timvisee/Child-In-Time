@@ -1,9 +1,11 @@
 package me.childintime.childintime.database.object;
 
+import me.childintime.childintime.database.configuration.AbstractDatabase;
+
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class AbstractDatabaseObject {
+public abstract class AbstractDatabaseObject implements Cloneable {
 
     /**
      * Hashmap containing cached fields from the database object.
@@ -93,4 +95,10 @@ public abstract class AbstractDatabaseObject {
      * @return Database object type name.
      */
     public abstract String getTypeName();
+
+    @Override
+    protected AbstractDatabaseObject clone() throws CloneNotSupportedException {
+        // Clone through the super
+        return (AbstractDatabaseObject) super.clone();
+    }
 }
