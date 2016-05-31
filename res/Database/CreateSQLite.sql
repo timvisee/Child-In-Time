@@ -106,3 +106,198 @@ CREATE TABLE IF NOT EXISTS `user_meta_value` (
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `user_meta_field` (`id`)
 );
+
+-- _meta_data table prototype
+/*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `MYTABLENAME_id` INTEGER NOT NULL,
+  FOREIGN KEY (`MYTABLENAME_id`) REFERENCES `MYTABLENAME` (`id`)
+);*/
+
+-- _meta_field table prototype
+/*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);*/
+
+-- _meta_value table prototype
+/*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `MYTABLENAME_meta_field` (`id`)
+);*/
+
+CREATE TABLE IF NOT EXISTS `student_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `student_id` INTEGER NOT NULL,
+  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `student_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `student_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `student_meta_field` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `teacher_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `teacher_id` INTEGER NOT NULL,
+  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `teacher_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `teacher_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `teacher_meta_field` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `group_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `group_id` INTEGER NOT NULL,
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `group_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `group_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `group_meta_field` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `school_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `school_id` INTEGER NOT NULL,
+  FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `school_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `school_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `school_meta_field` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `bodystate_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `bodystate_id` INTEGER NOT NULL,
+  FOREIGN KEY (`bodystate_id`) REFERENCES `bodystate` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `bodystate_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `bodystate_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `bodystate_meta_field` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `parkour_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `parkour_id` INTEGER NOT NULL,
+  FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `parkour_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `parkour_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `parkour_meta_field` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `measurement_meta_data` (
+  `id`      INTEGER PRIMARY KEY AUTOINCREMENT,
+  `field`   TEXT    NOT NULL,
+  `type`    INTEGER NOT NULL,
+  `value`   TEXT,
+  `measurement_id` INTEGER NOT NULL,
+  FOREIGN KEY (`measurement_id`) REFERENCES `measurement` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `measurement_meta_field` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT    NOT NULL,
+  `type`       INTEGER NOT NULL,
+  `default`    TEXT,
+  `allow_null` INTEGER             DEFAULT 1 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `measurement_meta_value` (
+  `id`       INTEGER PRIMARY KEY AUTOINCREMENT,
+  `value`    TEXT    NOT NULL,
+  `field_id` INTEGER NOT NULL,
+  FOREIGN KEY (`field_id`) REFERENCES `measurement_meta_field` (`id`)
+);
