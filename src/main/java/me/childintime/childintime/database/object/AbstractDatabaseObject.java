@@ -43,7 +43,9 @@ public abstract class AbstractDatabaseObject {
      *
      * @return True if the given field is cached, false if not.
      */
-    public abstract boolean hasField(DatabaseFieldsInterface field);
+    public boolean hasField(DatabaseFieldsInterface field) {
+        return hasFields(new DatabaseFieldsInterface[]{field});
+    }
 
     /**
      * Fetch the given database fields.
@@ -61,7 +63,9 @@ public abstract class AbstractDatabaseObject {
      *
      * @return True if the given field was fetched successfully.
      */
-    public abstract boolean fetchField(DatabaseFieldsInterface field);
+    public boolean fetchField(DatabaseFieldsInterface field) {
+        return fetchFields(new DatabaseFieldsInterface[]{field});
+    }
 
     /**
      * Get the given fields. All fields will be returned from cache when possible, fields that aren't cached are fetched
@@ -85,7 +89,9 @@ public abstract class AbstractDatabaseObject {
      *
      * @throws Exception Throws if an error occurred.
      */
-    public abstract Object getField(DatabaseFieldsInterface field) throws Exception;
+    public Object getField(DatabaseFieldsInterface field) throws Exception {
+        return getFields(new DatabaseFieldsInterface[]{field}).get(0);
+    }
 
     /**
      * Get the name of the current database object type.

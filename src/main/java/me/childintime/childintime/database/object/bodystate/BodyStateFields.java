@@ -1,15 +1,45 @@
 package me.childintime.childintime.database.object.bodystate;
 
-public enum BodyStateFields {
+import me.childintime.childintime.database.object.AbstractDatabaseObject;
+import me.childintime.childintime.database.object.DataType;
+import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
-    STUDENT_ID("student_id"),
-    DATE("date"),
-    LENGTH("length"),
-    WEIGHT("weight");
+public enum BodyStateFields implements DatabaseFieldsInterface{
 
-    private String student_id;
+    STUDENT_ID("student_id", false, DataType.INTEGER, null),
+    DATE("date", true, DataType.DATE, null),
+    LENGTH("length", true, DataType.INTEGER, null),
+    WEIGHT("weight", true, DataType.INTEGER, null);
 
-    BodyStateFields(String student_id) {
-        this.student_id = student_id;
+    private String databaseField;
+    private boolean editable;
+    private DataType dataType;
+    private Class<? extends AbstractDatabaseObject> referenceType;
+
+    BodyStateFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.databaseField = databaseField;
+        this.editable = editable;
+        this.dataType = dataType;
+        this.referenceType = referenceType;
+    }
+
+    @Override
+    public String getDatabaseField() {
+        return databaseField;
+    }
+
+    @Override
+    public DataType getDataType() {
+        return this.dataType;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return this.editable;
+    }
+
+    @Override
+    public Class<? extends AbstractDatabaseObject> getReferenceType() {
+        return this.referenceType;
     }
 }

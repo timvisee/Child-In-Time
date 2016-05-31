@@ -1,38 +1,47 @@
 package me.childintime.childintime.database.object.teacher;
 
+import me.childintime.childintime.database.object.AbstractDatabaseObject;
+import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.school.School;
 
 public enum TeacherFields implements DatabaseFieldsInterface {
 
-    // TODO: Put actual teacher fields here!
-    ;
+    ID("id", false, DataType.INTEGER, null),
+    FIRST_NAME("first_name", true, DataType.STRING, null),
+    LAST_NAME("last_name", true, DataType.STRING, null),
+    IS_GYM("is_gym", true, DataType.BOOLEAN, null),
+    SCHOOL_ID("school_id", true, DataType.REFERENCE, School.class);
 
-    /**
-     * Database table name.
-     */
-    public static final String DATABASE_TABLE_NAME = "teacher";
+    private String databaseField;
+    private boolean editable;
+    private DataType dataType;
+    private Class<? extends AbstractDatabaseObject> referenceType;
 
-    /**
-     * Field name in the database of the field.
-     */
-    private String fieldName;
-
-    /**
-     * Constructor.
-     *
-     * @param fieldName Database field name.
-     */
-    TeacherFields(String fieldName) {
-        this.fieldName = fieldName;
+    TeacherFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.databaseField = databaseField;
+        this.editable = editable;
+        this.dataType = dataType;
+        this.referenceType = referenceType;
     }
 
     @Override
-    public String getTableName() {
-        return DATABASE_TABLE_NAME;
+    public String getDatabaseField() {
+        return databaseField;
     }
 
     @Override
-    public String getFieldName() {
-        return this.fieldName;
+    public DataType getDataType() {
+        return this.dataType;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return this.editable;
+    }
+
+    @Override
+    public Class<? extends AbstractDatabaseObject> getReferenceType() {
+        return this.referenceType;
     }
 }
