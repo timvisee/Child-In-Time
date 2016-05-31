@@ -85,7 +85,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                closeFrame();
+                onClose();
             }
 
             @Override
@@ -290,7 +290,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             dispose();
         });
         applyButton.addActionListener(e -> applyDatabases());
-        cancelButton.addActionListener(e -> closeFrame());
+        cancelButton.addActionListener(e -> onClose());
 
         // Add the buttons to the panel in the proper order
         if(!Platform.isMacOsX()) {
@@ -433,9 +433,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Close the frame. Ask whether the user wants to save the changes.
+     * Called when the frame should be closed.
+     * This method determines whether to close the frame, with a confirmation dialog if it contains any unsaved changes.
      */
-    public void closeFrame() {
+    public void onClose() {
         // Only ask to save if there are any unsaved changes
         if(hasUnsavedChanges()) {
             // Ask whether the user wants to save the databases
