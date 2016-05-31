@@ -1,9 +1,13 @@
-package me.childintime.childintime.database.configuration.gui.window;
+package me.childintime.childintime.database.object.window;
 
+import com.sun.istack.internal.NotNull;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.DatabaseManager;
+import me.childintime.childintime.database.configuration.gui.window.DatabaseModifyDialog;
+import me.childintime.childintime.database.object.AbstractDatabaseObject;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -20,35 +24,37 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class DatabaseManagerDialog extends JDialog {
+public class DatabaseObjectManagerDialog extends JDialog {
+
+    /**
+     * The database object manager this dialog is used for.
+     */
+    private AbstractDatabaseObjectManager objectManager;
 
     /**
      * Frame title.
      */
-    private static final String FORM_TITLE = App.APP_NAME + " - Database configuration manager";
+    // TODO: Fetch the 'type' name from the object manager instance, to determine a proper window title.
+    private static final String FORM_TITLE = App.APP_NAME + " - Manager";
 
     /**
-     * The database manager label.
+     * The main label.
      */
+    // TODO: Fetch the 'type' name from the object manager instance, to determine a proper label.
     private JLabel mainLabel = new JLabel("Add, edit or delete databases.");
 
     /**
-     * Database list model instance.
+     * Data list model instance.
      */
-    private DefaultListModel<AbstractDatabase> databaseListModel;
+    private DefaultListModel<AbstractDatabaseObject> objectsListModel;
 
     /**
-     * Database list instance.
+     * Data list instance.
      */
-    private JList databaseList;
+    private JList objectList;
 
     /**
-     * Test button instance.
-     */
-    private JButton testButton;
-
-    /**
-     * Create button instance.
+     * Add button instance.
      */
     private JButton addButton;
 
@@ -58,37 +64,31 @@ public class DatabaseManagerDialog extends JDialog {
     private JButton editButton;
 
     /**
-     * Move up button instance.
-     */
-    private JButton moveUpButton;
-
-    /**
-     * Move down button instance.
-     */
-    private JButton moveDownButton;
-
-    /**
      * Remove button instance.
      */
     private JButton removeButton;
 
     /**
-     * List of the databases being shown.
+     * List of abstract database objects being shown.
      */
-    private List<AbstractDatabase> databases = new ArrayList<>();
+    private List<AbstractDatabaseObject> objects = new ArrayList<>();
 
     /**
      * Constructor.
      *
      * @param owner Owner dialog.
+     * @param objectManager Database object manager instance.
      * @param show True to show the frame once it has been initialized.
      */
-    public DatabaseManagerDialog(Window owner, boolean show) {
+    public DatabaseObjectManagerDialog(Window owner, @NotNull AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
         super(owner, FORM_TITLE, ModalityType.APPLICATION_MODAL);
 
-        // Load the databases
-        this.databases = Core.getInstance().getDatabaseManager().getDatabasesClone();
+        // Set the database object manager
+        this.objectManager = objectManager;
+
+        // Fetch the databases
+        this.objects = this.objectManager.getObjects();
 
         // Create the form UI
         buildUi();
@@ -167,7 +167,7 @@ public class DatabaseManagerDialog extends JDialog {
         pnlMain.add(new JLabel("Databases:"), c);
 
         // Create the database manager list and add it to the main panel
-        JScrollPane databaseList = createDatabaseList();
+        JScrollPane databaseList = buildUiList();
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 1;
@@ -215,24 +215,24 @@ public class DatabaseManagerDialog extends JDialog {
     }
 
     /**
-     * Create a list to manage the databases in.
+     * Create a list to manage the database objects in.
      *
      * @return Scroll pane with list.
      */
-    public JScrollPane createDatabaseList() {
+    public JScrollPane buildUiList() {
         // Create the default list model
-        this.databaseListModel = new DefaultListModel<>();
+        this.objectsListModel = new DefaultListModel<>();
 
-        // Refresh the list of databases to add them to the list model
-        updateListView();
+        // Refresh the list of databases objects and add them to the list
+        updateUiList();
 
         // Create the list and create an empty border
-        this.databaseList = new JList<>(this.databaseListModel);
-        this.databaseList.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.objectList = new JList<>(this.objectsListModel);
+        this.objectList.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Update the button panel on selection change
-        this.databaseList.addListSelectionListener(e -> updateButtons());
-        this.databaseList.addMouseListener(new MouseAdapter() {
+        this.objectList.addListSelectionListener(e -> updateButtons());
+        this.objectList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 if(evt.getClickCount() == 2)
                     editDatabase();
@@ -240,18 +240,18 @@ public class DatabaseManagerDialog extends JDialog {
         });
 
         // Create a scroll pane with the database list and return it
-        return new JScrollPane(this.databaseList);
+        return new JScrollPane(this.objectList);
     }
 
     /**
-     * Update the list view to show the list of databases.
+     * Update the UI list with the current list of database objects.
      */
-    public void updateListView() {
-        // Clear all current items
-        this.databaseListModel.clear();
+    public void updateUiList() {
+        // Clear all current database objects.
+        this.objectsListModel.clear();
 
-        // Add the items
-        this.databases.forEach(this.databaseListModel::addElement);
+        // Add the items to the list model
+        this.objects.forEach(this.objectsListModel::addElement);
     }
 
     /**
@@ -262,28 +262,19 @@ public class DatabaseManagerDialog extends JDialog {
     public JPanel createManageButtonPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(6, 1, 10, 10));
+        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
 
         // Create the buttons to add to the panel
-        this.testButton = new JButton("Test");
         this.addButton = new JButton("Add");
         this.editButton = new JButton("Edit");
-        this.moveUpButton = new JButton("Move up");
-        this.moveDownButton = new JButton("Move down");
         this.removeButton = new JButton("Remove");
 
         // Add the buttons to the panel
-        buttonPanel.add(testButton);
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
-        buttonPanel.add(moveUpButton);
-        buttonPanel.add(moveDownButton);
         buttonPanel.add(removeButton);
-        testButton.addActionListener(e -> testDatabase());
         addButton.addActionListener(e -> addDatabase());
         editButton.addActionListener(e -> editDatabase());
-        moveUpButton.addActionListener(e -> moveDatabasesUp());
-        moveDownButton.addActionListener(e -> moveDatabasesDown());
         removeButton.addActionListener(e -> removeDatabases());
 
         // Return the button panel
@@ -340,78 +331,7 @@ public class DatabaseManagerDialog extends JDialog {
         editButton.setEnabled(selected == 1);
 
         // Enable the test and delete buttons if at least one database is selected
-        testButton.setEnabled(selected > 0);
         removeButton.setEnabled(selected > 0);
-
-        // Enable the move buttons if at least one database is selected and if the databases can move in that direction
-        moveUpButton.setEnabled(canMoveDatabasesUp());
-        moveDownButton.setEnabled(canMoveDatabasesDown());
-    }
-
-    /**
-     * Test the selected databases.
-     *
-     * @return True if all tests succeeded, false if not. If no database is selected, false will be returned.
-     */
-    public boolean testDatabase() {
-        // Make sure just one or more databases are selected
-        if(getSelectedCount() == 0)
-            return false;
-
-        // Create a progress dialog for testing
-        ProgressDialog progressDialog = new ProgressDialog(this, "Testing database...", false, "Testing database configurations...", true);
-
-        // Get the list of selected databases
-        List selected = this.databaseList.getSelectedValuesList();
-
-        // Loop through the databases
-        for(Object databaseObject : selected) {
-            // Make sure the instance is valid
-            if(!(databaseObject instanceof AbstractDatabase))
-                continue;
-
-            // Cast the database object
-            AbstractDatabase database = (AbstractDatabase) databaseObject;
-
-            // Make sure the database is successfully configured
-            if(!database.isConfigured()) {
-                // Edit the selected database
-                DatabaseModifyDialog.showModify(progressDialog, database);
-
-                // TODO: Update the selected database!
-            }
-
-            // Show a message if it's still not configured properly
-            if(!database.isConfigured()) {
-                // Show a status message
-                JOptionPane.showMessageDialog(progressDialog, "The database configuration '" + database.getName() + "' is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-
-                // Dispose the progress dialog and return the result
-                progressDialog.dispose();
-                return false;
-            }
-
-            // Test the database
-            if(!database.test(this, progressDialog)) {
-                // Dispose the progress dialog and return the result
-                progressDialog.dispose();
-                return false;
-            }
-        }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
-
-        // Show a success message
-        JOptionPane.showMessageDialog(
-                this,
-                "Successfully connected to the selected database" + (getSelectedCount() > 1 ? "s" : "") + ".",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
-        // Everything seems to be fine, return the result
-        return true;
     }
 
     /**
@@ -419,15 +339,16 @@ public class DatabaseManagerDialog extends JDialog {
      */
     public void addDatabase() {
         // Create a new database through the edit panel
-        final AbstractDatabase database = DatabaseModifyDialog.showCreate(this);
+        // TODO: Implement modification dialog here!
+        final AbstractDatabaseObject databaseObject = null; // DatabaseModifyDialog.showCreate(this)
 
-        // Add the database to the list if it isn't null
-        if(database != null) {
+        // Add the database object to the list if it isn't null
+        if(databaseObject != null) {
             // Add the database
-            this.databases.add(database);
+            this.objects.add(databaseObject);
 
             // Refresh the list of databases
-            updateListView();
+            updateUiList();
         }
     }
 
@@ -440,149 +361,20 @@ public class DatabaseManagerDialog extends JDialog {
             return;
 
         // Get the selected database
-        final AbstractDatabase selected = (AbstractDatabase) this.databaseList.getSelectedValue();
+        final AbstractDatabaseObject selected = (AbstractDatabaseObject) this.objectList.getSelectedValue();
 
         // Show the edit dialog for this database
-        final AbstractDatabase result = DatabaseModifyDialog.showModify(this, selected);
+        // TODO: Implement the edit dialog here
+        final AbstractDatabaseObject result = null; // DatabaseModifyDialog.showModify(this, selected)
 
         // Set the result, or remove it from the list if it's null
         if(result != null)
-            this.databases.set(this.databaseList.getSelectedIndex(), result);
+            this.objects.set(this.objectList.getSelectedIndex(), result);
         else
-            this.databases.remove(this.databaseList.getSelectedIndex());
+            this.objects.remove(this.objectList.getSelectedIndex());
 
         // Refresh the list
-        updateListView();
-    }
-
-    /**
-     * Move the selected databases up.
-     */
-    public void moveDatabasesUp() {
-        // Make sure at least one database is selected
-        if(getSelectedCount() <= 0)
-            return;
-
-        // Get the indices
-        int[] indices = this.databaseList.getSelectedIndices();
-
-        // Move the databases
-        if(moveDatabases(this.databaseList.getSelectedIndices(), -1))
-            for(int i = 0; i < indices.length; i++)
-                indices[i]--;
-
-        // Update the list
-        updateListView();
-
-        // Set the selected indices
-        this.databaseList.setSelectedIndices(indices);
-    }
-
-    /**
-     * Check whether the selected databases can be moved up.
-     *
-     * @return True if they can be moved up, false otherwise.
-     */
-    public boolean canMoveDatabasesUp() {
-        // Make sure at least one database is selected
-        if(getSelectedCount() <= 0)
-            return false;
-
-        // Check whether the selected databases can be moved, return the result
-        return canMoveDatabases(this.databaseList.getSelectedIndices(), -1);
-    }
-
-    /**
-     * Move the selected databases down.
-     */
-    public void moveDatabasesDown() {
-        // Make sure at least one database is selected
-        if(getSelectedCount() <= 0)
-            return;
-
-        // Get the indices
-        int[] indices = this.databaseList.getSelectedIndices();
-
-        // Move the databases
-        if(moveDatabases(this.databaseList.getSelectedIndices(), 1))
-            for(int i = 0; i < indices.length; i++)
-                indices[i]++;
-
-        // Update the list
-        updateListView();
-
-        // Set the selected indices
-        this.databaseList.setSelectedIndices(indices);
-    }
-
-    /**
-     * Check whether the selected databases can be moved down.
-     *
-     * @return True if they can be moved down, false otherwise.
-     */
-    public boolean canMoveDatabasesDown() {
-        // Make sure at least one database is selected
-        if(getSelectedCount() <= 0)
-            return false;
-
-        // Check whether the selected databases can be moved, return the result
-        return canMoveDatabases(this.databaseList.getSelectedIndices(), 1);
-    }
-
-    /**
-     * Move the databases.
-     *
-     * @param databaseIndexes Indexes of databases to move.
-     * @param move How much to move.
-     *
-     * @return True if any item was moved, false if not.
-     */
-    private boolean moveDatabases(int[] databaseIndexes, int move) {
-        // Check whether the databases can be moved
-        if(!canMoveDatabases(databaseIndexes, move))
-            return false;
-
-        // Sort the array with indexes
-        Arrays.sort(databaseIndexes);
-
-        // Inverse the list if they should be moved upwards
-        if(move > 0) {
-            for(int i = 0; i < databaseIndexes.length / 2; i++) {
-                int temp = databaseIndexes[i];
-                databaseIndexes[i] = databaseIndexes[databaseIndexes.length - i - 1];
-                databaseIndexes[databaseIndexes.length - i - 1] = temp;
-            }
-        }
-
-        // Move all the databases
-        for(int i : databaseIndexes)
-            Collections.swap(this.databases, i, i + move);
-
-        // Return the result
-        return true;
-    }
-
-    /**
-     * Check whether the specified databases can be moved.
-     *
-     * @param databaseIndexes Database indexes.
-     * @param move Relative move.
-     *
-     * @return True if they can move, false if not.
-     */
-    private boolean canMoveDatabases(int[] databaseIndexes, int move) {
-        // Get the lowest and highest new index
-        int lowest = databaseIndexes[0] + move;
-        int highest = databaseIndexes[0] + move;
-
-        // Loop through the database indexes and update the lowest and highest values
-        for(int i = 1; i < databaseIndexes.length; i++) {
-            lowest = Math.min(databaseIndexes[i] + move, lowest);
-            highest = Math.max(databaseIndexes[i] + move, highest);
-        }
-
-        // Make sure the databases can be moved to that position
-        return !(lowest < 0 || highest >= this.databases.size());
+        updateUiList();
     }
 
     /**
@@ -594,37 +386,40 @@ public class DatabaseManagerDialog extends JDialog {
             return;
 
         // Ask whether the user wants to delete the databases
-        switch(JOptionPane.showConfirmDialog(this, "Are you sure you'd like to delete this database?", "Delete database", JOptionPane.YES_NO_OPTION)) {
+        // TODO: Show a proper message!
+        switch(JOptionPane.showConfirmDialog(this, "Are you sure you'd like to delete this object?", "Delete object", JOptionPane.YES_NO_OPTION)) {
             case JOptionPane.NO_OPTION:
             case JOptionPane.CANCEL_OPTION:
             case JOptionPane.CLOSED_OPTION:
                 return;
         }
 
-        // Delete the selected databases
-        for(Object database : this.databaseList.getSelectedValuesList())
+        // Delete the selected database object
+        for(Object databaseObject : this.objectList.getSelectedValuesList())
             //noinspection RedundantCast
-            this.databases.remove((AbstractDatabase) database);
+            this.objects.remove((AbstractDatabaseObject) databaseObject);
 
         // Refresh the list
-        updateListView();
+        updateUiList();
     }
 
     /**
-     * Get the number of selected items.
+     * Get the number of selected database objects.
      *
-     * @return Number of selected items.
+     * @return Number of selected database objects.
      */
     public int getSelectedCount() {
-        return this.databaseList.getSelectedValuesList().size();
+        return this.objectList.getSelectedValuesList().size();
     }
 
     /**
      * Apply and save the databases.
      */
+    // TODO: Create a method that applies the difference between the original list, and the new list, to the database using proper queries.
     public void applyDatabases() {
         // Store a copy of the databases
-        Core.getInstance().getDatabaseManager().setDatabases(this.databases);
+        // TODO: Reimplement this
+        //Core.getInstance().getDatabaseManager().setDatabases(this.objects);
 
         // Create a progress dialog and save the database configuration
         ProgressDialog progress = new ProgressDialog(this, FORM_TITLE, false, "Saving database configuration...", true);
@@ -682,12 +477,12 @@ public class DatabaseManagerDialog extends JDialog {
         DatabaseManager databaseManager = Core.getInstance().getDatabaseManager();
 
         // Compare the number of databases
-        if(databaseManager.getDatabaseCount() != this.databases.size())
+        if(databaseManager.getDatabaseCount() != this.objects.size())
             return true;
 
         // Compare the databases
-        for(int i = 0; i < this.databases.size(); i++)
-            if(!databaseManager.getDatabase(i).equals(this.databases.get(i)))
+        for(int i = 0; i < this.objects.size(); i++)
+            if(!databaseManager.getDatabase(i).equals(this.objects.get(i)))
                 return true;
 
         // There don't seem to be any unsaved changes, return the result

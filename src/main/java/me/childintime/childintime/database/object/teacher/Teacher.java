@@ -16,7 +16,7 @@ public class Teacher extends AbstractDatabaseObject {
             if (!(field instanceof TeacherFields))
                 return false;
 
-            if(this.hashmap.containsKey(field))
+            if(this.cachedFields.containsKey(field))
                 return false;
         }
 
@@ -51,7 +51,7 @@ public class Teacher extends AbstractDatabaseObject {
                 if(!fetchField(field))
                     throw new Exception("Failed to fetch field");
 
-            list.add(this.hashmap.get(field));
+            list.add(this.cachedFields.get(field));
         }
 
         return list;

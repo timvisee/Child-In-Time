@@ -4,20 +4,32 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
 public enum StudentFields implements DatabaseFieldsInterface {
 
-    ID("id"),
-    FIRST_NAME("first_name"),
-    LAST_NAME("last_name"),
-    GENDER("gender"),
-    BIRTHDATE("birthdate"),
-    GROUP_ID("group_id");
+    /**
+     * Student ID.
+     */
+    ID ("id"),
 
-    private String id;
+    /**
+     * First name of the student.
+     */
+    FIRST_NAME ("name");
 
-    StudentFields(String id) {
-        this.id = id;
+    /**
+     * Field name in the database of the field.
+     */
+    private String fieldName;
+
+    /**
+     * Constructor.
+     *
+     * @param fieldName Field name.
+     */
+    StudentFields(String fieldName) {
+        this.fieldName = fieldName;
     }
 
+    @Override
     public String getFieldName() {
-        return id;
+        return this.fieldName;
     }
 }

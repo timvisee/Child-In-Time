@@ -11,11 +11,11 @@ public class Student extends AbstractDatabaseObject {
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
 
-        for (DatabaseFieldsInterface field : fields) {
+        for(DatabaseFieldsInterface field : fields) {
             if (!(field instanceof StudentFields))
                 return false;
 
-            if(this.hashmap.containsKey(field))
+            if(this.cachedFields.containsKey(field))
                 return false;
         }
 
@@ -51,7 +51,7 @@ public class Student extends AbstractDatabaseObject {
                 if(!fetchField(field))
                     throw new Exception("Failed to fetch field");
 
-            list.add(this.hashmap.get(field));
+            list.add(this.cachedFields.get(field));
         }
 
         return list;
