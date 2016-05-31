@@ -166,7 +166,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         pnlMain.add(databaseList, c);
 
         // Create the manage button panel
-        JPanel manageButtonPanel = createManageButtonPanel();
+        JPanel manageButtonPanel = buildUiManageButtonsPanel();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
         c.gridy = 1;
@@ -178,7 +178,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         pnlMain.add(manageButtonPanel, c);
 
         // Create the control button panel
-        JPanel controlButtonPanel = createControlButtonPanel();
+        JPanel controlButtonPanel = buildUiCommitButtonsPanel();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
         c.gridy = 2;
@@ -198,7 +198,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.add(pnlMain, c);
 
         // Update the button panel
-        updateButtons();
+        updateUiButtons();
     }
 
     /**
@@ -218,7 +218,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.objectList.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Update the button panel on selection change
-        this.objectList.addListSelectionListener(e -> updateButtons());
+        this.objectList.addListSelectionListener(e -> updateUiButtons());
         this.objectList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 if(evt.getClickCount() == 2)
@@ -246,7 +246,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      *
      * @return Button panel.
      */
-    public JPanel createManageButtonPanel() {
+    public JPanel buildUiManageButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
@@ -269,11 +269,11 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Create the button panel to control the form.
+     * Create the commit buttons panel to control the form.
      *
      * @return Button panel.
      */
-    public JPanel createControlButtonPanel() {
+    public JPanel buildUiCommitButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
@@ -310,7 +310,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Update the state of buttons in the button panel.
      */
-    public void updateButtons() {
+    public void updateUiButtons() {
         // Get the number of selected items
         int selected = getSelectedCount();
 
