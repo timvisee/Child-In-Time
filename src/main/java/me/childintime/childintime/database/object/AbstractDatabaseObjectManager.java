@@ -1,8 +1,14 @@
 package me.childintime.childintime.database.object;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDatabaseObjectManager {
+
+    /**
+     * List of database objects loaded in this manager.
+     */
+    protected List<AbstractDatabaseObject> objects = new ArrayList<>();
 
     // TODO: Create the body of this object!
     // TODO: Shorten the name of this object?
