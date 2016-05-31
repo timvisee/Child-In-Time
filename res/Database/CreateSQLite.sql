@@ -15,7 +15,13 @@ CREATE TABLE IF NOT EXISTS `user` (
 	`password_hash` TEXT NOT NULL
 );
 
-create table `teacher` (
+CREATE TABLE IF NOT EXISTS `school` (
+	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
+	`name` TEXT NOT NULL,
+	`commune` TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `teacher` (
 	`id` INTEGER AUTOINCREMENT NOT NULL,
     	`first_name` TEXT NOT NULL,
     	`last_name` TEXT NOT NULL,
