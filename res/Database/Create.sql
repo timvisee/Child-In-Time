@@ -103,6 +103,7 @@ CREATE TABLE IF NOT EXISTS `group_teacher` (
 DROP PROCEDURE IF EXISTS createMetaTable;
 
 # Create the create meta table statement, to easily create metadata tables
+DELIMITER //
 CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 	BEGIN
 
@@ -151,8 +152,9 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 		DEALLOCATE PREPARE metaFieldPrepared;
 		DEALLOCATE PREPARE metaValuePrepared;
 
-	END;
-;
+	END
+	//
+	DELIMITER ;
 
 # Create meta data tables for database objects
 CALL createMetaTable('student');
