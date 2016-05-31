@@ -7,13 +7,13 @@ import java.util.List;
 
 public class Parkour extends AbstractDatabaseObject {
 
-    @Override
-    public boolean hasFields(DatabaseFieldsInterface[] fields) {
-        return false;
-    }
+    /**
+     * Database object type name.
+     */
+    public static final String TYPE_NAME = "Parkour";
 
     @Override
-    public boolean hasField(DatabaseFieldsInterface field) {
+    public boolean hasFields(DatabaseFieldsInterface[] fields) {
         return false;
     }
 
@@ -23,17 +23,12 @@ public class Parkour extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean fetchField(DatabaseFieldsInterface field) {
-        return false;
-    }
-
-    @Override
     public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
         return null;
     }
 
     @Override
-    public Object getField(DatabaseFieldsInterface field) throws Exception {
-        return null;
+    public String getTypeName() {
+        return TYPE_NAME;
     }
 }
