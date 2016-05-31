@@ -57,7 +57,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(2);
+        this.progressDialog.setProgressMax(6);
         this.progressDialog.setShowProgress(true);
 
         // Prepare the database
@@ -74,6 +74,10 @@ public class DatabaseBuilder {
 
         // Create the teacher table
         createTableTeacher();
+        this.progressDialog.increaseProgressValue();
+
+        // Create the group table
+        createTableGroup();
         this.progressDialog.increaseProgressValue();
 
         // Fill the user table
@@ -226,6 +230,42 @@ public class DatabaseBuilder {
                         "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
                         "    CHECK(`gender` = 0 OR `gender` = 1)," +
                         "    CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the group table.
+     *
+     * @throws SQLException
+     */
+    public void createTableGroup() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `group` (" +
+                        "    `id` INT NOT NULL AUTO_INCREMENT," +
+                        "    `name` TEXT NOT NULL," +
+                        "    `school_id` INT NOT NULL," +
+                        "    PRIMARY KEY (`id`)," +
+                        "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `group` (" +
+                        "    `id` INT PRIMARY KEY AUTOINCREMENT ," +
+                        "    `name` TEXT NOT NULL," +
+                        "    `school_id` INT NOT NULL," +
+                        "    FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
                         ");"
                 );
                 break;
