@@ -61,10 +61,12 @@ public class DatabaseBuilder {
         this.progressDialog.setShowProgress(true);
 
         // Prepare the database
+        this.progressDialog.setStatus("Preparing database...");
         prepare();
         this.progressDialog.increaseProgressValue();
 
         // Create the user table
+        this.progressDialog.setStatus("Configuring database...");
         createTableUser();
         this.progressDialog.increaseProgressValue();
 
@@ -111,6 +113,7 @@ public class DatabaseBuilder {
         createMetaDataTables("measurement");
 
         // Fill the user table
+        this.progressDialog.setStatus("Inserting database data...");
         fillTableUser();
         this.progressDialog.increaseProgressValue();
 
