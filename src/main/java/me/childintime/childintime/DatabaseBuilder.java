@@ -149,6 +149,10 @@ public class DatabaseBuilder {
         fillTableGroupTeacher();
         this.progressDialog.increaseProgressValue();
 
+        // Finish the database
+        finish();
+        this.progressDialog.increaseProgressValue();
+
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -1061,6 +1065,30 @@ public class DatabaseBuilder {
                         "  (8, 2)," +
                         "  (9, 3);"
                 );
+                break;
+        }
+    }
+
+    /**
+     * Finish the database.
+     *
+     * @throws SQLException
+     */
+    public void finish() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;" +
+                                "/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;" +
+                                "/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;"
+                );
+                break;
+
+            case SQLITE:
                 break;
         }
     }
