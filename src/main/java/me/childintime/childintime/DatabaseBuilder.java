@@ -57,7 +57,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(7);
+        this.progressDialog.setProgressMax(8);
         this.progressDialog.setShowProgress(true);
 
         // Prepare the database
@@ -82,6 +82,10 @@ public class DatabaseBuilder {
 
         // Create the student table
         createTableStudent();
+        this.progressDialog.increaseProgressValue();
+
+        // Create the body state table
+        createTableBodyState();
         this.progressDialog.increaseProgressValue();
 
         // Fill the user table
@@ -314,6 +318,46 @@ public class DatabaseBuilder {
                         "    `group_id` INTEGER NOT NULL," +
                         "    FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
                         "    CHECK(`gender` = 0 OR `gender` = 1)" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the body state table.
+     *
+     * @throws SQLException
+     */
+    public void createTableBodyState() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `bodystate` (" +
+                        "    `id` INT NOT NULL AUTO_INCREMENT," +
+                        "    `date` DATE NOT NULL," +
+                        "    `length` SMALLINT NOT NULL," +
+                        "    `weight` SMALLINT NOT NULL," +
+                        "    `student_id` INT NOT NULL," +
+                        "    PRIMARY KEY (`id`)," +
+                        "    FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `bodystate` (" +
+                        "    `id` INTEGER PRIMARY KEY AUTOINCREMENT ," +
+                        "    `date` DATE NOT NULL," +
+                        "    `length` INTEGER NOT NULL," +
+                        "    `weight` INTEGER NOT NULL," +
+                        "    `student_id` INTEGER NOT NULL," +
+                        "    FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
                         ");"
                 );
                 break;
