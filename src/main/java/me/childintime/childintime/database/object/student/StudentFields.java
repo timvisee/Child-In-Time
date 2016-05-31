@@ -1,23 +1,48 @@
 package me.childintime.childintime.database.object.student;
 
+import me.childintime.childintime.database.object.AbstractDatabaseObject;
+import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.group.Group;
 
 public enum StudentFields implements DatabaseFieldsInterface {
 
-    ID("id"),
-    FIRST_NAME("first_name"),
-    LAST_NAME("last_name"),
-    GENDER("gender"),
-    BIRTHDATE("birthdate"),
-    GROUP_ID("group_id");
+    ID("databaseField", false, DataType.INTEGER, null),
+    FIRST_NAME("first_name", true, DataType.STRING, null),
+    LAST_NAME("last_name", true, DataType.STRING, null),
+    GENDER("gender", true, DataType.BOOLEAN, null),
+    BIRTHDATE("birthdate", true, DataType.DATE, null),
+    GROUP_ID("group_id", true, DataType.REFERENCE, Group.class);
 
-    private String id;
+    private String databaseField;
+    private boolean editable;
+    private DataType dataType;
+    private Class<? extends AbstractDatabaseObject> referenceType;
 
-    StudentFields(String id) {
-        this.id = id;
+    StudentFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.databaseField = databaseField;
+        this.editable = editable;
+        this.dataType = dataType;
+        this.referenceType = referenceType;
     }
 
-    public String getFieldName() {
-        return id;
+    @Override
+    public String getDatabaseField() {
+        return databaseField;
+    }
+
+    @Override
+    public DataType getDataType() {
+        return this.dataType;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return this.editable;
+    }
+
+    @Override
+    public Class<? extends AbstractDatabaseObject> getReferenceType() {
+        return this.referenceType;
     }
 }
