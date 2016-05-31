@@ -2,6 +2,7 @@ package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
 import me.childintime.childintime.App;
+import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -182,8 +183,13 @@ public class IntegratedDatabase extends AbstractDatabase implements Cloneable {
     }
 
     @Override
-    public String getDatabaseConnectionString() {
+    public String getDatabaseConnectionUrl() {
         return "jdbc:sqlite:" + getFile().getAbsolutePath();
+    }
+
+    @Override
+    public DatabaseDialect getDialect() {
+        return DatabaseDialect.SQLITE;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone")
