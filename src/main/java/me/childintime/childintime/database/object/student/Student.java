@@ -8,6 +8,11 @@ import java.util.List;
 
 public class Student extends AbstractDatabaseObject {
 
+    /**
+     * Database object type name.
+     */
+    public static final String TYPE_NAME = "Student";
+
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
 
@@ -60,5 +65,10 @@ public class Student extends AbstractDatabaseObject {
     @Override
     public Object getField(DatabaseFieldsInterface field) throws Exception {
         return getFields(new DatabaseFieldsInterface[]{field}).get(0);
+    }
+
+    @Override
+    public String getTypeName() {
+        return TYPE_NAME;
     }
 }

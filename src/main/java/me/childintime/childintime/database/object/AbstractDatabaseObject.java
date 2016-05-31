@@ -86,4 +86,11 @@ public abstract class AbstractDatabaseObject {
      * @throws Exception Throws if an error occurred.
      */
     public abstract Object getField(DatabaseFieldsInterface field) throws Exception;
+
+    /**
+     * Get the name of the current database object type.
+     *
+     * @return Database object type name.
+     */
+    public abstract String getTypeName();
 }
