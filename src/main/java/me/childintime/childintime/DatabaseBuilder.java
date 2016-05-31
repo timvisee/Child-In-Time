@@ -113,7 +113,7 @@ public class DatabaseBuilder {
         createMetaDataTables("measurement");
 
         // Fill the user table
-        this.progressDialog.setStatus("Inserting database data...");
+        this.progressDialog.setStatus("Inserting default data...");
         fillTableUser();
         this.progressDialog.increaseProgressValue();
 
@@ -150,6 +150,7 @@ public class DatabaseBuilder {
         this.progressDialog.increaseProgressValue();
 
         // Finish the database
+        this.progressDialog.setStatus("Finishing database...");
         finish();
         this.progressDialog.increaseProgressValue();
 
