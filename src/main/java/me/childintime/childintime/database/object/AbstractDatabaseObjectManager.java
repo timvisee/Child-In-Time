@@ -64,6 +64,37 @@ public abstract class AbstractDatabaseObjectManager {
     }
 
     /**
+     * Get a clone of the list of objects.
+     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     *
+     * @return Clone of the list of objects.
+     */
+    public List<AbstractDatabaseObject> getObjectsClone() {
+        // TODO: Use the default fields here!
+        return getObjectsClone(null);
+    }
+
+    /**
+     * Get a clone of the list of objects.
+     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     *
+     * @param fields Database object fields to fetch and cache (using the same query, to improve performance).
+     *
+     * @return List of objects.
+     */
+    public List<AbstractDatabaseObject> getObjectsClone(DatabaseFieldsInterface[] fields) {
+        // Fetch the objects if they aren't fetched yet
+        if(!hasCache())
+            fetchObjects(fields);
+
+        // TODO: Clone the objects
+
+        // Return the list of cloned objects
+        // TODO: Return the objects
+        return null;
+    }
+
+    /**
      * Get the number of objects in the database.
      *
      * @return Number of objects.
