@@ -301,3 +301,6 @@ CREATE TABLE IF NOT EXISTS `measurement_meta_value` (
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `measurement_meta_field` (`id`)
 );
+
+INSERT INTO `user` VALUES
+  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');
