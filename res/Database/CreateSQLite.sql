@@ -304,3 +304,8 @@ CREATE TABLE IF NOT EXISTS `measurement_meta_value` (
 
 INSERT INTO `user` VALUES
   (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');
+
+INSERT INTO `school` VALUES
+  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn'),
+  (NULL, 'De Hobbitburcht', 'Amsterdam'),
+  (NULL, 'De Stromen', 'Den Haag');
