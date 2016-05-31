@@ -106,6 +106,17 @@ DELIMITER //
 CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
   BEGIN
 
+    -- _meta_data table prototype
+    /*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_data` (
+      `id`         INT      NOT NULL AUTO_INCREMENT,
+      `field`      TEXT     NOT NULL,
+      `type`       SMALLINT NOT NULL,
+      `value`      TEXT     NULL,
+      `MYTABLENAME_id` INT      NOT NULL,
+      PRIMARY KEY (`id`),
+      FOREIGN KEY (`MYTABLENAME_id`) REFERENCES `MYTABLENAME` (`id`)
+    );*/
+
     # Build the _meta_data statement
     SET @metaDataStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_data` (
 			`id` INT NOT NULL AUTO_INCREMENT,
@@ -117,6 +128,16 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 			FOREIGN KEY (`', tableName, '_id`) REFERENCES `', tableName, '`(`id`)
 		);');
 
+    -- _meta_field table prototype
+    /*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_field` (
+      `id`         INT               NOT NULL AUTO_INCREMENT,
+      `name`       TEXT              NOT NULL,
+      `type`       SMALLINT          NOT NULL,
+      `default`    TEXT              NULL,
+      `allow_null` TINYINT DEFAULT 1 NOT NULL,
+      PRIMARY KEY (`id`)
+    );*/
+
     # Build the _meta_field statement
     SET @metaFieldStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_field` (
 			`id` INT NOT NULL AUTO_INCREMENT,
@@ -126,6 +147,15 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 			`allow_null` TINYINT DEFAULT 1 NOT NULL,
 			PRIMARY KEY (`id`)
 		);');
+
+    -- _meta_value table prototype
+    /*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_value` (
+      `id`       INT  NOT NULL AUTO_INCREMENT,
+      `value`    TEXT NOT NULL,
+      `field_id` INT  NOT NULL,
+      PRIMARY KEY (`id`),
+      FOREIGN KEY (`field_id`) REFERENCES `MYTABLENAME_meta_field` (`id`)
+    );*/
 
     # Build the _meta_value statement
     SET @metaValueStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_value` (
