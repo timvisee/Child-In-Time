@@ -15,6 +15,11 @@ public enum StudentFields implements DatabaseFieldsInterface {
     FIRST_NAME ("name");
 
     /**
+     * Database table name.
+     */
+    public static final String DATABASE_TABLE_NAME = "student";
+
+    /**
      * Field name in the database of the field.
      */
     private String fieldName;
@@ -26,6 +31,11 @@ public enum StudentFields implements DatabaseFieldsInterface {
      */
     StudentFields(String fieldName) {
         this.fieldName = fieldName;
+    }
+
+    @Override
+    public String getTableName() {
+        return DATABASE_TABLE_NAME;
     }
 
     @Override
