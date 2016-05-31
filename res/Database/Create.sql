@@ -156,6 +156,7 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 DELIMITER ;
 
 # Create meta data tables for database objects
+CALL createMetaTable('user');
 CALL createMetaTable('student');
 CALL createMetaTable('teacher');
 CALL createMetaTable('group');
