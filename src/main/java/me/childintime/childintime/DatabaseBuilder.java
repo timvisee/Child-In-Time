@@ -141,6 +141,10 @@ public class DatabaseBuilder {
         fillTableParkour();
         this.progressDialog.increaseProgressValue();
 
+        // Fill the measurement table
+        fillTableMeasurement();
+        this.progressDialog.increaseProgressValue();
+
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -940,6 +944,73 @@ public class DatabaseBuilder {
                         "  (NULL, 'Parkour 1')," +
                         "  (NULL, 'Parkour 2')," +
                         "  (NULL, 'Parkour 3');"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Fill the measurement table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableMeasurement() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "LOCK TABLES `measurement` WRITE;" +
+                        "INSERT INTO `measurement` VALUES" +
+                        "  (1, '2016-02-09', 64, 1, 18)," +
+                        "  (2, '2016-02-15', 85, 1, 2)," +
+                        "  (3, '2015-08-11', 86, 3, 4)," +
+                        "  (4, '2015-06-14', 79, 2, 8)," +
+                        "  (5, '2015-07-21', 23, 3, 5)," +
+                        "  (6, '2015-06-22', 78, 3, 16)," +
+                        "  (7, '2016-04-15', 71, 3, 8)," +
+                        "  (8, '2015-08-22', 59, 2, 13)," +
+                        "  (9, '2016-05-03', 16, 3, 10)," +
+                        "  (10, '2015-09-26', 52, 3, 18)," +
+                        "  (11, '2016-02-04', 17, 2, 13)," +
+                        "  (12, '2016-03-24', 59, 2, 12)," +
+                        "  (13, '2016-04-01', 35, 2, 13)," +
+                        "  (14, '2015-10-24', 71, 1, 7)," +
+                        "  (15, '2016-03-29', 89, 1, 7)," +
+                        "  (16, '2016-04-15', 58, 2, 5)," +
+                        "  (17, '2016-03-11', 53, 2, 20)," +
+                        "  (18, '2015-06-06', 32, 2, 20)," +
+                        "  (19, '2016-05-19', 80, 1, 8)," +
+                        "  (20, '2015-06-07', 47, 3, 19);" +
+                        "UNLOCK TABLES;"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "INSERT INTO `measurement` VALUES" +
+                        "  (1, '2016-02-09', 64, 1, 18)," +
+                        "  (2, '2016-02-15', 85, 1, 2)," +
+                        "  (3, '2015-08-11', 86, 3, 4)," +
+                        "  (4, '2015-06-14', 79, 2, 8)," +
+                        "  (5, '2015-07-21', 23, 3, 5)," +
+                        "  (6, '2015-06-22', 78, 3, 16)," +
+                        "  (7, '2016-04-15', 71, 3, 8)," +
+                        "  (8, '2015-08-22', 59, 2, 13)," +
+                        "  (9, '2016-05-03', 16, 3, 10)," +
+                        "  (10, '2015-09-26', 52, 3, 18)," +
+                        "  (11, '2016-02-04', 17, 2, 13)," +
+                        "  (12, '2016-03-24', 59, 2, 12)," +
+                        "  (13, '2016-04-01', 35, 2, 13)," +
+                        "  (14, '2015-10-24', 71, 1, 7)," +
+                        "  (15, '2016-03-29', 89, 1, 7)," +
+                        "  (16, '2016-04-15', 58, 2, 5)," +
+                        "  (17, '2016-03-11', 53, 2, 20)," +
+                        "  (18, '2015-06-06', 32, 2, 20)," +
+                        "  (19, '2016-05-19', 80, 1, 8)," +
+                        "  (20, '2015-06-07', 47, 3, 19);"
                 );
                 break;
         }
