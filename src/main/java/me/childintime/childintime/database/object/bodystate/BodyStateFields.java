@@ -3,13 +3,20 @@ package me.childintime.childintime.database.object.bodystate;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.student.Student;
 
 public enum BodyStateFields implements DatabaseFieldsInterface{
 
-    STUDENT_ID("student_id", false, DataType.INTEGER, null),
+    ID("id", false, DataType.INTEGER, null),
+    STUDENT_ID("student_id", false, DataType.INTEGER, Student.class),
     DATE("date", true, DataType.DATE, null),
     LENGTH("length", true, DataType.INTEGER, null),
     WEIGHT("weight", true, DataType.INTEGER, null);
+
+    /**
+     * Database table name for the body state objects.
+     */
+    public static final String DATABASE_TABLE_NAME = "bodystate";
 
     private String databaseField;
     private boolean editable;

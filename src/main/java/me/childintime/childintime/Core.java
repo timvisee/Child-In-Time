@@ -311,4 +311,14 @@ public class Core {
     public DatabaseManager getDatabaseManager() {
         return this.databaseManager;
     }
+
+    /**
+     * Get the database connector instance.
+     *
+     * @return Database connector instance.
+     */
+
+    public DatabaseConnector getDatabaseConnector() {
+        return this.databaseConnector;
+    }
 }

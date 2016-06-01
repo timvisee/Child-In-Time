@@ -14,6 +14,15 @@ public class Teacher extends AbstractDatabaseObject {
      */
     private static final String TYPE_NAME = "Teacher";
 
+    /**
+     * Constructor.
+     *
+     * @param id Database object id.
+     */
+    public Teacher(int id) {
+        super(id);
+    }
+
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
 

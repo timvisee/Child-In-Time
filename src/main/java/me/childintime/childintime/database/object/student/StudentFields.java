@@ -14,6 +14,8 @@ public enum StudentFields implements DatabaseFieldsInterface {
     BIRTHDATE("birthdate", true, DataType.DATE, null),
     GROUP_ID("group_id", true, DataType.REFERENCE, Group.class);
 
+    public static final String DATABASE_TABLE_NAME = "student";
+
     private String databaseField;
     private boolean editable;
     private DataType dataType;

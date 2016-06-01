@@ -11,6 +11,8 @@ public enum GroupFields implements DatabaseFieldsInterface{
     NAME("name", true, DataType.STRING, null),
     SCHOOL_ID("school_id", false, DataType.REFERENCE, School.class);
 
+    public static final String DATABASE_TABLE_NAME = "group";
+
     private String databaseField;
     private boolean editable;
     private DataType dataType;

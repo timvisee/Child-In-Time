@@ -10,6 +10,8 @@ public enum SchoolFields implements DatabaseFieldsInterface{
     NAME("name", true, DataType.STRING, null),
     COMMUNE("commune", true, DataType.STRING, null);
 
+    public static final String DATABASE_TABLE_NAME = "school";
+
     private String databaseField;
     private boolean editable;
     private DataType dataType;
