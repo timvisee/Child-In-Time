@@ -25,8 +25,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of fetched objects.
      */
     public List<AbstractDatabaseObject> fetchObjects() {
-        // TODO: Use the default fields here!
-        return fetchObjects(null);
+        return fetchObjects(getDefaultFields());
     }
 
     /**
@@ -89,8 +88,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of objects.
      */
     public List<AbstractDatabaseObject> getObjects() {
-        // TODO: Use the default fields here!
-        return getObjects(null);
+        return getObjects(getDefaultFields());
     }
 
     /**
@@ -117,8 +115,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return Clone of the list of objects.
      */
     public List<AbstractDatabaseObject> getObjectsClone() {
-        // TODO: Use the default fields here!
-        return getObjectsClone(null);
+        return getObjectsClone(getDefaultFields());
     }
 
     /**
@@ -188,6 +185,13 @@ public abstract class AbstractDatabaseObjectManager {
         // Reset the cache
         this.objects = null;
     }
+
+    /**
+     * Get the default database object fields to fetch.
+     *
+     * @return Default object fields to fetch.
+     */
+    public abstract DatabaseFieldsInterface[] getDefaultFields();
 
     /**
      * Get the name of the current database object manager type.
