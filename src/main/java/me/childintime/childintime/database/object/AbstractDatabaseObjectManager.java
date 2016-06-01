@@ -71,7 +71,7 @@ public abstract class AbstractDatabaseObjectManager {
                 objects.add(databaseObject);
             }
         } catch(Exception e){
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
 
         // Set the list of objects
