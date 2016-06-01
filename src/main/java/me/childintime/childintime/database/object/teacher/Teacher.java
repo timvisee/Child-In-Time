@@ -31,7 +31,7 @@ public class Teacher extends AbstractDatabaseObject {
             if(!(field instanceof TeacherFields))
                 return false;
 
-            if(this.cachedFields.containsKey(field))
+            if(!this.cachedFields.containsKey(field))
                 return false;
         }
 

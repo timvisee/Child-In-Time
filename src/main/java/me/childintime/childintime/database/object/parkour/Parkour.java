@@ -30,7 +30,7 @@ public class Parkour extends AbstractDatabaseObject {
             if(!(field instanceof ParkourFields))
                 return false;
 
-            if(this.cachedFields.containsKey(field))
+            if(!this.cachedFields.containsKey(field))
                 return false;
         }
 

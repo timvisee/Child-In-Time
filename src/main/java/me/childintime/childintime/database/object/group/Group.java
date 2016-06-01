@@ -31,7 +31,7 @@ public class Group extends AbstractDatabaseObject {
             if(!(field instanceof GroupFields))
                 return false;
 
-            if(this.cachedFields.containsKey(field))
+            if(!this.cachedFields.containsKey(field))
                 return false;
         }
 

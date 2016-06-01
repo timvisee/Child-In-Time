@@ -31,7 +31,7 @@ public class Measurement extends AbstractDatabaseObject {
             if(!(field instanceof MeasurementFields))
                 return false;
 
-            if(this.cachedFields.containsKey(field))
+            if(!this.cachedFields.containsKey(field))
                 return false;
         }
 
@@ -50,7 +50,6 @@ public class Measurement extends AbstractDatabaseObject {
 
     @Override
     public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
-
         List<Object> list = new ArrayList<>();
 
         for (DatabaseFieldsInterface field : fields) {

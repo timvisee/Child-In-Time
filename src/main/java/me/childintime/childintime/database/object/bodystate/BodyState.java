@@ -25,12 +25,11 @@ public class BodyState extends AbstractDatabaseObject {
 
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
-
         for (DatabaseFieldsInterface field : fields) {
             if(!(field instanceof BodyStateFields))
                 return false;
 
-            if(this.cachedFields.containsKey(field))
+            if(!this.cachedFields.containsKey(field))
                 return false;
         }
 
