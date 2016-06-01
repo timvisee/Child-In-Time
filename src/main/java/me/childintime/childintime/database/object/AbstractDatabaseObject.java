@@ -1,9 +1,7 @@
 package me.childintime.childintime.database.object;
 
-import me.childintime.childintime.Core;
+import com.sun.istack.internal.NotNull;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.*;
 
 public abstract class AbstractDatabaseObject implements Cloneable {
@@ -11,6 +9,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Database object ID.
      */
+    @NotNull
     protected final int id;
 
     /**
@@ -32,7 +31,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @param id Database object id.
      */
-    public AbstractDatabaseObject(int id) {
+    public AbstractDatabaseObject(@NotNull int id) {
         this.id = id;
     }
 
@@ -56,6 +55,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * Check whether the given database object fields are cached.
      *
      * @param fields The fields to check.
+     *
      * @return True if all given fields are cached, false if not.
      * False is also returned if just one of the given fields isn't cached.
      */
@@ -65,6 +65,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * Check whether the given database object field is cached.
      *
      * @param field The field.
+     *
      * @return True if the given field is cached, false if not.
      */
     public boolean hasField(DatabaseFieldsInterface field) {
@@ -75,54 +76,16 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * Fetch the given database fields.
      *
      * @param fields The fields to fetch.
+     *
      * @return True if the given fields were fetched successfully.
      */
-    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
-
-        List<String> fieldNames = new ArrayList<>();
-
-        for (DatabaseFieldsInterface field : fields) {
-            if (!getFieldsClass().isInstance(field))
-                return false;
-
-            // Add the fieldname to the list
-            fieldNames.add(field.getDatabaseField());
-        }
-
-        String fieldsToFetch = String.join(", ", fieldNames);
-
-        try {
-            PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
-                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName() + "" +
-                            " WHERE `id` = " + String.valueOf(getId()));
-
-            ResultSet result = fetchStatement.executeQuery();
-
-            if(!result.next()) {
-                throw new Exception("Failed to fetch object data");
-            }
-
-            for (DatabaseFieldsInterface field : fields) {
-                parseField(field, result.getString(field.getDatabaseField()));
-            }
-
-            return true;
-
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-
-        return false;
-    }
-
-    protected abstract String getTableName();
-
-    public abstract Class<? extends DatabaseFieldsInterface> getFieldsClass();
+    public abstract boolean fetchFields(DatabaseFieldsInterface[] fields);
 
     /**
      * Fetch the given database field.
      *
      * @param field The field to fetch.
+     *
      * @return True if the given field was fetched successfully.
      */
     public boolean fetchField(DatabaseFieldsInterface field) {
@@ -134,7 +97,9 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * from the database automatically.
      *
      * @param fields Fields to get.
+     *
      * @return List of field values.
+     *
      * @throws Exception Throws if an error occurred.
      */
     public abstract List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception;
@@ -144,7 +109,9 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * it will be fetched from the database automatically.
      *
      * @param field The field to get.
+     *
      * @return The field value.
+     *
      * @throws Exception Throws if an error occurred.
      */
     public Object getField(DatabaseFieldsInterface field) throws Exception {
@@ -169,11 +136,11 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * This parses the field into it's proper data type.
      * The parsed fields are added to the hashmap.
      *
-     * @param field    Database field type.
+     * @param field Database field type.
      * @param rawField Raw field data.
      */
     public void parseField(DatabaseFieldsInterface field, String rawField) {
-        switch (field.getDataType()) {
+        switch(field.getDataType()) {
             case STRING:
                 this.cachedFields.put(field, rawField);
                 break;
