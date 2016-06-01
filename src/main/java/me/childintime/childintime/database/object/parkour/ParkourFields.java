@@ -9,6 +9,8 @@ public enum ParkourFields implements DatabaseFieldsInterface{
     ID("id", false, DataType.INTEGER, null),
     DESCRIPTION("description", true, DataType.STRING, null);
 
+    public static final String DATABASE_TABLE_NAME = "parkour";
+
     private String databaseField;
     private boolean editable;
     private DataType dataType;

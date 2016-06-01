@@ -13,6 +13,8 @@ public enum TeacherFields implements DatabaseFieldsInterface {
     IS_GYM("is_gym", true, DataType.BOOLEAN, null),
     SCHOOL_ID("school_id", true, DataType.REFERENCE, School.class);
 
+    public static final String DATABASE_TABLE_NAME = "teacher";
+
     private String databaseField;
     private boolean editable;
     private DataType dataType;
