@@ -144,4 +144,11 @@ public abstract class AbstractDatabaseObjectManager {
      * @return Database table name.
      */
     public abstract String getTableName();
+
+    /**
+     * Get the class of the database objects this manager is managing.
+     *
+     * @return Object class.
+     */
+    public abstract Class<? extends AbstractDatabaseObject> getObjectClass();
 }

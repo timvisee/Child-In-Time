@@ -11,7 +11,6 @@ import java.util.List;
 
 public class BodyStateManager extends AbstractDatabaseObjectManager {
 
-
     @Override
     public List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields[]) {
 
@@ -30,14 +29,14 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
                 int id = result.getInt("id");
 
                 // Create the database object instance
-                BodyState bodyState = new BodyState(id);
+                AbstractDatabaseObject databaseObject = getObjectClass().getConstructor(Integer.class).newInstance(id);
 
                 // Parse and cache the fields
                 for (DatabaseFieldsInterface field : fields)
-                    bodyState.parseField(field, result.getString(field.getDatabaseField()));
+                    databaseObject.parseField(field, result.getString(field.getDatabaseField()));
 
                 // Add the object to the list
-                super.objects.add(bodyState);
+                this.objects.add(databaseObject);
             }
         }
         catch(Exception e){
@@ -45,7 +44,7 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
         }
 
 
-        return super.objects;
+        return this.objects;
     }
 
     @Override
@@ -72,5 +71,10 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
     @Override
     public String getTableName() {
         return BodyStateFields.DATABASE_TABLE_NAME;
+    }
+
+    @Override
+    public Class<? extends AbstractDatabaseObject> getObjectClass() {
+        return BodyState.class;
     }
 }
