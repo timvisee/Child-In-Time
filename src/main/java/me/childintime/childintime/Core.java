@@ -5,6 +5,8 @@ import me.childintime.childintime.config.Config;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.database.configuration.DatabaseManager;
+import me.childintime.childintime.database.object.student.StudentManager;
+import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
 import me.childintime.childintime.gui.window.LoginDialog;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
@@ -239,6 +241,10 @@ public class Core {
 
         // Hide the progress dialog
         this.progressDialog.setVisible(false);
+
+        // TODO: Show a proper dashboard here, instead of this demo window!
+        StudentManager manager = new StudentManager();
+        new DatabaseObjectManagerDialog(null, manager, true);
     }
 
     /**
