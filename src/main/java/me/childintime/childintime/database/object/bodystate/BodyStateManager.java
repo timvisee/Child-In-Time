@@ -3,12 +3,10 @@ package me.childintime.childintime.database.object.bodystate;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Date;
 import java.util.List;
 
 public class BodyStateManager extends AbstractDatabaseObjectManager {
@@ -17,32 +15,28 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
     @Override
     public List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields[]) {
 
-        String fieldsToFetch = null;
-
-
-        for (DatabaseFieldsInterface field : fields) {
-            fieldsToFetch = fieldsToFetch + ", " + field.getDatabaseField();
-        }
+        StringBuilder fieldsToFetch = new StringBuilder("id");
+        for (DatabaseFieldsInterface field : fields)
+            fieldsToFetch.append(", ").append(field.getDatabaseField());
 
         try {
             PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
-                    .prepareStatement("SELECT id" + fieldsToFetch + " FROM bodystate");
+                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM bodystate");
 
             ResultSet result = fetchStatement.executeQuery();
 
-            while (result.next()){
-                int ID = result.getInt("id");
-                Date date = result.getDate("date");
-                int length = result.getInt("length");
-                int weight = result.getInt("weight");
-                int studentID = result.getInt("student_id");
-                BodyState bodyState = new BodyState();
-               // bodyState.getCachedFields().put(BodyStateFields.ID, ID);
-                bodyState.getCachedFields().put(BodyStateFields.DATE, date);
-                bodyState.getCachedFields().put(BodyStateFields.LENGTH, length);
-                bodyState.getCachedFields().put(BodyStateFields.WEIGHT, weight);
-                bodyState.getCachedFields().put(BodyStateFields.STUDENT_ID, studentID);
+            while (result.next()) {
+                // Get the object ID
+                int id = result.getInt("id");
 
+                // Create the database object instance
+                BodyState bodyState = new BodyState(id);
+
+                // Parse and cache the fields
+                for (DatabaseFieldsInterface field : fields)
+                    bodyState.parseField(field, result.getString(field.getDatabaseField()));
+
+                // Add the object to the list
                 super.objects.add(bodyState);
             }
         }
