@@ -80,17 +80,36 @@ public class InitialSetup {
         this.progressDialog.setStatus("Confirming environment cleanup...");
 
         // Show a warning
-        if(!Arrays.asList(Core.getInstance().getStarupArgs()).contains(FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING))
-            JOptionPane.showMessageDialog(
-                    this.progressDialog,
-                    "<html>The developer option Clean Environment is enabled.\n\n" +
-                            "All previous application files and configurations will be deleted,\n" +
-                            "to ensure that you're using a fresh application instance for development.\n\n" +
-                            "Start the application with the '" + FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING + "' argument to hide this warning.\n\n" +
-                            "This feature must be disabled in production.",
-                    App.APP_NAME + " - Developer mode",
-                    JOptionPane.WARNING_MESSAGE
+        if(!Arrays.asList(Core.getInstance().getStarupArgs()).contains(FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING)) {
+            // Create a list with the buttons to show in the option dialog
+            List<String> buttons = new ArrayList<>();
+            buttons.add("Clean Environment");
+            buttons.add("Keep Environment");
+
+            // Reverse the button list if we're on a Mac OS X system
+            if(Platform.isMacOsX())
+                Collections.reverse(buttons);
+
+            // Show the option dialog
+            final int option = JOptionPane.showOptionDialog(
+                                this.progressDialog,
+                                "The developer option Clean Environment is enabled.\n\n" +
+                                        "Would you like to clean your application environment?\n\n" +
+                                        "Cleaning the environment will delete all previous application files and configurations,\n" +
+                                        "to ensure that you're using a fresh application instance for development.\n\n" +
+                                        "This feature must be disabled in production.",
+                                App.APP_NAME + " - Developer mode - Environment cleanup",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.WARNING_MESSAGE,
+                    null,
+                    buttons.toArray(),
+                    buttons.get(!Platform.isMacOsX() ? 0 : 1)
             );
+
+            // Make sure the clean option is pressed
+            if(option != (!Platform.isMacOsX() ? 0 : 1))
+                return;
+        }
 
         // Show a status message
         this.progressDialog.setStatus("Refreshing application environment...");
