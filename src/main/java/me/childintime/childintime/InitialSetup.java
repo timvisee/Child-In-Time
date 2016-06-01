@@ -79,6 +79,10 @@ public class InitialSetup {
         // Show a status message
         this.progressDialog.setStatus("Confirming environment cleanup...");
 
+        // Make sure the clean environment feature is enabled
+        if(!App.APP_CLEAN_ENVIRONMENT)
+            return;
+
         // Show a warning
         if(!Arrays.asList(Core.getInstance().getStarupArgs()).contains(FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING)) {
             // Create a list with the buttons to show in the option dialog
