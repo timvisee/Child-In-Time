@@ -5,7 +5,13 @@ import me.childintime.childintime.config.Config;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.database.configuration.DatabaseManager;
+import me.childintime.childintime.database.object.bodystate.BodyStateManager;
+import me.childintime.childintime.database.object.group.GroupManager;
+import me.childintime.childintime.database.object.measurement.MeasurementManager;
+import me.childintime.childintime.database.object.parkour.ParkourManager;
+import me.childintime.childintime.database.object.school.SchoolManager;
 import me.childintime.childintime.database.object.student.StudentManager;
+import me.childintime.childintime.database.object.teacher.TeacherManager;
 import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
 import me.childintime.childintime.gui.window.LoginDialog;
 import me.childintime.childintime.util.Platform;
@@ -48,6 +54,41 @@ public class Core {
      * Database instance.
      */
     private DatabaseConnector databaseConnector;
+
+    /**
+     * Body state manager instance.
+     */
+    private BodyStateManager bodyStateManager;
+
+    /**
+     * Group manager instance.
+     */
+    private GroupManager groupManager;
+
+    /**
+     * Measurement manager instance.
+     */
+    private MeasurementManager measurementManager;
+
+    /**
+     * Parkour manager instance.
+     */
+    private ParkourManager parkourManager;
+
+    /**
+     * School manager instance.
+     */
+    private SchoolManager schoolManager;
+
+    /**
+     * Student manager instance.
+     */
+    private StudentManager studentManager;
+
+    /**
+     * Teacher manager instance.
+     */
+    private TeacherManager teacherManager;
 
     /**
      * Progress dialog instance.
@@ -96,6 +137,15 @@ public class Core {
 
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
+
+        // Initialize the database object managers
+        this.bodyStateManager = new BodyStateManager();
+        this.groupManager = new GroupManager();
+        this.measurementManager = new MeasurementManager();
+        this.parkourManager = new ParkourManager();
+        this.schoolManager = new SchoolManager();
+        this.studentManager = new StudentManager();
+        this.teacherManager = new TeacherManager();
 
         // Prepare the application data
         try {
@@ -243,8 +293,7 @@ public class Core {
         this.progressDialog.setVisible(false);
 
         // TODO: Show a proper dashboard here, instead of this demo window!
-        StudentManager manager = new StudentManager();
-        new DatabaseObjectManagerDialog(null, manager, true);
+        new DatabaseObjectManagerDialog(null, getStudentManager(), true);
     }
 
     /**
@@ -323,8 +372,70 @@ public class Core {
      *
      * @return Database connector instance.
      */
-
     public DatabaseConnector getDatabaseConnector() {
         return this.databaseConnector;
+    }
+
+    /**
+     * Get the body state manager instance.
+     *
+     * @return Body state manager instance.
+     */
+    public BodyStateManager getBodyStateManager() {
+        return this.bodyStateManager;
+    }
+
+    /**
+     * Get the group manager instance.
+     *
+     * @return Group manager instance.
+     */
+    public GroupManager getGroupManager() {
+        return this.groupManager;
+    }
+
+    /**
+     * Get the measurement manager instance.
+     *
+     * @return Measurement manager instance.
+     */
+    public MeasurementManager getMeasurementManager() {
+        return this.measurementManager;
+    }
+
+    /**
+     * Get the parkour manager instance.
+     *
+     * @return Parkour manager instance.
+     */
+    public ParkourManager getParkourManager() {
+        return this.parkourManager;
+    }
+
+    /**
+     * Get the school manager instance.
+     *
+     * @return School manager instance.
+     */
+    public SchoolManager getSchoolManager() {
+        return this.schoolManager;
+    }
+
+    /**
+     * Get the student manager instance.
+     *
+     * @return Student manager instance.
+     */
+    public StudentManager getStudentManager() {
+        return this.studentManager;
+    }
+
+    /**
+     * Get the teacher manager instance.
+     *
+     * @return Teacher manager instance.
+     */
+    public TeacherManager getTeacherManager() {
+        return this.teacherManager;
     }
 }
