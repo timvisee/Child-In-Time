@@ -13,6 +13,15 @@ public class Parkour extends AbstractDatabaseObject {
      */
     private static final String TYPE_NAME = "Parkour";
 
+    /**
+     * Constructor.
+     *
+     * @param id Database object id.
+     */
+    public Parkour(int id) {
+        super(id);
+    }
+
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
 
