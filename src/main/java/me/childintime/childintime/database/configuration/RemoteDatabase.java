@@ -1,15 +1,16 @@
 package me.childintime.childintime.database.configuration;
 
 import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
-import me.childintime.childintime.App;
 import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class RemoteDatabase extends AbstractDatabase implements Cloneable {
+
+    /**
+     * Database database.
+     */
+    private String database = "childintime";
 
     /**
      * Database host.
@@ -62,6 +63,7 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
             RemoteDatabase otherRemote = (RemoteDatabase) other;
 
             // Set the remote database fields
+            this.setDatabase(otherRemote.getDatabase());
             this.setHost(otherRemote.getHost());
             this.setPort(otherRemote.getPort());
             this.setUser(otherRemote.getUser());
@@ -72,12 +74,13 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     /**
      * Constructor.
      *
+     * @param database Database database or null.
      * @param host Database host or null.
      * @param port Database port.
      * @param user Database user or null.
      * @param password Database password or null.
      */
-    public RemoteDatabase(String host, int port, String user, String password) {
+    public RemoteDatabase(String database, String host, int port, String user, String password) {
         // Construct the super
         super();
 
@@ -85,6 +88,7 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
         setName(getType().toString());
 
         // Set the fields
+        this.database = database;
         this.host = host;
         this.port = port;
         this.user = user;
@@ -101,10 +105,43 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
         super(config);
 
         // Fetch the properties
+        this.database = config.getString("database", null);
         this.host = config.getString("host", null);
         this.port = config.getInt("port", 3306);
         this.user = config.getString("user", null);
         this.password = config.getString("password", null);
+    }
+
+    /**
+     * Get the database.
+     *
+     * @return Database.
+     */
+    public String getDatabase() {
+        return this.host;
+    }
+
+    /**
+     * Check whether the database is configured.
+     *
+     * @return True if the database is configured, false if not.
+     */
+    public boolean hasDatabase() {
+        // Make sure the database isn't null
+        if(database == null)
+            return false;
+
+        // Make sure a valid host has been given
+        return this.database.length() > 0;
+    }
+
+    /**
+     * Set the database.
+     *
+     * @param database Database.
+     */
+    public void setDatabase(String database) {
+        this.database = database;
     }
 
     /**
@@ -214,6 +251,7 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     @Override
     public void save(ConfigurationSection config) {
         // Save the file path
+        config.set("database", this.database);
         config.set("host", this.host);
         config.set("port", this.port);
         config.set("user", this.user);
@@ -243,7 +281,7 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
 
     @Override
     public String getDatabaseConnectionUrl() {
-        return "jdbc:mysql://" + host + "/?user=" + user + "&password=" + password;
+        return "jdbc:mysql://" + this.host + "/" + this.database + "childintime?user=" + this.user + "&password=" + this.password;
     }
 
     @Override
@@ -266,7 +304,8 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
         RemoteDatabase database = (RemoteDatabase) obj;
 
         // Compare all fields
-        return (this.host != null ? this.host.equals(database.getHost()) : database.getHost() == null) &&
+        return (this.database != null ? this.database.equals(database.getDatabase()) : database.getDatabase() == null) &&
+               (this.host != null ? this.host.equals(database.getHost()) : database.getHost() == null) &&
                 this.port == database.getPort() &&
                 (this.user != null ? this.user.equals(database.getUser()) : database.getUser() == null) &&
                 (this.password != null ? this.password.equals(database.getPassword()) : database.getPassword() == null);
