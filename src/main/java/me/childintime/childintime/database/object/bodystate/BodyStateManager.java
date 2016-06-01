@@ -8,7 +8,10 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
 
     @Override
     public DatabaseFieldsInterface[] getDefaultFields() {
-        return new DatabaseFieldsInterface[0];
+        return new BodyStateFields[]{
+                BodyStateFields.LENGTH,
+                BodyStateFields.WEIGHT
+        };
     }
 
     @Override
