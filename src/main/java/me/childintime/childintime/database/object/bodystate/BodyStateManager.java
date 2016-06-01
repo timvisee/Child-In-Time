@@ -52,7 +52,7 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
         int objectCount = 0;
 
         try{
-            PreparedStatement countQuery = Core.getInstance().getDatabaseConnector().getConnection().prepareStatement("SELECT count(id) FROM bodystate");
+            PreparedStatement countQuery = Core.getInstance().getDatabaseConnector().getConnection().prepareStatement("SELECT count(id) FROM " + getTableName());
             ResultSet result = countQuery.executeQuery();
             objectCount = result.getInt("count(id)");
         }
