@@ -30,7 +30,7 @@ public class Student extends AbstractDatabaseObject {
             if(!(field instanceof StudentFields))
                 return false;
 
-            if(this.cachedFields.containsKey(field))
+            if(!this.cachedFields.containsKey(field))
                 return false;
         }
 
