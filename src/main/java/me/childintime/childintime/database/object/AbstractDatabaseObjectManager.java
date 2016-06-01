@@ -39,18 +39,25 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of fetched objects.
      */
     public List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields[]) {
-
+        // Join the string, comma separated
         StringBuilder fieldsToFetch = new StringBuilder("id");
         for (DatabaseFieldsInterface field : fields)
             fieldsToFetch.append(", ").append(field.getDatabaseField());
 
+        // Create a list with fetched objects
+        List<AbstractDatabaseObject> objects = new ArrayList<>();
+
+        // Fetch the objects and their data from the database
         try {
+            // Create a statement to fetch the objects
             PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
                     .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName());
 
+            // Fetch the data
             ResultSet result = fetchStatement.executeQuery();
 
-            while (result.next()) {
+            // Parse all data
+            while(result.next()) {
                 // Get the object ID
                 int id = result.getInt("id");
 
@@ -62,14 +69,16 @@ public abstract class AbstractDatabaseObjectManager {
                     databaseObject.parseField(field, result.getString(field.getDatabaseField()));
 
                 // Add the object to the list
-                this.objects.add(databaseObject);
+                objects.add(databaseObject);
             }
-        }
-        catch(Exception e){
+        } catch(Exception e){
             System.out.println(e.toString());
         }
 
+        // Set the list of objects
+        this.objects = objects;
 
+        // Return the list of objects
         return this.objects;
     }
 
