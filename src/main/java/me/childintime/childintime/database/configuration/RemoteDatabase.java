@@ -118,7 +118,7 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
      * @return Database.
      */
     public String getDatabase() {
-        return this.host;
+        return this.database;
     }
 
     /**
@@ -283,11 +283,11 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
     public String getDatabaseConnectionUrl() {
         // Create the base URL
         StringBuilder url = new StringBuilder();
-        url.append("jdbc:mysql://").append(this.host).append("/").append(this.database);
+        url.append("jdbc:mysql://").append(this.host).append("/");
 
         // Append the database
         if(hasDatabase())
-            url.append(getDatabase());
+            url.append(this.database);
 
         // Append the user credentials
         url.append("?user=").append(this.user).append("&password=").append(this.password);
