@@ -137,7 +137,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         pnlMain.setLayout(new GridBagLayout());
 
         // Create the main label
-        final JLabel mainLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + ".");
+        final JLabel mainLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + "s.");
 
         // Add the main label
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -153,7 +153,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         c.gridwidth = 1;
         c.gridheight = 2;
         c.insets = new Insets(0, 0, 10, 10);
-        pnlMain.add(new JLabel("Databases:"), c);
+        pnlMain.add(new JLabel(this.objectManager.getTypeName() + "s:"), c);
 
         // Create the database manager list and add it to the main panel
         JScrollPane databaseList = buildUiList();
@@ -331,6 +331,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // TODO: Implement modification dialog here!
         final AbstractDatabaseObject databaseObject = null; // DatabaseModifyDialog.showCreate(this)
 
+        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
         // Add the database object to the list if it isn't null
         if(databaseObject != null) {
             // Add the database
@@ -356,6 +358,9 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // TODO: Implement the edit dialog here
         final AbstractDatabaseObject result = null; // DatabaseModifyDialog.showModify(this, selected)
 
+        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+        // TODO: Update this?
         // Set the result, or remove it from the list if it's null
         if(result != null)
             this.objects.set(this.objectList.getSelectedIndex(), result);
@@ -374,19 +379,25 @@ public class DatabaseObjectManagerDialog extends JDialog {
         if(getSelectedCount() <= 0)
             return;
 
+        // Get the type name
+        final String typeName = this.objectManager.getTypeName().toLowerCase();
+
         // Ask whether the user wants to delete the databases
         // TODO: Show a proper message!
-        switch(JOptionPane.showConfirmDialog(this, "Are you sure you'd like to delete this object?", "Delete object", JOptionPane.YES_NO_OPTION)) {
+        switch(JOptionPane.showConfirmDialog(this, "Are you sure you'd like to delete this " + typeName + "?", "Delete " + typeName, JOptionPane.YES_NO_OPTION)) {
             case JOptionPane.NO_OPTION:
             case JOptionPane.CANCEL_OPTION:
             case JOptionPane.CLOSED_OPTION:
                 return;
         }
 
-        // Delete the selected database object
-        for(Object databaseObject : this.objectList.getSelectedValuesList())
-            //noinspection RedundantCast
-            this.objects.remove((AbstractDatabaseObject) databaseObject);
+        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+
+        // TODO: Improve this!
+//        // Delete the selected database object
+//        for(Object databaseObject : this.objectList.getSelectedValuesList())
+//            //noinspection RedundantCast
+//            this.objects.remove((AbstractDatabaseObject) databaseObject);
 
         // Refresh the list
         updateUiList();
@@ -463,17 +474,18 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * @return True if this question has unsaved changes, false if not.
      */
     public boolean hasUnsavedChanges() {
-        // Get the database manager
-        DatabaseManager databaseManager = Core.getInstance().getDatabaseManager();
-
-        // Compare the number of databases
-        if(databaseManager.getDatabaseCount() != this.objects.size())
-            return true;
-
-        // Compare the databases
-        for(int i = 0; i < this.objects.size(); i++)
-            if(!databaseManager.getDatabase(i).equals(this.objects.get(i)))
-                return true;
+        // TODO: Reimplement this!
+//        // Get the database manager
+//        AbstractDatabaseObject databaseManager = Core.getInstance().getDatabaseManager();
+//
+//        // Compare the number of databases
+//        if(databaseManager.getDatabaseCount() != this.objects.size())
+//            return true;
+//
+//        // Compare the databases
+//        for(int i = 0; i < this.objects.size(); i++)
+//            if(!databaseManager.getDatabase(i).equals(this.objects.get(i)))
+//                return true;
 
         // There don't seem to be any unsaved changes, return the result
         return false;
