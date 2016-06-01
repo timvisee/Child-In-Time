@@ -21,7 +21,7 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
 
         try {
             PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
-                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM bodystate");
+                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName());
 
             ResultSet result = fetchStatement.executeQuery();
 
@@ -66,7 +66,7 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
 
     @Override
     public String getTypeName() {
-        return "BodyState";
+        return "Body state";
     }
 
     @Override
