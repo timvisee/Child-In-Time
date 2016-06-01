@@ -10,9 +10,6 @@ import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Timo on 1-6-2016.
- */
 public class StudentManager extends AbstractDatabaseObjectManager{
     @Override
     public List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface[] fields) {
