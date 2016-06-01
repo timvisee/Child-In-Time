@@ -71,6 +71,6 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
 
     @Override
     public String getTableName() {
-        return "bodystate";
+        return BodyStateFields.DATABASE_TABLE_NAME;
     }
 }

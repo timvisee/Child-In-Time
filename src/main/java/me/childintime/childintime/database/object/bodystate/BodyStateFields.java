@@ -13,6 +13,11 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
     LENGTH("length", true, DataType.INTEGER, null),
     WEIGHT("weight", true, DataType.INTEGER, null);
 
+    /**
+     * Database table name for the body state objects.
+     */
+    public static final String DATABASE_TABLE_NAME = "bodystate";
+
     private String databaseField;
     private boolean editable;
     private DataType dataType;
