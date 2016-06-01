@@ -126,7 +126,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Create and add the user label
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
-        c.gridy = 32;
+        c.gridy = 3;
         c.gridwidth = 1;
         c.weightx = 0;
         c.insets = new Insets(8, 0, 0, 0);
@@ -139,7 +139,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
-        c.gridy = 32;
+        c.gridy = 3;
         c.gridwidth = 1;
         c.weightx = 1;
         c.insets = new Insets(8, 16, 0, 0);
