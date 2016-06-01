@@ -281,7 +281,19 @@ public class RemoteDatabase extends AbstractDatabase implements Cloneable {
 
     @Override
     public String getDatabaseConnectionUrl() {
-        return "jdbc:mysql://" + this.host + "/" + this.database + "childintime?user=" + this.user + "&password=" + this.password;
+        // Create the base URL
+        StringBuilder url = new StringBuilder();
+        url.append("jdbc:mysql://").append(this.host).append("/").append(this.database);
+
+        // Append the database
+        if(hasDatabase())
+            url.append(getDatabase());
+
+        // Append the user credentials
+        url.append("?user=").append(this.user).append("&password=").append(this.password);
+
+        // Return the URL
+        return url.toString();
     }
 
     @Override
