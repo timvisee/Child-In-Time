@@ -13,6 +13,7 @@ import me.childintime.childintime.database.object.school.SchoolManager;
 import me.childintime.childintime.database.object.student.StudentManager;
 import me.childintime.childintime.database.object.teacher.TeacherManager;
 import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
+import me.childintime.childintime.gui.window.DashboardFrame;
 import me.childintime.childintime.gui.window.LoginDialog;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
@@ -293,7 +294,8 @@ public class Core {
         this.progressDialog.setVisible(false);
 
         // TODO: Show a proper dashboard here, instead of this demo window!
-        new DatabaseObjectManagerDialog(null, getStudentManager(), true);
+        DashboardFrame dashboard = new DashboardFrame("My Dashboard");
+        dashboard.setVisible(true);
     }
 
     /**
