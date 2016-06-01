@@ -2,8 +2,8 @@ package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public abstract class AbstractDatabaseObject implements Cloneable {
 
@@ -106,5 +106,78 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     protected AbstractDatabaseObject clone() throws CloneNotSupportedException {
         // Clone through the super
         return (AbstractDatabaseObject) super.clone();
+    }
+
+    /**
+     * Parse a raw database field.
+     * This parses the field into it's proper data type.
+     * The parsed fields are added to the hashmap.
+     *
+     * @param field Database field type.
+     * @param rawField Raw field data.
+     */
+    public void parseField(DatabaseFieldsInterface field, String rawField) {
+        switch(field.getDataType()) {
+            case STRING:
+                this.cachedFields.put(field, rawField);
+                break;
+
+            case BOOLEAN:
+                this.cachedFields.put(field, !rawField.equals("0"));
+                break;
+
+            case INTEGER:
+                this.cachedFields.put(field, Integer.parseInt(rawField));
+                break;
+
+            case DATE:
+//                // Split de datum string
+//                String[] rawDateSplitted = geb_datumField.getText().split("-");
+//
+//                // Haal het jaar, de maand en de dag op uit de string
+//                int dateYear = Integer.valueOf(rawDateSplitted[0]);
+//                int dateMonth = Integer.valueOf(rawDateSplitted[1]);
+//                int dateDay = Integer.valueOf(rawDateSplitted[2]);
+//
+//                // Maak een kalender object met de opgehaalde datum
+//                Calendar calendar = new GregorianCalendar(dateYear, dateMonth, dateDay);
+//
+//                // Zet de datum om naar een SQL datum (met een timestamp)
+//                java.sql.Date sqlDate = new java.sql.Date(calendar.getTime().getTime());
+
+                // Split the raw date string
+                String[] rawDateSplitted = rawField.split("-");
+
+                // Parse the year, month and day values
+                int dateYear = Integer.valueOf(rawDateSplitted[0]);
+                int dateMonth = Integer.valueOf(rawDateSplitted[1]);
+                int dateDay = Integer.valueOf(rawDateSplitted[2]);
+
+                // Create a calender object with the proper date
+                Calendar calendar = new GregorianCalendar(dateYear, dateMonth, dateDay);
+
+                // Put the date into the cached fields
+                this.cachedFields.put(field, calendar.getTime());
+
+                break;
+
+            case REFERENCE:
+                // Get the object ID
+                final int objectId = Integer.parseInt(rawField);
+
+                // Parse the referenced object
+                try {
+                    // Find the proper constructor of the referenced class, and instantiate the object with the fetched object ID
+                    AbstractDatabaseObject object = field.getReferenceType().getDeclaredConstructor(Integer.class).newInstance(objectId);
+
+                    // Put the reference into the cached fields
+                    this.cachedFields.put(field, object);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+        }
     }
 }
