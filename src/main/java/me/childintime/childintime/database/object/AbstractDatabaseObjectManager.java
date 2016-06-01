@@ -61,7 +61,7 @@ public abstract class AbstractDatabaseObjectManager {
                 int id = result.getInt("id");
 
                 // Create the database object instance
-                AbstractDatabaseObject databaseObject = getObjectClass().getConstructor(Integer.class).newInstance(id);
+                AbstractDatabaseObject databaseObject = getObjectClass().getConstructor(int.class).newInstance(id);
 
                 // Parse and cache the fields
                 for (DatabaseFieldsInterface field : fields)
@@ -71,7 +71,7 @@ public abstract class AbstractDatabaseObjectManager {
                 objects.add(databaseObject);
             }
         } catch(Exception e){
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
 
         // Set the list of objects
@@ -161,7 +161,7 @@ public abstract class AbstractDatabaseObjectManager {
             objectCount = result.getInt("count(id)");
         }
         catch (Exception e){
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
         return objectCount;
     }
