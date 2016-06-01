@@ -7,12 +7,12 @@ import me.childintime.childintime.database.object.group.Group;
 
 public enum StudentFields implements DatabaseFieldsInterface {
 
-    ID("databaseField", false, DataType.INTEGER, null),
-    FIRST_NAME("first_name", true, DataType.STRING, null),
-    LAST_NAME("last_name", true, DataType.STRING, null),
-    GENDER("gender", true, DataType.BOOLEAN, null),
-    BIRTHDATE("birthdate", true, DataType.DATE, null),
-    GROUP_ID("group_id", true, DataType.REFERENCE, Group.class);
+    ID(        "databaseField", false, DataType.INTEGER,   null),
+    FIRST_NAME("first_name",    true,  DataType.STRING,    null),
+    LAST_NAME( "last_name",     true,  DataType.STRING,    null),
+    GENDER(    "gender",        true,  DataType.BOOLEAN,   null),
+    BIRTHDATE( "birthdate",     true,  DataType.DATE,      null),
+    GROUP_ID(  "group_id",      true,  DataType.REFERENCE, Group.class);
 
     public static final String DATABASE_TABLE_NAME = "student";
 

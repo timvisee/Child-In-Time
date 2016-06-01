@@ -7,11 +7,11 @@ import me.childintime.childintime.database.object.student.Student;
 
 public enum BodyStateFields implements DatabaseFieldsInterface{
 
-    ID("id", false, DataType.INTEGER, null),
+    ID(        "id",         false, DataType.INTEGER, null),
     STUDENT_ID("student_id", false, DataType.INTEGER, Student.class),
-    DATE("date", true, DataType.DATE, null),
-    LENGTH("length", true, DataType.INTEGER, null),
-    WEIGHT("weight", true, DataType.INTEGER, null);
+    DATE(      "date",       true,  DataType.DATE,    null),
+    LENGTH(    "length",     true,  DataType.INTEGER, null),
+    WEIGHT(    "weight",     true,  DataType.INTEGER, null);
 
     /**
      * Database table name for the body state objects.

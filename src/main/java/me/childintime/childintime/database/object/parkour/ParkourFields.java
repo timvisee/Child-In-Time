@@ -6,8 +6,8 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
 public enum ParkourFields implements DatabaseFieldsInterface{
 
-    ID("id", false, DataType.INTEGER, null),
-    DESCRIPTION("description", true, DataType.STRING, null);
+    ID(         "id",          false, DataType.INTEGER, null),
+    DESCRIPTION("description", true,  DataType.STRING,  null);
 
     public static final String DATABASE_TABLE_NAME = "parkour";
 

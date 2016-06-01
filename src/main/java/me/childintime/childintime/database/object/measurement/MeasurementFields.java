@@ -8,10 +8,10 @@ import me.childintime.childintime.database.object.student.Student;
 
 public enum MeasurementFields implements DatabaseFieldsInterface{
 
-    ID("id", false, DataType.INTEGER, null),
-    STUDENT_ID("student_id", false, DataType.INTEGER, Student.class),
-    DATE("date", true, DataType.DATE, null),
-    TIME("time", true, DataType.INTEGER, null),
+    ID(        "id",         false, DataType.INTEGER,   null),
+    STUDENT_ID("student_id", false, DataType.INTEGER,   Student.class),
+    DATE(      "date",       true,  DataType.DATE,      null),
+    TIME(      "time",       true,  DataType.INTEGER,   null),
     PARKOUR_ID("parkour_id", false, DataType.REFERENCE, Parkour.class);
 
     public static final String DATABASE_TABLE_NAME = "measurement";
