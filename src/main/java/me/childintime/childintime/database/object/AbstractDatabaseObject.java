@@ -1,11 +1,13 @@
 package me.childintime.childintime.database.object;
 
-import me.childintime.childintime.database.configuration.AbstractDatabase;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class AbstractDatabaseObject implements Cloneable {
+
+    /**
+     * Database object ID.
+     */
+    protected final int id;
 
     /**
      * Hashmap containing cached fields from the database object.
@@ -19,6 +21,24 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      */
     public HashMap<DatabaseFieldsInterface, Object> getCachedFields() {
         return this.cachedFields;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param id Database object id.
+     */
+    public AbstractDatabaseObject(int id) {
+        this.id = id;
+    }
+
+    /**
+     * Get the database object ID.
+     *
+     * @return Database object ID.
+     */
+    public int getId() {
+        return this.id;
     }
 
     /**
