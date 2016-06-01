@@ -179,12 +179,12 @@ public class DatabaseBuilder {
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;" +
-                        "/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;" +
-                        "/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;" +
-                        "/*!40101 SET NAMES utf8 */;"
-                );
+//                statement.execute(
+//                        "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;" +
+//                        "/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;" +
+//                        "/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;" +
+//                        "/*!40101 SET NAMES utf8 */;"
+//                );
                 break;
 
             case SQLITE:
@@ -644,10 +644,8 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `user` WRITE;" +
                         "INSERT INTO `user` VALUES" +
-                        "  (NULL, 'admin', MD5('admin'));" +
-                        "UNLOCK TABLES;"
+                        "  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');"
                 );
                 break;
 
@@ -673,12 +671,10 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `school` WRITE;" +
                         "INSERT INTO `school` VALUES" +
                         "  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn')," +
                         "  (NULL, 'De Hobbitburcht', 'Amsterdam')," +
-                        "  (NULL, 'De Stromen', 'Den Haag');" +
-                        "UNLOCK TABLES;"
+                        "  (NULL, 'De Stromen', 'Den Haag');"
                 );
                 break;
 
@@ -706,7 +702,6 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `teacher` WRITE;" +
                         "INSERT INTO `teacher` VALUES" +
                         "  (NULL, 'Henk', 'Hoornald', 1, 1, 1)," +
                         "  (NULL, 'Henry', 'Hunter', 1, 1, 1)," +
@@ -718,8 +713,7 @@ public class DatabaseBuilder {
                         "  (NULL, 'Laura', 'Garcia', 0, 1, 3)," +
                         "  (NULL, 'Mark', 'Romero', 1, 0, 3)," +
                         "  (NULL, 'Ashley', 'Jacobs', 0, 0, 3)," +
-                        "  (NULL, 'Linda', 'Jackson', 0, 0, 3);" +
-                        "UNLOCK TABLES;"
+                        "  (NULL, 'Linda', 'Jackson', 0, 0, 3);"
                 );
                 break;
 
@@ -755,7 +749,6 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `group` WRITE;" +
                         "INSERT INTO `group` VALUES" +
                         "  (NULL, 'Groep 1', 1)," +
                         "  (NULL, 'Groep 2', 1)," +
@@ -765,8 +758,7 @@ public class DatabaseBuilder {
                         "  (NULL, 'Groep 3', 2)," +
                         "  (NULL, 'Groep 1', 3)," +
                         "  (NULL, 'Groep 2', 3)," +
-                        "  (NULL, 'Groep 3', 3);" +
-                        "UNLOCK TABLES;"
+                        "  (NULL, 'Groep 3', 3);"
                 );
                 break;
 
@@ -800,7 +792,6 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `student` WRITE;" +
                         "INSERT INTO `student` VALUES" +
                         "  (NULL, 'George', 'Barnes', 1, '2014-04-17', 1)," +
                         "  (NULL, 'Robin', 'Hughes', 0, '2011-01-10', 1)," +
@@ -821,8 +812,7 @@ public class DatabaseBuilder {
                         "  (NULL, 'Karen', 'Wells', 0, '2011-10-05', 8)," +
                         "  (NULL, 'Jonathan', 'Ferguson', 1, '2014-02-06', 9)," +
                         "  (NULL, 'Kathryn', 'Carr', 0, '2006-03-06', 9)," +
-                        "  (NULL, 'Sean', 'Reid', 1, '2009-04-20', 9);" +
-                        "UNLOCK TABLES;"
+                        "  (NULL, 'Sean', 'Reid', 1, '2009-04-20', 9);"
                 );
                 break;
 
@@ -867,7 +857,6 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `bodystate` WRITE;" +
                         "INSERT INTO `bodystate` VALUES" +
                         "  (NULL, '2016-01-11', 141, 38, 5)," +
                         "  (NULL, '2015-06-07', 150, 46, 20)," +
@@ -888,8 +877,7 @@ public class DatabaseBuilder {
                         "  (NULL, '2015-07-13', 124, 33, 2)," +
                         "  (NULL, '2015-12-26', 117, 40, 11)," +
                         "  (NULL, '2016-04-08', 116, 35, 6)," +
-                        "  (NULL, '2016-04-03', 107, 49, 8);" +
-                        "UNLOCK TABLES;"
+                        "  (NULL, '2016-04-03', 107, 49, 8);"
                 );
                 break;
 
@@ -934,12 +922,10 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `parkour` WRITE;" +
                         "INSERT INTO `parkour` VALUES" +
                         "  (NULL, 'Parkour 1')," +
                         "  (NULL, 'Parkour 2')," +
-                        "  (NULL, 'Parkour 3');" +
-                        "UNLOCK TABLES;"
+                        "  (NULL, 'Parkour 3');"
                 );
                 break;
 
@@ -967,7 +953,6 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `measurement` WRITE;" +
                         "INSERT INTO `measurement` VALUES" +
                         "  (1, '2016-02-09', 64, 1, 18)," +
                         "  (2, '2016-02-15', 85, 1, 2)," +
@@ -988,8 +973,7 @@ public class DatabaseBuilder {
                         "  (17, '2016-03-11', 53, 2, 20)," +
                         "  (18, '2015-06-06', 32, 2, 20)," +
                         "  (19, '2016-05-19', 80, 1, 8)," +
-                        "  (20, '2015-06-07', 47, 3, 19);" +
-                        "UNLOCK TABLES;"
+                        "  (20, '2015-06-07', 47, 3, 19);"
                 );
                 break;
 
@@ -1034,7 +1018,6 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
                 statement.execute(
-                        "LOCK TABLES `group_teacher` WRITE;" +
                         "INSERT INTO `group_teacher` VALUES" +
                         "  (1, 1)," +
                         "  (2, 2)," +
@@ -1044,8 +1027,7 @@ public class DatabaseBuilder {
                         "  (6, 3)," +
                         "  (7, 1)," +
                         "  (8, 2)," +
-                        "  (9, 3);" +
-                        "UNLOCK TABLES;"
+                        "  (9, 3);"
                 );
                 break;
 
@@ -1078,11 +1060,11 @@ public class DatabaseBuilder {
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;" +
-                                "/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;" +
-                                "/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;"
-                );
+//                statement.execute(
+//                        "/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;" +
+//                                "/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;" +
+//                                "/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;"
+//                );
                 break;
 
             case SQLITE:
