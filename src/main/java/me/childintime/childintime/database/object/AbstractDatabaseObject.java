@@ -191,7 +191,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 // Parse the referenced object
                 try {
                     // Find the proper constructor of the referenced class, and instantiate the object with the fetched object ID
-                    AbstractDatabaseObject object = field.getReferenceType().getDeclaredConstructor(Integer.class).newInstance(objectId);
+                    AbstractDatabaseObject object = field.getReferenceType().getDeclaredConstructor(int.class).newInstance(objectId);
 
                     // Put the reference into the cached fields
                     this.cachedFields.put(field, object);
