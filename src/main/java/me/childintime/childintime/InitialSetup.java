@@ -248,9 +248,8 @@ public class InitialSetup {
         // Show the option dialog
         final int option = JOptionPane.showOptionDialog(
                 this.progressDialog,
-                        App.APP_NAME + " is missing some required files.\n" +
-                        "This is normal if you're using the application for the first time.\n\n" +
-                        "Files will be updated automatically if a new update has been installed.\n\n" +
+                        "This is the first time you're using " + App.APP_NAME + " on this system.\n" +
+                        "Some application files are required to be installed.\n" +
                         "Please Continue and allow us to set things up for you.",
                 App.APP_NAME + " - Initial setup",
                 JOptionPane.DEFAULT_OPTION,
