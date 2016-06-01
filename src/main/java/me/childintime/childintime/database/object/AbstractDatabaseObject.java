@@ -203,4 +203,18 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 break;
         }
     }
+
+    /**
+     * Get the display name for this object.
+     * This can be used to show the object in a list.
+     *
+     * @return Display name.
+     */
+    public abstract String getDisplayName();
+
+    @Override
+    public String toString() {
+        // Return the display name
+        return getDisplayName();
+    }
 }

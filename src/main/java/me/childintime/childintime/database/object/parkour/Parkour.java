@@ -2,6 +2,7 @@ package me.childintime.childintime.database.object.parkour;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.bodystate.BodyStateFields;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,5 +70,20 @@ public class Parkour extends AbstractDatabaseObject {
     @Override
     public String getTypeName() {
         return TYPE_NAME;
+    }
+
+    @Override
+    public String getDisplayName() {
+        try {
+            // Build and return the display name
+            return String.valueOf(getField(ParkourFields.DESCRIPTION));
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Some error occurred, return an error string
+            return "<error>";
+        }
     }
 }
