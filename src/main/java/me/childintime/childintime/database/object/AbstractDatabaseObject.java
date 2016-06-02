@@ -140,6 +140,11 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         }
     }
 
+    /**
+     * Get the database fields configuration class that corresponds to the database object.
+     *
+     * @return Database fields class.
+     */
     public abstract Class<? extends DatabaseFieldsInterface> getFieldsClass();
 
     /**
