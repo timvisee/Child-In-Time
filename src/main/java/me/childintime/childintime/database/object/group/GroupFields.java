@@ -7,8 +7,22 @@ import me.childintime.childintime.database.object.school.School;
 
 public enum GroupFields implements DatabaseFieldsInterface{
 
-    ID(       "id",        false, DataType.INTEGER,   null),
-    NAME(     "name",      true,  DataType.STRING,    null),
+    /**
+     * ID.
+     * Identifier of a group object.
+     */
+    ID("id", false, DataType.INTEGER, null),
+
+    /**
+     * Group name.
+     * Display name of a group.
+     */
+    NAME("name", true, DataType.STRING, null),
+
+    /**
+     * School ID.
+     * ID of the school a group refers to.
+     */
     SCHOOL_ID("school_id", false, DataType.REFERENCE, School.class);
 
     public static final String DATABASE_TABLE_NAME = "group";

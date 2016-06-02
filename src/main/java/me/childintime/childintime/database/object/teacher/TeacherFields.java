@@ -7,11 +7,36 @@ import me.childintime.childintime.database.object.school.School;
 
 public enum TeacherFields implements DatabaseFieldsInterface {
 
-    ID(        "id",         false, DataType.INTEGER,   null),
-    FIRST_NAME("first_name", true,  DataType.STRING,    null),
-    LAST_NAME( "last_name",  true,  DataType.STRING,    null),
-    IS_GYM(    "is_gym",     true,  DataType.BOOLEAN,   null),
-    SCHOOL_ID( "school_id",  true,  DataType.REFERENCE, School.class);
+    /**
+     * ID.
+     * Identifier of a teacher object.
+     */
+    ID("id", false, DataType.INTEGER, null),
+
+    /**
+     * Teacher first name.
+     * The first name of a teacher.
+     */
+    FIRST_NAME("first_name", true, DataType.STRING, null),
+
+    /**
+     * Teacher last name.
+     * The last name of a teacher.
+     */
+    LAST_NAME("last_name", true, DataType.STRING, null),
+
+    /**
+     * Teacher gym.
+     * Defines whether this teacher is a gymnastics teacher.
+     * True if the teacher is a gymnastics teacher, false if not.
+     */
+    IS_GYM("is_gym", true, DataType.BOOLEAN, null),
+
+    /**
+     * School ID.
+     * The ID of the school this teacher refers to.
+     */
+    SCHOOL_ID("school_id", true, DataType.REFERENCE, School.class);
 
     public static final String DATABASE_TABLE_NAME = "teacher";
 

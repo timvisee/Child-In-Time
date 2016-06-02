@@ -7,12 +7,42 @@ import me.childintime.childintime.database.object.group.Group;
 
 public enum StudentFields implements DatabaseFieldsInterface {
 
-    ID(        "databaseField", false, DataType.INTEGER,   null),
-    FIRST_NAME("first_name",    true,  DataType.STRING,    null),
-    LAST_NAME( "last_name",     true,  DataType.STRING,    null),
-    GENDER(    "gender",        true,  DataType.BOOLEAN,   null),
-    BIRTHDATE( "birthdate",     true,  DataType.DATE,      null),
-    GROUP_ID(  "group_id",      true,  DataType.REFERENCE, Group.class);
+    /**
+     * ID.
+     * Identifier of a student object.
+     */
+    ID("databaseField", false, DataType.INTEGER, null),
+
+    /**
+     * Student first name.
+     * The first name of a student.
+     */
+    FIRST_NAME("first_name", true, DataType.STRING, null),
+
+    /**
+     * Student last name.
+     * The last name of a student.
+     */
+    LAST_NAME("last_name", true, DataType.STRING, null),
+
+    /**
+     * Student gender.
+     * The gender of a student.
+     * True defines a man, false defines a woman.
+     */
+    GENDER("gender", true, DataType.BOOLEAN, null),
+
+    /**
+     * Student birthdate.
+     * The birthdate of a student.
+     */
+    BIRTHDATE("birthdate", true, DataType.DATE, null),
+
+    /**
+     * Group ID.
+     * The ID of a group this student refers to.
+     */
+    GROUP_ID("group_id", true, DataType.REFERENCE, Group.class);
 
     public static final String DATABASE_TABLE_NAME = "student";
 

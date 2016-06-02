@@ -7,11 +7,35 @@ import me.childintime.childintime.database.object.student.Student;
 
 public enum BodyStateFields implements DatabaseFieldsInterface{
 
-    ID(        "id",         false, DataType.INTEGER, null),
+    /**
+     * ID.
+     * Identifier of a body state object.
+     */
+    ID("id", false, DataType.INTEGER, null),
+
+    /**
+     * Student ID.
+     * ID of the student a body state references to.
+     */
     STUDENT_ID("student_id", false, DataType.INTEGER, Student.class),
-    DATE(      "date",       true,  DataType.DATE,    null),
-    LENGTH(    "length",     true,  DataType.INTEGER, null),
-    WEIGHT(    "weight",     true,  DataType.INTEGER, null);
+
+    /**
+     * Measurement date.
+     * The date a body state has been measured on.
+     */
+    DATE("date", true, DataType.DATE, null),
+
+    /**
+     * Body state length.
+     * The body length in centimeters.
+     */
+    LENGTH("length", true, DataType.INTEGER, null),
+
+    /**
+     * Body state weight.
+     * The body weight in grams.
+     */
+    WEIGHT("weight", true, DataType.INTEGER, null);
 
     /**
      * Database table name for the body state objects.

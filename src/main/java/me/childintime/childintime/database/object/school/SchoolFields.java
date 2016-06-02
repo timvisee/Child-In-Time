@@ -6,9 +6,23 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
 public enum SchoolFields implements DatabaseFieldsInterface{
 
-    ID(     "id",      false, DataType.INTEGER, null),
-    NAME(   "name",    true,  DataType.STRING,  null),
-    COMMUNE("commune", true,  DataType.STRING,  null);
+    /**
+     * ID.
+     * Identifier of a school object.
+     */
+    ID("id", false, DataType.INTEGER, null),
+
+    /**
+     * School name.
+     * The name of a school.
+     */
+    NAME("name", true, DataType.STRING, null),
+
+    /**
+     * School commune.
+     * The commune a school is located in.
+     */
+    COMMUNE("commune", true, DataType.STRING, null);
 
     public static final String DATABASE_TABLE_NAME = "school";
 
