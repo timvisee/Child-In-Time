@@ -38,9 +38,8 @@ public class Group extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
-        return false;
-        // TODO: Implement this
+    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
+        return GroupFields.class;
     }
 
     @Override

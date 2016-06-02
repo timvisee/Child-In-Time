@@ -38,9 +38,8 @@ public class BodyState extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
-        return false;
-        // TODO: Implement this
+    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
+        return BodyStateFields.class;
     }
 
     @Override

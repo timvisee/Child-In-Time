@@ -37,10 +37,10 @@ public class Parkour extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
-        return false;
-        // TODO: Implement this
+    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
+        return ParkourFields.class;
     }
+
 
     @Override
     public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
