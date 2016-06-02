@@ -2,6 +2,7 @@ package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.Core;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
@@ -12,6 +13,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * The name of the constant located in each abstract database object to define the table name.
      */
     private static final String FIELD_DATABASE_TABLE_NAME = "DATABASE_TABLE_NAME";
+
     /**
      * Database object ID.
      */
@@ -79,46 +81,67 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
     /**
      * Fetch the given database fields.
+     * True will be returned if the given fields were fetched successfully.
+     * True will also be returned if no fields are fetched, because the given fields array was empty.
      *
      * @param fields The fields to fetch.
      *
-     * @return True if the given fields were fetched successfully.
+     * @return True on success, false on failure.
      */
     public boolean fetchFields(DatabaseFieldsInterface[] fields) {
+        // Make sure at least one field is fetched
+        if(fields.length == 0)
+            return true;
+
+        // Create a string list to put all fields name to fetch in
         List<String> fieldNames = new ArrayList<>();
 
-        for (DatabaseFieldsInterface field : fields) {
-            if (!getFieldsClass().isInstance(field))
+        // Put the fields name into the field names list
+        for(DatabaseFieldsInterface field : fields) {
+            // Make sure the field is of the correct instance
+            if(!getFieldsClass().isInstance(field))
                 return false;
 
             // Add the field name to the list
             fieldNames.add(field.getDatabaseField());
         }
 
+        // Join all the field names together to use it in the database query
         String fieldsToFetch = String.join(", ", fieldNames);
 
         try {
-            PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
-                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName() + "" +
-                            " WHERE `id` = " + String.valueOf(getId()));
+            // Get the database connection
+            final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
+            // Prepare a statement to fetch the fields
+            PreparedStatement fetchStatement = connection.prepareStatement(
+                    "SELECT " + fieldsToFetch.toString() +
+                    "FROM " + getTableName() +
+                    "WHERE `id` = ?"
+            );
+
+            // Set the prepared statement parameters
+            fetchStatement.setInt(1, getId());
+
+            // Execute the query
             ResultSet result = fetchStatement.executeQuery();
 
-            if(!result.next()) {
-                throw new Exception("Failed to fetch object data");
-            }
+            // Throw an exception if no data is returned from the database
+            if(!result.next())
+                throw new Exception("Failed to fetch object data, empty result received from the database.");
 
-            for (DatabaseFieldsInterface field : fields) {
+            // Get the raw data for each field, and parse it
+            for (DatabaseFieldsInterface field : fields)
                 parseField(field, result.getString(field.getDatabaseField()));
-            }
 
+            // Return the result
             return true;
 
         } catch (Exception e) {
-            System.out.println(e.toString());
+            // Print the stack trace, and return the result
+            e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     /**
