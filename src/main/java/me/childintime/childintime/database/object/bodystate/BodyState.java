@@ -38,6 +38,11 @@ public class BodyState extends AbstractDatabaseObject {
     }
 
     @Override
+    protected String getTableName() {
+        return BodyStateFields.DATABASE_TABLE_NAME;
+    }
+
+    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return BodyStateFields.class;
     }
