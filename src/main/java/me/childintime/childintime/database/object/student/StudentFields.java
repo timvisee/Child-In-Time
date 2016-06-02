@@ -11,7 +11,7 @@ public enum StudentFields implements DatabaseFieldsInterface {
      * ID.
      * Identifier of a student object.
      */
-    ID("databaseField", false, DataType.INTEGER, null),
+    ID("id", false, DataType.INTEGER, null),
 
     /**
      * Student first name.
