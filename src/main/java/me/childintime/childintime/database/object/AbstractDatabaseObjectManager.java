@@ -66,7 +66,7 @@ public abstract class AbstractDatabaseObjectManager {
                 int id = result.getInt("id");
 
                 // Create the database object instance
-                AbstractDatabaseObject databaseObject = getObjectClass().getConstructor(int.class).newInstance(id);
+                AbstractDatabaseObject databaseObject = getManifest().getObject().getConstructor(int.class).newInstance(id);
 
                 // Parse and cache the fields
                 for (DatabaseFieldsInterface field : fields)
@@ -224,9 +224,9 @@ public abstract class AbstractDatabaseObjectManager {
     public abstract String getTableName();
 
     /**
-     * Get the class of the database objects this manager is managing.
+     * Get the database object manifest.
      *
-     * @return Object class.
+     * @return Database object manifest.
      */
-    public abstract Class<? extends AbstractDatabaseObject> getObjectClass();
+    public abstract AbstractDatabaseObjectManifest getManifest();
 }
