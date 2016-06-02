@@ -243,20 +243,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 break;
 
             case DATE:
-//                // Split de datum string
-//                String[] rawDateSplitted = geb_datumField.getText().split("-");
-//
-//                // Haal het jaar, de maand en de dag op uit de string
-//                int dateYear = Integer.valueOf(rawDateSplitted[0]);
-//                int dateMonth = Integer.valueOf(rawDateSplitted[1]);
-//                int dateDay = Integer.valueOf(rawDateSplitted[2]);
-//
-//                // Maak een kalender object met de opgehaalde datum
-//                Calendar calendar = new GregorianCalendar(dateYear, dateMonth, dateDay);
-//
-//                // Zet de datum om naar een SQL datum (met een timestamp)
-//                java.sql.Date sqlDate = new java.sql.Date(calendar.getTime().getTime());
-
                 // Split the raw date string
                 String[] rawDateSplitted = rawField.split("-");
 
@@ -270,7 +256,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
                 // Put the date into the cached fields
                 this.cachedFields.put(field, calendar.getTime());
-
                 break;
 
             case REFERENCE:
@@ -288,7 +273,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 break;
         }
     }
