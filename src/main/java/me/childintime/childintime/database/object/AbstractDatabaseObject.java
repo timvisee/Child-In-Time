@@ -125,8 +125,8 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
             // Prepare a statement to fetch the fields
             PreparedStatement fetchStatement = connection.prepareStatement(
-                    "SELECT " + fieldsToFetch.toString() +
-                    "FROM " + getTableName() +
+                    "SELECT " + fieldsToFetch.toString() + " " +
+                    "FROM " + getTableName() + " " +
                     "WHERE `id` = ?"
             );
 

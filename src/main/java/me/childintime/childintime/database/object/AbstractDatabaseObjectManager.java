@@ -53,7 +53,7 @@ public abstract class AbstractDatabaseObjectManager {
 
             // Create a statement to fetch the objects
             PreparedStatement fetchStatement = connection.prepareStatement(
-                    "SELECT " + fieldsToFetch.toString() +
+                    "SELECT " + fieldsToFetch.toString() + " " +
                     "FROM " + getTableName()
             );
 
