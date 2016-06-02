@@ -2,6 +2,7 @@ package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.Core;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -50,9 +51,14 @@ public abstract class AbstractDatabaseObjectManager {
 
         // Fetch the objects and their data from the database
         try {
+            // Get the database connection
+            final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
+
             // Create a statement to fetch the objects
-            PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
-                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName());
+            PreparedStatement fetchStatement = connection.prepareStatement(
+                    "SELECT " + fieldsToFetch.toString() +
+                    "FROM " + getTableName()
+            );
 
             // Fetch the data
             ResultSet result = fetchStatement.executeQuery();
@@ -72,6 +78,7 @@ public abstract class AbstractDatabaseObjectManager {
                 // Add the object to the list
                 objects.add(databaseObject);
             }
+
         } catch(Exception e){
             e.printStackTrace();
         }
