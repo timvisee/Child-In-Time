@@ -11,7 +11,7 @@ public class BodyState extends AbstractDatabaseObject {
     /**
      * Database object type name.
      */
-    private static final String TYPE_NAME = "BodyState";
+    private static final String TYPE_NAME = "Body state";
 
     /**
      * Constructor.
