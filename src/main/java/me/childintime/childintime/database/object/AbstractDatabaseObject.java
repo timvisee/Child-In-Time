@@ -25,15 +25,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     protected HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
 
     /**
-     * Get a hashmap of cached fields.
-     *
-     * @return Hashmap of cached fields.
-     */
-    public HashMap<DatabaseFieldsInterface, Object> getCachedFields() {
-        return this.cachedFields;
-    }
-
-    /**
      * Constructor.
      *
      * @param id Database object id.
@@ -54,6 +45,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Clear the cached database object fields.
      */
+    @SuppressWarnings("unused")
     public void flushCache() {
         this.cachedFields.clear();
     }

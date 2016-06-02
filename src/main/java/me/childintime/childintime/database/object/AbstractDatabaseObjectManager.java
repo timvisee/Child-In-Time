@@ -24,6 +24,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of fetched objects.
      */
+    @SuppressWarnings("unused")
     public List<AbstractDatabaseObject> fetchObjects() {
         return fetchObjects(getDefaultFields());
     }
@@ -87,6 +88,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of objects.
      */
+    @SuppressWarnings("unused")
     public List<AbstractDatabaseObject> getObjects() {
         return getObjects(getDefaultFields());
     }
@@ -152,6 +154,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return Number of objects.
      */
+    @SuppressWarnings("unused")
     public int getObjectCount() {
         int objectCount = 0;
 
@@ -178,6 +181,7 @@ public abstract class AbstractDatabaseObjectManager {
     /**
      * Flush the cached database objects.
      */
+    @SuppressWarnings("unused")
     public void flushCache() {
         // Clear the list of objects
         this.objects.clear();
