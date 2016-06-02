@@ -15,9 +15,6 @@ public abstract class AbstractDatabaseObjectManager {
      */
     private List<AbstractDatabaseObject> objects = null;
 
-    // TODO: Create the body of this object!
-    // TODO: Shorten the name of this object?
-
     /**
      * Fetch all objects from the database.
      * The given fields will be cached into the objects itself, to prevent further queries from being executed.
