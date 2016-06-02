@@ -159,21 +159,25 @@ public abstract class AbstractDatabaseObjectManager {
     /**
      * Get the number of objects in the database.
      *
-     * @return Number of objects.
+     * @return Number of objects, returns zero if an error occurred.
      */
     @SuppressWarnings("unused")
     public int getObjectCount() {
-        int objectCount = 0;
+        try {
+            // Get the database connection
+            final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
-        try{
-            PreparedStatement countQuery = Core.getInstance().getDatabaseConnector().getConnection().prepareStatement("SELECT count(id) FROM " + getTableName());
+            // Prepare a query to count the number of objects
+            PreparedStatement countQuery = connection.prepareStatement("SELECT count(`id`) AS objectCount FROM " + getTableName());
+
+            // Execute the query, and return the results
             ResultSet result = countQuery.executeQuery();
-            objectCount = result.getInt("count(id)");
-        }
-        catch (Exception e){
+            return result.getInt("objectCount");
+
+        } catch(Exception e){
             e.printStackTrace();
+            return 0;
         }
-        return objectCount;
     }
 
     /**
