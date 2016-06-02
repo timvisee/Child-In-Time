@@ -1,8 +1,7 @@
 package me.childintime.childintime.database.object.school;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 
 public class School extends AbstractDatabaseObject {
 
@@ -21,13 +20,8 @@ public class School extends AbstractDatabaseObject {
     }
 
     @Override
-    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
-        return SchoolFields.class;
-    }
-
-    @Override
-    public Class<? extends AbstractDatabaseObjectManager> getManagerClass() {
-        return SchoolManager.class;
+    public AbstractDatabaseObjectManifest getManifest() {
+        return SchoolManifest.getInstance();
     }
 
     @Override

@@ -1,8 +1,8 @@
 package me.childintime.childintime.database.object.measurement;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.group.GroupManifest;
 
 public class Measurement extends AbstractDatabaseObject {
 
@@ -21,13 +21,8 @@ public class Measurement extends AbstractDatabaseObject {
     }
 
     @Override
-    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
-        return MeasurementFields.class;
-    }
-
-    @Override
-    public Class<? extends AbstractDatabaseObjectManager> getManagerClass() {
-        return MeasurementManager.class;
+    public AbstractDatabaseObjectManifest getManifest() {
+        return GroupManifest.getInstance();
     }
 
     @Override

@@ -64,7 +64,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         // Loop through all given fields
         for(DatabaseFieldsInterface field : fields) {
             // Make sure the proper fields enum is used for this object
-            if(!getFieldsClass().isInstance(field))
+            if(!getManifest().getFields().isInstance(field))
                 return false;
 
             // Make sure the field exists in cache
@@ -109,7 +109,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         // Put the fields name into the field names list
         for(DatabaseFieldsInterface field : fields) {
             // Make sure the field is of the correct instance
-            if(!getFieldsClass().isInstance(field))
+            if(!getManifest().getFields().isInstance(field))
                 return false;
 
             // Add the field name to the list
@@ -162,30 +162,23 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     private String getTableName() {
         try {
             // Get the database table name from the constant of the abstract database object
-            return getFieldsClass().getField(FIELD_DATABASE_TABLE_NAME).get(String.class).toString();
+            return getManifest().getFields().getField(FIELD_DATABASE_TABLE_NAME).get(String.class).toString();
 
         } catch(IllegalAccessException | NoSuchFieldException e) {
             // Throw an error if the required constant is missing
-            throw new Error("Missing " + FIELD_DATABASE_TABLE_NAME + " constant in " + getFieldsClass().getSimpleName() + " class.");
+            throw new Error("Missing " + FIELD_DATABASE_TABLE_NAME + " constant in " + getManifest().getFields().getSimpleName() + " class.");
         } catch(Exception e) {
             // Throw an error if the required constant could not be accessed
-            throw new Error("Failed to access " + FIELD_DATABASE_TABLE_NAME + " constant in " + getFieldsClass().getSimpleName() + " class.");
+            throw new Error("Failed to access " + FIELD_DATABASE_TABLE_NAME + " constant in " + getManifest().getFields().getSimpleName() + " class.");
         }
     }
 
     /**
-     * Get the database fields configuration class that corresponds to the database object.
+     * Get the database object manifest.
      *
-     * @return Database fields class.
+     * @return Database object manifest.
      */
-    public abstract Class<? extends DatabaseFieldsInterface> getFieldsClass();
-
-    /**
-     * Get the manager class for this database object.
-     *
-     * @return Manager class.
-     */
-    public abstract Class<? extends AbstractDatabaseObjectManager> getManagerClass();
+    public abstract AbstractDatabaseObjectManifest getManifest();
 
     /**
      * Fetch the given database field.
@@ -217,7 +210,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         // Loop through the given list of fields
         for(DatabaseFieldsInterface field : fields) {
             // Make sure the field enum that is used is for the current class
-            if(!getFieldsClass().isInstance(field))
+            if(!getManifest().getFields().isInstance(field))
                 throw new Exception("Invalid database object fields configuration class used, not compatible with" +
                         "current database object type.");
 

@@ -1,8 +1,7 @@
 package me.childintime.childintime.database.object.bodystate;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 
 public class BodyState extends AbstractDatabaseObject {
 
@@ -21,13 +20,8 @@ public class BodyState extends AbstractDatabaseObject {
     }
 
     @Override
-    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
-        return BodyStateFields.class;
-    }
-
-    @Override
-    public Class<? extends AbstractDatabaseObjectManager> getManagerClass() {
-        return BodyStateManager.class;
+    public AbstractDatabaseObjectManifest getManifest() {
+        return BodyStateManifest.getInstance();
     }
 
     @Override

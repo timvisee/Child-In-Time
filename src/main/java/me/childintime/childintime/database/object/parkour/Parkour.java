@@ -1,8 +1,7 @@
 package me.childintime.childintime.database.object.parkour;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 
 public class Parkour extends AbstractDatabaseObject {
 
@@ -21,13 +20,8 @@ public class Parkour extends AbstractDatabaseObject {
     }
 
     @Override
-    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
-        return ParkourFields.class;
-    }
-
-    @Override
-    public Class<? extends AbstractDatabaseObjectManager> getManagerClass() {
-        return ParkourManager.class;
+    public AbstractDatabaseObjectManifest getManifest() {
+        return ParkourManifest.getInstance();
     }
 
     @Override
