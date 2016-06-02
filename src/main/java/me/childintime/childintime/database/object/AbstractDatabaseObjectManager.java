@@ -12,7 +12,7 @@ public abstract class AbstractDatabaseObjectManager {
     /**
      * List of database objects loaded in this manager.
      */
-    protected List<AbstractDatabaseObject> objects = null;
+    private List<AbstractDatabaseObject> objects = null;
 
     // TODO: Create the body of this object!
     // TODO: Shorten the name of this object?
@@ -38,6 +38,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of fetched objects.
      */
+    @SuppressWarnings("WeakerAccess")
     public List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields[]) {
         // Join the string, comma separated
         StringBuilder fieldsToFetch = new StringBuilder("id");
@@ -101,6 +102,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of objects.
      */
+    @SuppressWarnings("WeakerAccess")
     public List<AbstractDatabaseObject> getObjects(DatabaseFieldsInterface[] fields) {
         // Return the objects if cached
         if(hasCache())
@@ -128,6 +130,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of objects.
      */
+    @SuppressWarnings("WeakerAccess")
     public List<AbstractDatabaseObject> getObjectsClone(DatabaseFieldsInterface[] fields) {
         // Fetch the objects if they aren't fetched yet
         if(!hasCache())
@@ -174,6 +177,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return True if cached, false if not.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean hasCache() {
         return this.objects != null;
     }

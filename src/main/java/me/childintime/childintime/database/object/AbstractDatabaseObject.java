@@ -67,6 +67,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if the given field is cached, false if not.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean hasField(DatabaseFieldsInterface field) {
         return hasFields(new DatabaseFieldsInterface[]{field});
     }
@@ -80,6 +81,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True on success, false on failure.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean fetchFields(DatabaseFieldsInterface[] fields) {
         // Make sure at least one field is fetched
         if(fields.length == 0)
@@ -169,6 +171,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if the given field was fetched successfully.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean fetchField(DatabaseFieldsInterface field) {
         return fetchFields(new DatabaseFieldsInterface[]{field});
     }
@@ -195,6 +198,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @throws Exception Throws if an error occurred.
      */
+    @SuppressWarnings("WeakerAccess")
     public Object getField(DatabaseFieldsInterface field) throws Exception {
         return getFields(new DatabaseFieldsInterface[]{field}).get(0);
     }
@@ -220,7 +224,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * @param field Database field type.
      * @param rawField Raw field data.
      */
-    public void parseField(DatabaseFieldsInterface field, String rawField) {
+    void parseField(DatabaseFieldsInterface field, String rawField) {
         switch(field.getDataType()) {
             case STRING:
                 this.cachedFields.put(field, rawField);
