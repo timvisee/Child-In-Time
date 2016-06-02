@@ -195,14 +195,39 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Get the given fields. All fields will be returned from cache when possible, fields that aren't cached are fetched
      * from the database automatically.
+     * If an empty list of fields is given, an empty list will be returned.
      *
-     * @param fields Fields to get.
+     * @param fields List of fields to get.
      *
-     * @return List of field values.
+     * @return List of field values, in the same order as the given fields list.
      *
      * @throws Exception Throws if an error occurred.
      */
-    public abstract List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception;
+    public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
+        // Create a list to put the field values into
+        List<Object> fieldValues = new ArrayList<>();
+
+        // Loop through the given list of fields
+        for(DatabaseFieldsInterface field : fields) {
+            // Make sure the field enum that is used is for the current class
+            if(!getFieldsClass().isInstance(field))
+                throw new Exception("Invalid database object fields configuration class used, not compatible with" +
+                        "current database object type.");
+
+            // Make sure the field is cached
+            if(!hasField(field))
+                // Fetch the field if it isn't cached
+                // TODO: Fetch all non-cached fields at once, instead of spending a query for each
+                if(!fetchField(field))
+                    throw new Exception("Failed to fetch field.");
+
+            // Add the field value to the output list
+            fieldValues.add(this.cachedFields.get(field));
+        }
+
+        // Return the list of field values
+        return fieldValues;
+    }
 
     /**
      * Get the given field. The field will be returned from cache when possible. If the field isn't available in cache,

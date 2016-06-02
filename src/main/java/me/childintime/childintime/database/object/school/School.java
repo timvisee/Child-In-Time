@@ -29,25 +29,6 @@ public class School extends AbstractDatabaseObject {
     }
 
     @Override
-    public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
-
-        List<Object> list = new ArrayList<>();
-
-        for (DatabaseFieldsInterface field : fields) {
-            if(!(field instanceof SchoolFields))
-                throw new Exception("Invalid field");
-
-            if(!hasField(field))
-                if(!fetchField(field))
-                    throw new Exception("Failed to fetch field: " + ((SchoolFields) field).name());
-
-            list.add(this.cachedFields.get(field));
-        }
-
-        return list;
-    }
-
-    @Override
     public String getTypeName() {
         return TYPE_NAME;
     }
