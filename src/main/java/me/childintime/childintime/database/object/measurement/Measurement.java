@@ -25,20 +25,6 @@ public class Measurement extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean hasFields(DatabaseFieldsInterface[] fields) {
-
-        for (DatabaseFieldsInterface field : fields) {
-            if(!(field instanceof MeasurementFields))
-                return false;
-
-            if(!this.cachedFields.containsKey(field))
-                return false;
-        }
-
-        return true;
-    }
-
-    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return MeasurementFields.class;
     }

@@ -24,20 +24,6 @@ public class Parkour extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean hasFields(DatabaseFieldsInterface[] fields) {
-
-        for (DatabaseFieldsInterface field : fields) {
-            if(!(field instanceof ParkourFields))
-                return false;
-
-            if(!this.cachedFields.containsKey(field))
-                return false;
-        }
-
-        return true;
-    }
-
-    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return ParkourFields.class;
     }

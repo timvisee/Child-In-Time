@@ -57,8 +57,24 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if all given fields are cached, false if not.
      * False is also returned if just one of the given fields isn't cached.
+     * If no fields are given, true will be returned.
      */
-    public abstract boolean hasFields(DatabaseFieldsInterface[] fields);
+    @SuppressWarnings("WeakerAccess")
+    public boolean hasFields(DatabaseFieldsInterface[] fields) {
+        // Loop through all given fields
+        for(DatabaseFieldsInterface field : fields) {
+            // Make sure the proper fields enum is used for this object
+            if(!getFieldsClass().isInstance(field))
+                return false;
+
+            // Make sure the field exists in cache
+            if(!this.cachedFields.containsKey(field))
+                return false;
+        }
+
+        // All keys exist, return the result
+        return true;
+    }
 
     /**
      * Check whether the given database object field is cached.

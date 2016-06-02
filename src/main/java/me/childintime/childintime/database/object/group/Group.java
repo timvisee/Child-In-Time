@@ -25,20 +25,6 @@ public class Group extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean hasFields(DatabaseFieldsInterface[] fields) {
-
-        for (DatabaseFieldsInterface field : fields) {
-            if(!(field instanceof GroupFields))
-                return false;
-
-            if(!this.cachedFields.containsKey(field))
-                return false;
-        }
-
-        return true;
-    }
-
-    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return GroupFields.class;
     }
