@@ -54,7 +54,7 @@ public class School extends AbstractDatabaseObject {
 
             if(!hasField(field))
                 if(!fetchField(field))
-                    throw new Exception("Failed to fetch field");
+                    throw new Exception("Failed to fetch field: " + ((SchoolFields) field).name());
 
             list.add(this.cachedFields.get(field));
         }
