@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id`            INT  NOT NULL AUTO_INCREMENT,
   `username`      TEXT NOT NULL,
   `password_hash` TEXT NOT NULL,
+  `permission_group` INT NOT NULL,
   PRIMARY KEY (`id`)
 );
 
