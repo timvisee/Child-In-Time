@@ -49,7 +49,7 @@ public class Teacher extends AbstractDatabaseObject {
         List<Object> list = new ArrayList<>();
 
         for (DatabaseFieldsInterface field : fields) {
-            if(!(field instanceof StudentFields))
+            if(!(field instanceof TeacherFields))
                 throw new Exception("Invalid field");
 
             if(!hasField(field))
