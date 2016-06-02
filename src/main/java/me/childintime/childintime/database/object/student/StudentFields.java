@@ -50,9 +50,25 @@ public enum StudentFields implements DatabaseFieldsInterface {
      */
     public static final String DATABASE_TABLE_NAME = "student";
 
+    /**
+     * The name of the field in the database.
+     */
     private String databaseField;
+
+    /**
+     * Defines whether this field is editable by the user.
+     */
     private boolean editable;
+
+    /**
+     * The data type of the field.
+     */
     private DataType dataType;
+
+    /**
+     * The referenced type for fields of the {@link DataType#REFERENCE} type.
+     * Must be null if the data type is different.
+     */
     private Class<? extends AbstractDatabaseObject> referenceType;
 
     StudentFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
