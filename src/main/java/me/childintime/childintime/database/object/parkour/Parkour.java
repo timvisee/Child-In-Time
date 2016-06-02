@@ -38,11 +38,6 @@ public class Parkour extends AbstractDatabaseObject {
     }
 
     @Override
-    protected String getTableName() {
-        return ParkourFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return ParkourFields.class;
     }

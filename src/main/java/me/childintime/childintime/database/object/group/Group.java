@@ -39,11 +39,6 @@ public class Group extends AbstractDatabaseObject {
     }
 
     @Override
-    protected String getTableName() {
-        return GroupFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return GroupFields.class;
     }

@@ -9,6 +9,10 @@ import java.util.*;
 public abstract class AbstractDatabaseObject implements Cloneable {
 
     /**
+     * The name of the constant located in each abstract database object to define the table name.
+     */
+    private static final String FIELD_DATABASE_TABLE_NAME = "DATABASE_TABLE_NAME";
+    /**
      * Database object ID.
      */
     protected final int id;
@@ -81,14 +85,13 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * @return True if the given fields were fetched successfully.
      */
     public boolean fetchFields(DatabaseFieldsInterface[] fields) {
-
         List<String> fieldNames = new ArrayList<>();
 
         for (DatabaseFieldsInterface field : fields) {
             if (!getFieldsClass().isInstance(field))
                 return false;
 
-            // Add the fieldname to the list
+            // Add the field name to the list
             fieldNames.add(field.getDatabaseField());
         }
 
@@ -118,7 +121,24 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         return false;
     }
 
-    protected abstract String getTableName();
+    /**
+     * Get the database table name for the database object.
+     *
+     * @return Database table name.
+     */
+    private String getTableName() {
+        try {
+            // Get the database table name from the constant of the abstract database object
+            return getFieldsClass().getField(FIELD_DATABASE_TABLE_NAME).get(String.class).toString();
+
+        } catch(IllegalAccessException | NoSuchFieldException e) {
+            // Throw an error if the required constant is missing
+            throw new Error("Missing " + FIELD_DATABASE_TABLE_NAME + " constant in " + getFieldsClass().getSimpleName() + " class.");
+        } catch(Exception e) {
+            // Throw an error if the required constant could not be accessed
+            throw new Error("Failed to access " + FIELD_DATABASE_TABLE_NAME + " constant in " + getFieldsClass().getSimpleName() + " class.");
+        }
+    }
 
     public abstract Class<? extends DatabaseFieldsInterface> getFieldsClass();
 

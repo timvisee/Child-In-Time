@@ -39,11 +39,6 @@ public class Teacher extends AbstractDatabaseObject {
     }
 
     @Override
-    protected String getTableName() {
-        return TeacherFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return TeacherFields.class;
     }

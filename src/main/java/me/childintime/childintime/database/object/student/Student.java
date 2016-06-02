@@ -38,11 +38,6 @@ public class Student extends AbstractDatabaseObject {
     }
 
     @Override
-    protected String getTableName() {
-        return StudentFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return StudentFields.class;
     }

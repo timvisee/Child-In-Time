@@ -39,11 +39,6 @@ public class Measurement extends AbstractDatabaseObject {
     }
 
     @Override
-    protected String getTableName() {
-        return MeasurementFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return MeasurementFields.class;
     }
