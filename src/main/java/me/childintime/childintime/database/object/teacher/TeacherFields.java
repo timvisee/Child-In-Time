@@ -38,6 +38,10 @@ public enum TeacherFields implements DatabaseFieldsInterface {
      */
     SCHOOL_ID("school_id", true, DataType.REFERENCE, School.class);
 
+    /**
+     * Database table name for this object type.
+     * This constant is dynamically accessed by {@link AbstractDatabaseObject#getTableName()}.
+     */
     public static final String DATABASE_TABLE_NAME = "teacher";
 
     private String databaseField;

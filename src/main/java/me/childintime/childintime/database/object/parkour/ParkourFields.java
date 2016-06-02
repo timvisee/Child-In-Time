@@ -18,6 +18,10 @@ public enum ParkourFields implements DatabaseFieldsInterface{
      */
     DESCRIPTION("description", true, DataType.STRING, null);
 
+    /**
+     * Database table name for this object type.
+     * This constant is dynamically accessed by {@link AbstractDatabaseObject#getTableName()}.
+     */
     public static final String DATABASE_TABLE_NAME = "parkour";
 
     private String databaseField;

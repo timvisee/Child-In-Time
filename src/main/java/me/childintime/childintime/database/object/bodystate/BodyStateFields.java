@@ -38,7 +38,8 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
     WEIGHT("weight", true, DataType.INTEGER, null);
 
     /**
-     * Database table name for the body state objects.
+     * Database table name for this object type.
+     * This constant is dynamically accessed by {@link AbstractDatabaseObject#getTableName()}.
      */
     public static final String DATABASE_TABLE_NAME = "bodystate";
 

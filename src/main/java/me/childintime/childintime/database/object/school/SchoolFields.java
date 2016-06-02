@@ -24,6 +24,10 @@ public enum SchoolFields implements DatabaseFieldsInterface{
      */
     COMMUNE("commune", true, DataType.STRING, null);
 
+    /**
+     * Database table name for this object type.
+     * This constant is dynamically accessed by {@link AbstractDatabaseObject#getTableName()}.
+     */
     public static final String DATABASE_TABLE_NAME = "school";
 
     private String databaseField;
