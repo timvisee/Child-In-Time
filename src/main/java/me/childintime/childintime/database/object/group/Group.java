@@ -1,12 +1,8 @@
 package me.childintime.childintime.database.object.group;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
-import me.childintime.childintime.database.object.bodystate.BodyStateFields;
-import me.childintime.childintime.database.object.school.SchoolFields;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Group extends AbstractDatabaseObject {
 
@@ -27,6 +23,11 @@ public class Group extends AbstractDatabaseObject {
     @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return GroupFields.class;
+    }
+
+    @Override
+    public Class<? extends AbstractDatabaseObjectManager> getManagerClass() {
+        return GroupManager.class;
     }
 
     @Override

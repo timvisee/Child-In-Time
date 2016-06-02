@@ -1,12 +1,8 @@
 package me.childintime.childintime.database.object.teacher;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
-import me.childintime.childintime.database.object.bodystate.BodyStateFields;
-import me.childintime.childintime.database.object.student.StudentFields;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Teacher extends AbstractDatabaseObject {
 
@@ -27,6 +23,11 @@ public class Teacher extends AbstractDatabaseObject {
     @Override
     public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
         return TeacherFields.class;
+    }
+
+    @Override
+    public Class<? extends AbstractDatabaseObjectManager> getManagerClass() {
+        return TeacherManager.class;
     }
 
     @Override

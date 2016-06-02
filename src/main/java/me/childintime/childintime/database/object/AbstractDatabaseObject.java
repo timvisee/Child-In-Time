@@ -181,6 +181,13 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     public abstract Class<? extends DatabaseFieldsInterface> getFieldsClass();
 
     /**
+     * Get the manager class for this database object.
+     *
+     * @return Manager class.
+     */
+    public abstract Class<? extends AbstractDatabaseObjectManager> getManagerClass();
+
+    /**
      * Fetch the given database field.
      *
      * @param field The field to fetch.
