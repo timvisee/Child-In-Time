@@ -2,6 +2,10 @@ package me.childintime.childintime.database.object;
 
 import com.sun.istack.internal.NotNull;
 
+import me.childintime.childintime.Core;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 
 public abstract class AbstractDatabaseObject implements Cloneable {
@@ -79,7 +83,47 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if the given fields were fetched successfully.
      */
-    public abstract boolean fetchFields(DatabaseFieldsInterface[] fields);
+    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
+
+        List<String> fieldNames = new ArrayList<>();
+
+        for (DatabaseFieldsInterface field : fields) {
+            if (!getFieldsClass().isInstance(field))
+                return false;
+
+            // Add the fieldname to the list
+            fieldNames.add(field.getDatabaseField());
+        }
+
+        String fieldsToFetch = String.join(", ", fieldNames);
+
+        try {
+            PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
+                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName() + "" +
+                            " WHERE `id` = " + String.valueOf(getId()));
+
+            ResultSet result = fetchStatement.executeQuery();
+
+            if(!result.next()) {
+                throw new Exception("Failed to fetch object data");
+            }
+
+            for (DatabaseFieldsInterface field : fields) {
+                parseField(field, result.getString(field.getDatabaseField()));
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+        return false;
+    }
+
+    protected abstract String getTableName();
+
+    public abstract Class<? extends DatabaseFieldsInterface> getFieldsClass();
 
     /**
      * Fetch the given database field.
