@@ -21,7 +21,7 @@ public enum GroupFields implements DatabaseFieldsInterface{
 
     /**
      * School ID.
-     * ID of the school a group refers to.
+     * The school instance a group is in.
      */
     SCHOOL_ID("school_id", false, DataType.REFERENCE, School.class);
 

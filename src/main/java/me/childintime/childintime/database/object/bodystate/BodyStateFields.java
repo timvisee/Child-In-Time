@@ -15,7 +15,7 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
 
     /**
      * Student ID.
-     * ID of the student a body state references to.
+     * The student of a body state instance.
      */
     STUDENT_ID("student_id", false, DataType.INTEGER, Student.class),
 

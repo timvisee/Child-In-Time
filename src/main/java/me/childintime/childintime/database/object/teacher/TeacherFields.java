@@ -34,7 +34,7 @@ public enum TeacherFields implements DatabaseFieldsInterface {
 
     /**
      * School ID.
-     * The ID of the school this teacher refers to.
+     * The school instance a teacher works at.
      */
     SCHOOL_ID("school_id", true, DataType.REFERENCE, School.class);
 

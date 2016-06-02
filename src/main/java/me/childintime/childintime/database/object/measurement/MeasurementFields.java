@@ -16,7 +16,7 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
 
     /**
      * Student ID.
-     * The ID of a student a measurement refers to.
+     * The student instance a measurement is for.
      */
     STUDENT_ID("student_id", false, DataType.INTEGER, Student.class),
 
@@ -34,7 +34,7 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
 
     /**
      * Parkour ID.
-     * The ID of a parkour this measurement refers to.
+     * The parkour instance a measurement is tracked on.
      */
     PARKOUR_ID("parkour_id", false, DataType.REFERENCE, Parkour.class);
 

@@ -40,7 +40,7 @@ public enum StudentFields implements DatabaseFieldsInterface {
 
     /**
      * Group ID.
-     * The ID of a group this student refers to.
+     * The group instance a student is part of.
      */
     GROUP_ID("group_id", true, DataType.REFERENCE, Group.class);
 
