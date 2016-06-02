@@ -24,9 +24,9 @@ public class DashboardFrame extends JFrame {
     private JButton teacherButton;
 
     /**
-     * Group button instance.
+     * School button instance.
      */
-    private JButton groupButton;
+    private JButton schoolButton;
 
     /**
      * Constructor.
@@ -96,10 +96,10 @@ public class DashboardFrame extends JFrame {
         teacherPanel.setBorder(BorderFactory.createTitledBorder("Teachers"));
         teacherPanel.add(this.teacherButton = new JButton("Teachers"));
 
-        // Create the group panel
-        JPanel groupPanel = new JPanel();
-        groupPanel.setBorder(BorderFactory.createTitledBorder("Groups"));
-        groupPanel.add(this.groupButton = new JButton("Groups"));
+        // Create the school panel
+        JPanel schoolPanel = new JPanel();
+        schoolPanel.setBorder(BorderFactory.createTitledBorder("Schools"));
+        schoolPanel.add(this.schoolButton = new JButton("Schools"));
 
         // Add the student panel
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -115,12 +115,12 @@ public class DashboardFrame extends JFrame {
         c.weightx = 1;
         container.add(teacherPanel, c);
 
-        // Add the group panel
+        // Add the school panel
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 2;
         c.weightx = 1;
-        container.add(groupPanel, c);
+        container.add(schoolPanel, c);
 
         // Add the container to the dialog
         add(container);
@@ -136,7 +136,7 @@ public class DashboardFrame extends JFrame {
         // Link the buttons to their managers
         this.studentButton.addActionListener(e -> new DatabaseObjectManagerDialog(this, Core.getInstance().getStudentManager(), true));
         this.teacherButton.addActionListener(e -> new DatabaseObjectManagerDialog(this, Core.getInstance().getTeacherManager(), true));
-        this.groupButton.addActionListener(e -> new DatabaseObjectManagerDialog(this, Core.getInstance().getGroupManager(), true));
+        this.schoolButton.addActionListener(e -> new DatabaseObjectManagerDialog(this, Core.getInstance().getSchoolManager(), true));
 
 //        // Store the current instance
 //        final LoginDialog instance = this;
