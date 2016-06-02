@@ -11,6 +11,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Database object ID.
      */
+    @NotNull
     protected final int id;
 
     /**
@@ -32,7 +33,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @param id Database object id.
      */
-    public AbstractDatabaseObject(int id) {
+    public AbstractDatabaseObject(@NotNull int id) {
         this.id = id;
     }
 
