@@ -25,8 +25,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of fetched objects.
      */
     public List<AbstractDatabaseObject> fetchObjects() {
-        // TODO: Use the default fields here!
-        return fetchObjects(null);
+        return fetchObjects(getDefaultFields());
     }
 
     /**
@@ -39,37 +38,46 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of fetched objects.
      */
     public List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields[]) {
-
+        // Join the string, comma separated
         StringBuilder fieldsToFetch = new StringBuilder("id");
         for (DatabaseFieldsInterface field : fields)
             fieldsToFetch.append(", ").append(field.getDatabaseField());
 
+        // Create a list with fetched objects
+        List<AbstractDatabaseObject> objects = new ArrayList<>();
+
+        // Fetch the objects and their data from the database
         try {
+            // Create a statement to fetch the objects
             PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
                     .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName());
 
+            // Fetch the data
             ResultSet result = fetchStatement.executeQuery();
 
-            while (result.next()) {
+            // Parse all data
+            while(result.next()) {
                 // Get the object ID
                 int id = result.getInt("id");
 
                 // Create the database object instance
-                AbstractDatabaseObject databaseObject = getObjectClass().getConstructor(Integer.class).newInstance(id);
+                AbstractDatabaseObject databaseObject = getObjectClass().getConstructor(int.class).newInstance(id);
 
                 // Parse and cache the fields
                 for (DatabaseFieldsInterface field : fields)
                     databaseObject.parseField(field, result.getString(field.getDatabaseField()));
 
                 // Add the object to the list
-                this.objects.add(databaseObject);
+                objects.add(databaseObject);
             }
-        }
-        catch(Exception e){
-            System.out.println(e.toString());
+        } catch(Exception e){
+            e.printStackTrace();
         }
 
+        // Set the list of objects
+        this.objects = objects;
 
+        // Return the list of objects
         return this.objects;
     }
 
@@ -80,8 +88,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of objects.
      */
     public List<AbstractDatabaseObject> getObjects() {
-        // TODO: Use the default fields here!
-        return getObjects(null);
+        return getObjects(getDefaultFields());
     }
 
     /**
@@ -108,8 +115,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return Clone of the list of objects.
      */
     public List<AbstractDatabaseObject> getObjectsClone() {
-        // TODO: Use the default fields here!
-        return getObjectsClone(null);
+        return getObjectsClone(getDefaultFields());
     }
 
     /**
@@ -155,7 +161,7 @@ public abstract class AbstractDatabaseObjectManager {
             objectCount = result.getInt("count(id)");
         }
         catch (Exception e){
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
         return objectCount;
     }
@@ -179,6 +185,13 @@ public abstract class AbstractDatabaseObjectManager {
         // Reset the cache
         this.objects = null;
     }
+
+    /**
+     * Get the default database object fields to fetch.
+     *
+     * @return Default object fields to fetch.
+     */
+    public abstract DatabaseFieldsInterface[] getDefaultFields();
 
     /**
      * Get the name of the current database object manager type.

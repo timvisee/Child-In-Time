@@ -12,6 +12,11 @@ import java.awt.*;
 public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
 
     /**
+     * Database field.
+     */
+    private TextPropertyField databaseField;
+
+    /**
      * Host field.
      */
     private TextPropertyField hostField;
@@ -48,11 +53,11 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.weightx = 0;
         c.insets = new Insets(0, 0, 0, 0);
         c.anchor = GridBagConstraints.WEST;
-        add(new JLabel("Host:"), c);
+        add(new JLabel("Database:"), c);
 
         // Create the host field
-        this.hostField = new TextPropertyField("MY_HOST", true);
-        this.hostField.setEmptyAllowed(false);
+        this.databaseField = new TextPropertyField("MY_DATABASE", true);
+        this.databaseField.setEmptyAllowed(false);
 
         // Add the host field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -62,12 +67,36 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         c.weightx = 1;
         c.insets = new Insets(0, 16, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
+        add(this.databaseField, c);
+
+        // Create and add the host label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.insets = new Insets(8, 0, 0, 0);
+        c.anchor = GridBagConstraints.WEST;
+        add(new JLabel("Host:"), c);
+
+        // Create the host field
+        this.hostField = new TextPropertyField("MY_HOST", true);
+        this.hostField.setEmptyAllowed(false);
+
+        // Add the host field
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 1;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(8, 16, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
         add(this.hostField, c);
 
         // Create and add the port label
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy = 2;
         c.gridwidth = 1;
         c.weightx = 0;
         c.insets = new Insets(8, 0, 0, 0);
@@ -87,7 +116,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Add the port field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
-        c.gridy = 1;
+        c.gridy = 2;
         c.gridwidth = 1;
         c.weightx = 1;
         c.insets = new Insets(8, 16, 0, 0);
@@ -97,7 +126,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Create and add the user label
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridwidth = 1;
         c.weightx = 0;
         c.insets = new Insets(8, 0, 0, 0);
@@ -110,7 +139,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridwidth = 1;
         c.weightx = 1;
         c.insets = new Insets(8, 16, 0, 0);
@@ -120,7 +149,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Create and add the password label
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridwidth = 1;
         c.weightx = 0;
         c.insets = new Insets(8, 0, 0, 0);
@@ -133,7 +162,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridwidth = 1;
         c.weightx = 1;
         c.insets = new Insets(8, 16, 0, 0);
@@ -155,6 +184,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         RemoteDatabase remote = (RemoteDatabase) database;
 
         // Update the fields
+        this.databaseField.setText(remote.getDatabase());
         this.hostField.setText(remote.getHost());
         this.portField.setValue(remote.getPort());
         this.userField.setText(remote.getUser());
@@ -171,6 +201,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         RemoteDatabase remote = (RemoteDatabase) database;
 
         // Apply properties
+        remote.setDatabase(this.databaseField.getText());
         remote.setHost(this.hostField.getText());
         remote.setPort((Integer) this.portField.getValue());
         remote.setUser(this.userField.getText());

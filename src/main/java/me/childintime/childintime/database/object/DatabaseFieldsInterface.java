@@ -2,6 +2,11 @@ package me.childintime.childintime.database.object;
 
 public interface DatabaseFieldsInterface {
 
+    /**
+     * Returns the fieldname in the database.
+     *
+     * @return The database fieldname in a String.
+     */
     String getDatabaseField();
 
     /**
@@ -11,7 +16,17 @@ public interface DatabaseFieldsInterface {
      */
     boolean isEditable();
 
+    /**
+     * Returns the DataType of the field in the database.
+     *
+     * @return INTEGER, DATE, STRING, BOOLEAN, REFERENCE.
+     */
     DataType getDataType();
 
+    /**
+     * Returns a Class Type.
+     *
+     * @return Class Type.
+     */
     Class<? extends AbstractDatabaseObject> getReferenceType();
 }

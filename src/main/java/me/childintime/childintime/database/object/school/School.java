@@ -2,6 +2,7 @@ package me.childintime.childintime.database.object.school;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.bodystate.BodyStateFields;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class School extends AbstractDatabaseObject {
             if(!(field instanceof SchoolFields))
                 return false;
 
-            if(this.cachedFields.containsKey(field))
+            if(!this.cachedFields.containsKey(field))
                 return false;
         }
 
@@ -37,9 +38,13 @@ public class School extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
-        return false;
-        // TODO: Implement this
+    protected String getTableName() {
+        return SchoolFields.DATABASE_TABLE_NAME;
+    }
+
+    @Override
+    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
+        return SchoolFields.class;
     }
 
     @Override
@@ -53,7 +58,7 @@ public class School extends AbstractDatabaseObject {
 
             if(!hasField(field))
                 if(!fetchField(field))
-                    throw new Exception("Failed to fetch field");
+                    throw new Exception("Failed to fetch field: " + ((SchoolFields) field).name());
 
             list.add(this.cachedFields.get(field));
         }
@@ -64,5 +69,27 @@ public class School extends AbstractDatabaseObject {
     @Override
     public String getTypeName() {
         return TYPE_NAME;
+    }
+
+    @Override
+    public String getDisplayName() {
+        try {
+            // Pre-fetch the required fields if not cached
+            getFields(new SchoolFields[]{
+                    SchoolFields.NAME,
+                    SchoolFields.COMMUNE
+            });
+
+            // Build and return the display name
+            return String.valueOf(getField(SchoolFields.NAME)) + ", " +
+                    String.valueOf(getField(SchoolFields.COMMUNE));
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Some error occurred, return an error string
+            return "<error>";
+        }
     }
 }

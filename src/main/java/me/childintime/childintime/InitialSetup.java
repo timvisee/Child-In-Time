@@ -79,18 +79,41 @@ public class InitialSetup {
         // Show a status message
         this.progressDialog.setStatus("Confirming environment cleanup...");
 
+        // Make sure the clean environment feature is enabled
+        if(!App.APP_CLEAN_ENVIRONMENT)
+            return;
+
         // Show a warning
-        if(!Arrays.asList(Core.getInstance().getStarupArgs()).contains(FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING))
-            JOptionPane.showMessageDialog(
-                    this.progressDialog,
-                    "<html>The developer option Clean Environment is enabled.\n\n" +
-                            "All previous application files and configurations will be deleted,\n" +
-                            "to ensure that you're using a fresh application instance for development.\n\n" +
-                            "Start the application with the '" + FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING + "' argument to hide this warning.\n\n" +
-                            "This feature must be disabled in production.",
-                    App.APP_NAME + " - Developer mode",
-                    JOptionPane.WARNING_MESSAGE
+        if(!Arrays.asList(Core.getInstance().getStarupArgs()).contains(FLAG_HIDE_CLEAN_ENVIRONMENT_WARNING)) {
+            // Create a list with the buttons to show in the option dialog
+            List<String> buttons = new ArrayList<>();
+            buttons.add("Clean Environment");
+            buttons.add("Keep Environment");
+
+            // Reverse the button list if we're on a Mac OS X system
+            if(Platform.isMacOsX())
+                Collections.reverse(buttons);
+
+            // Show the option dialog
+            final int option = JOptionPane.showOptionDialog(
+                                this.progressDialog,
+                                "The developer option Clean Environment is enabled.\n\n" +
+                                        "Would you like to clean your application environment?\n\n" +
+                                        "Cleaning the environment will delete all previous application files and configurations,\n" +
+                                        "to ensure that you're using a fresh application instance for development.\n\n" +
+                                        "This feature must be disabled in production.",
+                                App.APP_NAME + " - Developer mode - Environment cleanup",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.WARNING_MESSAGE,
+                    null,
+                    buttons.toArray(),
+                    buttons.get(!Platform.isMacOsX() ? 0 : 1)
             );
+
+            // Make sure the clean option is pressed
+            if(option != (!Platform.isMacOsX() ? 0 : 1))
+                return;
+        }
 
         // Show a status message
         this.progressDialog.setStatus("Refreshing application environment...");
@@ -225,9 +248,8 @@ public class InitialSetup {
         // Show the option dialog
         final int option = JOptionPane.showOptionDialog(
                 this.progressDialog,
-                        App.APP_NAME + " is missing some required files.\n" +
-                        "This is normal if you're using the application for the first time.\n\n" +
-                        "Files will be updated automatically if a new update has been installed.\n\n" +
+                        "This is the first time you're using " + App.APP_NAME + " on this system.\n" +
+                        "Some application files are required to be installed.\n" +
                         "Please Continue and allow us to set things up for you.",
                 App.APP_NAME + " - Initial setup",
                 JOptionPane.DEFAULT_OPTION,

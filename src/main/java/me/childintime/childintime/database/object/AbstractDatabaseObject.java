@@ -1,5 +1,11 @@
 package me.childintime.childintime.database.object;
 
+import com.sun.istack.internal.NotNull;
+
+import me.childintime.childintime.Core;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 
 public abstract class AbstractDatabaseObject implements Cloneable {
@@ -7,12 +13,13 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Database object ID.
      */
+    @NotNull
     protected final int id;
 
     /**
      * Hashmap containing cached fields from the database object.
      */
-    protected HashMap<DatabaseFieldsInterface, Object> cachedFields;
+    protected HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
 
     /**
      * Get a hashmap of cached fields.
@@ -28,7 +35,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @param id Database object id.
      */
-    public AbstractDatabaseObject(int id) {
+    public AbstractDatabaseObject(@NotNull int id) {
         this.id = id;
     }
 
@@ -76,7 +83,47 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if the given fields were fetched successfully.
      */
-    public abstract boolean fetchFields(DatabaseFieldsInterface[] fields);
+    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
+
+        List<String> fieldNames = new ArrayList<>();
+
+        for (DatabaseFieldsInterface field : fields) {
+            if (!getFieldsClass().isInstance(field))
+                return false;
+
+            // Add the fieldname to the list
+            fieldNames.add(field.getDatabaseField());
+        }
+
+        String fieldsToFetch = String.join(", ", fieldNames);
+
+        try {
+            PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
+                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName() + "" +
+                            " WHERE `id` = " + String.valueOf(getId()));
+
+            ResultSet result = fetchStatement.executeQuery();
+
+            if(!result.next()) {
+                throw new Exception("Failed to fetch object data");
+            }
+
+            for (DatabaseFieldsInterface field : fields) {
+                parseField(field, result.getString(field.getDatabaseField()));
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+        return false;
+    }
+
+    protected abstract String getTableName();
+
+    public abstract Class<? extends DatabaseFieldsInterface> getFieldsClass();
 
     /**
      * Fetch the given database field.
@@ -188,7 +235,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 // Parse the referenced object
                 try {
                     // Find the proper constructor of the referenced class, and instantiate the object with the fetched object ID
-                    AbstractDatabaseObject object = field.getReferenceType().getDeclaredConstructor(Integer.class).newInstance(objectId);
+                    AbstractDatabaseObject object = field.getReferenceType().getDeclaredConstructor(int.class).newInstance(objectId);
 
                     // Put the reference into the cached fields
                     this.cachedFields.put(field, object);
@@ -199,5 +246,19 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
                 break;
         }
+    }
+
+    /**
+     * Get the display name for this object.
+     * This can be used to show the object in a list.
+     *
+     * @return Display name.
+     */
+    public abstract String getDisplayName();
+
+    @Override
+    public String toString() {
+        // Return the display name
+        return getDisplayName();
     }
 }

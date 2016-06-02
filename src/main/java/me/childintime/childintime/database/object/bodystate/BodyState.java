@@ -25,12 +25,11 @@ public class BodyState extends AbstractDatabaseObject {
 
     @Override
     public boolean hasFields(DatabaseFieldsInterface[] fields) {
-
         for (DatabaseFieldsInterface field : fields) {
             if(!(field instanceof BodyStateFields))
                 return false;
 
-            if(this.cachedFields.containsKey(field))
+            if(!this.cachedFields.containsKey(field))
                 return false;
         }
 
@@ -38,9 +37,13 @@ public class BodyState extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
-        return false;
-        // TODO: Implement this
+    protected String getTableName() {
+        return BodyStateFields.DATABASE_TABLE_NAME;
+    }
+
+    @Override
+    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
+        return BodyStateFields.class;
     }
 
     @Override
@@ -65,5 +68,27 @@ public class BodyState extends AbstractDatabaseObject {
     @Override
     public String getTypeName() {
         return TYPE_NAME;
+    }
+
+    @Override
+    public String getDisplayName() {
+        try {
+            // Pre-fetch the required fields if not cached
+            getFields(new BodyStateFields[]{
+                    BodyStateFields.LENGTH,
+                    BodyStateFields.WEIGHT
+            });
+
+            // Build and return the display name
+            return String.valueOf(getField(BodyStateFields.LENGTH)) + " cm, " +
+                    String.valueOf(getField(BodyStateFields.WEIGHT)) + " g";
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Some error occurred, return an error string
+            return "<error>";
+        }
     }
 }
