@@ -1,9 +1,7 @@
 package me.childintime.childintime.database.object.window;
 
-import com.sun.istack.internal.NotNull;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.configuration.DatabaseManager;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.util.Platform;
@@ -64,7 +62,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * @param objectManager Database object manager instance.
      * @param show True to show the frame once it has been initialized.
      */
-    public DatabaseObjectManagerDialog(Window owner, @NotNull AbstractDatabaseObjectManager objectManager, boolean show) {
+    public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
         super(owner, App.APP_NAME + " - " + objectManager.getTypeName() + " manager", ModalityType.APPLICATION_MODAL);
 
