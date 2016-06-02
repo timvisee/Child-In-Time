@@ -20,11 +20,6 @@ public class StudentManager extends AbstractDatabaseObjectManager{
     }
 
     @Override
-    public String getTableName() {
-        return StudentFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return StudentManifest.getInstance();
     }

@@ -8,6 +8,11 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 public class SchoolManifest extends AbstractDatabaseObjectManifest {
 
     /**
+     * Database table name for this object type.
+     */
+    public static final String DATABASE_TABLE_NAME = "school";
+
+    /**
      * This instance.
      * Singleton.
      */
@@ -26,6 +31,11 @@ public class SchoolManifest extends AbstractDatabaseObjectManifest {
 
         // Return the instance
         return instance;
+    }
+
+    @Override
+    public String getTableName() {
+        return DATABASE_TABLE_NAME;
     }
 
     @Override

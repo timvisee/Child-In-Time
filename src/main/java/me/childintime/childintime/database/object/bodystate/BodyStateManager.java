@@ -20,11 +20,6 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
     }
 
     @Override
-    public String getTableName() {
-        return BodyStateFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return BodyStateManifest.getInstance();
     }

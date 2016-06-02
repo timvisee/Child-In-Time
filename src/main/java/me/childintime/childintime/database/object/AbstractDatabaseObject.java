@@ -159,18 +159,9 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return Database table name.
      */
+    @Deprecated
     private String getTableName() {
-        try {
-            // Get the database table name from the constant of the abstract database object
-            return getManifest().getFields().getField(FIELD_DATABASE_TABLE_NAME).get(String.class).toString();
-
-        } catch(IllegalAccessException | NoSuchFieldException e) {
-            // Throw an error if the required constant is missing
-            throw new Error("Missing " + FIELD_DATABASE_TABLE_NAME + " constant in " + getManifest().getFields().getSimpleName() + " class.");
-        } catch(Exception e) {
-            // Throw an error if the required constant could not be accessed
-            throw new Error("Failed to access " + FIELD_DATABASE_TABLE_NAME + " constant in " + getManifest().getFields().getSimpleName() + " class.");
-        }
+        return getManifest().getTableName();
     }
 
     /**

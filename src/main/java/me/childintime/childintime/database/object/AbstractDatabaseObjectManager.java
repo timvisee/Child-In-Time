@@ -221,7 +221,10 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return Database table name.
      */
-    public abstract String getTableName();
+    @Deprecated
+    public String getTableName() {
+        return getManifest().getTableName();
+    }
 
     /**
      * Get the database object manifest.

@@ -39,12 +39,6 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
     PARKOUR_ID("parkour_id", false, DataType.REFERENCE, Parkour.class);
 
     /**
-     * Database table name for this object type.
-     * This constant is dynamically accessed by {@link AbstractDatabaseObject#getTableName()}.
-     */
-    public static final String DATABASE_TABLE_NAME = "measurement";
-
-    /**
      * The name of the field in the database.
      */
     private String databaseField;

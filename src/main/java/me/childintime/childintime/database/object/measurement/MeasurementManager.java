@@ -19,11 +19,6 @@ public class MeasurementManager extends AbstractDatabaseObjectManager {
     }
 
     @Override
-    public String getTableName() {
-        return MeasurementFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return MeasurementManifest.getInstance();
     }

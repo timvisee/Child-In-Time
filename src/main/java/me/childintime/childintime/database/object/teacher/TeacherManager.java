@@ -20,11 +20,6 @@ public class TeacherManager extends AbstractDatabaseObjectManager{
     }
 
     @Override
-    public String getTableName() {
-        return TeacherFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return TeacherManifest.getInstance();
     }

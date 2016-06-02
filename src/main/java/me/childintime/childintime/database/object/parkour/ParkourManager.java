@@ -19,11 +19,6 @@ public class ParkourManager extends AbstractDatabaseObjectManager{
     }
 
     @Override
-    public String getTableName() {
-        return ParkourFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return ParkourManifest.getInstance();
     }

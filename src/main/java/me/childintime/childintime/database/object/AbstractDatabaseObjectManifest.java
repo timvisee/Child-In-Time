@@ -8,6 +8,13 @@ public abstract class AbstractDatabaseObjectManifest {
     public AbstractDatabaseObjectManifest() { }
 
     /**
+     * Get the database table name for the manifest´s object.
+     *
+     * @return Database table name.
+     */
+    public abstract String getTableName();
+
+    /**
      * Get the fields class for this database object.
      *
      * @return Fields class.
