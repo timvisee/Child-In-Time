@@ -9,7 +9,8 @@ public class SchoolManager extends AbstractDatabaseObjectManager{
     @Override
     public DatabaseFieldsInterface[] getDefaultFields() {
         return new SchoolFields[]{
-                SchoolFields.NAME
+                SchoolFields.NAME,
+                SchoolFields.COMMUNE
         };
     }
 
