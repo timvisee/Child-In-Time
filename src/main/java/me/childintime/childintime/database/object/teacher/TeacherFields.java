@@ -65,6 +65,14 @@ public enum TeacherFields implements DatabaseFieldsInterface {
      */
     private Class<? extends AbstractDatabaseObject> referenceType;
 
+    /**
+     * Constructor.
+     *
+     * @param databaseField Database field name.
+     * @param editable True if this field is editable by the user, false if not.
+     * @param dataType Data type of the field.
+     * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
+     */
     TeacherFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
         this.databaseField = databaseField;
         this.editable = editable;
