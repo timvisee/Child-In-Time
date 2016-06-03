@@ -22,6 +22,13 @@ public abstract class AbstractDatabaseObjectManifest {
     public abstract String getTableName();
 
     /**
+     * Get the default database object fields.
+     *
+     * @return Default object fields to fetch.
+     */
+    public abstract DatabaseFieldsInterface[] getDefaultFields();
+
+    /**
      * Get the fields class for this database object.
      *
      * @return Fields class.

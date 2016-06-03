@@ -7,13 +7,6 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 public class MeasurementManager extends AbstractDatabaseObjectManager {
 
     @Override
-    public DatabaseFieldsInterface[] getDefaultFields() {
-        return new MeasurementFields[]{
-                MeasurementFields.TIME
-        };
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return MeasurementManifest.getInstance();
     }

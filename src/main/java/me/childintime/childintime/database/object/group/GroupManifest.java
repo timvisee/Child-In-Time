@@ -49,6 +49,13 @@ public class GroupManifest extends AbstractDatabaseObjectManifest {
     }
 
     @Override
+    public DatabaseFieldsInterface[] getDefaultFields() {
+        return new GroupFields[]{
+                GroupFields.NAME
+        };
+    }
+
+    @Override
     public Class<? extends DatabaseFieldsInterface> getFields() {
         return GroupFields.class;
     }

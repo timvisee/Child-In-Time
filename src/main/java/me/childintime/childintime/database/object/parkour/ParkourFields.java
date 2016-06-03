@@ -4,6 +4,8 @@ import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
+import java.util.Locale;
+
 public enum ParkourFields implements DatabaseFieldsInterface{
 
     /**
@@ -72,5 +74,10 @@ public enum ParkourFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return toString().replace("_", " ").toLowerCase().toUpperCase(Locale.US);
     }
 }

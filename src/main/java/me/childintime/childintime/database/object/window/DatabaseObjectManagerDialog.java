@@ -4,11 +4,13 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
+import me.childintime.childintime.database.object.student.StudentFields;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -26,14 +28,14 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private AbstractDatabaseObjectManager objectManager;
 
     /**
-     * Data list model instance.
+     * Data table model instance.
      */
-    private DefaultListModel<AbstractDatabaseObject> objectsListModel;
+    private AbstractTableModel objectTableModel;
 
     /**
      * Data list instance.
      */
-    private JList objectList;
+    private JTable objectList;
 
     /**
      * Add button instance.
@@ -208,17 +210,43 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public JScrollPane buildUiList() {
         // Create the default list model
-        this.objectsListModel = new DefaultListModel<>();
+        this.objectTableModel = new AbstractTableModel() {
+            @Override
+            public int getRowCount() {
+                return objectManager.getObjectCount();
+            }
+
+            @Override
+            public int getColumnCount() {
+                return objectManager.getManifest().getDefaultFields().length;
+            }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                // TODO: Return the field value
+                try {
+                    return objectManager.getObjects().get(rowIndex).getField(objectManager.getManifest().getDefaultFields()[columnIndex]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public String getColumnName(int column) {
+                return objectManager.getManifest().getDefaultFields()[column].getDisplayName();
+            }
+        };
 
         // Refresh the list of databases objects and add them to the list
         updateUiList();
 
         // Create the list and create an empty border
-        this.objectList = new JList<>(this.objectsListModel);
+        this.objectList = new JTable(this.objectTableModel);
         this.objectList.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Update the button panel on selection change
-        this.objectList.addListSelectionListener(e -> updateUiButtons());
+        //this.objectList.addListSelectionListener(e -> updateUiButtons());
         this.objectList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 if(evt.getClickCount() == 2)
@@ -227,18 +255,16 @@ public class DatabaseObjectManagerDialog extends JDialog {
         });
 
         // Create a scroll pane with the database list and return it
-        return new JScrollPane(this.objectList);
+        return new JScrollPane(this.objectList); // this.objectList
     }
 
     /**
      * Update the UI list with the current list of database objects.
      */
     public void updateUiList() {
-        // Clear all current database objects.
-        this.objectsListModel.clear();
-
-        // Add the items to the list model
-        this.objects.forEach(this.objectsListModel::addElement);
+        // TODO: Update the table!
+        if(this.objectTableModel != null)
+            this.objectTableModel.fireTableDataChanged();
     }
 
     /**
@@ -350,7 +376,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Get the selected database
-        final AbstractDatabaseObject selected = (AbstractDatabaseObject) this.objectList.getSelectedValue();
+        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(this.objectList.getSelectedRow());
 
         // Show the edit dialog for this database
         // TODO: Implement the edit dialog here
@@ -361,9 +387,9 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // TODO: Update this?
         // Set the result, or remove it from the list if it's null
         if(result != null)
-            this.objects.set(this.objectList.getSelectedIndex(), result);
+            this.objects.set(this.objectList.getSelectedRow(), result);
         else
-            this.objects.remove(this.objectList.getSelectedIndex());
+            this.objects.remove(this.objectList.getSelectedRow());
 
         // Refresh the list
         updateUiList();
@@ -407,7 +433,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * @return Number of selected database objects.
      */
     public int getSelectedCount() {
-        return this.objectList.getSelectedValuesList().size();
+        return this.objectList.getSelectedRowCount();
     }
 
     /**

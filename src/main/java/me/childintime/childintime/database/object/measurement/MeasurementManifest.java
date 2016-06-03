@@ -49,6 +49,13 @@ public class MeasurementManifest extends AbstractDatabaseObjectManifest {
     }
 
     @Override
+    public DatabaseFieldsInterface[] getDefaultFields() {
+        return new MeasurementFields[]{
+                MeasurementFields.TIME
+        };
+    }
+
+    @Override
     public Class<? extends DatabaseFieldsInterface> getFields() {
         return MeasurementFields.class;
     }

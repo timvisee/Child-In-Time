@@ -7,14 +7,6 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 public class StudentManager extends AbstractDatabaseObjectManager{
 
     @Override
-    public DatabaseFieldsInterface[] getDefaultFields() {
-        return new StudentFields[]{
-                StudentFields.FIRST_NAME,
-                StudentFields.LAST_NAME
-        };
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return StudentManifest.getInstance();
     }

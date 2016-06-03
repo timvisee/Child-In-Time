@@ -29,4 +29,11 @@ public interface DatabaseFieldsInterface {
      * @return Class Type.
      */
     Class<? extends AbstractDatabaseObject> getReferenceType();
+
+    /**
+     * Display name of this field.
+     *
+     * @return Display name.
+     */
+    String getDisplayName();
 }

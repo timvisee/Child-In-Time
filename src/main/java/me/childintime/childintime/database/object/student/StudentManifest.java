@@ -4,6 +4,7 @@ import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.school.SchoolFields;
 
 public class StudentManifest extends AbstractDatabaseObjectManifest {
 
@@ -46,6 +47,14 @@ public class StudentManifest extends AbstractDatabaseObjectManifest {
     @Override
     public String getTableName() {
         return DATABASE_TABLE_NAME;
+    }
+
+    @Override
+    public DatabaseFieldsInterface[] getDefaultFields() {
+        return new StudentFields[]{
+                StudentFields.FIRST_NAME,
+                StudentFields.LAST_NAME
+        };
     }
 
     @Override
