@@ -6,16 +6,47 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
 public enum ParkourFields implements DatabaseFieldsInterface{
 
-    ID(         "id",          false, DataType.INTEGER, null),
-    DESCRIPTION("description", true,  DataType.STRING,  null);
+    /**
+     * ID.
+     * Identifier of a parkour object.
+     */
+    ID("id", false, DataType.INTEGER, null),
 
-    public static final String DATABASE_TABLE_NAME = "parkour";
+    /**
+     * Description.
+     * The description of a parkour.
+     */
+    DESCRIPTION("description", true, DataType.STRING, null);
 
+    /**
+     * The name of the field in the database.
+     */
     private String databaseField;
+
+    /**
+     * Defines whether this field is editable by the user.
+     */
     private boolean editable;
+
+    /**
+     * The data type of the field.
+     */
     private DataType dataType;
+
+    /**
+     * The referenced type for fields of the {@link DataType#REFERENCE} type.
+     * Must be null if the data type is different.
+     */
     private Class<? extends AbstractDatabaseObject> referenceType;
 
+    /**
+     * Constructor.
+     *
+     * @param databaseField Database field name.
+     * @param editable True if this field is editable by the user, false if not.
+     * @param dataType Data type of the field.
+     * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
+     */
     ParkourFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
         this.databaseField = databaseField;
         this.editable = editable;

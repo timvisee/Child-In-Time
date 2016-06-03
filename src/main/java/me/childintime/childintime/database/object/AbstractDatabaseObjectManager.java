@@ -2,6 +2,7 @@ package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.Core;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -12,10 +13,7 @@ public abstract class AbstractDatabaseObjectManager {
     /**
      * List of database objects loaded in this manager.
      */
-    protected List<AbstractDatabaseObject> objects = null;
-
-    // TODO: Create the body of this object!
-    // TODO: Shorten the name of this object?
+    private List<AbstractDatabaseObject> objects = null;
 
     /**
      * Fetch all objects from the database.
@@ -24,6 +22,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of fetched objects.
      */
+    @SuppressWarnings("unused")
     public List<AbstractDatabaseObject> fetchObjects() {
         return fetchObjects(getDefaultFields());
     }
@@ -37,6 +36,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of fetched objects.
      */
+    @SuppressWarnings("WeakerAccess")
     public List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields[]) {
         // Join the string, comma separated
         StringBuilder fieldsToFetch = new StringBuilder("id");
@@ -48,9 +48,14 @@ public abstract class AbstractDatabaseObjectManager {
 
         // Fetch the objects and their data from the database
         try {
+            // Get the database connection
+            final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
+
             // Create a statement to fetch the objects
-            PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
-                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName());
+            PreparedStatement fetchStatement = connection.prepareStatement(
+                    "SELECT " + fieldsToFetch.toString() + " " +
+                    "FROM " + getTableName()
+            );
 
             // Fetch the data
             ResultSet result = fetchStatement.executeQuery();
@@ -61,7 +66,7 @@ public abstract class AbstractDatabaseObjectManager {
                 int id = result.getInt("id");
 
                 // Create the database object instance
-                AbstractDatabaseObject databaseObject = getObjectClass().getConstructor(int.class).newInstance(id);
+                AbstractDatabaseObject databaseObject = getManifest().getObject().getConstructor(int.class).newInstance(id);
 
                 // Parse and cache the fields
                 for (DatabaseFieldsInterface field : fields)
@@ -70,6 +75,7 @@ public abstract class AbstractDatabaseObjectManager {
                 // Add the object to the list
                 objects.add(databaseObject);
             }
+
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -87,6 +93,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of objects.
      */
+    @SuppressWarnings("unused")
     public List<AbstractDatabaseObject> getObjects() {
         return getObjects(getDefaultFields());
     }
@@ -99,6 +106,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of objects.
      */
+    @SuppressWarnings("WeakerAccess")
     public List<AbstractDatabaseObject> getObjects(DatabaseFieldsInterface[] fields) {
         // Return the objects if cached
         if(hasCache())
@@ -126,6 +134,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of objects.
      */
+    @SuppressWarnings("WeakerAccess")
     public List<AbstractDatabaseObject> getObjectsClone(DatabaseFieldsInterface[] fields) {
         // Fetch the objects if they aren't fetched yet
         if(!hasCache())
@@ -150,20 +159,25 @@ public abstract class AbstractDatabaseObjectManager {
     /**
      * Get the number of objects in the database.
      *
-     * @return Number of objects.
+     * @return Number of objects, returns zero if an error occurred.
      */
+    @SuppressWarnings("unused")
     public int getObjectCount() {
-        int objectCount = 0;
+        try {
+            // Get the database connection
+            final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
-        try{
-            PreparedStatement countQuery = Core.getInstance().getDatabaseConnector().getConnection().prepareStatement("SELECT count(id) FROM " + getTableName());
+            // Prepare a query to count the number of objects
+            PreparedStatement countQuery = connection.prepareStatement("SELECT count(`id`) AS objectCount FROM " + getTableName());
+
+            // Execute the query, and return the results
             ResultSet result = countQuery.executeQuery();
-            objectCount = result.getInt("count(id)");
-        }
-        catch (Exception e){
+            return result.getInt("objectCount");
+
+        } catch(Exception e){
             e.printStackTrace();
+            return 0;
         }
-        return objectCount;
     }
 
     /**
@@ -171,6 +185,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return True if cached, false if not.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean hasCache() {
         return this.objects != null;
     }
@@ -178,6 +193,7 @@ public abstract class AbstractDatabaseObjectManager {
     /**
      * Flush the cached database objects.
      */
+    @SuppressWarnings("unused")
     public void flushCache() {
         // Clear the list of objects
         this.objects.clear();
@@ -198,19 +214,24 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return Database object manager type name.
      */
-    public abstract String getTypeName();
+    public String getTypeName() {
+        return getManifest().getTypeName();
+    }
 
     /**
      * Get the database table name for this object manager.
      *
      * @return Database table name.
      */
-    public abstract String getTableName();
+    @Deprecated
+    public String getTableName() {
+        return getManifest().getTableName();
+    }
 
     /**
-     * Get the class of the database objects this manager is managing.
+     * Get the database object manifest.
      *
-     * @return Object class.
+     * @return Database object manifest.
      */
-    public abstract Class<? extends AbstractDatabaseObject> getObjectClass();
+    public abstract AbstractDatabaseObjectManifest getManifest();
 }

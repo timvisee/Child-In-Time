@@ -2,11 +2,17 @@ package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.Core;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 
 public abstract class AbstractDatabaseObject implements Cloneable {
+
+    /**
+     * The name of the constant located in each abstract database object to define the table name.
+     */
+    private static final String FIELD_DATABASE_TABLE_NAME = "DATABASE_TABLE_NAME";
 
     /**
      * Database object ID.
@@ -17,15 +23,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * Hashmap containing cached fields from the database object.
      */
     protected HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
-
-    /**
-     * Get a hashmap of cached fields.
-     *
-     * @return Hashmap of cached fields.
-     */
-    public HashMap<DatabaseFieldsInterface, Object> getCachedFields() {
-        return this.cachedFields;
-    }
 
     /**
      * Constructor.
@@ -48,6 +45,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Clear the cached database object fields.
      */
+    @SuppressWarnings("unused")
     public void flushCache() {
         this.cachedFields.clear();
     }
@@ -59,8 +57,24 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if all given fields are cached, false if not.
      * False is also returned if just one of the given fields isn't cached.
+     * If no fields are given, true will be returned.
      */
-    public abstract boolean hasFields(DatabaseFieldsInterface[] fields);
+    @SuppressWarnings("WeakerAccess")
+    public boolean hasFields(DatabaseFieldsInterface[] fields) {
+        // Loop through all given fields
+        for(DatabaseFieldsInterface field : fields) {
+            // Make sure the proper fields enum is used for this object
+            if(!getManifest().getFields().isInstance(field))
+                return false;
+
+            // Make sure the field exists in cache
+            if(!this.cachedFields.containsKey(field))
+                return false;
+        }
+
+        // All keys exist, return the result
+        return true;
+    }
 
     /**
      * Check whether the given database object field is cached.
@@ -69,58 +83,93 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if the given field is cached, false if not.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean hasField(DatabaseFieldsInterface field) {
         return hasFields(new DatabaseFieldsInterface[]{field});
     }
 
     /**
      * Fetch the given database fields.
+     * True will be returned if the given fields were fetched successfully.
+     * True will also be returned if no fields are fetched, because the given fields array was empty.
      *
      * @param fields The fields to fetch.
      *
-     * @return True if the given fields were fetched successfully.
+     * @return True on success, false on failure.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean fetchFields(DatabaseFieldsInterface[] fields) {
+        // Make sure at least one field is fetched
+        if(fields.length == 0)
+            return true;
 
+        // Create a string list to put all fields name to fetch in
         List<String> fieldNames = new ArrayList<>();
 
-        for (DatabaseFieldsInterface field : fields) {
-            if (!getFieldsClass().isInstance(field))
+        // Put the fields name into the field names list
+        for(DatabaseFieldsInterface field : fields) {
+            // Make sure the field is of the correct instance
+            if(!getManifest().getFields().isInstance(field))
                 return false;
 
-            // Add the fieldname to the list
+            // Add the field name to the list
             fieldNames.add(field.getDatabaseField());
         }
 
+        // Join all the field names together to use it in the database query
         String fieldsToFetch = String.join(", ", fieldNames);
 
         try {
-            PreparedStatement fetchStatement = Core.getInstance().getDatabaseConnector().getConnection()
-                    .prepareStatement("SELECT " + fieldsToFetch.toString() + " FROM " + getTableName() + "" +
-                            " WHERE `id` = " + String.valueOf(getId()));
+            // Get the database connection
+            final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
+            // Prepare a statement to fetch the fields
+            PreparedStatement fetchStatement = connection.prepareStatement(
+                    "SELECT " + fieldsToFetch.toString() + " " +
+                    "FROM " + getTableName() + " " +
+                    "WHERE `id` = ?"
+            );
+
+            // Set the prepared statement parameters
+            fetchStatement.setInt(1, getId());
+
+            // Execute the query
             ResultSet result = fetchStatement.executeQuery();
 
-            if(!result.next()) {
-                throw new Exception("Failed to fetch object data");
-            }
+            // Throw an exception if no data is returned from the database
+            if(!result.next())
+                throw new Exception("Failed to fetch object data, empty result received from the database.");
 
-            for (DatabaseFieldsInterface field : fields) {
+            // Get the raw data for each field, and parse it
+            for (DatabaseFieldsInterface field : fields)
                 parseField(field, result.getString(field.getDatabaseField()));
-            }
 
+            // Return the result
             return true;
 
         } catch (Exception e) {
-            System.out.println(e.toString());
+            // Print the stack trace, and return the result
+            e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
-    protected abstract String getTableName();
+    /**
+     * Get the database table name for the database object.
+     *
+     * @return Database table name.
+     */
+    @Deprecated
+    private String getTableName() {
+        return getManifest().getTableName();
+    }
 
-    public abstract Class<? extends DatabaseFieldsInterface> getFieldsClass();
+    /**
+     * Get the database object manifest.
+     *
+     * @return Database object manifest.
+     */
+    public abstract AbstractDatabaseObjectManifest getManifest();
 
     /**
      * Fetch the given database field.
@@ -129,6 +178,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if the given field was fetched successfully.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean fetchField(DatabaseFieldsInterface field) {
         return fetchFields(new DatabaseFieldsInterface[]{field});
     }
@@ -136,14 +186,39 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Get the given fields. All fields will be returned from cache when possible, fields that aren't cached are fetched
      * from the database automatically.
+     * If an empty list of fields is given, an empty list will be returned.
      *
-     * @param fields Fields to get.
+     * @param fields List of fields to get.
      *
-     * @return List of field values.
+     * @return List of field values, in the same order as the given fields list.
      *
      * @throws Exception Throws if an error occurred.
      */
-    public abstract List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception;
+    public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
+        // Create a list to put the field values into
+        List<Object> fieldValues = new ArrayList<>();
+
+        // Loop through the given list of fields
+        for(DatabaseFieldsInterface field : fields) {
+            // Make sure the field enum that is used is for the current class
+            if(!getManifest().getFields().isInstance(field))
+                throw new Exception("Invalid database object fields configuration class used, not compatible with" +
+                        "current database object type.");
+
+            // Make sure the field is cached
+            if(!hasField(field))
+                // Fetch the field if it isn't cached
+                // TODO: Fetch all non-cached fields at once, instead of spending a query for each
+                if(!fetchField(field))
+                    throw new Exception("Failed to fetch field.");
+
+            // Add the field value to the output list
+            fieldValues.add(this.cachedFields.get(field));
+        }
+
+        // Return the list of field values
+        return fieldValues;
+    }
 
     /**
      * Get the given field. The field will be returned from cache when possible. If the field isn't available in cache,
@@ -155,6 +230,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @throws Exception Throws if an error occurred.
      */
+    @SuppressWarnings("WeakerAccess")
     public Object getField(DatabaseFieldsInterface field) throws Exception {
         return getFields(new DatabaseFieldsInterface[]{field}).get(0);
     }
@@ -164,7 +240,10 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return Database object type name.
      */
-    public abstract String getTypeName();
+    @Deprecated
+    public String getTypeName() {
+        return getManifest().getTypeName();
+    }
 
     @Override
     protected AbstractDatabaseObject clone() throws CloneNotSupportedException {
@@ -180,7 +259,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * @param field Database field type.
      * @param rawField Raw field data.
      */
-    public void parseField(DatabaseFieldsInterface field, String rawField) {
+    void parseField(DatabaseFieldsInterface field, String rawField) {
         switch(field.getDataType()) {
             case STRING:
                 this.cachedFields.put(field, rawField);
@@ -195,20 +274,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 break;
 
             case DATE:
-//                // Split de datum string
-//                String[] rawDateSplitted = geb_datumField.getText().split("-");
-//
-//                // Haal het jaar, de maand en de dag op uit de string
-//                int dateYear = Integer.valueOf(rawDateSplitted[0]);
-//                int dateMonth = Integer.valueOf(rawDateSplitted[1]);
-//                int dateDay = Integer.valueOf(rawDateSplitted[2]);
-//
-//                // Maak een kalender object met de opgehaalde datum
-//                Calendar calendar = new GregorianCalendar(dateYear, dateMonth, dateDay);
-//
-//                // Zet de datum om naar een SQL datum (met een timestamp)
-//                java.sql.Date sqlDate = new java.sql.Date(calendar.getTime().getTime());
-
                 // Split the raw date string
                 String[] rawDateSplitted = rawField.split("-");
 
@@ -222,7 +287,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
                 // Put the date into the cached fields
                 this.cachedFields.put(field, calendar.getTime());
-
                 break;
 
             case REFERENCE:
@@ -240,7 +304,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 break;
         }
     }

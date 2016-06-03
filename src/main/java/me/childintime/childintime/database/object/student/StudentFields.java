@@ -7,20 +7,72 @@ import me.childintime.childintime.database.object.group.Group;
 
 public enum StudentFields implements DatabaseFieldsInterface {
 
-    ID(        "databaseField", false, DataType.INTEGER,   null),
-    FIRST_NAME("first_name",    true,  DataType.STRING,    null),
-    LAST_NAME( "last_name",     true,  DataType.STRING,    null),
-    GENDER(    "gender",        true,  DataType.BOOLEAN,   null),
-    BIRTHDATE( "birthdate",     true,  DataType.DATE,      null),
-    GROUP_ID(  "group_id",      true,  DataType.REFERENCE, Group.class);
+    /**
+     * ID.
+     * Identifier of a student object.
+     */
+    ID("id", false, DataType.INTEGER, null),
 
-    public static final String DATABASE_TABLE_NAME = "student";
+    /**
+     * Student first name.
+     * The first name of a student.
+     */
+    FIRST_NAME("first_name", true, DataType.STRING, null),
 
+    /**
+     * Student last name.
+     * The last name of a student.
+     */
+    LAST_NAME("last_name", true, DataType.STRING, null),
+
+    /**
+     * Student gender.
+     * The gender of a student.
+     * True defines a man, false defines a woman.
+     */
+    GENDER("gender", true, DataType.BOOLEAN, null),
+
+    /**
+     * Student birthdate.
+     * The birthdate of a student.
+     */
+    BIRTHDATE("birthdate", true, DataType.DATE, null),
+
+    /**
+     * Group ID.
+     * The group instance a student is part of.
+     */
+    GROUP_ID("group_id", true, DataType.REFERENCE, Group.class);
+
+    /**
+     * The name of the field in the database.
+     */
     private String databaseField;
+
+    /**
+     * Defines whether this field is editable by the user.
+     */
     private boolean editable;
+
+    /**
+     * The data type of the field.
+     */
     private DataType dataType;
+
+    /**
+     * The referenced type for fields of the {@link DataType#REFERENCE} type.
+     * Must be null if the data type is different.
+     */
     private Class<? extends AbstractDatabaseObject> referenceType;
 
+    /**
+     * Constructor.
+     *
+     * @param databaseField Database field name.
+     * @param editable True if this field is editable by the user, false if not.
+     * @param dataType Data type of the field.
+     * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
+     */
     StudentFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
         this.databaseField = databaseField;
         this.editable = editable;

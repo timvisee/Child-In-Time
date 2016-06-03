@@ -1,19 +1,9 @@
 package me.childintime.childintime.database.object.group;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
-import me.childintime.childintime.database.object.bodystate.BodyStateFields;
-import me.childintime.childintime.database.object.school.SchoolFields;
-
-import java.util.ArrayList;
-import java.util.List;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 
 public class Group extends AbstractDatabaseObject {
-
-    /**
-     * Database object type name.
-     */
-    private static final String TYPE_NAME = "Group";
 
     /**
      * Constructor.
@@ -25,51 +15,8 @@ public class Group extends AbstractDatabaseObject {
     }
 
     @Override
-    public boolean hasFields(DatabaseFieldsInterface[] fields) {
-
-        for (DatabaseFieldsInterface field : fields) {
-            if(!(field instanceof GroupFields))
-                return false;
-
-            if(!this.cachedFields.containsKey(field))
-                return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    protected String getTableName() {
-        return GroupFields.DATABASE_TABLE_NAME;
-    }
-
-    @Override
-    public Class<? extends DatabaseFieldsInterface> getFieldsClass() {
-        return GroupFields.class;
-    }
-
-    @Override
-    public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
-
-        List<Object> list = new ArrayList<>();
-
-        for (DatabaseFieldsInterface field : fields) {
-            if(!(field instanceof GroupFields))
-                throw new Exception("Invalid field");
-
-            if(!hasField(field))
-                if(!fetchField(field))
-                    throw new Exception("Failed to fetch field");
-
-            list.add(this.cachedFields.get(field));
-        }
-
-        return list;
-    }
-
-    @Override
-    public String getTypeName() {
-        return TYPE_NAME;
+    public AbstractDatabaseObjectManifest getManifest() {
+        return GroupManifest.getInstance();
     }
 
     @Override

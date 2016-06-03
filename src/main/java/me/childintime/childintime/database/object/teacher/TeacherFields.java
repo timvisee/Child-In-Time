@@ -7,19 +7,66 @@ import me.childintime.childintime.database.object.school.School;
 
 public enum TeacherFields implements DatabaseFieldsInterface {
 
-    ID(        "id",         false, DataType.INTEGER,   null),
-    FIRST_NAME("first_name", true,  DataType.STRING,    null),
-    LAST_NAME( "last_name",  true,  DataType.STRING,    null),
-    IS_GYM(    "is_gym",     true,  DataType.BOOLEAN,   null),
-    SCHOOL_ID( "school_id",  true,  DataType.REFERENCE, School.class);
+    /**
+     * ID.
+     * Identifier of a teacher object.
+     */
+    ID("id", false, DataType.INTEGER, null),
 
-    public static final String DATABASE_TABLE_NAME = "teacher";
+    /**
+     * Teacher first name.
+     * The first name of a teacher.
+     */
+    FIRST_NAME("first_name", true, DataType.STRING, null),
 
+    /**
+     * Teacher last name.
+     * The last name of a teacher.
+     */
+    LAST_NAME("last_name", true, DataType.STRING, null),
+
+    /**
+     * Teacher gym.
+     * Defines whether this teacher is a gymnastics teacher.
+     * True if the teacher is a gymnastics teacher, false if not.
+     */
+    IS_GYM("is_gym", true, DataType.BOOLEAN, null),
+
+    /**
+     * School ID.
+     * The school instance a teacher works at.
+     */
+    SCHOOL_ID("school_id", true, DataType.REFERENCE, School.class);
+
+    /**
+     * The name of the field in the database.
+     */
     private String databaseField;
+
+    /**
+     * Defines whether this field is editable by the user.
+     */
     private boolean editable;
+
+    /**
+     * The data type of the field.
+     */
     private DataType dataType;
+
+    /**
+     * The referenced type for fields of the {@link DataType#REFERENCE} type.
+     * Must be null if the data type is different.
+     */
     private Class<? extends AbstractDatabaseObject> referenceType;
 
+    /**
+     * Constructor.
+     *
+     * @param databaseField Database field name.
+     * @param editable True if this field is editable by the user, false if not.
+     * @param dataType Data type of the field.
+     * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
+     */
     TeacherFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
         this.databaseField = databaseField;
         this.editable = editable;
