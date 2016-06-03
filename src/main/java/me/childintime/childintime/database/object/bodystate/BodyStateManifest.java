@@ -49,6 +49,14 @@ public class BodyStateManifest extends AbstractDatabaseObjectManifest {
     }
 
     @Override
+    public DatabaseFieldsInterface[] getDefaultFields() {
+        return new BodyStateFields[]{
+                BodyStateFields.LENGTH,
+                BodyStateFields.WEIGHT
+        };
+    }
+
+    @Override
     public Class<? extends DatabaseFieldsInterface> getFields() {
         return BodyStateFields.class;
     }

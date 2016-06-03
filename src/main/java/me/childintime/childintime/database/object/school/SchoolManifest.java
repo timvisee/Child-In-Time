@@ -49,6 +49,14 @@ public class SchoolManifest extends AbstractDatabaseObjectManifest {
     }
 
     @Override
+    public DatabaseFieldsInterface[] getDefaultFields() {
+        return new SchoolFields[]{
+                SchoolFields.NAME,
+                SchoolFields.COMMUNE
+        };
+    }
+
+    @Override
     public Class<? extends DatabaseFieldsInterface> getFields() {
         return SchoolFields.class;
     }

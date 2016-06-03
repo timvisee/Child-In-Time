@@ -49,6 +49,13 @@ public class ParkourManifest extends AbstractDatabaseObjectManifest {
     }
 
     @Override
+    public DatabaseFieldsInterface[] getDefaultFields() {
+        return new ParkourFields[]{
+                ParkourFields.DESCRIPTION
+        };
+    }
+
+    @Override
     public Class<? extends DatabaseFieldsInterface> getFields() {
         return ParkourFields.class;
     }

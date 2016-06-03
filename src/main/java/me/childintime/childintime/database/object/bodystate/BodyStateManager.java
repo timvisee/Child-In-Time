@@ -7,14 +7,6 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 public class BodyStateManager extends AbstractDatabaseObjectManager {
 
     @Override
-    public DatabaseFieldsInterface[] getDefaultFields() {
-        return new BodyStateFields[]{
-                BodyStateFields.LENGTH,
-                BodyStateFields.WEIGHT
-        };
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return BodyStateManifest.getInstance();
     }

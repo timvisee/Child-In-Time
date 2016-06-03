@@ -6,6 +6,8 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.parkour.Parkour;
 import me.childintime.childintime.database.object.student.Student;
 
+import java.util.Locale;
+
 public enum MeasurementFields implements DatabaseFieldsInterface{
 
     /**
@@ -92,5 +94,10 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return toString().replace("_", " ").toLowerCase().toUpperCase(Locale.US);
     }
 }
