@@ -6,11 +6,6 @@ import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest
 public class Group extends AbstractDatabaseObject {
 
     /**
-     * Database object type name.
-     */
-    private static final String TYPE_NAME = "Group";
-
-    /**
      * Constructor.
      *
      * @param id Database object id.
@@ -22,11 +17,6 @@ public class Group extends AbstractDatabaseObject {
     @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return GroupManifest.getInstance();
-    }
-
-    @Override
-    public String getTypeName() {
-        return TYPE_NAME;
     }
 
     @Override

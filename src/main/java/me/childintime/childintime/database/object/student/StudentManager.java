@@ -15,11 +15,6 @@ public class StudentManager extends AbstractDatabaseObjectManager{
     }
 
     @Override
-    public String getTypeName() {
-        return "Student";
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return StudentManifest.getInstance();
     }

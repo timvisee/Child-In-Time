@@ -15,11 +15,6 @@ public class BodyStateManager extends AbstractDatabaseObjectManager {
     }
 
     @Override
-    public String getTypeName() {
-        return "Body state";
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return BodyStateManifest.getInstance();
     }

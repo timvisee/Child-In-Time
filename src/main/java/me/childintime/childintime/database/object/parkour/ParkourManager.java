@@ -14,11 +14,6 @@ public class ParkourManager extends AbstractDatabaseObjectManager{
     }
 
     @Override
-    public String getTypeName() {
-        return "Parkour";
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return ParkourManifest.getInstance();
     }

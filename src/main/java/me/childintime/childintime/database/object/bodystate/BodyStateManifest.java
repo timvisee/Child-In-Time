@@ -8,6 +8,11 @@ import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 public class BodyStateManifest extends AbstractDatabaseObjectManifest {
 
     /**
+     * Database object type name.
+     */
+    public static final String TYPE_NAME = "Body state";
+
+    /**
      * Database table name for this object type.
      */
     public static final String DATABASE_TABLE_NAME = "bodystate";
@@ -34,8 +39,13 @@ public class BodyStateManifest extends AbstractDatabaseObjectManifest {
     }
 
     @Override
+    public String getTypeName() {
+        return TYPE_NAME;
+    }
+
+    @Override
     public String getTableName() {
-        return null;
+        return DATABASE_TABLE_NAME;
     }
 
     @Override

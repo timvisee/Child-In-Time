@@ -240,7 +240,10 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return Database object type name.
      */
-    public abstract String getTypeName();
+    @Deprecated
+    public String getTypeName() {
+        return getManifest().getTypeName();
+    }
 
     @Override
     protected AbstractDatabaseObject clone() throws CloneNotSupportedException {

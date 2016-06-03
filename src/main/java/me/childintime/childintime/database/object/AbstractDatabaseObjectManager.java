@@ -214,7 +214,9 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return Database object manager type name.
      */
-    public abstract String getTypeName();
+    public String getTypeName() {
+        return getManifest().getTypeName();
+    }
 
     /**
      * Get the database table name for this object manager.

@@ -8,6 +8,13 @@ public abstract class AbstractDatabaseObjectManifest {
     public AbstractDatabaseObjectManifest() { }
 
     /**
+     * Get the name of the current database object manager type.
+     *
+     * @return Database object manager type name.
+     */
+    public abstract String getTypeName();
+
+    /**
      * Get the database table name for the manifest´s object.
      *
      * @return Database table name.

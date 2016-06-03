@@ -14,11 +14,6 @@ public class GroupManager extends AbstractDatabaseObjectManager {
     }
 
     @Override
-    public String getTypeName() {
-        return "Group";
-    }
-
-    @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return GroupManifest.getInstance();
     }

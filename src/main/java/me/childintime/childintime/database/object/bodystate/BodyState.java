@@ -6,11 +6,6 @@ import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest
 public class BodyState extends AbstractDatabaseObject {
 
     /**
-     * Database object type name.
-     */
-    private static final String TYPE_NAME = "Body state";
-
-    /**
      * Constructor.
      *
      * @param id Database object id.
@@ -22,11 +17,6 @@ public class BodyState extends AbstractDatabaseObject {
     @Override
     public AbstractDatabaseObjectManifest getManifest() {
         return BodyStateManifest.getInstance();
-    }
-
-    @Override
-    public String getTypeName() {
-        return TYPE_NAME;
     }
 
     @Override
