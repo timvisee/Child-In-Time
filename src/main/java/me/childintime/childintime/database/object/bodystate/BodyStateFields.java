@@ -5,8 +5,6 @@ import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.student.Student;
 
-import java.util.Locale;
-
 public enum BodyStateFields implements DatabaseFieldsInterface{
 
     /**

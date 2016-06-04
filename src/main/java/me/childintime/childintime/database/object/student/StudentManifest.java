@@ -53,7 +53,8 @@ public class StudentManifest extends AbstractDatabaseObjectManifest {
     public DatabaseFieldsInterface[] getDefaultFields() {
         return new StudentFields[]{
                 StudentFields.FIRST_NAME,
-                StudentFields.LAST_NAME
+                StudentFields.LAST_NAME,
+                StudentFields.GROUP_ID
         };
     }
 
