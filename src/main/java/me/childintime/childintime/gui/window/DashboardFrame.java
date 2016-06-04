@@ -51,7 +51,7 @@ public class DashboardFrame extends JFrame {
 
         // Set the dialog location to the center of the screen
         setLocationByPlatform(true);
-        //setLocationRelativeTo(owner);
+        setLocationRelativeTo(null);
 
         // Bring the window to the front
         toFront();
