@@ -313,7 +313,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         JScrollPane tablePane = new JScrollPane(this.objectTable);
 
         // Set the table pane background color, to match the table's color
-        tablePane.getViewport().setBackground(Color.WHITE);
+        objectTable.setFillsViewportHeight(true);
 
         // Create a scroll pane with the database list and return it
         return tablePane;
