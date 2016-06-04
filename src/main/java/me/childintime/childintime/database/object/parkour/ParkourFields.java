@@ -4,21 +4,24 @@ import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
-import java.util.Locale;
-
 public enum ParkourFields implements DatabaseFieldsInterface{
 
     /**
      * ID.
      * Identifier of a parkour object.
      */
-    ID("id", false, DataType.INTEGER, null),
+    ID("ID", "id", false, DataType.INTEGER, null),
 
     /**
      * Description.
      * The description of a parkour.
      */
-    DESCRIPTION("description", true, DataType.STRING, null);
+    DESCRIPTION("Parkour", "description", true, DataType.STRING, null);
+
+    /**
+     * The display name for this field.
+     */
+    private String displayName;
 
     /**
      * The name of the field in the database.
@@ -44,16 +47,23 @@ public enum ParkourFields implements DatabaseFieldsInterface{
     /**
      * Constructor.
      *
+     * @param displayName Display name.
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
      * @param dataType Data type of the field.
      * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
      */
-    ParkourFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    ParkourFields(String displayName, String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
         this.dataType = dataType;
         this.referenceType = referenceType;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     @Override
@@ -74,10 +84,5 @@ public enum ParkourFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return toString().replace("_", " ").toLowerCase().toUpperCase(Locale.US);
     }
 }

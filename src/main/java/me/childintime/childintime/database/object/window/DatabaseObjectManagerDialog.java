@@ -4,9 +4,9 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.student.StudentFields;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
+import me.childintime.childintime.util.swing.TableUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -35,7 +35,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Data list instance.
      */
-    private JTable objectList;
+    private JTable objectTable;
 
     /**
      * Add button instance.
@@ -51,6 +51,16 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * Remove button instance.
      */
     private JButton removeButton;
+
+    /**
+     * Filters button instance.
+     */
+    private JButton filtersButton;
+
+    /**
+     * Columns button instance.
+     */
+    private JButton columnsButton;
 
     /**
      * List of abstract database objects being shown.
@@ -104,11 +114,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
             public void windowDeactivated(WindowEvent e) { }
         });
 
-        // Set the frame sizes
-        // TODO: Figure this out dynamically, using pack().
-        this.setMinimumSize(new Dimension(350, 465));
-        this.setPreferredSize(new Dimension(400, 450));
-        this.setSize(new Dimension(400, 450));
+        // Configure the frame size
+        configureSize();
 
         // Make the explicitly frame resizable
         this.setResizable(true);
@@ -123,6 +130,23 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
+     * Properly configure the window sizes for the current content.
+     */
+    private void configureSize() {
+        // Pack everything
+        pack();
+
+        // Get the minimum width and size
+        final int minWidth = getMinimumSize().width;
+        final int minHeight = getMinimumSize().height;
+
+        // Configure the sizes
+        setMinimumSize(new Dimension(minWidth + 50, minHeight + 50));
+        setPreferredSize(new Dimension(minWidth + 400, minHeight + 200));
+        setSize(new Dimension(minWidth + 400, minHeight + 200));
+    }
+
+    /**
      * Build the UI components for this window.
      */
     private void buildUi() {
@@ -133,82 +157,106 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.setLayout(new GridBagLayout());
 
         // Create the main panel, to put the question and answers in
-        JPanel pnlMain = new JPanel();
-        pnlMain.setLayout(new GridBagLayout());
+        JPanel mainPanel = new JPanel(new GridBagLayout());
 
         // Create the main label
-        final JLabel mainLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + "s.");
+        final JLabel instructionLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + "s.");
 
-        // Add the main label
+        // Add the instruction label
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 3;
-        c.insets = new Insets(0, 0, 25, 0);
-        pnlMain.add(mainLabel, c);
+        c.insets = new Insets(0, 0, 10, 0);
+        mainPanel.add(instructionLabel, c);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
+        // Add the objects management panel
+        c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
-        c.gridheight = 2;
-        c.insets = new Insets(0, 0, 10, 10);
-        pnlMain.add(new JLabel(this.objectManager.getTypeName() + "s:"), c);
-
-        // Create the database manager list and add it to the main panel
-        JScrollPane databaseList = buildUiList();
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
-        c.gridy = 1;
-        c.gridwidth = 1;
-        c.gridheight = 2;
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.insets = new Insets(0, 0, 0, 0);
-        pnlMain.add(databaseList, c);
-
-        // Create the manage button panel
-        JPanel manageButtonPanel = buildUiManageButtonsPanel();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
-        c.gridy = 1;
         c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.insets = new Insets(0, 10, 0, 0);
-        c.anchor = GridBagConstraints.NORTH;
-        pnlMain.add(manageButtonPanel, c);
+        c.weightx = 1;
+        c.weighty = 1;
+        c.insets = new Insets(0, 0, 0, 0);
+        mainPanel.add(buildUiObjectManagementPanel(), c);
 
-        // Create the control button panel
-        JPanel controlButtonPanel = buildUiCommitButtonsPanel();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
+        // Add the commit buttons panel
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
         c.gridy = 2;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+        c.weightx = 0;
+        c.weighty = 0;
         c.insets = new Insets(10, 10, 0, 0);
-        c.anchor = GridBagConstraints.SOUTH;
-        pnlMain.add(controlButtonPanel, c);
+        c.anchor = GridBagConstraints.EAST;
+        mainPanel.add(buildUiCommitButtonsPanel(), c);
 
-        // Configure the main panel placement and add it to the frame
+        // Add the main panel to the frame
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
         c.weightx = 1.0;
         c.weighty = 1.0;
         c.insets = new Insets(10, 10, 10, 10);
-        this.add(pnlMain, c);
+        this.add(mainPanel, c);
 
         // Update the button panel
         updateUiButtons();
     }
 
     /**
-     * Create a list to manage the database objects in.
+     * Build the object management panel.
      *
-     * @return Scroll pane with list.
+     * @return Object management panel.
      */
-    public JScrollPane buildUiList() {
+    private JPanel buildUiObjectManagementPanel() {
+        // Construct a grid bag constraints object to specify the placement of all components
+        GridBagConstraints c = new GridBagConstraints();
+
+        // Create the object table panel, and give it a titled border
+        JPanel objectPanel = new JPanel(new GridBagLayout());
+        objectPanel.setBorder(BorderFactory.createTitledBorder(this.objectManager.getTypeName() + "s"));
+
+        // Create the manage button panel
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(0, 4, 4, 10);
+        c.anchor = GridBagConstraints.NORTH;
+        objectPanel.add(buildUiManageButtonsPanel(), c);
+
+        // Create the manage button panel
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(0, 4, 4, 10);
+        c.anchor = GridBagConstraints.SOUTH;
+        objectPanel.add(buildUiViewSelectionButtonsPanel(), c);
+
+        // Create the database manager list and add it to the main panel
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridheight = 2;
+        c.insets = new Insets(0, 0, 4, 4);
+        objectPanel.add(buildUiTable(), c);
+
+        // Return the created panel
+        return objectPanel;
+    }
+
+    /**
+     * Create a table to manage the database objects in.
+     *
+     * @return Scroll pane with table.
+     */
+    private JScrollPane buildUiTable() {
         // Create the default list model
         this.objectTableModel = new AbstractTableModel() {
             @Override
@@ -239,29 +287,42 @@ public class DatabaseObjectManagerDialog extends JDialog {
         };
 
         // Refresh the list of databases objects and add them to the list
-        updateUiList();
+        updateUiTable();
 
         // Create the list and create an empty border
-        this.objectList = new JTable(this.objectTableModel);
-        this.objectList.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.objectTable = new JTable(this.objectTableModel);
+        this.objectTable.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        // Fit the table columns to it's content
+        TableUtils.fitColumns(this.objectTable);
 
         // Update the button panel on selection change
-        //this.objectList.addListSelectionListener(e -> updateUiButtons());
-        this.objectList.addMouseListener(new MouseAdapter() {
+        final ListSelectionModel selectionModel = this.objectTable.getSelectionModel();
+        selectionModel.addListSelectionListener(e -> updateUiButtons());
+
+        // Edit a table item when it's double clicked
+        this.objectTable.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 if(evt.getClickCount() == 2)
                     editDatabase();
             }
         });
 
+        // Create a scroll pane with the database table
+        JScrollPane tablePane = new JScrollPane(this.objectTable);
+
+        // Set the table pane background color, to match the table's color
+        objectTable.setFillsViewportHeight(true);
+
         // Create a scroll pane with the database list and return it
-        return new JScrollPane(this.objectList); // this.objectList
+        return tablePane;
     }
 
     /**
-     * Update the UI list with the current list of database objects.
+     * Update the UI list with the current table of database objects.
      */
-    public void updateUiList() {
+    private void updateUiTable() {
         // TODO: Update the table!
         if(this.objectTableModel != null)
             this.objectTableModel.fireTableDataChanged();
@@ -272,7 +333,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      *
      * @return Button panel.
      */
-    public JPanel buildUiManageButtonsPanel() {
+    private JPanel buildUiManageButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
@@ -283,12 +344,36 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.removeButton = new JButton("Remove");
 
         // Add the buttons to the panel
-        buttonPanel.add(addButton);
-        buttonPanel.add(editButton);
-        buttonPanel.add(removeButton);
-        addButton.addActionListener(e -> addDatabase());
-        editButton.addActionListener(e -> editDatabase());
-        removeButton.addActionListener(e -> removeDatabases());
+        buttonPanel.add(this.addButton);
+        buttonPanel.add(this.editButton);
+        buttonPanel.add(this.removeButton);
+        this.addButton.addActionListener(e -> addDatabase());
+        this.editButton.addActionListener(e -> editDatabase());
+        this.removeButton.addActionListener(e -> removeDatabases());
+
+        // Return the button panel
+        return buttonPanel;
+    }
+
+    /**
+     * Create the button panel to modify the shown features in the object list view.
+     *
+     * @return Button panel.
+     */
+    private JPanel buildUiViewSelectionButtonsPanel() {
+        // Create a panel to put the buttons in and set it's layout
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(2, 1, 10, 10));
+
+        // Create the buttons to add to the panel
+        this.filtersButton = new JButton("Filters...");
+        this.columnsButton = new JButton("Columns...");
+
+        // Add the buttons to the panel
+        buttonPanel.add(this.filtersButton);
+        buttonPanel.add(this.columnsButton);
+        this.filtersButton.addActionListener(e -> featureNotImplemented());
+        this.columnsButton.addActionListener(e -> featureNotImplemented());
 
         // Return the button panel
         return buttonPanel;
@@ -299,10 +384,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
      *
      * @return Button panel.
      */
-    public JPanel buildUiCommitButtonsPanel() {
+    private JPanel buildUiCommitButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        buttonPanel.setLayout(new GridLayout(1, 3, 10, 10));
 
         // Create the buttons to add to the panel
         JButton okButton = new JButton("OK");
@@ -336,7 +421,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Update the state of buttons in the button panel.
      */
-    public void updateUiButtons() {
+    private void updateUiButtons() {
         // Get the number of selected items
         int selected = getSelectedCount();
 
@@ -362,8 +447,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
             // Add the database
             this.objects.add(databaseObject);
 
-            // Refresh the list of databases
-            updateUiList();
+            // Refresh the table of databases
+            updateUiTable();
         }
     }
 
@@ -376,23 +461,24 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Get the selected database
-        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(this.objectList.getSelectedRow());
+        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(this.objectTable.getSelectedRow());
 
         // Show the edit dialog for this database
         // TODO: Implement the edit dialog here
         final AbstractDatabaseObject result = null; // DatabaseModifyDialog.showModify(this, selected)
 
-        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        // Feature not yet implemented, show a warning box
+        featureNotImplemented();
 
         // TODO: Update this?
         // Set the result, or remove it from the list if it's null
         if(result != null)
-            this.objects.set(this.objectList.getSelectedRow(), result);
+            this.objects.set(this.objectTable.getSelectedRow(), result);
         else
-            this.objects.remove(this.objectList.getSelectedRow());
+            this.objects.remove(this.objectTable.getSelectedRow());
 
         // Refresh the list
-        updateUiList();
+        updateUiTable();
     }
 
     /**
@@ -415,7 +501,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
                 return;
         }
 
-        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        // Feature not yet implemented, show a warning box
+        featureNotImplemented();
 
         // TODO: Improve this!
 //        // Delete the selected database object
@@ -423,8 +510,14 @@ public class DatabaseObjectManagerDialog extends JDialog {
 //            //noinspection RedundantCast
 //            this.objects.remove((AbstractDatabaseObject) databaseObject);
 
-        // Refresh the list
-        updateUiList();
+        // Refresh the table
+        updateUiTable();
+    }
+
+    // TODO: This should be removed!
+    @Deprecated
+    public void featureNotImplemented() {
+        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -433,7 +526,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * @return Number of selected database objects.
      */
     public int getSelectedCount() {
-        return this.objectList.getSelectedRowCount();
+        return this.objectTable.getSelectedRowCount();
     }
 
     /**

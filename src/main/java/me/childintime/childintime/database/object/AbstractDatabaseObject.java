@@ -117,7 +117,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         }
 
         // Join all the field names together to use it in the database query
-        String fieldsToFetch = String.join(", ", fieldNames);
+        String fieldsToFetch = String.join("`, `", fieldNames);
 
         try {
             // Get the database connection
@@ -125,8 +125,8 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
             // Prepare a statement to fetch the fields
             PreparedStatement fetchStatement = connection.prepareStatement(
-                    "SELECT " + fieldsToFetch.toString() + " " +
-                    "FROM " + getTableName() + " " +
+                    "SELECT `" + fieldsToFetch.toString() + "` " +
+                    "FROM `" + getTableName() + "` " +
                     "WHERE `id` = ?"
             );
 
@@ -198,23 +198,26 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         // Create a list to put the field values into
         List<Object> fieldValues = new ArrayList<>();
 
-        // Loop through the given list of fields
+        // Create a list of fields that need to be fetched
+        List<DatabaseFieldsInterface> fieldsToFetch = new ArrayList<>();
         for(DatabaseFieldsInterface field : fields) {
             // Make sure the field enum that is used is for the current class
             if(!getManifest().getFields().isInstance(field))
                 throw new Exception("Invalid database object fields configuration class used, not compatible with" +
                         "current database object type.");
 
-            // Make sure the field is cached
+            // Fetch the field if we haven't cached it yet
             if(!hasField(field))
-                // Fetch the field if it isn't cached
-                // TODO: Fetch all non-cached fields at once, instead of spending a query for each
-                if(!fetchField(field))
-                    throw new Exception("Failed to fetch field.");
-
-            // Add the field value to the output list
-            fieldValues.add(this.cachedFields.get(field));
+                fieldsToFetch.add(field);
         }
+
+        // Fetch the given fields
+        if(!fetchFields(fieldsToFetch.toArray(new DatabaseFieldsInterface[]{})))
+            throw new Exception("Failed to fetch database fields.");
+
+        // Get all fields values, add it to the result list
+        for(DatabaseFieldsInterface field : fields)
+            fieldValues.add(this.cachedFields.get(field));
 
         // Return the list of field values
         return fieldValues;

@@ -5,46 +5,49 @@ import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.group.Group;
 
-import java.util.Locale;
-
 public enum StudentFields implements DatabaseFieldsInterface {
 
     /**
      * ID.
      * Identifier of a student object.
      */
-    ID("id", false, DataType.INTEGER, null),
+    ID("ID", "id", false, DataType.INTEGER, null),
 
     /**
      * Student first name.
      * The first name of a student.
      */
-    FIRST_NAME("first_name", true, DataType.STRING, null),
+    FIRST_NAME("First name", "first_name", true, DataType.STRING, null),
 
     /**
      * Student last name.
      * The last name of a student.
      */
-    LAST_NAME("last_name", true, DataType.STRING, null),
+    LAST_NAME("Last name", "last_name", true, DataType.STRING, null),
 
     /**
      * Student gender.
      * The gender of a student.
      * True defines a man, false defines a woman.
      */
-    GENDER("gender", true, DataType.BOOLEAN, null),
+    GENDER("Gender", "gender", true, DataType.BOOLEAN, null),
 
     /**
      * Student birthdate.
      * The birthdate of a student.
      */
-    BIRTHDATE("birthdate", true, DataType.DATE, null),
+    BIRTHDATE("Birthdate", "birthdate", true, DataType.DATE, null),
 
     /**
      * Group ID.
      * The group instance a student is part of.
      */
-    GROUP_ID("group_id", true, DataType.REFERENCE, Group.class);
+    GROUP_ID("Group", "group_id", true, DataType.REFERENCE, Group.class);
+
+    /**
+     * The display name for this field.
+     */
+    private String displayName;
 
     /**
      * The name of the field in the database.
@@ -70,16 +73,23 @@ public enum StudentFields implements DatabaseFieldsInterface {
     /**
      * Constructor.
      *
+     * @param displayName Display name.
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
      * @param dataType Data type of the field.
      * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
      */
-    StudentFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    StudentFields(String displayName, String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
         this.dataType = dataType;
         this.referenceType = referenceType;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     @Override
@@ -100,10 +110,5 @@ public enum StudentFields implements DatabaseFieldsInterface {
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return toString().replace("_", " ").toLowerCase().toUpperCase(Locale.US);
     }
 }

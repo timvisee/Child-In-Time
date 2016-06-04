@@ -4,27 +4,30 @@ import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
-import java.util.Locale;
-
 public enum SchoolFields implements DatabaseFieldsInterface{
 
     /**
      * ID.
      * Identifier of a school object.
      */
-    ID("id", false, DataType.INTEGER, null),
+    ID("ID", "id", false, DataType.INTEGER, null),
 
     /**
      * School name.
      * The name of a school.
      */
-    NAME("name", true, DataType.STRING, null),
+    NAME("School", "name", true, DataType.STRING, null),
 
     /**
      * School commune.
      * The commune a school is located in.
      */
-    COMMUNE("commune", true, DataType.STRING, null);
+    COMMUNE("Commune", "commune", true, DataType.STRING, null);
+
+    /**
+     * The display name for this field.
+     */
+    private String displayName;
 
     /**
      * The name of the field in the database.
@@ -50,16 +53,23 @@ public enum SchoolFields implements DatabaseFieldsInterface{
     /**
      * Constructor.
      *
+     * @param displayName Display name.
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
      * @param dataType Data type of the field.
      * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
      */
-    SchoolFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    SchoolFields(String displayName, String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
         this.dataType = dataType;
         this.referenceType = referenceType;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     @Override
@@ -80,10 +90,5 @@ public enum SchoolFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return toString().replace("_", " ").toLowerCase().toUpperCase(Locale.US);
     }
 }

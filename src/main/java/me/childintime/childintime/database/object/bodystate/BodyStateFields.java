@@ -5,39 +5,42 @@ import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.student.Student;
 
-import java.util.Locale;
-
 public enum BodyStateFields implements DatabaseFieldsInterface{
 
     /**
      * ID.
      * Identifier of a body state object.
      */
-    ID("id", false, DataType.INTEGER, null),
+    ID("ID", "id", false, DataType.INTEGER, null),
 
     /**
      * Student ID.
      * The student of a body state instance.
      */
-    STUDENT_ID("student_id", false, DataType.INTEGER, Student.class),
+    STUDENT_ID("Student", "student_id", false, DataType.INTEGER, Student.class),
 
     /**
      * Measurement date.
      * The date a body state has been measured on.
      */
-    DATE("date", true, DataType.DATE, null),
+    DATE("Measurement date", "date", true, DataType.DATE, null),
 
     /**
      * Body state length.
      * The body length in centimeters.
      */
-    LENGTH("length", true, DataType.INTEGER, null),
+    LENGTH("Length", "length", true, DataType.INTEGER, null),
 
     /**
      * Body state weight.
      * The body weight in grams.
      */
-    WEIGHT("weight", true, DataType.INTEGER, null);
+    WEIGHT("Weight", "weight", true, DataType.INTEGER, null);
+
+    /**
+     * The display name for this field.
+     */
+    private String displayName;
 
     /**
      * The name of the field in the database.
@@ -63,16 +66,23 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
     /**
      * Constructor.
      *
+     * @param displayName Display name.
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
      * @param dataType Data type of the field.
      * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
      */
-    BodyStateFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    BodyStateFields(String displayName, String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
         this.dataType = dataType;
         this.referenceType = referenceType;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     @Override
@@ -93,10 +103,5 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return toString().replace("_", " ").toLowerCase().toUpperCase(Locale.US);
     }
 }
