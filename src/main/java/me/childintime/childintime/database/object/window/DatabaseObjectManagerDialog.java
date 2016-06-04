@@ -263,7 +263,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
         TableUtils.fitColumns(this.objectTable);
 
         // Update the button panel on selection change
-        //this.objectList.addListSelectionListener(e -> updateUiButtons());
+        final ListSelectionModel selectionModel = this.objectTable.getSelectionModel();
+        selectionModel.addListSelectionListener(e -> updateUiButtons());
+
+        // Edit a table item when it's double clicked
         this.objectTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
