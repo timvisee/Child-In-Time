@@ -104,12 +104,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
             public void windowDeactivated(WindowEvent e) { }
         });
 
-        // Set the frame sizes
-        // TODO: Figure this out dynamically, using pack().
-        //this.setMinimumSize(new Dimension(350, 465));
-        //this.setPreferredSize(new Dimension(400, 450));
-        //this.setSize(new Dimension(400, 450));
-        pack();
+        // Configure the frame size
+        configureSize();
 
         // Make the explicitly frame resizable
         this.setResizable(true);
@@ -121,6 +117,23 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // Show the form
         if(show)
             this.setVisible(true);
+    }
+
+    /**
+     * Properly configure the window sizes for the current content.
+     */
+    private void configureSize() {
+        // Pack everything
+        pack();
+
+        // Get the minimum width and size
+        final int minWidth = getMinimumSize().width;
+        final int minHeight = getMinimumSize().height;
+
+        // Configure the sizes
+        setMinimumSize(new Dimension(minWidth + 50, minHeight + 50));
+        setPreferredSize(new Dimension(minWidth + 400, minHeight + 200));
+        setSize(new Dimension(minWidth + 400, minHeight + 200));
     }
 
     /**
