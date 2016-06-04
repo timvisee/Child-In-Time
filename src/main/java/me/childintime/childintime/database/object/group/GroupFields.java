@@ -5,8 +5,6 @@ import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.school.School;
 
-import java.util.Locale;
-
 public enum GroupFields implements DatabaseFieldsInterface{
 
     /**

@@ -4,8 +4,6 @@ import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
-import java.util.Locale;
-
 public enum SchoolFields implements DatabaseFieldsInterface{
 
     /**
