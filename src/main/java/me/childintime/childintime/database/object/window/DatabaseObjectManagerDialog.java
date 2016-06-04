@@ -208,7 +208,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
         objectPanel.setBorder(BorderFactory.createTitledBorder(this.objectManager.getTypeName() + "s"));
 
         // Create the manage button panel
-        JPanel manageButtonPanel = buildUiManageButtonsPanel();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
@@ -216,17 +215,16 @@ public class DatabaseObjectManagerDialog extends JDialog {
         c.weighty = 0;
         c.insets = new Insets(0, 4, 4, 10);
         c.anchor = GridBagConstraints.NORTH;
-        objectPanel.add(manageButtonPanel, c);
+        objectPanel.add(buildUiManageButtonsPanel(), c);
 
         // Create the database manager list and add it to the main panel
-        JScrollPane objectTablePane = buildUiTable();
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 0;
         c.weightx = 1;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 4, 4);
-        objectPanel.add(objectTablePane, c);
+        objectPanel.add(buildUiTable(), c);
 
         // Return the created panel
         return objectPanel;
