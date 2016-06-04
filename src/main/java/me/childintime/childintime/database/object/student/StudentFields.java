@@ -88,6 +88,11 @@ public enum StudentFields implements DatabaseFieldsInterface {
     }
 
     @Override
+    public String getDisplayName() {
+        return this.displayName;
+    }
+
+    @Override
     public String getDatabaseField() {
         return databaseField;
     }
