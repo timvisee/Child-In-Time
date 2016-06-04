@@ -70,6 +70,11 @@ public enum SchoolFields implements DatabaseFieldsInterface{
     }
 
     @Override
+    public String getDisplayName() {
+        return this.displayName;
+    }
+
+    @Override
     public String getDatabaseField() {
         return databaseField;
     }
@@ -87,10 +92,5 @@ public enum SchoolFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return toString().replace("_", " ").toLowerCase().toUpperCase(Locale.US);
     }
 }
