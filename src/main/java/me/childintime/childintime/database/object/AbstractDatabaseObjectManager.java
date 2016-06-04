@@ -41,7 +41,7 @@ public abstract class AbstractDatabaseObjectManager {
         // Join the string, comma separated
         StringBuilder fieldsToFetch = new StringBuilder("id");
         for (DatabaseFieldsInterface field : fields)
-            fieldsToFetch.append(", ").append(field.getDatabaseField());
+            fieldsToFetch.append("`, `").append(field.getDatabaseField());
 
         // Create a list with fetched objects
         List<AbstractDatabaseObject> objects = new ArrayList<>();
@@ -53,8 +53,8 @@ public abstract class AbstractDatabaseObjectManager {
 
             // Create a statement to fetch the objects
             PreparedStatement fetchStatement = connection.prepareStatement(
-                    "SELECT " + fieldsToFetch.toString() + " " +
-                    "FROM " + getTableName()
+                    "SELECT `" + fieldsToFetch.toString() + "` " +
+                    "FROM `" + getTableName() + "`"
             );
 
             // Fetch the data
