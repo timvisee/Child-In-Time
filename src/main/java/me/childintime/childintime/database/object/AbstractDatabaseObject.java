@@ -123,11 +123,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
             // Get the database connection
             final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
-            System.out.println("SQL QUERY::::::");
-            System.out.println("SELECT `" + fieldsToFetch.toString() + "` " +
-                    "FROM `" + getTableName() + "` " +
-                    "WHERE `id` = ?");
-
             // Prepare a statement to fetch the fields
             PreparedStatement fetchStatement = connection.prepareStatement(
                     "SELECT `" + fieldsToFetch.toString() + "` " +
