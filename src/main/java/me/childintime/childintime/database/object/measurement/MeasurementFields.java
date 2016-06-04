@@ -14,31 +14,36 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a measurement object.
      */
-    ID("id", false, DataType.INTEGER, null),
+    ID("ID", "id", false, DataType.INTEGER, null),
 
     /**
      * Student ID.
      * The student instance a measurement is for.
      */
-    STUDENT_ID("student_id", false, DataType.INTEGER, Student.class),
+    STUDENT_ID("Student", "student_id", false, DataType.INTEGER, Student.class),
 
     /**
      * Measurement date.
      * The date a measurement was tracked on.
      */
-    DATE("date", true, DataType.DATE, null),
+    DATE("Measurement date", "date", true, DataType.DATE, null),
 
     /**
      * Measurement time.
      * The time in milliseconds of a measurement.
      */
-    TIME("time", true, DataType.INTEGER, null),
+    TIME("Time", "time", true, DataType.INTEGER, null),
 
     /**
      * Parkour ID.
      * The parkour instance a measurement is tracked on.
      */
-    PARKOUR_ID("parkour_id", false, DataType.REFERENCE, Parkour.class);
+    PARKOUR_ID("Parkour", "parkour_id", false, DataType.REFERENCE, Parkour.class);
+
+    /**
+     * The display name for this field.
+     */
+    private String displayName;
 
     /**
      * The name of the field in the database.
@@ -64,16 +69,23 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
     /**
      * Constructor.
      *
+     * @param displayName Display name.
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
      * @param dataType Data type of the field.
      * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
      */
-    MeasurementFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    MeasurementFields(String displayName, String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
         this.dataType = dataType;
         this.referenceType = referenceType;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     @Override

@@ -13,19 +13,24 @@ public enum GroupFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a group object.
      */
-    ID("id", false, DataType.INTEGER, null),
+    ID("ID", "id", false, DataType.INTEGER, null),
 
     /**
      * Group name.
      * Display name of a group.
      */
-    NAME("name", true, DataType.STRING, null),
+    NAME("Group", "name", true, DataType.STRING, null),
 
     /**
      * School ID.
      * The school instance a group is in.
      */
-    SCHOOL_ID("school_id", false, DataType.REFERENCE, School.class);
+    SCHOOL_ID("School", "school_id", false, DataType.REFERENCE, School.class);
+
+    /**
+     * The display name for this field.
+     */
+    private String displayName;
 
     /**
      * The name of the field in the database.
@@ -51,16 +56,23 @@ public enum GroupFields implements DatabaseFieldsInterface{
     /**
      * Constructor.
      *
+     * @param displayName Display name.
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
      * @param dataType Data type of the field.
      * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
      */
-    GroupFields(String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    GroupFields(String displayName, String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+        this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
         this.dataType = dataType;
         this.referenceType = referenceType;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     @Override
