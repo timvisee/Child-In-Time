@@ -147,74 +147,89 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.setLayout(new GridBagLayout());
 
         // Create the main panel, to put the question and answers in
-        JPanel pnlMain = new JPanel();
-        pnlMain.setLayout(new GridBagLayout());
+        JPanel mainPanel = new JPanel(new GridBagLayout());
 
         // Create the main label
-        final JLabel mainLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + "s.");
+        final JLabel instructionLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + "s.");
 
-        // Add the main label
+        // Add the instruction label
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 3;
-        c.insets = new Insets(0, 0, 25, 0);
-        pnlMain.add(mainLabel, c);
+        c.insets = new Insets(0, 0, 10, 0);
+        mainPanel.add(instructionLabel, c);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
+        // Add the objects management panel
+        c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
-        c.gridheight = 2;
-        c.insets = new Insets(0, 0, 10, 10);
-        pnlMain.add(new JLabel(this.objectManager.getTypeName() + "s:"), c);
-
-        // Create the database manager list and add it to the main panel
-        JScrollPane databaseList = buildUiTable();
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
-        c.gridy = 1;
-        c.gridwidth = 1;
-        c.gridheight = 2;
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.insets = new Insets(0, 0, 0, 0);
-        pnlMain.add(databaseList, c);
-
-        // Create the manage button panel
-        JPanel manageButtonPanel = buildUiManageButtonsPanel();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
-        c.gridy = 1;
         c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.insets = new Insets(0, 10, 0, 0);
-        c.anchor = GridBagConstraints.NORTH;
-        pnlMain.add(manageButtonPanel, c);
+        c.weightx = 1;
+        c.weighty = 1;
+        c.insets = new Insets(0, 0, 0, 0);
+        mainPanel.add(buildUiObjectManagementPanel(), c);
 
-        // Create the control button panel
-        JPanel controlButtonPanel = buildUiCommitButtonsPanel();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
+        // Add the commit buttons panel
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
         c.gridy = 2;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+        c.weightx = 0;
+        c.weighty = 0;
         c.insets = new Insets(10, 10, 0, 0);
-        c.anchor = GridBagConstraints.SOUTH;
-        pnlMain.add(controlButtonPanel, c);
+        c.anchor = GridBagConstraints.EAST;
+        mainPanel.add(buildUiCommitButtonsPanel(), c);
 
-        // Configure the main panel placement and add it to the frame
+        // Add the main panel to the frame
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
         c.weightx = 1.0;
         c.weighty = 1.0;
         c.insets = new Insets(10, 10, 10, 10);
-        this.add(pnlMain, c);
+        this.add(mainPanel, c);
 
         // Update the button panel
         updateUiButtons();
+    }
+
+    /**
+     * Build the object management panel.
+     *
+     * @return Object management panel.
+     */
+    private JPanel buildUiObjectManagementPanel() {
+        // Construct a grid bag constraints object to specify the placement of all components
+        GridBagConstraints c = new GridBagConstraints();
+
+        // Create the object table panel, and give it a titled border
+        JPanel objectPanel = new JPanel(new GridBagLayout());
+        objectPanel.setBorder(BorderFactory.createTitledBorder(this.objectManager.getTypeName() + "s"));
+
+        // Create the database manager list and add it to the main panel
+        JScrollPane objectTablePane = buildUiTable();
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.insets = new Insets(0, 6, 6, 0);
+        objectPanel.add(objectTablePane, c);
+
+        // Create the manage button panel
+        JPanel manageButtonPanel = buildUiManageButtonsPanel();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(0, 10, 6, 6);
+        c.anchor = GridBagConstraints.NORTH;
+        objectPanel.add(manageButtonPanel, c);
+
+        // Return the created panel
+        return objectPanel;
     }
 
     /**
@@ -222,7 +237,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      *
      * @return Scroll pane with table.
      */
-    public JScrollPane buildUiTable() {
+    private JScrollPane buildUiTable() {
         // Create the default list model
         this.objectTableModel = new AbstractTableModel() {
             @Override
@@ -288,7 +303,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Update the UI list with the current table of database objects.
      */
-    public void updateUiTable() {
+    private void updateUiTable() {
         // TODO: Update the table!
         if(this.objectTableModel != null)
             this.objectTableModel.fireTableDataChanged();
@@ -299,7 +314,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      *
      * @return Button panel.
      */
-    public JPanel buildUiManageButtonsPanel() {
+    private JPanel buildUiManageButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
@@ -326,10 +341,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
      *
      * @return Button panel.
      */
-    public JPanel buildUiCommitButtonsPanel() {
+    private JPanel buildUiCommitButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        buttonPanel.setLayout(new GridLayout(1, 3, 10, 10));
 
         // Create the buttons to add to the panel
         JButton okButton = new JButton("OK");
@@ -363,7 +378,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Update the state of buttons in the button panel.
      */
-    public void updateUiButtons() {
+    private void updateUiButtons() {
         // Get the number of selected items
         int selected = getSelectedCount();
 
