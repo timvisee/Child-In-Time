@@ -53,6 +53,16 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JButton removeButton;
 
     /**
+     * Filters button instance.
+     */
+    private JButton filtersButton;
+
+    /**
+     * Columns button instance.
+     */
+    private JButton columnsButton;
+
+    /**
      * List of abstract database objects being shown.
      */
     private List<AbstractDatabaseObject> objects = new ArrayList<>();
@@ -217,12 +227,23 @@ public class DatabaseObjectManagerDialog extends JDialog {
         c.anchor = GridBagConstraints.NORTH;
         objectPanel.add(buildUiManageButtonsPanel(), c);
 
+        // Create the manage button panel
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(0, 4, 4, 10);
+        c.anchor = GridBagConstraints.SOUTH;
+        objectPanel.add(buildUiViewSelectionButtonsPanel(), c);
+
         // Create the database manager list and add it to the main panel
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 0;
         c.weightx = 1;
         c.weighty = 1;
+        c.gridheight = 2;
         c.insets = new Insets(0, 0, 4, 4);
         objectPanel.add(buildUiTable(), c);
 
@@ -323,12 +344,36 @@ public class DatabaseObjectManagerDialog extends JDialog {
         this.removeButton = new JButton("Remove");
 
         // Add the buttons to the panel
-        buttonPanel.add(addButton);
-        buttonPanel.add(editButton);
-        buttonPanel.add(removeButton);
-        addButton.addActionListener(e -> addDatabase());
-        editButton.addActionListener(e -> editDatabase());
-        removeButton.addActionListener(e -> removeDatabases());
+        buttonPanel.add(this.addButton);
+        buttonPanel.add(this.editButton);
+        buttonPanel.add(this.removeButton);
+        this.addButton.addActionListener(e -> addDatabase());
+        this.editButton.addActionListener(e -> editDatabase());
+        this.removeButton.addActionListener(e -> removeDatabases());
+
+        // Return the button panel
+        return buttonPanel;
+    }
+
+    /**
+     * Create the button panel to modify the shown features in the object list view.
+     *
+     * @return Button panel.
+     */
+    private JPanel buildUiViewSelectionButtonsPanel() {
+        // Create a panel to put the buttons in and set it's layout
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(2, 1, 10, 10));
+
+        // Create the buttons to add to the panel
+        this.filtersButton = new JButton("Filters...");
+        this.columnsButton = new JButton("Columns...");
+
+        // Add the buttons to the panel
+        buttonPanel.add(this.filtersButton);
+        buttonPanel.add(this.columnsButton);
+        this.filtersButton.addActionListener(e -> featureNotImplemented());
+        this.columnsButton.addActionListener(e -> featureNotImplemented());
 
         // Return the button panel
         return buttonPanel;
@@ -422,7 +467,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // TODO: Implement the edit dialog here
         final AbstractDatabaseObject result = null; // DatabaseModifyDialog.showModify(this, selected)
 
-        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        // Feature not yet implemented, show a warning box
+        featureNotImplemented();
 
         // TODO: Update this?
         // Set the result, or remove it from the list if it's null
@@ -455,7 +501,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
                 return;
         }
 
-        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        // Feature not yet implemented, show a warning box
+        featureNotImplemented();
 
         // TODO: Improve this!
 //        // Delete the selected database object
@@ -465,6 +512,12 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Refresh the table
         updateUiTable();
+    }
+
+    // TODO: This should be removed!
+    @Deprecated
+    public void featureNotImplemented() {
+        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
     }
 
     /**
