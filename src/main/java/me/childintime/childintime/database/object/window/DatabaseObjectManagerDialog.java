@@ -4,9 +4,9 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.student.StudentFields;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
+import me.childintime.childintime.util.swing.TableUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -35,7 +35,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Data list instance.
      */
-    private JTable objectList;
+    private JTable objectTable;
 
     /**
      * Add button instance.
@@ -106,9 +106,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Set the frame sizes
         // TODO: Figure this out dynamically, using pack().
-        this.setMinimumSize(new Dimension(350, 465));
-        this.setPreferredSize(new Dimension(400, 450));
-        this.setSize(new Dimension(400, 450));
+        //this.setMinimumSize(new Dimension(350, 465));
+        //this.setPreferredSize(new Dimension(400, 450));
+        //this.setSize(new Dimension(400, 450));
+        pack();
 
         // Make the explicitly frame resizable
         this.setResizable(true);
@@ -156,7 +157,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         pnlMain.add(new JLabel(this.objectManager.getTypeName() + "s:"), c);
 
         // Create the database manager list and add it to the main panel
-        JScrollPane databaseList = buildUiList();
+        JScrollPane databaseList = buildUiTable();
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 1;
@@ -204,11 +205,11 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Create a list to manage the database objects in.
+     * Create a table to manage the database objects in.
      *
-     * @return Scroll pane with list.
+     * @return Scroll pane with table.
      */
-    public JScrollPane buildUiList() {
+    public JScrollPane buildUiTable() {
         // Create the default list model
         this.objectTableModel = new AbstractTableModel() {
             @Override
@@ -239,15 +240,19 @@ public class DatabaseObjectManagerDialog extends JDialog {
         };
 
         // Refresh the list of databases objects and add them to the list
-        updateUiList();
+        updateUiTable();
 
         // Create the list and create an empty border
-        this.objectList = new JTable(this.objectTableModel);
-        this.objectList.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.objectTable = new JTable(this.objectTableModel);
+        this.objectTable.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        // Fit the table columns to it's content
+        TableUtils.fitColumns(this.objectTable);
 
         // Update the button panel on selection change
         //this.objectList.addListSelectionListener(e -> updateUiButtons());
-        this.objectList.addMouseListener(new MouseAdapter() {
+        this.objectTable.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 if(evt.getClickCount() == 2)
                     editDatabase();
@@ -255,13 +260,13 @@ public class DatabaseObjectManagerDialog extends JDialog {
         });
 
         // Create a scroll pane with the database list and return it
-        return new JScrollPane(this.objectList); // this.objectList
+        return new JScrollPane(this.objectTable);
     }
 
     /**
-     * Update the UI list with the current list of database objects.
+     * Update the UI list with the current table of database objects.
      */
-    public void updateUiList() {
+    public void updateUiTable() {
         // TODO: Update the table!
         if(this.objectTableModel != null)
             this.objectTableModel.fireTableDataChanged();
@@ -362,8 +367,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
             // Add the database
             this.objects.add(databaseObject);
 
-            // Refresh the list of databases
-            updateUiList();
+            // Refresh the table of databases
+            updateUiTable();
         }
     }
 
@@ -376,7 +381,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Get the selected database
-        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(this.objectList.getSelectedRow());
+        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(this.objectTable.getSelectedRow());
 
         // Show the edit dialog for this database
         // TODO: Implement the edit dialog here
@@ -387,12 +392,12 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // TODO: Update this?
         // Set the result, or remove it from the list if it's null
         if(result != null)
-            this.objects.set(this.objectList.getSelectedRow(), result);
+            this.objects.set(this.objectTable.getSelectedRow(), result);
         else
-            this.objects.remove(this.objectList.getSelectedRow());
+            this.objects.remove(this.objectTable.getSelectedRow());
 
         // Refresh the list
-        updateUiList();
+        updateUiTable();
     }
 
     /**
@@ -423,8 +428,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
 //            //noinspection RedundantCast
 //            this.objects.remove((AbstractDatabaseObject) databaseObject);
 
-        // Refresh the list
-        updateUiList();
+        // Refresh the table
+        updateUiTable();
     }
 
     /**
@@ -433,7 +438,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * @return Number of selected database objects.
      */
     public int getSelectedCount() {
-        return this.objectList.getSelectedRowCount();
+        return this.objectTable.getSelectedRowCount();
     }
 
     /**
