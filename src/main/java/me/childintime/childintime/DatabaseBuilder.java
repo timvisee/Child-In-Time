@@ -622,20 +622,12 @@ public class DatabaseBuilder {
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `user` VALUES (NULL, ?, ?);");
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-                prepared.setString(1, "admin");
-                prepared.setString(2, "21232f297a57a5a743894a0e4a801fc3"); // MD5('admin')
-                prepared.execute();
-                break;
+        // Fill the prepared statement
+        prepared.setString(1, "admin");
+        prepared.setString(2, "21232f297a57a5a743894a0e4a801fc3"); // MD5('admin')
 
-            case SQLITE:
-                prepared.setString(1, "admin");
-                prepared.setString(2, "21232f297a57a5a743894a0e4a801fc3"); // MD5('admin')
-                prepared.execute();
-                break;
-        }
+        // Execute the prepared statement
+        prepared.execute();
     }
 
     /**
@@ -650,31 +642,14 @@ public class DatabaseBuilder {
         // Determine the number of schools to generate
         final int schoolCount = this.faker.number().numberBetween(3, 6);
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-                // Loop for the determined count
-                for(int i = 0; i < schoolCount; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, this.faker.university().name());
-                    prepared.setString(2, this.faker.address().city());
+        // Loop for the determined count
+        for(int i = 0; i < schoolCount; i++) {
+            // Fill the prepared statement
+            prepared.setString(1, this.faker.university().name());
+            prepared.setString(2, this.faker.address().city());
 
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
-
-            case SQLITE:
-                // Loop for the determined count
-                for(int i = 0; i < schoolCount; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, this.faker.university().name());
-                    prepared.setString(2, this.faker.address().city());
-
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
+            // Execute the prepared statement
+            prepared.execute();
         }
     }
 
@@ -690,26 +665,20 @@ public class DatabaseBuilder {
         // Determine the number of students to generate
         final int teacherCount = this.faker.number().numberBetween(10, 15);
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-            case SQLITE:
-                // Loop for the determined count
-                for(int i = 0; i < teacherCount; i++) {
-                    // Generate a name
-                    Name name = this.faker.name();
+        // Loop for the determined count
+        for(int i = 0; i < teacherCount; i++) {
+            // Generate a name
+            Name name = this.faker.name();
 
-                    // Fill the prepared statement
-                    prepared.setString(1, name.firstName());
-                    prepared.setString(2, name.lastName());
-                    prepared.setInt(3, this.faker.number().numberBetween(0, 2));
-                    prepared.setInt(4, this.faker.number().numberBetween(0, 2));
-                    prepared.setInt(5, this.faker.number().numberBetween(1, 4));
+            // Fill the prepared statement
+            prepared.setString(1, name.firstName());
+            prepared.setString(2, name.lastName());
+            prepared.setInt(3, this.faker.number().numberBetween(0, 2));
+            prepared.setInt(4, this.faker.number().numberBetween(0, 2));
+            prepared.setInt(5, this.faker.number().numberBetween(1, 4));
 
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
+            // Execute the prepared statement
+            prepared.execute();
         }
     }
 
@@ -722,31 +691,14 @@ public class DatabaseBuilder {
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `group` VALUES (NULL, ?, ?);");
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-                // Insert default groups
-                for(int i = 0; i < 9; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, "Group " + ((i % 3) + 1));
-                    prepared.setInt(2, (i / 3) + 1);
+        // Insert default groups
+        for(int i = 0; i < 9; i++) {
+            // Fill the prepared statement
+            prepared.setString(1, "Group " + ((i % 3) + 1));
+            prepared.setInt(2, (i / 3) + 1);
 
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
-
-            case SQLITE:
-                // Insert default groups
-                for(int i = 0; i < 9; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, "Group " + ((i % 3) + 1));
-                    prepared.setInt(2, (i / 3) + 1);
-
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
+            // Execute the prepared statement
+            prepared.execute();
         }
     }
 
@@ -762,26 +714,20 @@ public class DatabaseBuilder {
         // Determine the number of students to generate
         final int studentCount = this.faker.number().numberBetween(50, 100);
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-            case SQLITE:
-                // Loop for the determined count
-                for(int i = 0; i < studentCount; i++) {
-                    // Generate a name
-                    Name name = this.faker.name();
+        // Loop for the determined count
+        for(int i = 0; i < studentCount; i++) {
+            // Generate a name
+            Name name = this.faker.name();
 
-                    // Fill the prepared statement
-                    prepared.setString(1, name.firstName());
-                    prepared.setString(2, name.lastName());
-                    prepared.setInt(3, this.faker.number().numberBetween(0, 2));
-                    prepared.setString(4, dateFormat.format(this.faker.date().past(20 * 356, TimeUnit.DAYS)));
-                    prepared.setInt(5, this.faker.number().numberBetween(1, 10));
+            // Fill the prepared statement
+            prepared.setString(1, name.firstName());
+            prepared.setString(2, name.lastName());
+            prepared.setInt(3, this.faker.number().numberBetween(0, 2));
+            prepared.setString(4, dateFormat.format(this.faker.date().past(20 * 356, TimeUnit.DAYS)));
+            prepared.setInt(5, this.faker.number().numberBetween(1, 10));
 
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
+            // Execute the prepared statement
+            prepared.execute();
         }
     }
 
@@ -797,35 +743,16 @@ public class DatabaseBuilder {
         // Determine the number of students to generate
         final int bodyStateCount = this.faker.number().numberBetween(50, 100);
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-                // Loop for the determined count
-                for(int i = 0; i < bodyStateCount; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
-                    prepared.setInt(2, this.faker.number().numberBetween(110, 160));
-                    prepared.setInt(3, this.faker.number().numberBetween(30000, 55000));
-                    prepared.setInt(4, this.faker.number().numberBetween(1, 51));
+        // Loop for the determined count
+        for(int i = 0; i < bodyStateCount; i++) {
+            // Fill the prepared statement
+            prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
+            prepared.setInt(2, this.faker.number().numberBetween(110, 160));
+            prepared.setInt(3, this.faker.number().numberBetween(30000, 55000));
+            prepared.setInt(4, this.faker.number().numberBetween(1, 51));
 
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
-
-            case SQLITE:
-                // Loop for the determined count
-                for(int i = 0; i < bodyStateCount; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
-                    prepared.setInt(2, this.faker.number().numberBetween(110, 160));
-                    prepared.setInt(3, this.faker.number().numberBetween(30000, 55000));
-                    prepared.setInt(4, this.faker.number().numberBetween(1, 51));
-
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
+            // Execute the prepared statement
+            prepared.execute();
         }
     }
 
@@ -838,29 +765,13 @@ public class DatabaseBuilder {
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `parkour` VALUES (NULL, ?);");
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-                // Insert default parkours
-                for(int i = 0; i < 3; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, "Parkour " + (i + 1));
+        // Insert default parkours
+        for(int i = 0; i < 3; i++) {
+            // Fill the prepared statement
+            prepared.setString(1, "Parkour " + (i + 1));
 
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
-
-            case SQLITE:
-                // Insert default parkours
-                for(int i = 0; i < 3; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, "Parkour " + (i + 1));
-
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
+            // Execute the prepared statement
+            prepared.execute();
         }
     }
 
@@ -876,35 +787,16 @@ public class DatabaseBuilder {
         // Determine the number of students to generate
         final int bodyStateCount = this.faker.number().numberBetween(50, 100);
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-                // Loop for the determined count
-                for(int i = 0; i < bodyStateCount; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
-                    prepared.setInt(2, this.faker.number().numberBetween(16000, 30000));
-                    prepared.setInt(3, this.faker.number().numberBetween(1, 4));
-                    prepared.setInt(4, this.faker.number().numberBetween(1, 51));
+        // Loop for the determined count
+        for(int i = 0; i < bodyStateCount; i++) {
+            // Fill the prepared statement
+            prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
+            prepared.setInt(2, this.faker.number().numberBetween(16000, 30000));
+            prepared.setInt(3, this.faker.number().numberBetween(1, 4));
+            prepared.setInt(4, this.faker.number().numberBetween(1, 51));
 
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
-
-            case SQLITE:
-                // Loop for the determined count
-                for(int i = 0; i < bodyStateCount; i++) {
-                    // Fill the prepared statement
-                    prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
-                    prepared.setInt(2, this.faker.number().numberBetween(16000, 30000));
-                    prepared.setInt(3, this.faker.number().numberBetween(1, 4));
-                    prepared.setInt(4, this.faker.number().numberBetween(1, 51));
-
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
+            // Execute the prepared statement
+            prepared.execute();
         }
     }
 
@@ -917,31 +809,14 @@ public class DatabaseBuilder {
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `group_teacher` VALUES (?, ?);");
 
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-                // Insert default group teachers
-                for(int i = 0; i < 9; i++) {
-                    // Fill the prepared statement
-                    prepared.setInt(1, i + 1);
-                    prepared.setInt(2, (i % 3) + 1);
+        // Insert default group teachers
+        for(int i = 0; i < 9; i++) {
+            // Fill the prepared statement
+            prepared.setInt(1, i + 1);
+            prepared.setInt(2, (i % 3) + 1);
 
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
-
-            case SQLITE:
-                // Insert default group teachers
-                for(int i = 0; i < 9; i++) {
-                    // Fill the prepared statement
-                    prepared.setInt(1, i + 1);
-                    prepared.setInt(2, (i % 3) + 1);
-
-                    // Execute the prepared statement
-                    prepared.execute();
-                }
-                break;
+            // Execute the prepared statement
+            prepared.execute();
         }
     }
 }
