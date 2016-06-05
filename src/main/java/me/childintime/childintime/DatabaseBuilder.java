@@ -127,7 +127,7 @@ public class DatabaseBuilder {
         createMetaDataTables("measurement");
 
         // Fill the user table
-        this.progressDialog.setStatus("Inserting default data...");
+        this.progressDialog.setStatus("Generating fake data...");
         fillTableUser();
         this.progressDialog.increaseProgressValue();
 
@@ -651,23 +651,21 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableUser() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `user` VALUES (NULL, ?, ?);");
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `user` VALUES" +
-                        "  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');"
-                );
+                prepared.setString(1, "admin");
+                prepared.setString(2, "21232f297a57a5a743894a0e4a801fc3"); // MD5('admin')
+                prepared.execute();
                 break;
 
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `user` VALUES" +
-                        "  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');"
-                );
+                prepared.setString(1, "admin");
+                prepared.setString(2, "21232f297a57a5a743894a0e4a801fc3"); // MD5('admin')
+                prepared.execute();
                 break;
         }
     }
@@ -678,27 +676,36 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableSchool() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `school` VALUES (NULL, ?, ?);");
+
+        // Determine the number of schools to generate
+        final int schoolCount = this.faker.number().numberBetween(3, 6);
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `school` VALUES" +
-                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "')," +
-                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "')," +
-                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "');"
-                );
+                // Loop for the determined count
+                for(int i = 0; i < schoolCount; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, this.faker.university().name());
+                    prepared.setString(2, this.faker.address().city());
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
 
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `school` VALUES" +
-                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "')," +
-                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "')," +
-                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "');"
-                );
+                // Loop for the determined count
+                for(int i = 0; i < schoolCount; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, this.faker.university().name());
+                    prepared.setString(2, this.faker.address().city());
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
         }
     }
@@ -719,6 +726,7 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
             case SQLITE:
+                // Loop for the determined count
                 for(int i = 0; i < teacherCount; i++) {
                     // Generate a name
                     Name name = this.faker.name();
@@ -743,39 +751,33 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableGroup() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `group` VALUES (NULL, ?, ?);");
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `group` VALUES" +
-                        "  (NULL, 'Group 1', 1)," +
-                        "  (NULL, 'Group 2', 1)," +
-                        "  (NULL, 'Group 3', 1)," +
-                        "  (NULL, 'Group 1', 2)," +
-                        "  (NULL, 'Group 2', 2)," +
-                        "  (NULL, 'Group 3', 2)," +
-                        "  (NULL, 'Group 1', 3)," +
-                        "  (NULL, 'Group 2', 3)," +
-                        "  (NULL, 'Group 3', 3);"
-                );
+                // Insert default groups
+                for(int i = 0; i < 9; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, "Group " + ((i % 3) + 1));
+                    prepared.setInt(2, (i / 3) + 1);
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
 
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `group` VALUES" +
-                        "  (NULL, 'Group 1', 1)," +
-                        "  (NULL, 'Group 2', 1)," +
-                        "  (NULL, 'Group 3', 1)," +
-                        "  (NULL, 'Group 1', 2)," +
-                        "  (NULL, 'Group 2', 2)," +
-                        "  (NULL, 'Group 3', 2)," +
-                        "  (NULL, 'Group 1', 3)," +
-                        "  (NULL, 'Group 2', 3)," +
-                        "  (NULL, 'Group 3', 3);"
-                );
+                // Insert default groups
+                for(int i = 0; i < 9; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, "Group " + ((i % 3) + 1));
+                    prepared.setInt(2, (i / 3) + 1);
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
         }
     }
@@ -796,6 +798,7 @@ public class DatabaseBuilder {
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
             case SQLITE:
+                // Loop for the determined count
                 for(int i = 0; i < studentCount; i++) {
                     // Generate a name
                     Name name = this.faker.name();
@@ -820,61 +823,40 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableBodyState() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `bodystate` VALUES (NULL, ?, ?, ?, ?);");
+
+        // Determine the number of students to generate
+        final int bodyStateCount = this.faker.number().numberBetween(50, 100);
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `bodystate` VALUES" +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ");"
-                );
+                // Loop for the determined count
+                for(int i = 0; i < bodyStateCount; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
+                    prepared.setInt(2, this.faker.number().numberBetween(110, 160));
+                    prepared.setInt(3, this.faker.number().numberBetween(30000, 55000));
+                    prepared.setInt(4, this.faker.number().numberBetween(1, 51));
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
 
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `bodystate` VALUES" +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ");"
-                );
+                // Loop for the determined count
+                for(int i = 0; i < bodyStateCount; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
+                    prepared.setInt(2, this.faker.number().numberBetween(110, 160));
+                    prepared.setInt(3, this.faker.number().numberBetween(30000, 55000));
+                    prepared.setInt(4, this.faker.number().numberBetween(1, 51));
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
         }
     }
@@ -885,27 +867,31 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableParkour() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `parkour` VALUES (NULL, ?);");
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `parkour` VALUES" +
-                        "  (NULL, 'Parkour 1')," +
-                        "  (NULL, 'Parkour 2')," +
-                        "  (NULL, 'Parkour 3');"
-                );
+                // Insert default parkours
+                for(int i = 0; i < 3; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, "Parkour " + (i + 1));
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
 
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `parkour` VALUES" +
-                        "  (NULL, 'Parkour 1')," +
-                        "  (NULL, 'Parkour 2')," +
-                        "  (NULL, 'Parkour 3');"
-                );
+                // Insert default parkours
+                for(int i = 0; i < 3; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, "Parkour " + (i + 1));
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
         }
     }
@@ -916,61 +902,40 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableMeasurement() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `measurement` VALUES (NULL, ?, ?, ?, ?);");
+
+        // Determine the number of students to generate
+        final int bodyStateCount = this.faker.number().numberBetween(50, 100);
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `measurement` VALUES" +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ");"
-                );
+                // Loop for the determined count
+                for(int i = 0; i < bodyStateCount; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
+                    prepared.setInt(2, this.faker.number().numberBetween(16000, 30000));
+                    prepared.setInt(3, this.faker.number().numberBetween(1, 4));
+                    prepared.setInt(4, this.faker.number().numberBetween(1, 51));
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
 
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `measurement` VALUES" +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
-                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ");"
-                );
+                // Loop for the determined count
+                for(int i = 0; i < bodyStateCount; i++) {
+                    // Fill the prepared statement
+                    prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
+                    prepared.setInt(2, this.faker.number().numberBetween(16000, 30000));
+                    prepared.setInt(3, this.faker.number().numberBetween(1, 4));
+                    prepared.setInt(4, this.faker.number().numberBetween(1, 51));
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
         }
     }
@@ -981,39 +946,33 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableGroupTeacher() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `group_teacher` VALUES (?, ?);");
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `group_teacher` VALUES" +
-                        "  (1, 1)," +
-                        "  (2, 2)," +
-                        "  (3, 3)," +
-                        "  (4, 1)," +
-                        "  (5, 2)," +
-                        "  (6, 3)," +
-                        "  (7, 1)," +
-                        "  (8, 2)," +
-                        "  (9, 3);"
-                );
+                // Insert default group teachers
+                for(int i = 0; i < 9; i++) {
+                    // Fill the prepared statement
+                    prepared.setInt(1, i + 1);
+                    prepared.setInt(2, (i % 3) + 1);
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
 
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `group_teacher` VALUES" +
-                        "  (1, 1)," +
-                        "  (2, 2)," +
-                        "  (3, 3)," +
-                        "  (4, 1)," +
-                        "  (5, 2)," +
-                        "  (6, 3)," +
-                        "  (7, 1)," +
-                        "  (8, 2)," +
-                        "  (9, 3);"
-                );
+                // Insert default group teachers
+                for(int i = 0; i < 9; i++) {
+                    // Fill the prepared statement
+                    prepared.setInt(1, i + 1);
+                    prepared.setInt(2, (i % 3) + 1);
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
         }
     }
