@@ -238,16 +238,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         return getFields(new DatabaseFieldsInterface[]{field}).get(0);
     }
 
-    /**
-     * Get the name of the current database object type.
-     *
-     * @return Database object type name.
-     */
-    @Deprecated
-    public String getTypeName() {
-        return getManifest().getTypeName();
-    }
-
     @Override
     protected AbstractDatabaseObject clone() throws CloneNotSupportedException {
         // Clone through the super

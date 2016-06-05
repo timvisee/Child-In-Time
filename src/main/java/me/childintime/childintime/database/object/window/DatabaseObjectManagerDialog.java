@@ -76,7 +76,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
-        super(owner, App.APP_NAME + " - " + objectManager.getTypeName() + " manager", ModalityType.APPLICATION_MODAL);
+        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTableName() + " manager", ModalityType.APPLICATION_MODAL);
 
         // Set the database object manager
         this.objectManager = objectManager;
@@ -160,7 +160,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         JPanel mainPanel = new JPanel(new GridBagLayout());
 
         // Create the main label
-        final JLabel instructionLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + "s.");
+        final JLabel instructionLabel = new JLabel("Add, edit or delete " + this.objectManager.getManifest().getTypeName(false, true).toLowerCase() + ".");
 
         // Add the instruction label
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -215,7 +215,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Create the object table panel, and give it a titled border
         JPanel objectPanel = new JPanel(new GridBagLayout());
-        objectPanel.setBorder(BorderFactory.createTitledBorder(this.objectManager.getTypeName() + "s"));
+        objectPanel.setBorder(BorderFactory.createTitledBorder(this.objectManager.getManifest().getTypeName(true, true)));
 
         // Create the manage button panel
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -490,7 +490,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Get the type name
-        final String typeName = this.objectManager.getTypeName().toLowerCase();
+        final String typeName = this.objectManager.getManifest().getTypeName(false, false);
 
         // Ask whether the user wants to delete the databases
         // TODO: Show a proper message!

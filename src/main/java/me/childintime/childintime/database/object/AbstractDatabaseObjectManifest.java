@@ -12,9 +12,12 @@ public abstract class AbstractDatabaseObjectManifest {
     /**
      * Get the name of the current database object manager type.
      *
+     * @param capital True to make the first character capital.
+     * @param plural True to make the type name a plural.
+     *
      * @return Database object manager type name.
      */
-    public abstract String getTypeName();
+    public abstract String getTypeName(boolean capital, boolean plural);
 
     /**
      * Get the database table name for the manifest´s object.
