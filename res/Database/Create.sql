@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `bodystate` (
   `id`         INT      NOT NULL AUTO_INCREMENT,
   `date`       DATE     NOT NULL,
   `length`     SMALLINT NOT NULL,
-  `weight`     SMALLINT NOT NULL,
+  `weight`     INT      NOT NULL,
   `student_id` INT      NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
