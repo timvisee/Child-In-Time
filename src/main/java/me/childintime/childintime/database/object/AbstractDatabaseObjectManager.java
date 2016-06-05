@@ -77,7 +77,11 @@ public abstract class AbstractDatabaseObjectManager {
             }
 
         } catch(Exception e){
+            // Print the stack trace
             e.printStackTrace();
+
+            // Return null
+            return null;
         }
 
         // Set the list of objects
@@ -163,16 +167,21 @@ public abstract class AbstractDatabaseObjectManager {
      */
     @SuppressWarnings("unused")
     public int getObjectCount() {
+        // Return the number of objects from cache, if cached
+        if(hasCache())
+            return this.objects.size();
+
+        // Query the database to get the object count
         try {
             // Get the database connection
             final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
             // Prepare a query to count the number of objects
-            PreparedStatement countQuery = connection.prepareStatement("SELECT count(`id`) AS objectCount FROM " + getManifest().getTableName());
+            PreparedStatement countQuery = connection.prepareStatement("SELECT count(`id`) FROM `" + getManifest().getTableName() + "`");
 
             // Execute the query, and return the results
             ResultSet result = countQuery.executeQuery();
-            return result.getInt("objectCount");
+            return result.getInt(1);
 
         } catch(Exception e){
             e.printStackTrace();
