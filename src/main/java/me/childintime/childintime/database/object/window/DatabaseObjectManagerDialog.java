@@ -81,7 +81,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
-        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTableName() + " manager", ModalityType.APPLICATION_MODAL);
+        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTypeName(true, false) + " manager", ModalityType.APPLICATION_MODAL);
 
         // Set the database object manager
         this.objectManager = objectManager;
@@ -379,7 +379,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         buttonPanel.add(this.refreshButton);
         buttonPanel.add(this.filtersButton);
         buttonPanel.add(this.columnsButton);
-        this.refreshButton.addActionListener(e -> featureNotImplemented());
+        this.refreshButton.addActionListener(e -> refresh());
         this.filtersButton.addActionListener(e -> featureNotImplemented());
         this.columnsButton.addActionListener(e -> featureNotImplemented());
 
@@ -614,5 +614,26 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // There don't seem to be any unsaved changes, return the result
         return false;
+    }
+
+    /**
+     * Refresh the list of database objects.
+     * This also flushes the cache and forces new objects to be fetched.
+     */
+    public void refresh() {
+        // Create a progress dialog
+        ProgressDialog progressDialog = new ProgressDialog(this, App.APP_NAME, false, "Refreshing...", true);
+
+        // Clear the manager's cache
+        this.objectManager.flushCache();
+
+        // Fetch all data again
+        this.objectManager.fetchObjects();
+
+        // Fire a table change
+        this.objectTableModel.fireTableDataChanged();
+
+        // Dispose the dialog
+        progressDialog.dispose();
     }
 }
