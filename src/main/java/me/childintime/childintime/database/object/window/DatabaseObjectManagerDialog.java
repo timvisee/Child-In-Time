@@ -4,7 +4,6 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.TableUtils;
 
@@ -395,32 +394,20 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JPanel buildUiCommitButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 3, 10, 10));
+        buttonPanel.setLayout(new GridLayout(1, 1, 10, 10));
 
-        // Create the buttons to add to the panel
-        JButton okButton = new JButton("OK");
-        JButton applyButton = new JButton("Apply");
-        JButton cancelButton = new JButton("Cancel");
-        okButton.addActionListener(e -> {
-            // Save the databases
-            applyDatabases();
+        // Create the commit buttons
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> {
+//            // Save the databases
+//            applyDatabases();
 
             // Close the frame
             dispose();
         });
-        applyButton.addActionListener(e -> applyDatabases());
-        cancelButton.addActionListener(e -> onClose());
 
         // Add the buttons to the panel in the proper order
-        if(!Platform.isMacOsX()) {
-            buttonPanel.add(okButton);
-            buttonPanel.add(cancelButton);
-            buttonPanel.add(applyButton);
-        } else {
-            buttonPanel.add(applyButton);
-            buttonPanel.add(cancelButton);
-            buttonPanel.add(okButton);
-        }
+        buttonPanel.add(closeButton);
 
         // Return the button panel
         return buttonPanel;
