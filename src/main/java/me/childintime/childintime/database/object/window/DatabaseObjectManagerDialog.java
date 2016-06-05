@@ -53,6 +53,11 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JButton removeButton;
 
     /**
+     * Refresh button instance.
+     */
+    private JButton refreshButton;
+
+    /**
      * Filters button instance.
      */
     private JButton filtersButton;
@@ -363,15 +368,18 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JPanel buildUiViewSelectionButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2, 1, 10, 10));
+        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
 
         // Create the buttons to add to the panel
+        this.refreshButton = new JButton("Refresh");
         this.filtersButton = new JButton("Filters...");
         this.columnsButton = new JButton("Columns...");
 
         // Add the buttons to the panel
+        buttonPanel.add(this.refreshButton);
         buttonPanel.add(this.filtersButton);
         buttonPanel.add(this.columnsButton);
+        this.refreshButton.addActionListener(e -> featureNotImplemented());
         this.filtersButton.addActionListener(e -> featureNotImplemented());
         this.columnsButton.addActionListener(e -> featureNotImplemented());
 
