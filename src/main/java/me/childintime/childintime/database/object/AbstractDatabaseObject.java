@@ -138,7 +138,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
             // Throw an exception if no data is returned from the database
             if(!result.next())
-                throw new Exception("Failed to fetch object data, empty result received from the database.");
+                throw new Exception("Failed to fetch object data for [" + getClass().getSimpleName() + ";id=" + getId() + "], empty result received from the database.");
 
             // Get the raw data for each field, and parse it
             for (DatabaseFieldsInterface field : fields)
