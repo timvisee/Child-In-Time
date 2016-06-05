@@ -30,6 +30,9 @@ public class DatabaseBuilder {
      */
     private boolean disposeProgressDialog = false;
 
+    /**
+     * Date format to use for the database.
+     */
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
@@ -71,13 +74,8 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(44);
+        this.progressDialog.setProgressMax(42);
         this.progressDialog.setShowProgress(true);
-
-        // Prepare the database
-        this.progressDialog.setStatus("Preparing database...");
-        prepare();
-        this.progressDialog.increaseProgressValue();
 
         // Create the user table
         this.progressDialog.setStatus("Configuring database...");
@@ -163,11 +161,6 @@ public class DatabaseBuilder {
         fillTableGroupTeacher();
         this.progressDialog.increaseProgressValue();
 
-        // Finish the database
-        this.progressDialog.setStatus("Finishing database...");
-        finish();
-        this.progressDialog.increaseProgressValue();
-
         // Revert the progress dialog state
         this.progressDialog.setProgressMax(originalProgressMax);
         this.progressDialog.setProgressValue(originalProgressValue);
@@ -179,31 +172,6 @@ public class DatabaseBuilder {
 
         // Return the result
         return true;
-    }
-
-    /**
-     * Prepare the database.
-     *
-     * @throws SQLException
-     */
-    public void prepare() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
-
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-//                statement.execute(
-//                        "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;" +
-//                        "/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;" +
-//                        "/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;" +
-//                        "/*!40101 SET NAMES utf8 */;"
-//                );
-                break;
-
-            case SQLITE:
-                break;
-        }
     }
 
     /**
@@ -973,30 +941,6 @@ public class DatabaseBuilder {
                     // Execute the prepared statement
                     prepared.execute();
                 }
-                break;
-        }
-    }
-
-    /**
-     * Finish the database.
-     *
-     * @throws SQLException
-     */
-    public void finish() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
-
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-//                statement.execute(
-//                        "/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;" +
-//                                "/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;" +
-//                                "/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;"
-//                );
-                break;
-
-            case SQLITE:
                 break;
         }
     }
