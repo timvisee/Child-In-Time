@@ -1,10 +1,21 @@
 package me.childintime.childintime;
 
+import com.github.javafaker.Faker;
+import com.github.javafaker.Name;
+import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class DatabaseBuilder {
 
@@ -22,6 +33,13 @@ public class DatabaseBuilder {
      * Define whether to dispose the progress dialog after we're finished.
      */
     private boolean disposeProgressDialog = false;
+
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    /**
+     * Java faker, used to generate fake user data.
+     */
+    private final Faker faker = new Faker(Locale.ENGLISH);
 
     /**
      * Constructor.
@@ -672,18 +690,18 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "INSERT INTO `school` VALUES" +
-                        "  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn')," +
-                        "  (NULL, 'De Hobbitburcht', 'Amsterdam')," +
-                        "  (NULL, 'De Stromen', 'Den Haag');"
+                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "')," +
+                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "')," +
+                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "');"
                 );
                 break;
 
             case SQLITE:
                 statement.execute(
                         "INSERT INTO `school` VALUES" +
-                        "  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn')," +
-                        "  (NULL, 'De Hobbitburcht', 'Amsterdam')," +
-                        "  (NULL, 'De Stromen', 'Den Haag');"
+                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "')," +
+                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "')," +
+                        "  (NULL, '" + this.faker.university().name() + "', '" + this.faker.address().cityName() + "');"
                 );
                 break;
         }
@@ -695,43 +713,30 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableTeacher() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `teacher` VALUES (NULL, ?, ?, ?, ?, ?);");
+
+        // Determine the number of students to generate
+        final int teacherCount = this.faker.number().numberBetween(10, 15);
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `teacher` VALUES" +
-                        "  (NULL, 'Henk', 'Hoornald', 1, 1, 1)," +
-                        "  (NULL, 'Henry', 'Hunter', 1, 1, 1)," +
-                        "  (NULL, 'Phillip', 'Ward', 1, 0, 1)," +
-                        "  (NULL, 'Carlos', 'Ryan', 1, 0, 1)," +
-                        "  (NULL, 'Karen', 'Diaz', 0, 1, 2)," +
-                        "  (NULL, 'Paula', 'Black', 0, 0, 2)," +
-                        "  (NULL, 'Julie', 'Sims', 0, 0, 2)," +
-                        "  (NULL, 'Laura', 'Garcia', 0, 1, 3)," +
-                        "  (NULL, 'Mark', 'Romero', 1, 0, 3)," +
-                        "  (NULL, 'Ashley', 'Jacobs', 0, 0, 3)," +
-                        "  (NULL, 'Linda', 'Jackson', 0, 0, 3);"
-                );
-                break;
-
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `teacher` VALUES" +
-                        "  (NULL, 'Henk', 'Hoornald', 1, 1, 1)," +
-                        "  (NULL, 'Henry', 'Hunter', 1, 1, 1)," +
-                        "  (NULL, 'Phillip', 'Ward', 1, 0, 1)," +
-                        "  (NULL, 'Carlos', 'Ryan', 1, 0, 1)," +
-                        "  (NULL, 'Karen', 'Diaz', 0, 1, 2)," +
-                        "  (NULL, 'Paula', 'Black', 0, 0, 2)," +
-                        "  (NULL, 'Julie', 'Sims', 0, 0, 2)," +
-                        "  (NULL, 'Laura', 'Garcia', 0, 1, 3)," +
-                        "  (NULL, 'Mark', 'Romero', 1, 0, 3)," +
-                        "  (NULL, 'Ashley', 'Jacobs', 0, 0, 3)," +
-                        "  (NULL, 'Linda', 'Jackson', 0, 0, 3);"
-                );
+                for(int i = 0; i < teacherCount; i++) {
+                    // Generate a name
+                    Name name = this.faker.name();
+
+                    // Fill the prepared statement
+                    prepared.setString(1, name.firstName());
+                    prepared.setString(2, name.lastName());
+                    prepared.setInt(3, this.faker.number().numberBetween(0, 2));
+                    prepared.setInt(4, this.faker.number().numberBetween(0, 2));
+                    prepared.setInt(5, this.faker.number().numberBetween(1, 4));
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
         }
     }
@@ -750,30 +755,30 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "INSERT INTO `group` VALUES" +
-                        "  (NULL, 'Groep 1', 1)," +
-                        "  (NULL, 'Groep 2', 1)," +
-                        "  (NULL, 'Groep 3', 1)," +
-                        "  (NULL, 'Groep 1', 2)," +
-                        "  (NULL, 'Groep 2', 2)," +
-                        "  (NULL, 'Groep 3', 2)," +
-                        "  (NULL, 'Groep 1', 3)," +
-                        "  (NULL, 'Groep 2', 3)," +
-                        "  (NULL, 'Groep 3', 3);"
+                        "  (NULL, 'Group 1', 1)," +
+                        "  (NULL, 'Group 2', 1)," +
+                        "  (NULL, 'Group 3', 1)," +
+                        "  (NULL, 'Group 1', 2)," +
+                        "  (NULL, 'Group 2', 2)," +
+                        "  (NULL, 'Group 3', 2)," +
+                        "  (NULL, 'Group 1', 3)," +
+                        "  (NULL, 'Group 2', 3)," +
+                        "  (NULL, 'Group 3', 3);"
                 );
                 break;
 
             case SQLITE:
                 statement.execute(
                         "INSERT INTO `group` VALUES" +
-                        "  (NULL, 'Groep 1', 1)," +
-                        "  (NULL, 'Groep 2', 1)," +
-                        "  (NULL, 'Groep 3', 1)," +
-                        "  (NULL, 'Groep 1', 2)," +
-                        "  (NULL, 'Groep 2', 2)," +
-                        "  (NULL, 'Groep 3', 2)," +
-                        "  (NULL, 'Groep 1', 3)," +
-                        "  (NULL, 'Groep 2', 3)," +
-                        "  (NULL, 'Groep 3', 3);"
+                        "  (NULL, 'Group 1', 1)," +
+                        "  (NULL, 'Group 2', 1)," +
+                        "  (NULL, 'Group 3', 1)," +
+                        "  (NULL, 'Group 1', 2)," +
+                        "  (NULL, 'Group 2', 2)," +
+                        "  (NULL, 'Group 3', 2)," +
+                        "  (NULL, 'Group 1', 3)," +
+                        "  (NULL, 'Group 2', 3)," +
+                        "  (NULL, 'Group 3', 3);"
                 );
                 break;
         }
@@ -785,61 +790,30 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableStudent() throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement("INSERT INTO `student` VALUES (NULL, ?, ?, ?, ?, ?);");
+
+        // Determine the number of students to generate
+        final int studentCount = this.faker.number().numberBetween(50, 100);
 
         // Execute the table create query
         switch(this.databaseConnector.getDialect()) {
             case MYSQL:
-                statement.execute(
-                        "INSERT INTO `student` VALUES" +
-                        "  (NULL, 'George', 'Barnes', 1, '2014-04-17', 1)," +
-                        "  (NULL, 'Robin', 'Hughes', 0, '2011-01-10', 1)," +
-                        "  (NULL, 'Anne', 'Diaz', 0, '2015-02-26', 2)," +
-                        "  (NULL, 'Sandra', 'Knight', 0, '2013-08-27', 2)," +
-                        "  (NULL, 'Terry', 'Morales', 1, '2015-09-06', 3)," +
-                        "  (NULL, 'Jimmy', 'Smith', 1, '2013-04-07', 3)," +
-                        "  (NULL, 'Nicholas', 'Dunn', 1, '2013-09-01', 4)," +
-                        "  (NULL, 'Raymond', 'Franklin', 1, '2015-12-13', 4)," +
-                        "  (NULL, 'Maria', 'Barnes', 0, '2005-08-28', 5)," +
-                        "  (NULL, 'Wayne', 'Graham', 1, '2010-10-20', 5)," +
-                        "  (NULL, 'Kathy', 'James', 0, '2006-06-05', 6)," +
-                        "  (NULL, 'Evelyn', 'Elliott', 0, '2008-11-26', 6)," +
-                        "  (NULL, 'Barbara', 'Parker', 0, '2008-05-03', 7)," +
-                        "  (NULL, 'Mildred', 'Sanders', 0, '2009-08-22', 7)," +
-                        "  (NULL, 'Jason', 'Ross', 1, '2007-07-31', 8)," +
-                        "  (NULL, 'Anna', 'Porter', 0, '2008-12-21', 8)," +
-                        "  (NULL, 'Karen', 'Wells', 0, '2011-10-05', 8)," +
-                        "  (NULL, 'Jonathan', 'Ferguson', 1, '2014-02-06', 9)," +
-                        "  (NULL, 'Kathryn', 'Carr', 0, '2006-03-06', 9)," +
-                        "  (NULL, 'Sean', 'Reid', 1, '2009-04-20', 9);"
-                );
-                break;
-
             case SQLITE:
-                statement.execute(
-                        "INSERT INTO `student` VALUES" +
-                        "  (NULL, 'George', 'Barnes', 1, '2014-04-17', 1)," +
-                        "  (NULL, 'Robin', 'Hughes', 0, '2011-01-10', 1)," +
-                        "  (NULL, 'Anne', 'Diaz', 0, '2015-02-26', 2)," +
-                        "  (NULL, 'Sandra', 'Knight', 0, '2013-08-27', 2)," +
-                        "  (NULL, 'Terry', 'Morales', 1, '2015-09-06', 3)," +
-                        "  (NULL, 'Jimmy', 'Smith', 1, '2013-04-07', 3)," +
-                        "  (NULL, 'Nicholas', 'Dunn', 1, '2013-09-01', 4)," +
-                        "  (NULL, 'Raymond', 'Franklin', 1, '2015-12-13', 4)," +
-                        "  (NULL, 'Maria', 'Barnes', 0, '2005-08-28', 5)," +
-                        "  (NULL, 'Wayne', 'Graham', 1, '2010-10-20', 5)," +
-                        "  (NULL, 'Kathy', 'James', 0, '2006-06-05', 6)," +
-                        "  (NULL, 'Evelyn', 'Elliott', 0, '2008-11-26', 6)," +
-                        "  (NULL, 'Barbara', 'Parker', 0, '2008-05-03', 7)," +
-                        "  (NULL, 'Mildred', 'Sanders', 0, '2009-08-22', 7)," +
-                        "  (NULL, 'Jason', 'Ross', 1, '2007-07-31', 8)," +
-                        "  (NULL, 'Anna', 'Porter', 0, '2008-12-21', 8)," +
-                        "  (NULL, 'Karen', 'Wells', 0, '2011-10-05', 8)," +
-                        "  (NULL, 'Jonathan', 'Ferguson', 1, '2014-02-06', 9)," +
-                        "  (NULL, 'Kathryn', 'Carr', 0, '2006-03-06', 9)," +
-                        "  (NULL, 'Sean', 'Reid', 1, '2009-04-20', 9);"
-                );
+                for(int i = 0; i < studentCount; i++) {
+                    // Generate a name
+                    Name name = this.faker.name();
+
+                    // Fill the prepared statement
+                    prepared.setString(1, name.firstName());
+                    prepared.setString(2, name.lastName());
+                    prepared.setInt(3, this.faker.number().numberBetween(0, 2));
+                    prepared.setString(4, dateFormat.format(this.faker.date().past(20 * 356, TimeUnit.DAYS)));
+                    prepared.setInt(5, this.faker.number().numberBetween(1, 10));
+
+                    // Execute the prepared statement
+                    prepared.execute();
+                }
                 break;
         }
     }
@@ -858,52 +832,52 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "INSERT INTO `bodystate` VALUES" +
-                        "  (NULL, '2016-01-11', 141, 38, 5)," +
-                        "  (NULL, '2015-06-07', 150, 46, 20)," +
-                        "  (NULL, '2016-02-03', 116, 41, 13)," +
-                        "  (NULL, '2015-08-11', 140, 50, 2)," +
-                        "  (NULL, '2016-04-08', 109, 46, 11)," +
-                        "  (NULL, '2016-05-03', 150, 32, 8)," +
-                        "  (NULL, '2016-02-17', 125, 39, 12)," +
-                        "  (NULL, '2015-09-06', 92, 31, 16)," +
-                        "  (NULL, '2015-08-06', 102, 47, 4)," +
-                        "  (NULL, '2016-02-02', 95, 47, 5)," +
-                        "  (NULL, '2015-08-01', 107, 33, 18)," +
-                        "  (NULL, '2015-06-22', 119, 44, 5)," +
-                        "  (NULL, '2015-08-08', 147, 40, 14)," +
-                        "  (NULL, '2015-12-16', 134, 46, 3)," +
-                        "  (NULL, '2016-02-08', 97, 31, 17)," +
-                        "  (NULL, '2015-11-01', 123, 38, 1)," +
-                        "  (NULL, '2015-07-13', 124, 33, 2)," +
-                        "  (NULL, '2015-12-26', 117, 40, 11)," +
-                        "  (NULL, '2016-04-08', 116, 35, 6)," +
-                        "  (NULL, '2016-04-03', 107, 49, 8);"
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ");"
                 );
                 break;
 
             case SQLITE:
                 statement.execute(
                         "INSERT INTO `bodystate` VALUES" +
-                        "  (NULL, '2016-01-11', 141, 38, 5)," +
-                        "  (NULL, '2015-06-07', 150, 46, 20)," +
-                        "  (NULL, '2016-02-03', 116, 41, 13)," +
-                        "  (NULL, '2015-08-11', 140, 50, 2)," +
-                        "  (NULL, '2016-04-08', 109, 46, 11)," +
-                        "  (NULL, '2016-05-03', 150, 32, 8)," +
-                        "  (NULL, '2016-02-17', 125, 39, 12)," +
-                        "  (NULL, '2015-09-06', 92, 31, 16)," +
-                        "  (NULL, '2015-08-06', 102, 47, 4)," +
-                        "  (NULL, '2016-02-02', 95, 47, 5)," +
-                        "  (NULL, '2015-08-01', 107, 33, 18)," +
-                        "  (NULL, '2015-06-22', 119, 44, 5)," +
-                        "  (NULL, '2015-08-08', 147, 40, 14)," +
-                        "  (NULL, '2015-12-16', 134, 46, 3)," +
-                        "  (NULL, '2016-02-08', 97, 31, 17)," +
-                        "  (NULL, '2015-11-01', 123, 38, 1)," +
-                        "  (NULL, '2015-07-13', 124, 33, 2)," +
-                        "  (NULL, '2015-12-26', 117, 40, 11)," +
-                        "  (NULL, '2016-04-08', 116, 35, 6)," +
-                        "  (NULL, '2016-04-03', 107, 49, 8);"
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(110, 160) + ", " + this.faker.number().numberBetween(30000, 55000) + ", " + this.faker.number().numberBetween(1, 51) + ");"
                 );
                 break;
         }
@@ -954,52 +928,52 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "INSERT INTO `measurement` VALUES" +
-                        "  (1, '2016-02-09', 64, 1, 18)," +
-                        "  (2, '2016-02-15', 85, 1, 2)," +
-                        "  (3, '2015-08-11', 86, 3, 4)," +
-                        "  (4, '2015-06-14', 79, 2, 8)," +
-                        "  (5, '2015-07-21', 23, 3, 5)," +
-                        "  (6, '2015-06-22', 78, 3, 16)," +
-                        "  (7, '2016-04-15', 71, 3, 8)," +
-                        "  (8, '2015-08-22', 59, 2, 13)," +
-                        "  (9, '2016-05-03', 16, 3, 10)," +
-                        "  (10, '2015-09-26', 52, 3, 18)," +
-                        "  (11, '2016-02-04', 17, 2, 13)," +
-                        "  (12, '2016-03-24', 59, 2, 12)," +
-                        "  (13, '2016-04-01', 35, 2, 13)," +
-                        "  (14, '2015-10-24', 71, 1, 7)," +
-                        "  (15, '2016-03-29', 89, 1, 7)," +
-                        "  (16, '2016-04-15', 58, 2, 5)," +
-                        "  (17, '2016-03-11', 53, 2, 20)," +
-                        "  (18, '2015-06-06', 32, 2, 20)," +
-                        "  (19, '2016-05-19', 80, 1, 8)," +
-                        "  (20, '2015-06-07', 47, 3, 19);"
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                        "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ");"
                 );
                 break;
 
             case SQLITE:
                 statement.execute(
                         "INSERT INTO `measurement` VALUES" +
-                        "  (1, '2016-02-09', 64, 1, 18)," +
-                        "  (2, '2016-02-15', 85, 1, 2)," +
-                        "  (3, '2015-08-11', 86, 3, 4)," +
-                        "  (4, '2015-06-14', 79, 2, 8)," +
-                        "  (5, '2015-07-21', 23, 3, 5)," +
-                        "  (6, '2015-06-22', 78, 3, 16)," +
-                        "  (7, '2016-04-15', 71, 3, 8)," +
-                        "  (8, '2015-08-22', 59, 2, 13)," +
-                        "  (9, '2016-05-03', 16, 3, 10)," +
-                        "  (10, '2015-09-26', 52, 3, 18)," +
-                        "  (11, '2016-02-04', 17, 2, 13)," +
-                        "  (12, '2016-03-24', 59, 2, 12)," +
-                        "  (13, '2016-04-01', 35, 2, 13)," +
-                        "  (14, '2015-10-24', 71, 1, 7)," +
-                        "  (15, '2016-03-29', 89, 1, 7)," +
-                        "  (16, '2016-04-15', 58, 2, 5)," +
-                        "  (17, '2016-03-11', 53, 2, 20)," +
-                        "  (18, '2015-06-06', 32, 2, 20)," +
-                        "  (19, '2016-05-19', 80, 1, 8)," +
-                        "  (20, '2015-06-07', 47, 3, 19);"
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ")," +
+                                "  (NULL, '" + dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)) + "', " + this.faker.number().numberBetween(16000, 30000) + ", " + this.faker.number().numberBetween(1, 4) + ", " + this.faker.number().numberBetween(1, 51) + ");"
                 );
                 break;
         }
