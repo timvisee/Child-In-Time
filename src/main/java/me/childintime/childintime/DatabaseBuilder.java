@@ -2,7 +2,6 @@ package me.childintime.childintime;
 
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
-import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -11,10 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class DatabaseBuilder {
