@@ -210,6 +210,15 @@ public class TextPropertyField extends AbstractPropertyField {
         return actionButtonPanel;
     }
 
+    /**
+     * Get the text field.
+     *
+     * @return Text field.
+     */
+    public JTextField getTextField() {
+        return this.textField;
+    }
+
     @Override
     public String getValue() {
         return getText();
