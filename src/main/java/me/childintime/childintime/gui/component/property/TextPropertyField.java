@@ -10,11 +10,6 @@ import java.awt.event.*;
 public class TextPropertyField extends AbstractPropertyField {
 
     /**
-     * Define whether this is a password field.
-     */
-    private boolean isPassword = false;
-
-    /**
      * True if an empty value is allowed.
      * If this is set to false, an empty string will be converted to null when focus is lost.
      * The field will be left empty if null is not allowed.
