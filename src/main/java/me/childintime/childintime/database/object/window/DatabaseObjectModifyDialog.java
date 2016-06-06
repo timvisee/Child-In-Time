@@ -4,6 +4,7 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.gui.component.property.TextPropertyField;
 import me.childintime.childintime.util.Platform;
@@ -333,9 +334,18 @@ public class DatabaseObjectModifyDialog extends JDialog {
             c.insets = new Insets(0, 8, 8, 0);
             c.anchor = GridBagConstraints.CENTER;
 
-            if(fieldType.isEditable())
-                container.add(new TextPropertyField(value, true, false), c);
-            else
+            if(fieldType.isEditable()) {
+
+                if(fieldType.getDataType().equals(DataType.BOOLEAN))
+                    try {
+                        container.add(new JCheckBox(), c);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                else
+                    container.add(new TextPropertyField(value, true), c);
+
+            } else
                 container.add(new JLabel(value), c);
         }
 
