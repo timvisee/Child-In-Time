@@ -414,13 +414,16 @@ public class DatabaseObjectModifyDialog extends JDialog {
         // Create and add the test button
         JButton defaultsButton = new JButton("Defaults");
         defaultsButton.addActionListener(e -> {
-            // Create a progress dialog
-            ProgressDialog progressDialog = new ProgressDialog(this, "Testing database...", false, "Applying changes...", true);
+            // Feature not yet implemented, show a dialog box
+            featureNotImplemented();
 
-            // Apply the changes
-            applyChanges();
-
-            // TODO: Fix this!
+//            // Create a progress dialog
+//            ProgressDialog progressDialog = new ProgressDialog(this, "Testing database...", false, "Applying changes...", true);
+//
+//            // Apply the changes
+//            applyChanges();
+//
+//            // TODO: Fix this!
 //            // Get the database
 //            AbstractDatabase database = getDatabase();
 //
@@ -647,5 +650,11 @@ public class DatabaseObjectModifyDialog extends JDialog {
      */
     public boolean isDiscarded() {
         return this.discarded;
+    }
+
+    // TODO: This should be removed!
+    @Deprecated
+    public void featureNotImplemented() {
+        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
     }
 }
