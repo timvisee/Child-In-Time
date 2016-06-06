@@ -351,7 +351,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         buttonPanel.add(this.addButton);
         buttonPanel.add(this.editButton);
         buttonPanel.add(this.removeButton);
-        this.addButton.addActionListener(e -> addDatabase());
+        this.addButton.addActionListener(e -> addObject());
         this.editButton.addActionListener(e -> editDatabase());
         this.removeButton.addActionListener(e -> removeDatabases());
 
@@ -428,12 +428,12 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Create a new database, ask for the name.
+     * Create a new database object.
      */
-    public void addDatabase() {
+    public void addObject() {
         // Create a new database through the edit panel
         // TODO: Implement modification dialog here!
-        final AbstractDatabaseObject databaseObject = null; // DatabaseModifyDialog.showCreate(this)
+        final AbstractDatabaseObject databaseObject = DatabaseObjectModifyDialog.showCreate(this, this.objectManager.getManifest());
 
         JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
@@ -460,7 +460,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Show the edit dialog for this database
         // TODO: Implement the edit dialog here
-        final AbstractDatabaseObject result = null; // DatabaseModifyDialog.showModify(this, selected)
+        final AbstractDatabaseObject result = DatabaseObjectModifyDialog.showModify(this, selected);
 
         // Feature not yet implemented, show a warning box
         featureNotImplemented();
