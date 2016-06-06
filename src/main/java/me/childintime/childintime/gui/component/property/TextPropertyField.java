@@ -53,7 +53,7 @@ public class TextPropertyField extends AbstractPropertyField {
      * @param allowNull True if null is allowed, false if not.
      */
     public TextPropertyField(String value, boolean allowNull) {
-        this(value, allowNull, false);
+        this(value, allowNull, new JTextField(""));
     }
 
     /**
@@ -61,14 +61,14 @@ public class TextPropertyField extends AbstractPropertyField {
      *
      * @param value Value.
      * @param allowNull True if null is allowed, false if not.
-     * @param isPassword True if password, false if not.
+     * @param textField Text field instance to use.
      */
-    public TextPropertyField(String value, boolean allowNull, boolean isPassword) {
+    public TextPropertyField(String value, boolean allowNull, JTextField textField) {
         // Call the super
         super(allowNull);
 
-        // Define whether this is a password
-        this.isPassword = isPassword;
+        // Set the text field instance
+        this.textField = textField;
 
         // Build the UI
         buildUi();
@@ -102,8 +102,11 @@ public class TextPropertyField extends AbstractPropertyField {
             public void focusLost(FocusEvent e) { }
         });
 
-        // Create the text field
-        this.textField = !this.isPassword ? new JTextField("") : new JPasswordField("");
+        // Create the text field if it hasn't been initialized yet
+        if(this.textField == null)
+            this.textField = new JTextField("");
+
+        // Link the text field listeners
         this.textField.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {

@@ -1,6 +1,5 @@
 package me.childintime.childintime.gui.component.property;
 
-import com.timvisee.swingtoolbox.border.ComponentBorder;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
@@ -30,28 +29,8 @@ public class FilePropertyField extends TextPropertyField {
      * @param allowNull True if null is allowed.
      */
     public FilePropertyField(String value, boolean allowNull) {
-        this(value, allowNull, false);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param file File.
-     * @param allowNull True if null is allowed.
-     */
-    public FilePropertyField(File file, boolean allowNull) {
-        this(file.getAbsolutePath(), allowNull);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param value Value.
-     * @param allowNull True if null is allowed.
-     */
-    public FilePropertyField(String value, boolean allowNull, boolean isPassword) {
         // Call the super
-        super(value, allowNull, isPassword);
+        super(value, allowNull);
 
         // Do not allow empty values
         setEmptyAllowed(false);
@@ -63,8 +42,8 @@ public class FilePropertyField extends TextPropertyField {
      * @param file File.
      * @param allowNull True if null is allowed.
      */
-    public FilePropertyField(File file, boolean allowNull, boolean isPassword) {
-        this(file.getAbsolutePath(), allowNull, isPassword);
+    public FilePropertyField(File file, boolean allowNull) {
+        this(file.getAbsolutePath(), allowNull);
     }
 
     @Override
