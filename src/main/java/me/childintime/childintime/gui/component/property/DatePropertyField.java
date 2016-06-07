@@ -1,6 +1,7 @@
 package me.childintime.childintime.gui.component.property;
 
 import com.toedter.calendar.JCalendar;
+import me.childintime.childintime.gui.component.property.context.ContextDateAction;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
@@ -78,6 +79,25 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
      */
     public DatePropertyField(String value, boolean allowNull) {
         this((Object) value, allowNull);
+    }
+
+    @Override
+    protected JPopupMenu buildUiMenu() {
+        // Build the super context menu
+        JPopupMenu contextMenu = super.buildUiMenu();
+
+        // Return null if the super was null
+        if(contextMenu == null)
+            return null;
+
+        // Add a separator
+        contextMenu.addSeparator();
+
+        // Add the date selection context menu item
+        contextMenu.add(new ContextDateAction(this));
+
+        // Return the context menu
+        return contextMenu;
     }
 
     /**
@@ -238,24 +258,8 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
 
     @Override
     public void actionPerformed(ActionEvent action) {
-        // Determine the position of the date chooser
-        final int x = this.textField.getSize().width - this.dateChooserPopup.getPreferredSize().width;
-        final int y = this.textField.getSize().height;
-
-        // Create a calendar instance to use
-        Calendar calendar = Calendar.getInstance();
-
-        // Set the date based on the value in the text field
-        final Date date = getDate();
-        if(date != null)
-            calendar.setTime(date);
-
-        // Set the date chooser calendar
-        this.dateChooser.setCalendar(calendar);
-
-        // Show the date chooser popup
-        this.dateChooserPopup.show(this.textField, x, y);
-        this.dateSelected = false;
+        // Show the date chooser
+        showDateChooser();
     }
 
     @Override
@@ -279,6 +283,30 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
             this.setDate(this.dateChooser.getCalendar().getTime());
         else
             this.setDate(null);
+    }
+
+    /**
+     * Show the date chooser.
+     */
+    public void showDateChooser() {
+        // Determine the position of the date chooser
+        final int x = this.textField.getSize().width - this.dateChooserPopup.getPreferredSize().width;
+        final int y = this.textField.getSize().height;
+
+        // Create a calendar instance to use
+        Calendar calendar = Calendar.getInstance();
+
+        // Set the date based on the value in the text field
+        final Date date = getDate();
+        if(date != null)
+            calendar.setTime(date);
+
+        // Set the date chooser calendar
+        this.dateChooser.setCalendar(calendar);
+
+        // Show the date chooser popup
+        this.dateChooserPopup.show(this.textField, x, y);
+        this.dateSelected = false;
     }
 
     @Override
