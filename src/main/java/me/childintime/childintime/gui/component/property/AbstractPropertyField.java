@@ -20,7 +20,11 @@ public abstract class AbstractPropertyField extends JComponent {
      * @param allowNull True if null is allowed, false if not.
      */
     public AbstractPropertyField(boolean allowNull) {
+        // Set whether null is allowed
         this.allowNull = allowNull;
+
+        // Set the component name
+        this.setName(getComponentName());
     }
 
     /**
@@ -68,4 +72,11 @@ public abstract class AbstractPropertyField extends JComponent {
     public void setNull(boolean _null) {
         this._null = _null;
     }
+
+    /**
+     * Get the component name.
+     *
+     * @return Component name.
+     */
+    protected abstract String getComponentName();
 }

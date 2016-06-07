@@ -257,6 +257,11 @@ public class TextPropertyField extends AbstractPropertyField {
             this.textField.setText("<null>");
     }
 
+    @Override
+    protected String getComponentName() {
+        return getClass().getSimpleName();
+    }
+
     /**
      * Check whether an empty field is allowed.
      *
