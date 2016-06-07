@@ -17,11 +17,6 @@ public class TextPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * The property field text.
-     */
-    private String text = null;
-
-    /**
      * Text field.
      */
     protected JTextField textField;
@@ -54,7 +49,7 @@ public class TextPropertyField extends AbstractPropertyField {
         // Build the UI
         buildUi();
 
-        // Set the text
+        // Set the text value
         setText(value);
     }
 
@@ -62,9 +57,6 @@ public class TextPropertyField extends AbstractPropertyField {
      * Build the component UI.
      */
     protected void buildUi() {
-        // Store the current instance
-        final TextPropertyField instance = this;
-
         // Set the layout
         setLayout(new GridBagLayout());
 
@@ -75,7 +67,6 @@ public class TextPropertyField extends AbstractPropertyField {
         this.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                // Enable the field
                 enableField();
             }
 
@@ -90,7 +81,6 @@ public class TextPropertyField extends AbstractPropertyField {
         this.textField.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Enable the field
                 enableField();
             }
 
@@ -112,11 +102,8 @@ public class TextPropertyField extends AbstractPropertyField {
 
             @Override
             public void focusLost(FocusEvent e) {
-                // Copy the text from the field
-                instance.text = instance.textField.getText();
-
-                // Clear the field if it's empty
-                clearIfEmpty();
+                // Disable the property field if it's currently empty
+                disableIfEmpty();
             }
         });
 
@@ -133,8 +120,7 @@ public class TextPropertyField extends AbstractPropertyField {
                 transferFocus();
 
                 // Set the field to null
-                if(!isNull())
-                    setNull(true);
+                setNull(true);
             }
         });
 
@@ -169,7 +155,7 @@ public class TextPropertyField extends AbstractPropertyField {
     public JPanel getActionButtonPanel() {
         // Create the action button panel
         JPanel actionButtonPanel = new JPanel();
-        actionButtonPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 0, 0));
+        actionButtonPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 1, 1));
         actionButtonPanel.setOpaque(false);
 
         // Create the clear button
@@ -225,12 +211,14 @@ public class TextPropertyField extends AbstractPropertyField {
     }
 
     /**
-     * Get the text value.
+     * Get the property field text value.
+     * If the field is null, null will be returned.
+     * If null is not allowed, an empty string will be returned instead of a null value.
      *
-     * @return Text value.
+     * @return Text value, or null.
      */
     public String getText() {
-        return this.text;
+        return !isNull() ? this.textField.getText() : (isNullAllowed() ? null : "");
     }
 
     /**
@@ -243,28 +231,30 @@ public class TextPropertyField extends AbstractPropertyField {
         if(text == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
 
-        // Set the text and the null flag
-        this.text = text;
+        // Set the null state
+        if(text == null)
+            setNull(true);
+        else if(isNull())
+            setNull(false);
 
-        // Set the field content
-        if(this.text != null)
-            this.textField.setText(this.text);
-        else
-            this.textField.setText("<null>");
-
-        // Update the enabled state of both components
-        this.textField.setEnabled(!isNull());
-        this.clearButton.setEnabled(!isNull());
-        this.setFocusable(isNull());
+        // Set the text field text
+        if(!isNull())
+            this.textField.setText(text);
     }
 
-    /**
-     * Set whether the property field is null.
-     *
-     * @param isNull True if null.
-     */
-    public void setNull(boolean isNull) {
-        setText(isNull ? null : "");
+    @Override
+    public void setNull(boolean _null) {
+        // Set null in the super
+        super.setNull(_null);
+
+        // Update the enabled state of both components
+        this.textField.setEnabled(!_null);
+        this.clearButton.setEnabled(!_null);
+        this.setFocusable(_null);
+
+        // Set the field text to the null placeholder if it's set to null
+        if(_null)
+            this.textField.setText("<null>");
     }
 
     /**
@@ -286,7 +276,8 @@ public class TextPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty
-        clearIfEmpty();
+        // TODO: Only if not focussed?
+        disableIfEmpty();
     }
 
     /**
@@ -314,12 +305,23 @@ public class TextPropertyField extends AbstractPropertyField {
     }
 
     /**
-     * Clear the field if it's empty.
+     * Disable the field.
+     * This will put the field into it's null state if possible.
+     */
+    public void disableField() {
+        if(isNullAllowed())
+            setNull(true);
+        else
+            setText("");
+    }
+
+    /**
+     * Disable the field if it's empty.
      * This sets the field to null if it's empty, if null is not allowed the field is left blank.
      */
-    public void clearIfEmpty() {
+    public void disableIfEmpty() {
         // Clear the field if it's empty, and empty is allowed
-        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && getText().isEmpty())
+        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && isEmpty())
             setNull(true);
     }
 }
