@@ -135,6 +135,10 @@ public class Core {
         // Show a status message
         System.out.println("Starting application core...");
 
+        // Enable hardware accelerated rendering using OpenGL for Java2D, including AWT and Swing
+        System.out.println("Enabling hardware acceleration...");
+        System.setProperty("sun.java2d.opengl", "true");
+
         // Set the Swing look and feel to the systems native
         SwingUtils.useNativeLookAndFeel();
 
