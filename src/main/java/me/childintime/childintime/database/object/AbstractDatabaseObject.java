@@ -127,7 +127,8 @@ public abstract class AbstractDatabaseObject implements Cloneable {
             PreparedStatement fetchStatement = connection.prepareStatement(
                     "SELECT `" + fieldsToFetch.toString() + "` " +
                     "FROM `" + getTableName() + "` " +
-                    "WHERE `id` = ?"
+                    "WHERE `id` = ?" +
+                    "LIMIT 1"
             );
 
             // Set the prepared statement parameters
