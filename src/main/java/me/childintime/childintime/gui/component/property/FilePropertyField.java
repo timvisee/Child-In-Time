@@ -1,5 +1,6 @@
 package me.childintime.childintime.gui.component.property;
 
+import me.childintime.childintime.gui.component.property.context.ContextFileAction;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
@@ -61,6 +62,25 @@ public class FilePropertyField extends TextPropertyField {
     }
 
     @Override
+    protected JPopupMenu buildUiMenu() {
+        // Build the super context menu
+        JPopupMenu contextMenu = super.buildUiMenu();
+
+        // Return null if the super was null
+        if(contextMenu == null)
+            return null;
+
+        // Add a separator
+        contextMenu.addSeparator();
+
+        // Add the file selection context menu item
+        contextMenu.add(new ContextFileAction(this));
+
+        // Return the context menu
+        return contextMenu;
+    }
+
+    @Override
     public JPanel getActionButtonPanel() {
         // Create the super action button panel
         JPanel actionButtonPanel = super.getActionButtonPanel();
@@ -86,28 +106,33 @@ public class FilePropertyField extends TextPropertyField {
         }
 
         // Add an action listener to the browse button
-        this.browseButton.addActionListener(e -> {
-            // Create a file chooser
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setSelectedFile(getFile());
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-            // Show the save dialog, to select a file
-            fileChooser.showSaveDialog(this);
-
-            // Get the selected file
-            File selectedFile = fileChooser.getSelectedFile();
-
-            // Update the selected file if it isn't null
-            if(selectedFile != null)
-                setFile(selectedFile);
-        });
+        this.browseButton.addActionListener(e -> showFileChooserDialog());
 
         // Add the button
         actionButtonPanel.add(this.browseButton);
 
         // Return the action button panel
         return actionButtonPanel;
+    }
+
+    /**
+     * Show the file chooser dialog.
+     */
+    public void showFileChooserDialog() {
+        // Create a file chooser
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(getFile());
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        // Show the save dialog, to select a file
+        fileChooser.showSaveDialog(this);
+
+        // Get the selected file
+        File selectedFile = fileChooser.getSelectedFile();
+
+        // Update the selected file if it isn't null
+        if(selectedFile != null)
+            setFile(selectedFile);
     }
 
     /**
