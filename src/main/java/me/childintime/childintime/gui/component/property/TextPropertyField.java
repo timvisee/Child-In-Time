@@ -35,6 +35,11 @@ public class TextPropertyField extends AbstractPropertyField {
     protected JButton clearButton;
 
     /**
+     * Context menu.
+     */
+    protected JPopupMenu contextMenu;
+
+    /**
      * Constructor.
      *
      * @param allowNull True if null is allowed, false if not.
@@ -133,9 +138,9 @@ public class TextPropertyField extends AbstractPropertyField {
         });
 
         // Build the context menu, and attach it to the component
-        JPopupMenu contextMenu = buildUiMenu();
-        if(contextMenu != null)
-        this.textField.setComponentPopupMenu(contextMenu);
+        this.contextMenu = buildUiMenu();
+        if(this.contextMenu != null)
+            this.textField.setComponentPopupMenu(this.contextMenu);
 
         // Create a component border, and install the action buttons into the text field
         ComponentBorder cb = new ComponentBorder(getActionButtonPanel(), ComponentBorder.Edge.RIGHT, ComponentBorder.CENTER);
