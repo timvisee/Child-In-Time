@@ -325,6 +325,15 @@ public class TextPropertyField extends AbstractPropertyField {
             this.textField.setText(this.nullPlaceholderText);
     }
 
+    @Override
+    public void clear() {
+        // Set the field to null, or an empty string if null isn't allowed
+        if(isNullAllowed())
+            setNull(true);
+        else
+            setText("");
+    }
+
     /**
      * Get the null placeholder text.
      *
@@ -393,17 +402,6 @@ public class TextPropertyField extends AbstractPropertyField {
         // Focus the field and select all
         this.textField.grabFocus();
         this.textField.selectAll();
-    }
-
-    /**
-     * Disable the field.
-     * This will put the field into it's null state if possible.
-     */
-    public void disableField() {
-        if(isNullAllowed())
-            setNull(true);
-        else
-            setText("");
     }
 
     /**

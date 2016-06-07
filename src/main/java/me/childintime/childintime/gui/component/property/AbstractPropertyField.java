@@ -74,6 +74,11 @@ public abstract class AbstractPropertyField extends JComponent {
     }
 
     /**
+     * Clear the field.
+     */
+    public abstract void clear();
+
+    /**
      * Get the component name.
      *
      * @return Component name.

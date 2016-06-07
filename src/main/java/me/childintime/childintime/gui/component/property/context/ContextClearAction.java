@@ -35,6 +35,6 @@ public class ContextClearAction extends TextAction {
      */
     public void actionPerformed(ActionEvent e) {
         // Clear the property field
-        this.propertyField.setNull(true);
+        this.propertyField.clear();
     }
 }
