@@ -13,6 +13,16 @@ import java.awt.event.*;
 public class TextPropertyField extends AbstractPropertyField {
 
     /**
+     * Clear button text.
+     */
+    public static final String BUTTON_CLEAR_TEXT = "✖";
+
+    /**
+     * Clear button tooltip.
+     */
+    public static final String BUTTON_CLEAR_TOOLTIP = "Clear field";
+
+    /**
      * True if an empty value is allowed.
      * If this is set to false, an empty string will be converted to null when focus is lost.
      * The field will be left empty if null is not allowed.
@@ -216,7 +226,8 @@ public class TextPropertyField extends AbstractPropertyField {
         actionButtonPanel.setOpaque(false);
 
         // Create the clear button
-        this.clearButton = new JButton("✖");
+        this.clearButton = new JButton(BUTTON_CLEAR_TEXT);
+        this.clearButton.setToolTipText(BUTTON_CLEAR_TOOLTIP);
         this.clearButton.addActionListener(e -> {
             // Set the value to null
             setNull(true);

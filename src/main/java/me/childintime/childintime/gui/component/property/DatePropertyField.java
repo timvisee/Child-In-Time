@@ -23,6 +23,16 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
     private static final long serialVersionUID = -2303712745720670722L;
 
     /**
+     * Calendar button text.
+     */
+    public static final String BUTTON_CALENDAR_TEXT = "…";
+
+    /**
+     * Calendar button tooltip.
+     */
+    public static final String BUTTON_CALENDAR_TOOLTIP = "Choose date...";
+
+    /**
      * Null placeholder text for the date property field.
      */
     public static final String NULL_PLACEHOLDER_TEXT = "YYYY-MM-DD";
@@ -179,7 +189,8 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
     @Override
     public JPanel getActionButtonPanel() {
         // Create the clear button
-        this.calendarButton = new JButton("…");
+        this.calendarButton = new JButton(BUTTON_CALENDAR_TEXT);
+        this.calendarButton.setToolTipText(BUTTON_CALENDAR_TOOLTIP);
 
         // Define the size of the clear button
         final int buttonSize = this.textField.getPreferredSize().height - 4;

@@ -9,6 +9,16 @@ import java.io.File;
 public class FilePropertyField extends TextPropertyField {
 
     /**
+     * Browse button text.
+     */
+    public static final String BUTTON_BROWSE_TEXT = "…";
+
+    /**
+     * Browse button tooltip.
+     */
+    public static final String BUTTON_BROWSE_TOOLTIP = "Browse...";
+
+    /**
      * Browse button.
      */
     private JButton browseButton;
@@ -56,7 +66,8 @@ public class FilePropertyField extends TextPropertyField {
         JPanel actionButtonPanel = super.getActionButtonPanel();
 
         // Create the clear button
-        this.browseButton = new JButton("…");
+        this.browseButton = new JButton(BUTTON_BROWSE_TEXT);
+        this.browseButton.setToolTipText(BUTTON_BROWSE_TOOLTIP);
 
         // Define the size of the clear button
         this.browseButton.setPreferredSize(this.clearButton.getPreferredSize());
