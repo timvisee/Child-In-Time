@@ -4,7 +4,6 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.TableUtils;
 
@@ -53,6 +52,11 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JButton removeButton;
 
     /**
+     * Refresh button instance.
+     */
+    private JButton refreshButton;
+
+    /**
      * Filters button instance.
      */
     private JButton filtersButton;
@@ -76,7 +80,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
-        super(owner, App.APP_NAME + " - " + objectManager.getTypeName() + " manager", ModalityType.APPLICATION_MODAL);
+        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTypeName(true, false) + " manager", ModalityType.APPLICATION_MODAL);
 
         // Set the database object manager
         this.objectManager = objectManager;
@@ -160,7 +164,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         JPanel mainPanel = new JPanel(new GridBagLayout());
 
         // Create the main label
-        final JLabel instructionLabel = new JLabel("Add, edit or delete " + this.objectManager.getTypeName().toLowerCase() + "s.");
+        final JLabel instructionLabel = new JLabel("Add, edit or delete " + this.objectManager.getManifest().getTypeName(false, true).toLowerCase() + ".");
 
         // Add the instruction label
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -215,7 +219,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Create the object table panel, and give it a titled border
         JPanel objectPanel = new JPanel(new GridBagLayout());
-        objectPanel.setBorder(BorderFactory.createTitledBorder(this.objectManager.getTypeName() + "s"));
+        objectPanel.setBorder(BorderFactory.createTitledBorder(this.objectManager.getManifest().getTypeName(true, true)));
 
         // Create the manage button panel
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -347,7 +351,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         buttonPanel.add(this.addButton);
         buttonPanel.add(this.editButton);
         buttonPanel.add(this.removeButton);
-        this.addButton.addActionListener(e -> addDatabase());
+        this.addButton.addActionListener(e -> addObject());
         this.editButton.addActionListener(e -> editDatabase());
         this.removeButton.addActionListener(e -> removeDatabases());
 
@@ -363,15 +367,18 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JPanel buildUiViewSelectionButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2, 1, 10, 10));
+        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
 
         // Create the buttons to add to the panel
+        this.refreshButton = new JButton("Refresh");
         this.filtersButton = new JButton("Filters...");
         this.columnsButton = new JButton("Columns...");
 
         // Add the buttons to the panel
+        buttonPanel.add(this.refreshButton);
         buttonPanel.add(this.filtersButton);
         buttonPanel.add(this.columnsButton);
+        this.refreshButton.addActionListener(e -> refresh());
         this.filtersButton.addActionListener(e -> featureNotImplemented());
         this.columnsButton.addActionListener(e -> featureNotImplemented());
 
@@ -387,32 +394,20 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JPanel buildUiCommitButtonsPanel() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 3, 10, 10));
+        buttonPanel.setLayout(new GridLayout(1, 1, 10, 10));
 
-        // Create the buttons to add to the panel
-        JButton okButton = new JButton("OK");
-        JButton applyButton = new JButton("Apply");
-        JButton cancelButton = new JButton("Cancel");
-        okButton.addActionListener(e -> {
-            // Save the databases
-            applyDatabases();
+        // Create the commit buttons
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> {
+//            // Save the databases
+//            applyDatabases();
 
             // Close the frame
             dispose();
         });
-        applyButton.addActionListener(e -> applyDatabases());
-        cancelButton.addActionListener(e -> onClose());
 
         // Add the buttons to the panel in the proper order
-        if(!Platform.isMacOsX()) {
-            buttonPanel.add(okButton);
-            buttonPanel.add(cancelButton);
-            buttonPanel.add(applyButton);
-        } else {
-            buttonPanel.add(applyButton);
-            buttonPanel.add(cancelButton);
-            buttonPanel.add(okButton);
-        }
+        buttonPanel.add(closeButton);
 
         // Return the button panel
         return buttonPanel;
@@ -433,12 +428,12 @@ public class DatabaseObjectManagerDialog extends JDialog {
     }
 
     /**
-     * Create a new database, ask for the name.
+     * Create a new database object.
      */
-    public void addDatabase() {
+    public void addObject() {
         // Create a new database through the edit panel
         // TODO: Implement modification dialog here!
-        final AbstractDatabaseObject databaseObject = null; // DatabaseModifyDialog.showCreate(this)
+        final AbstractDatabaseObject databaseObject = DatabaseObjectModifyDialog.showCreate(this, this.objectManager.getManifest());
 
         JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
@@ -465,7 +460,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Show the edit dialog for this database
         // TODO: Implement the edit dialog here
-        final AbstractDatabaseObject result = null; // DatabaseModifyDialog.showModify(this, selected)
+        final AbstractDatabaseObject result = DatabaseObjectModifyDialog.showModify(this, selected);
 
         // Feature not yet implemented, show a warning box
         featureNotImplemented();
@@ -490,7 +485,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Get the type name
-        final String typeName = this.objectManager.getTypeName().toLowerCase();
+        final String typeName = this.objectManager.getManifest().getTypeName(false, false);
 
         // Ask whether the user wants to delete the databases
         // TODO: Show a proper message!
@@ -606,5 +601,26 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // There don't seem to be any unsaved changes, return the result
         return false;
+    }
+
+    /**
+     * Refresh the list of database objects.
+     * This also flushes the cache and forces new objects to be fetched.
+     */
+    public void refresh() {
+        // Create a progress dialog
+        ProgressDialog progressDialog = new ProgressDialog(this, App.APP_NAME, false, "Refreshing...", true);
+
+        // Clear the manager's cache
+        this.objectManager.flushCache();
+
+        // Fetch all data again
+        this.objectManager.fetchObjects();
+
+        // Fire a table change
+        this.objectTableModel.fireTableDataChanged();
+
+        // Dispose the dialog
+        progressDialog.dispose();
     }
 }

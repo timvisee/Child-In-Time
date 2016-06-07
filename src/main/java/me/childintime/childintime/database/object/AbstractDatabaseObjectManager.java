@@ -54,7 +54,7 @@ public abstract class AbstractDatabaseObjectManager {
             // Create a statement to fetch the objects
             PreparedStatement fetchStatement = connection.prepareStatement(
                     "SELECT `" + fieldsToFetch.toString() + "` " +
-                    "FROM `" + getTableName() + "`"
+                    "FROM `" + getManifest().getTableName() + "`"
             );
 
             // Fetch the data
@@ -77,7 +77,11 @@ public abstract class AbstractDatabaseObjectManager {
             }
 
         } catch(Exception e){
+            // Print the stack trace
             e.printStackTrace();
+
+            // Return null
+            return null;
         }
 
         // Set the list of objects
@@ -163,16 +167,21 @@ public abstract class AbstractDatabaseObjectManager {
      */
     @SuppressWarnings("unused")
     public int getObjectCount() {
+        // Return the number of objects from cache, if cached
+        if(hasCache())
+            return this.objects.size();
+
+        // Query the database to get the object count
         try {
             // Get the database connection
             final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
             // Prepare a query to count the number of objects
-            PreparedStatement countQuery = connection.prepareStatement("SELECT count(`id`) AS objectCount FROM " + getTableName());
+            PreparedStatement countQuery = connection.prepareStatement("SELECT count(`id`) FROM `" + getManifest().getTableName() + "`");
 
             // Execute the query, and return the results
             ResultSet result = countQuery.executeQuery();
-            return result.getInt("objectCount");
+            return result.getInt(1);
 
         } catch(Exception e){
             e.printStackTrace();
@@ -200,25 +209,6 @@ public abstract class AbstractDatabaseObjectManager {
 
         // Reset the cache
         this.objects = null;
-    }
-
-    /**
-     * Get the name of the current database object manager type.
-     *
-     * @return Database object manager type name.
-     */
-    public String getTypeName() {
-        return getManifest().getTypeName();
-    }
-
-    /**
-     * Get the database table name for this object manager.
-     *
-     * @return Database table name.
-     */
-    @Deprecated
-    public String getTableName() {
-        return getManifest().getTableName();
     }
 
     /**

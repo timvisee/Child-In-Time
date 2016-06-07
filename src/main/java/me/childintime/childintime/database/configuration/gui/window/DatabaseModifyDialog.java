@@ -22,7 +22,7 @@ public class DatabaseModifyDialog extends JDialog {
     private static final String FORM_TITLE = App.APP_NAME + " - Edit database configuration";
 
     /**
-     * The source database instance, which is the source.
+     * The source database instance.
      */
     private AbstractDatabase source;
 
@@ -233,6 +233,7 @@ public class DatabaseModifyDialog extends JDialog {
         c.gridy = 0;
         c.gridwidth = 2;
         c.insets = new Insets(0, 0, 16, 8);
+        // TODO: Show edit or create label!
         container.add(new JLabel("Edit database."), c);
 
         // Create and add the name label

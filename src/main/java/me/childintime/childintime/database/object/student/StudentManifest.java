@@ -4,7 +4,6 @@ import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
-import me.childintime.childintime.database.object.school.SchoolFields;
 
 public class StudentManifest extends AbstractDatabaseObjectManifest {
 
@@ -40,8 +39,9 @@ public class StudentManifest extends AbstractDatabaseObjectManifest {
     }
 
     @Override
-    public String getTypeName() {
-        return TYPE_NAME;
+    public String getTypeName(boolean capital, boolean plural) {
+        return (capital ? TYPE_NAME.substring(0, 1).toUpperCase() + TYPE_NAME.substring(1) : TYPE_NAME.toLowerCase()) +
+                (plural ? "s" : "");
     }
 
     @Override

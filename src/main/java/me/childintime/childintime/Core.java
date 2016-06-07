@@ -11,8 +11,10 @@ import me.childintime.childintime.database.object.measurement.MeasurementManager
 import me.childintime.childintime.database.object.parkour.ParkourManager;
 import me.childintime.childintime.database.object.school.SchoolManager;
 import me.childintime.childintime.database.object.student.StudentManager;
+import me.childintime.childintime.database.object.student.StudentManifest;
 import me.childintime.childintime.database.object.teacher.TeacherManager;
 import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
+import me.childintime.childintime.database.object.window.DatabaseObjectModifyDialog;
 import me.childintime.childintime.gui.window.DashboardFrame;
 import me.childintime.childintime.gui.window.LoginDialog;
 import me.childintime.childintime.util.Platform;
@@ -132,6 +134,12 @@ public class Core {
 
         // Show a status message
         System.out.println("Starting application core...");
+
+        // Enable hardware accelerated rendering using OpenGL for Java2D on non-OSX platforms, including AWT and Swing
+        if(!Platform.isMacOsX()) {
+            System.out.println("Enabling hardware acceleration...");
+            System.setProperty("sun.java2d.opengl", "true");
+        }
 
         // Set the Swing look and feel to the systems native
         SwingUtils.useNativeLookAndFeel();
@@ -292,6 +300,8 @@ public class Core {
 
         // Hide the progress dialog
         this.progressDialog.setVisible(false);
+
+        DatabaseObjectModifyDialog.showModify(null, getStudentManager().getObjects().get(0));
 
         // TODO: Show a proper dashboard here, instead of this demo window!
         DashboardFrame dashboard = new DashboardFrame("My Dashboard");

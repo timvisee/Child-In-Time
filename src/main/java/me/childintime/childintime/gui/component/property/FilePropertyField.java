@@ -1,6 +1,6 @@
 package me.childintime.childintime.gui.component.property;
 
-import com.timvisee.swingtoolbox.border.ComponentBorder;
+import me.childintime.childintime.gui.component.property.context.ContextFileAction;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
@@ -8,6 +8,16 @@ import java.awt.*;
 import java.io.File;
 
 public class FilePropertyField extends TextPropertyField {
+
+    /**
+     * Browse button text.
+     */
+    public static final String BUTTON_BROWSE_TEXT = "…";
+
+    /**
+     * Browse button tooltip.
+     */
+    public static final String BUTTON_BROWSE_TOOLTIP = "Browse...";
 
     /**
      * Browse button.
@@ -20,7 +30,11 @@ public class FilePropertyField extends TextPropertyField {
      * @param allowNull True if null is allowed.
      */
     public FilePropertyField(boolean allowNull) {
-        this(allowNull ? null : "", allowNull);
+        // Call the super
+        super(allowNull);
+
+        // Do not allow empty values
+        setEmptyAllowed(false);
     }
 
     /**
@@ -30,7 +44,11 @@ public class FilePropertyField extends TextPropertyField {
      * @param allowNull True if null is allowed.
      */
     public FilePropertyField(String value, boolean allowNull) {
-        this(value, allowNull, false);
+        // Call the super
+        super(value, allowNull);
+
+        // Do not allow empty values
+        setEmptyAllowed(false);
     }
 
     /**
@@ -43,28 +61,23 @@ public class FilePropertyField extends TextPropertyField {
         this(file.getAbsolutePath(), allowNull);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param value Value.
-     * @param allowNull True if null is allowed.
-     */
-    public FilePropertyField(String value, boolean allowNull, boolean isPassword) {
-        // Call the super
-        super(value, allowNull, isPassword);
+    @Override
+    protected JPopupMenu buildUiMenu() {
+        // Build the super context menu
+        JPopupMenu contextMenu = super.buildUiMenu();
 
-        // Do not allow empty values
-        setEmptyAllowed(false);
-    }
+        // Return null if the super was null
+        if(contextMenu == null)
+            return null;
 
-    /**
-     * Constructor.
-     *
-     * @param file File.
-     * @param allowNull True if null is allowed.
-     */
-    public FilePropertyField(File file, boolean allowNull, boolean isPassword) {
-        this(file.getAbsolutePath(), allowNull, isPassword);
+        // Add a separator
+        contextMenu.addSeparator();
+
+        // Add the file selection context menu item
+        contextMenu.add(new ContextFileAction(this));
+
+        // Return the context menu
+        return contextMenu;
     }
 
     @Override
@@ -73,7 +86,8 @@ public class FilePropertyField extends TextPropertyField {
         JPanel actionButtonPanel = super.getActionButtonPanel();
 
         // Create the clear button
-        this.browseButton = new JButton("…");
+        this.browseButton = new JButton(BUTTON_BROWSE_TEXT);
+        this.browseButton.setToolTipText(BUTTON_BROWSE_TOOLTIP);
 
         // Define the size of the clear button
         this.browseButton.setPreferredSize(this.clearButton.getPreferredSize());
@@ -92,28 +106,33 @@ public class FilePropertyField extends TextPropertyField {
         }
 
         // Add an action listener to the browse button
-        this.browseButton.addActionListener(e -> {
-            // Create a file chooser
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setSelectedFile(getFile());
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-            // Show the save dialog, to select a file
-            fileChooser.showSaveDialog(this);
-
-            // Get the selected file
-            File selectedFile = fileChooser.getSelectedFile();
-
-            // Update the selected file if it isn't null
-            if(selectedFile != null)
-                setFile(selectedFile);
-        });
+        this.browseButton.addActionListener(e -> showFileChooserDialog());
 
         // Add the button
         actionButtonPanel.add(this.browseButton);
 
         // Return the action button panel
         return actionButtonPanel;
+    }
+
+    /**
+     * Show the file chooser dialog.
+     */
+    public void showFileChooserDialog() {
+        // Create a file chooser
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(getFile());
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        // Show the save dialog, to select a file
+        fileChooser.showSaveDialog(this);
+
+        // Get the selected file
+        File selectedFile = fileChooser.getSelectedFile();
+
+        // Update the selected file if it isn't null
+        if(selectedFile != null)
+            setFile(selectedFile);
     }
 
     /**

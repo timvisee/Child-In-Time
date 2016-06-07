@@ -127,7 +127,8 @@ public abstract class AbstractDatabaseObject implements Cloneable {
             PreparedStatement fetchStatement = connection.prepareStatement(
                     "SELECT `" + fieldsToFetch.toString() + "` " +
                     "FROM `" + getTableName() + "` " +
-                    "WHERE `id` = ?"
+                    "WHERE `id` = ?" +
+                    "LIMIT 1"
             );
 
             // Set the prepared statement parameters
@@ -138,7 +139,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
             // Throw an exception if no data is returned from the database
             if(!result.next())
-                throw new Exception("Failed to fetch object data, empty result received from the database.");
+                throw new Exception("Failed to fetch object data for [" + getClass().getSimpleName() + ";id=" + getId() + "], empty result received from the database.");
 
             // Get the raw data for each field, and parse it
             for (DatabaseFieldsInterface field : fields)
@@ -236,16 +237,6 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     @SuppressWarnings("WeakerAccess")
     public Object getField(DatabaseFieldsInterface field) throws Exception {
         return getFields(new DatabaseFieldsInterface[]{field}).get(0);
-    }
-
-    /**
-     * Get the name of the current database object type.
-     *
-     * @return Database object type name.
-     */
-    @Deprecated
-    public String getTypeName() {
-        return getManifest().getTypeName();
     }
 
     @Override

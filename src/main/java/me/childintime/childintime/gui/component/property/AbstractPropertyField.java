@@ -5,6 +5,11 @@ import javax.swing.*;
 public abstract class AbstractPropertyField extends JComponent {
 
     /**
+     * Defines whether the property field is set to null.
+     */
+    private boolean _null = false;
+
+    /**
      * Flag which defines whether a null value is allowed.
      */
     private boolean allowNull;
@@ -15,7 +20,11 @@ public abstract class AbstractPropertyField extends JComponent {
      * @param allowNull True if null is allowed, false if not.
      */
     public AbstractPropertyField(boolean allowNull) {
+        // Set whether null is allowed
         this.allowNull = allowNull;
+
+        // Set the component name
+        this.setName(getComponentName());
     }
 
     /**
@@ -46,11 +55,33 @@ public abstract class AbstractPropertyField extends JComponent {
     }
 
     /**
-     * Check whether the value is null.
+     * Check whether the property field is set to null.
      *
-     * @return True if the value is null, false if not.
+     * @return True if the property field is set to null.
      */
     public boolean isNull() {
-        return getValue() == null;
+        // TODO: Only return true if null values are allowed?
+        return this._null;
     }
+
+    /**
+     * Set whether the property field is set to null.
+     *
+     * @param _null True if null, false if not.
+     */
+    public void setNull(boolean _null) {
+        this._null = _null;
+    }
+
+    /**
+     * Clear the field.
+     */
+    public abstract void clear();
+
+    /**
+     * Get the component name.
+     *
+     * @return Component name.
+     */
+    protected abstract String getComponentName();
 }
