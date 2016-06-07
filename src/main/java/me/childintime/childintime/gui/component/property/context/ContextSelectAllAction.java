@@ -8,6 +8,11 @@ import java.awt.event.ActionEvent;
 public class ContextSelectAllAction extends TextAction {
 
     /**
+     * Action key stroke.
+     */
+    public static final String ACTION_KEY_STROKE = "control A";
+
+    /**
      * Constructor.
      */
     public ContextSelectAllAction() {
@@ -15,7 +20,7 @@ public class ContextSelectAllAction extends TextAction {
         super("Select All");
 
         // Set the shortcut key
-        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control A"));
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(ACTION_KEY_STROKE));
     }
 
     /**

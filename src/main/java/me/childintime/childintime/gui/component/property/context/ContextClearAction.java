@@ -8,6 +8,11 @@ import java.awt.event.ActionEvent;
 public class ContextClearAction extends TextAction {
 
     /**
+     * Context action name.
+     */
+    public static final String ACTION_NAME = "Clear";
+
+    /**
      * Property field.
      */
     private AbstractPropertyField propertyField;
@@ -17,7 +22,7 @@ public class ContextClearAction extends TextAction {
      */
     public ContextClearAction(AbstractPropertyField propertyField) {
         // Construct the super with the name
-        super("Clear");
+        super(ACTION_NAME);
 
         // Set the property field instance
         this.propertyField = propertyField;

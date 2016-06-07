@@ -8,6 +8,11 @@ import java.awt.event.ActionEvent;
 public class ContextDateAction extends TextAction {
 
     /**
+     * Context action name.
+     */
+    public static final String ACTION_NAME = "Choose date...";
+
+    /**
      * Date property field.
      */
     private DatePropertyField propertyField;
@@ -17,7 +22,7 @@ public class ContextDateAction extends TextAction {
      */
     public ContextDateAction(DatePropertyField propertyField) {
         // Construct the super with the name
-        super("Choose Date...");
+        super(ACTION_NAME);
 
         // Set the property field instance
         this.propertyField = propertyField;
