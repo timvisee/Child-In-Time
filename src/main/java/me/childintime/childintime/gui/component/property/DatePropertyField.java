@@ -4,9 +4,6 @@ import com.toedter.calendar.JCalendar;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +13,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class DatePropertyField extends TextPropertyField implements ActionListener, PropertyChangeListener {
 
@@ -24,6 +20,11 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
      * Swing serial version UID.
      */
     private static final long serialVersionUID = -2303712745720670722L;
+
+    /**
+     * Null placeholder text for the date property field.
+     */
+    public static final String NULL_PLACEHOLDER_TEXT = "YYYY-MM-DD";
 
     /**
      * Date format to use.
@@ -46,11 +47,6 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
     private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     /**
-     * The date that was selected last.
-     */
-    private Date lastSelectedDate;
-
-    /**
      * Date chooser.
      */
     private JCalendar dateChooser;
@@ -59,6 +55,11 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
      * Date chooser popup.
      */
     private JPopupMenu dateChooserPopup;
+
+    /**
+     * Defines whether a date is selected.
+     */
+    private boolean dateSelected;
 
     /**
      * Constructor.
@@ -99,8 +100,8 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
         // Construct the super
         super(allowNull);
 
-        // Set the component name
-        this.setName("JDateChooser");
+        // Set the null placeholder text
+        setNullPlaceholderText(NULL_PLACEHOLDER_TEXT);
 
         // Create a variable for the date value
         Date valueDate = null;
@@ -117,7 +118,6 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
 
         // Set the date, and the last selected date
         setDate(valueDate);
-        this.lastSelectedDate = valueDate;
 
         // Create the calendar chooser
         this.dateChooser = new JCalendar(valueDate);
@@ -144,63 +144,16 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
 
             @Override
             public void setVisible(boolean visible) {
+                // Determine whether to fire a cancelled popup menu event
+                Boolean fireCancelled = (Boolean) this.getClientProperty("JPopupMenu.firePopupMenuCanceled");
 
-                Boolean fire = (Boolean) this.getClientProperty("JPopupMenu.firePopupMenuCanceled");
-
-                if(visible || instance.dateSelected || fire != null && fire)
+                // Determine whether to make the popup visible
+                if(visible || instance.dateSelected || fireCancelled != null && fireCancelled)
                     super.setVisible(visible);
             }
         };
         this.dateChooserPopup.setLightWeightPopupEnabled(true);
         this.dateChooserPopup.add(this.dateChooser);
-
-        // TODO: What is this change listener used for?
-        ChangeListener changeListener = new ChangeListener() {
-            boolean hasListened = false;
-
-            public void stateChanged(ChangeEvent var1) {
-                if(this.hasListened) {
-                    this.hasListened = false;
-                } else {
-                    if(DatePropertyField.this.dateChooserPopup.isVisible() && DatePropertyField.this.dateChooser.getMonthChooser().getComboBox().hasFocus()) {
-                        MenuElement[] var2 = MenuSelectionManager.defaultManager().getSelectedPath();
-                        MenuElement[] var3 = new MenuElement[var2.length + 1];
-                        var3[0] = DatePropertyField.this.dateChooserPopup;
-
-                        System.arraycopy(var2, 0, var3, 1, var2.length);
-
-                        this.hasListened = true;
-                        MenuSelectionManager.defaultManager().setSelectedPath(var3);
-                    }
-
-                }
-            }
-        };
-        MenuSelectionManager.defaultManager().addChangeListener(changeListener);
-    }
-
-    @Override
-    protected JTextField buildUiTextField() {
-        try {
-            // Create the formatter with the date mask
-            MaskFormatter formatter = new MaskFormatter("####-##-##");
-
-            // Create a calendar instance, to fetch the current date from
-            Calendar c = new GregorianCalendar();
-
-            // Configure the place holders for the mask formatter
-            formatter.setPlaceholderCharacter('?');
-            formatter.setPlaceholder(String.format("%02d", c.get(Calendar.YEAR)) + "-" +
-                            String.format("%02d", c.get(Calendar.MONTH)) + "-" +
-                            String.format("%02d", c.get(Calendar.DAY_OF_MONTH)));
-
-            // Create and return the formatted text field
-            return new JFormattedTextField(formatter);
-
-        } catch(ParseException e) {
-            // Throw an exception
-            throw new RuntimeException("Failed to configure date mask parser.", e);
-        }
     }
 
     @Override
@@ -230,14 +183,14 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
             this.calendarButton.setFont(new Font(this.clearButton.getFont().getFontName(), Font.PLAIN, this.clearButton.getFont().getSize() - 2));
         }
 
-        // Call the super
-        JPanel basePanel = super.getActionButtonPanel();
+        // Create the button panel through the super
+        final JPanel button = super.getActionButtonPanel();
 
-        // Add the button to the panel
-        basePanel.add(this.calendarButton, 0);
+        // Add the calendar button to the left of the panel
+        button.add(this.calendarButton, 0);
 
         // Return the button panel
-        return basePanel;
+        return button;
     }
 
     /**
@@ -274,15 +227,14 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
             setText(null);
     }
 
-
-
-
-
-
-
-
-
-    private boolean dateSelected;
+    /**
+     * Check whether a valid date is entered in the date property field.
+     *
+     * @return True if a valid date is entered, false if not.
+     */
+    public boolean isValidDate() {
+        return getDate() != null;
+    }
 
     @Override
     public void actionPerformed(ActionEvent action) {
@@ -294,7 +246,7 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
         Calendar calendar = Calendar.getInstance();
 
         // Set the date based on the value in the text field
-        Date date = getDate();
+        final Date date = getDate();
         if(date != null)
             calendar.setTime(date);
 
@@ -308,22 +260,25 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
 
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-        // Handle date changes
-        if(event.getPropertyName().equals("day")) {
-            if(this.dateChooserPopup.isVisible()) {
-                // Set the selected state
-                this.dateSelected = true;
+        // Make sure the day property changed
+        if(!event.getPropertyName().equals("day"))
+            return;
 
-                // Hide the popup
-                this.dateChooserPopup.setVisible(false);
+        // Make sure the data chooser popup is visible
+        if(!this.dateChooserPopup.isVisible())
+            return;
 
-                // Set the date
-                if((Integer) event.getNewValue() > 0)
-                    this.setDate(this.dateChooser.getCalendar().getTime());
-                else
-                    this.setDate(null);
-            }
-        }
+        // Set the selected state
+        this.dateSelected = true;
+
+        // Hide the popup
+        this.dateChooserPopup.setVisible(false);
+
+        // Set the date
+        if((Integer) event.getNewValue() > 0)
+            this.setDate(this.dateChooser.getCalendar().getTime());
+        else
+            this.setDate(null);
     }
 
     @Override
@@ -339,5 +294,12 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
     @Override
     public boolean requestFocusInWindow() {
         return this.textField != null ? this.textField.requestFocusInWindow() : super.requestFocusInWindow();
+    }
+
+    @Override
+    public void disableIfEmpty() {
+        // Clear the field if it's empty, and empty is allowed
+        if(isNullAllowed() && !isNull() && !isValidDate())
+            setNull(true);
     }
 }

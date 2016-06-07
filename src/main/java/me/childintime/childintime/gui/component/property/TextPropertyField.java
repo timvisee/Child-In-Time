@@ -17,6 +17,11 @@ public class TextPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
+     * Null placeholder text.
+     */
+    private String nullPlaceholderText = "<null>";
+
+    /**
      * Text field.
      */
     protected JTextField textField;
@@ -254,7 +259,25 @@ public class TextPropertyField extends AbstractPropertyField {
 
         // Set the field text to the null placeholder if it's set to null
         if(_null)
-            this.textField.setText("<null>");
+            this.textField.setText(this.nullPlaceholderText);
+    }
+
+    /**
+     * Get the null placeholder text.
+     *
+     * @return Null placeholder text.
+     */
+    public String getNullPlaceholderText() {
+        return this.nullPlaceholderText;
+    }
+
+    /**
+     * Set the null placeholder text.
+     *
+     * @param nullPlaceholderText Null placeholder text.
+     */
+    public void setNullPlaceholderText(String nullPlaceholderText) {
+        this.nullPlaceholderText = nullPlaceholderText;
     }
 
     @Override
