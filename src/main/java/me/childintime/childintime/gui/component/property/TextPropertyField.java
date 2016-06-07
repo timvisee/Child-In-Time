@@ -1,9 +1,12 @@
 package me.childintime.childintime.gui.component.property;
 
 import com.timvisee.swingtoolbox.border.ComponentBorder;
+import me.childintime.childintime.gui.component.property.context.ContextClearAction;
+import me.childintime.childintime.gui.component.property.context.ContextSelectAllAction;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -129,6 +132,11 @@ public class TextPropertyField extends AbstractPropertyField {
             }
         });
 
+        // Build the context menu, and attach it to the component
+        JPopupMenu contextMenu = buildUiMenu();
+        if(contextMenu != null)
+        this.textField.setComponentPopupMenu(contextMenu);
+
         // Create a component border, and install the action buttons into the text field
         ComponentBorder cb = new ComponentBorder(getActionButtonPanel(), ComponentBorder.Edge.RIGHT, ComponentBorder.CENTER);
         cb.setGap(2);
@@ -150,6 +158,45 @@ public class TextPropertyField extends AbstractPropertyField {
      */
     protected JTextField buildUiTextField() {
         return new JTextField();
+    }
+
+    /**
+     * Build the UI context menu for this component.
+     * @return Context menu, or null.
+     */
+    protected JPopupMenu buildUiMenu() {
+        // Create the context menu
+        JPopupMenu menu = new JPopupMenu();
+
+        // Create and set up the cut action
+        Action cutAction = new DefaultEditorKit.CutAction();
+        cutAction.putValue(Action.NAME, "Cut");
+        cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
+        menu.add(cutAction);
+
+        // Create and set up the copy action
+        Action copyAction = new DefaultEditorKit.CopyAction();
+        copyAction.putValue(Action.NAME, "Copy");
+        copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
+        menu.add(copyAction);
+
+        // Create and set up the paste action
+        Action pasteAction = new DefaultEditorKit.PasteAction();
+        pasteAction.putValue(Action.NAME, "Paste");
+        pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
+        menu.add(pasteAction);
+
+        // Create and set up the select all action
+        menu.add(new ContextSelectAllAction());
+
+        // Add a separator
+        menu.addSeparator();
+
+        // Create and set up the clear action
+        menu.add(new ContextClearAction(this));
+
+        // Return the menu
+        return menu;
     }
 
     /**
