@@ -48,22 +48,8 @@ public class TextPropertyField extends AbstractPropertyField {
      * @param allowNull True if null is allowed, false if not.
      */
     public TextPropertyField(String value, boolean allowNull) {
-        this(value, allowNull, new JTextField(""));
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param value Value.
-     * @param allowNull True if null is allowed, false if not.
-     * @param textField Text field instance to use.
-     */
-    public TextPropertyField(String value, boolean allowNull, JTextField textField) {
         // Call the super
         super(allowNull);
-
-        // Set the text field instance
-        this.textField = textField;
 
         // Build the UI
         buildUi();
@@ -97,9 +83,8 @@ public class TextPropertyField extends AbstractPropertyField {
             public void focusLost(FocusEvent e) { }
         });
 
-        // Create the text field if it hasn't been initialized yet
-        if(this.textField == null)
-            this.textField = new JTextField("");
+        // Build the text field
+        this.textField = buildUiTextField();
 
         // Link the text field listeners
         this.textField.addMouseListener(new MouseListener() {
@@ -165,6 +150,15 @@ public class TextPropertyField extends AbstractPropertyField {
         c.gridy = 0;
         c.weightx = 1;
         add(this.textField, c);
+    }
+
+    /**
+     * Build the text field.
+     *
+     * @return Text field.
+     */
+    protected JTextField buildUiTextField() {
+        return new JTextField();
     }
 
     /**

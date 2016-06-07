@@ -19,7 +19,11 @@ public class FilePropertyField extends TextPropertyField {
      * @param allowNull True if null is allowed.
      */
     public FilePropertyField(boolean allowNull) {
-        this(allowNull ? null : "", allowNull);
+        // Call the super
+        super(allowNull);
+
+        // Do not allow empty values
+        setEmptyAllowed(false);
     }
 
     /**

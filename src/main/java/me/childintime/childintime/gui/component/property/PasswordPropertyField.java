@@ -1,5 +1,7 @@
 package me.childintime.childintime.gui.component.property;
 
+import javax.swing.*;
+
 public class PasswordPropertyField extends TextPropertyField {
 
     /**
@@ -8,7 +10,7 @@ public class PasswordPropertyField extends TextPropertyField {
      * @param allowNull True if null is allowed.
      */
     public PasswordPropertyField(boolean allowNull) {
-        this(allowNull ? null : "", allowNull);
+        super(allowNull);
     }
 
     /**
@@ -19,5 +21,10 @@ public class PasswordPropertyField extends TextPropertyField {
      */
     public PasswordPropertyField(String value, boolean allowNull) {
         super(value, allowNull);
+    }
+
+    @Override
+    protected JTextField buildUiTextField() {
+        return new JPasswordField();
     }
 }
