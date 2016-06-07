@@ -4,17 +4,18 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
-import me.childintime.childintime.database.object.DataType;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.gui.component.property.AbstractPropertyField;
+import me.childintime.childintime.gui.component.property.DatePropertyField;
 import me.childintime.childintime.gui.component.property.TextPropertyField;
 import me.childintime.childintime.util.Platform;
-import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 public class DatabaseObjectModifyDialog extends JDialog {
 
@@ -49,6 +50,11 @@ public class DatabaseObjectModifyDialog extends JDialog {
      * Database fields cache.
      */
     private DatabaseFieldsInterface[] fieldsCache = null;
+
+    /**
+     * Hashmap containing all the fields.
+     */
+    private HashMap<DatabaseFieldsInterface, AbstractPropertyField> fields = new HashMap<>();
 
     /**
      * Constructor, to modify an existing database object.
@@ -334,19 +340,22 @@ public class DatabaseObjectModifyDialog extends JDialog {
             c.insets = new Insets(0, 8, 8, 0);
             c.anchor = GridBagConstraints.CENTER;
 
-            if(fieldType.isEditable()) {
+            // Create a variable for the property field instance
+            AbstractPropertyField field;
 
-                if(fieldType.getDataType().equals(DataType.BOOLEAN))
-                    try {
-                        container.add(new JCheckBox(), c);
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                else
-                    container.add(new TextPropertyField(value, true), c);
+            switch(fieldType.getDataType()) {
+                case DATE:
+                    field = new DatePropertyField(true);
+                    break;
 
-            } else
-                container.add(new JLabel(value), c);
+                case STRING:
+                default:
+                    field = new TextPropertyField(value, false);
+                    break;
+            }
+
+            // Add the field
+            container.add(field, c);
         }
 
         // Create the control button panel and add it to the main panel
