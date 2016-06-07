@@ -180,10 +180,6 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
     public JPanel getActionButtonPanel() {
         // Create the clear button
         this.calendarButton = new JButton("…");
-        this.calendarButton.addActionListener(e -> {
-            // Set the value to null
-            setNull(true);
-        });
 
         // Define the size of the clear button
         final int buttonSize = this.textField.getPreferredSize().height - 4;
