@@ -11,7 +11,7 @@ public enum SchoolFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a school object.
      */
-    ID("ID", "id", false, DataTypeExtended.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * School name.

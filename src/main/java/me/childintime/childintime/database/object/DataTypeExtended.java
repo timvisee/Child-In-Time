@@ -15,6 +15,30 @@ public enum DataTypeExtended {
     INTEGER(DataTypeBase.INTEGER),
 
     /**
+     * ID type.
+     * Used to store object IDs.
+     */
+    ID(DataTypeBase.INTEGER),
+
+    /**
+     * Centimeter type.
+     * Used to store centimeters.
+     */
+    CENTIMETER(DataTypeBase.INTEGER),
+
+    /**
+     * Gram (weight) type.
+     * Used to store the weight in grams.
+     */
+    GRAM(DataTypeBase.INTEGER),
+
+    /**
+     * Milliseconds type.
+     * Used to store time in milliseconds.
+     */
+    MILLISECONDS(DataTypeBase.INTEGER),
+
+    /**
      * Boolean type.
      * Used to store boolean types.
      */

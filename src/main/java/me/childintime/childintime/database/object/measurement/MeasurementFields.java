@@ -13,13 +13,13 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a measurement object.
      */
-    ID("ID", "id", false, DataTypeExtended.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * Student ID.
      * The student instance a measurement is for.
      */
-    STUDENT_ID("Student", "student_id", false, DataTypeExtended.INTEGER, Student.class),
+    STUDENT_ID("Student", "student_id", false, DataTypeExtended.REFERENCE, Student.class),
 
     /**
      * Measurement date.
@@ -31,7 +31,7 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
      * Measurement time.
      * The time in milliseconds of a measurement.
      */
-    TIME("Time", "time", true, DataTypeExtended.INTEGER, null),
+    TIME("Time", "time", true, DataTypeExtended.MILLISECONDS, null),
 
     /**
      * Parkour ID.

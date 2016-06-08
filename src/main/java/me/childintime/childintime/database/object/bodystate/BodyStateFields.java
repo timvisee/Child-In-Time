@@ -12,13 +12,13 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a body state object.
      */
-    ID("ID", "id", false, DataTypeExtended.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * Student ID.
      * The student of a body state instance.
      */
-    STUDENT_ID("Student", "student_id", false, DataTypeExtended.INTEGER, Student.class),
+    STUDENT_ID("Student", "student_id", false, DataTypeExtended.REFERENCE, Student.class),
 
     /**
      * Measurement date.
@@ -30,13 +30,13 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
      * Body state length.
      * The body length in centimeters.
      */
-    LENGTH("Length", "length", true, DataTypeExtended.INTEGER, null),
+    LENGTH("Length", "length", true, DataTypeExtended.CENTIMETER, null),
 
     /**
      * Body state weight.
      * The body weight in grams.
      */
-    WEIGHT("Weight", "weight", true, DataTypeExtended.INTEGER, null);
+    WEIGHT("Weight", "weight", true, DataTypeExtended.GRAM, null);
 
     /**
      * The display name for this field.

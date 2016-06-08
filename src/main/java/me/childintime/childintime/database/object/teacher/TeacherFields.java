@@ -12,7 +12,7 @@ public enum TeacherFields implements DatabaseFieldsInterface {
      * ID.
      * Identifier of a teacher object.
      */
-    ID("ID", "id", false, DataTypeExtended.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * Teacher first name.

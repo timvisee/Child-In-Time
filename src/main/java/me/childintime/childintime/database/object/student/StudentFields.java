@@ -12,7 +12,7 @@ public enum StudentFields implements DatabaseFieldsInterface {
      * ID.
      * Identifier of a student object.
      */
-    ID("ID", "id", false, DataTypeExtended.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * Student first name.
@@ -31,13 +31,13 @@ public enum StudentFields implements DatabaseFieldsInterface {
      * The gender of a student.
      * True defines a man, false defines a woman.
      */
-    GENDER("Gender", "gender", true, DataTypeExtended.BOOLEAN, null),
+    GENDER("Gender", "gender", true, DataTypeExtended.GENDER, null),
 
     /**
      * Student birthdate.
      * The birthdate of a student.
      */
-    BIRTHDATE("Birthdate", "birthdate", true, DataTypeExtended.DATE, null),
+    BIRTHDAY("Birthdate", "birthdate", true, DataTypeExtended.BIRTHDAY, null),
 
     /**
      * Group ID.

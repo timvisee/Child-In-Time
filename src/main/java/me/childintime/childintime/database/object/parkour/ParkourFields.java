@@ -11,7 +11,7 @@ public enum ParkourFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a parkour object.
      */
-    ID("ID", "id", false, DataTypeExtended.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * Description.

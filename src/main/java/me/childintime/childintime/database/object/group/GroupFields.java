@@ -12,7 +12,7 @@ public enum GroupFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a group object.
      */
-    ID("ID", "id", false, DataTypeExtended.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * Group name.
