@@ -1,25 +1,9 @@
 package me.childintime.childintime.gui.component.property;
 
-import me.childintime.childintime.gui.component.property.action.TextCopyAction;
-import me.childintime.childintime.gui.component.property.action.TextCutAction;
-import me.childintime.childintime.gui.component.property.action.TextPasteAction;
-import me.childintime.childintime.gui.component.property.context.ContextClearAction;
-import me.childintime.childintime.gui.component.property.context.ContextSelectAllAction;
-
 import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
 import java.awt.event.*;
 
-public class TextPropertyField extends AbstractPropertyField {
-    @Override
-    public void buildActionList() {
-        // Add the text cut/copy/paste actions
-        this.actionsList.add(new TextCutAction());
-        this.actionsList.add(new TextCopyAction());
-        this.actionsList.add(new TextPasteAction());
-
-        super.buildActionList();
-    }
+public class BooleanPropertyField extends AbstractPropertyField {
 
     /**
      * True if an empty value is allowed.
@@ -34,49 +18,44 @@ public class TextPropertyField extends AbstractPropertyField {
     private String nullPlaceholderText = "<null>";
 
     /**
-     * Text field.
+     * Boolean field.
      */
-    protected JTextField textField;
-
-    /**
-     * Context menu.
-     */
-    protected JPopupMenu contextMenu;
+    protected JCheckBox checkBox;
 
     /**
      * Constructor.
      *
      * @param allowNull True if null is allowed, false if not.
      */
-    public TextPropertyField(boolean allowNull) {
+    public BooleanPropertyField(boolean allowNull) {
         // Call an alias constructor
-        this(allowNull ? null : "", allowNull);
+        this(false, allowNull);
     }
 
     /**
      * Constructor.
      *
-     * @param value Value.
+     * @param state Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public TextPropertyField(String value, boolean allowNull) {
+    public BooleanPropertyField(Boolean state, boolean allowNull) {
         // Call the super
         super(allowNull);
 
         // Build the UI
         buildUi();
 
-        // Set the text value
-        setText(value);
+        // Set the state value
+        setState(state);
     }
 
     @Override
     protected JComponent buildUiField() {
         // Build the text field
-        this.textField = buildUiTextField();
+        this.checkBox = new JCheckBox();
 
         // Link the text field listeners
-        this.textField.addMouseListener(new MouseListener() {
+        this.checkBox.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -94,7 +73,7 @@ public class TextPropertyField extends AbstractPropertyField {
             @Override
             public void mouseExited(MouseEvent e) { }
         });
-        this.textField.addFocusListener(new FocusListener() {
+        this.checkBox.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
 
@@ -106,8 +85,8 @@ public class TextPropertyField extends AbstractPropertyField {
         });
 
         // Set the field back to null when the escape key is pressed
-        this.textField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.textField.getActionMap().put("Escape", new AbstractAction() {
+        this.checkBox.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.checkBox.getActionMap().put("Escape", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Make sure null is allowed
@@ -122,81 +101,28 @@ public class TextPropertyField extends AbstractPropertyField {
             }
         });
 
-        // Build the context menu, and attach it to the component
-        this.contextMenu = buildUiMenu();
-        if(this.contextMenu != null)
-            this.textField.setComponentPopupMenu(this.contextMenu);
-
-        // Return the text field
-        return this.textField;
+        // Return the checkbox
+        return this.checkBox;
     }
 
     /**
-     * Build the text field.
+     * Get the checkbox.
      *
-     * @return Build the text field.
+     * @return Checkbox.
      */
-    protected JTextField buildUiTextField() {
-        return new JTextField();
-    }
-
-    /**
-     * Build the UI context menu for this component.
-     * @return Context menu, or null.
-     */
-    protected JPopupMenu buildUiMenu() {
-        // Create the context menu
-        JPopupMenu menu = new JPopupMenu();
-
-        // Create and set up the cut action
-        Action cutAction = new DefaultEditorKit.CutAction();
-        cutAction.putValue(Action.NAME, "Cut");
-        cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
-        menu.add(cutAction);
-
-        // Create and set up the copy action
-        Action copyAction = new DefaultEditorKit.CopyAction();
-        copyAction.putValue(Action.NAME, "Copy");
-        copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
-        menu.add(copyAction);
-
-        // Create and set up the paste action
-        Action pasteAction = new DefaultEditorKit.PasteAction();
-        pasteAction.putValue(Action.NAME, "Paste");
-        pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
-        menu.add(pasteAction);
-
-        // Create and set up the select all action
-        menu.add(new ContextSelectAllAction());
-
-        // Add a separator
-        menu.addSeparator();
-
-        // Create and set up the clear action
-        menu.add(new ContextClearAction(this));
-
-        // Return the menu
-        return menu;
-    }
-
-    /**
-     * Get the text field.
-     *
-     * @return Text field.
-     */
-    public JTextField getTextField() {
-        return this.textField;
+    public JCheckBox getCheckBox() {
+        return this.checkBox;
     }
 
     @Override
-    public String getValue() {
-        return getText();
+    public Boolean getValue() {
+        return getState();
     }
 
     @Override
-    public void setValue(Object text) {
+    public void setValue(Object state) {
         // Set the text, or null
-        setText(text != null ? text.toString() : null);
+        setState((Boolean) state);
     }
 
     /**
@@ -206,8 +132,9 @@ public class TextPropertyField extends AbstractPropertyField {
      *
      * @return Text value, or null.
      */
-    public String getText() {
-        return !isNull() ? this.textField.getText() : (isNullAllowed() ? null : "");
+    public boolean getState() {
+        // TODO: Return null?
+        return !isNull() && this.checkBox.isSelected();
     }
 
     /**
@@ -215,7 +142,7 @@ public class TextPropertyField extends AbstractPropertyField {
      *
      * @param text Text value.
      */
-    public void setText(String text) {
+    public void setState(Boolean text) {
         // Make sure null is allowed
         if(text == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
@@ -228,7 +155,7 @@ public class TextPropertyField extends AbstractPropertyField {
 
         // Set the text field text
         if(!isNull())
-            this.textField.setText(text);
+            this.checkBox.setSelected(text);
     }
 
     @Override
@@ -236,18 +163,18 @@ public class TextPropertyField extends AbstractPropertyField {
         // Set null in the super
         super.setNull(_null);
 
-        // Update the enabled state of the text field
-        this.textField.setEnabled(!_null);
+        // Update the enabled state of both components
+        this.checkBox.setEnabled(!_null);
 
-        // Set the field text to the null placeholder if it's set to null
+        // Disable the selection
         if(_null)
-            this.textField.setText(this.nullPlaceholderText);
+            this.checkBox.setSelected(false);
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        //this.textField.transferFocus();
+        this.checkBox.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
@@ -255,7 +182,7 @@ public class TextPropertyField extends AbstractPropertyField {
             if(isNullAllowed())
                 setNull(true);
             else
-                setText("");
+                setState(false);
         });
     }
 
@@ -301,7 +228,7 @@ public class TextPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.textField.hasFocus())
+        if(!allowEmpty && !this.checkBox.hasFocus())
             disableIfEmpty();
     }
 
@@ -312,18 +239,20 @@ public class TextPropertyField extends AbstractPropertyField {
      * @return True if empty, false if not.
      */
     public boolean isEmpty() {
-        return isNull() || getText().isEmpty();
+        return isNull();
     }
 
-    @Override
+    /**
+     * Enable the field for editing.
+     * This will reset the null state, and select all the text inside the field.
+     */
     public void enableField() {
         // Enable the field if it's disabled because it's value is null
         if(isNull())
-            this.setText("");
+            this.setState(true);
 
         // Focus the field and select all
-        this.textField.grabFocus();
-        this.textField.selectAll();
+        this.checkBox.grabFocus();
     }
 
     /**

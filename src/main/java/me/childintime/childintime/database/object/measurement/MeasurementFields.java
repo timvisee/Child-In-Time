@@ -1,7 +1,8 @@
 package me.childintime.childintime.database.object.measurement;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataType;
+import me.childintime.childintime.database.object.DataTypeBase;
+import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.parkour.Parkour;
 import me.childintime.childintime.database.object.student.Student;
@@ -12,31 +13,31 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a measurement object.
      */
-    ID("ID", "id", false, DataType.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * Student ID.
      * The student instance a measurement is for.
      */
-    STUDENT_ID("Student", "student_id", false, DataType.INTEGER, Student.class),
+    STUDENT_ID("Student", "student_id", false, DataTypeExtended.REFERENCE, Student.class),
 
     /**
      * Measurement date.
      * The date a measurement was tracked on.
      */
-    DATE("Measurement date", "date", true, DataType.DATE, null),
+    DATE("Measurement date", "date", true, DataTypeExtended.DATE, null),
 
     /**
      * Measurement time.
      * The time in milliseconds of a measurement.
      */
-    TIME("Time", "time", true, DataType.INTEGER, null),
+    TIME("Time", "time", true, DataTypeExtended.MILLISECONDS, null),
 
     /**
      * Parkour ID.
      * The parkour instance a measurement is tracked on.
      */
-    PARKOUR_ID("Parkour", "parkour_id", false, DataType.REFERENCE, Parkour.class);
+    PARKOUR_ID("Parkour", "parkour_id", false, DataTypeExtended.REFERENCE, Parkour.class);
 
     /**
      * The display name for this field.
@@ -56,10 +57,10 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
     /**
      * The data type of the field.
      */
-    private DataType dataType;
+    private DataTypeExtended dataType;
 
     /**
-     * The referenced type for fields of the {@link DataType#REFERENCE} type.
+     * The referenced type for fields of the {@link DataTypeExtended#REFERENCE} type.
      * Must be null if the data type is different.
      */
     private Class<? extends AbstractDatabaseObject> referenceType;
@@ -71,9 +72,9 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
      * @param dataType Data type of the field.
-     * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
+     * @param referenceType Referenced class if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    MeasurementFields(String displayName, String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    MeasurementFields(String displayName, String databaseField, boolean editable, DataTypeExtended dataType, Class<? extends AbstractDatabaseObject> referenceType) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
@@ -92,8 +93,13 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
     }
 
     @Override
-    public DataType getDataType() {
+    public DataTypeExtended getExtendedDataType() {
         return this.dataType;
+    }
+
+    @Override
+    public DataTypeBase getBaseDataType() {
+        return this.dataType.getDataTypeBase();
     }
 
     @Override

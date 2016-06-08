@@ -1,7 +1,8 @@
 package me.childintime.childintime.database.object.group;
 
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataType;
+import me.childintime.childintime.database.object.DataTypeBase;
+import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.school.School;
 
@@ -11,19 +12,19 @@ public enum GroupFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a group object.
      */
-    ID("ID", "id", false, DataType.INTEGER, null),
+    ID("ID", "id", false, DataTypeExtended.ID, null),
 
     /**
      * Group name.
      * Display name of a group.
      */
-    NAME("Group", "name", true, DataType.STRING, null),
+    NAME("Group", "name", true, DataTypeExtended.STRING, null),
 
     /**
      * School ID.
      * The school instance a group is in.
      */
-    SCHOOL_ID("School", "school_id", false, DataType.REFERENCE, School.class);
+    SCHOOL_ID("School", "school_id", false, DataTypeExtended.REFERENCE, School.class);
 
     /**
      * The display name for this field.
@@ -43,10 +44,10 @@ public enum GroupFields implements DatabaseFieldsInterface{
     /**
      * The data type of the field.
      */
-    private DataType dataType;
+    private DataTypeExtended dataType;
 
     /**
-     * The referenced type for fields of the {@link DataType#REFERENCE} type.
+     * The referenced type for fields of the {@link DataTypeExtended#REFERENCE} type.
      * Must be null if the data type is different.
      */
     private Class<? extends AbstractDatabaseObject> referenceType;
@@ -58,9 +59,9 @@ public enum GroupFields implements DatabaseFieldsInterface{
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
      * @param dataType Data type of the field.
-     * @param referenceType Referenced class if this field has the {@link DataType#REFERENCE} type.
+     * @param referenceType Referenced class if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    GroupFields(String displayName, String databaseField, boolean editable, DataType dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    GroupFields(String displayName, String databaseField, boolean editable, DataTypeExtended dataType, Class<? extends AbstractDatabaseObject> referenceType) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
@@ -79,8 +80,13 @@ public enum GroupFields implements DatabaseFieldsInterface{
     }
 
     @Override
-    public DataType getDataType() {
+    public DataTypeExtended getExtendedDataType() {
         return this.dataType;
+    }
+
+    @Override
+    public DataTypeBase getBaseDataType() {
+        return this.dataType.getDataTypeBase();
     }
 
     @Override

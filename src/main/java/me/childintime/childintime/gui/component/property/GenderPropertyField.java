@@ -1,25 +1,10 @@
 package me.childintime.childintime.gui.component.property;
 
-import me.childintime.childintime.gui.component.property.action.TextCopyAction;
-import me.childintime.childintime.gui.component.property.action.TextCutAction;
-import me.childintime.childintime.gui.component.property.action.TextPasteAction;
-import me.childintime.childintime.gui.component.property.context.ContextClearAction;
-import me.childintime.childintime.gui.component.property.context.ContextSelectAllAction;
-
 import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
+import java.awt.*;
 import java.awt.event.*;
 
-public class TextPropertyField extends AbstractPropertyField {
-    @Override
-    public void buildActionList() {
-        // Add the text cut/copy/paste actions
-        this.actionsList.add(new TextCutAction());
-        this.actionsList.add(new TextCopyAction());
-        this.actionsList.add(new TextPasteAction());
-
-        super.buildActionList();
-    }
+public class GenderPropertyField extends AbstractPropertyField {
 
     /**
      * True if an empty value is allowed.
@@ -34,49 +19,61 @@ public class TextPropertyField extends AbstractPropertyField {
     private String nullPlaceholderText = "<null>";
 
     /**
-     * Text field.
+     * Radio button for men.
      */
-    protected JTextField textField;
+    protected JRadioButton menButton;
 
     /**
-     * Context menu.
+     * Radio button for women.
      */
-    protected JPopupMenu contextMenu;
+    protected JRadioButton womenButton;
 
     /**
      * Constructor.
      *
      * @param allowNull True if null is allowed, false if not.
      */
-    public TextPropertyField(boolean allowNull) {
+    public GenderPropertyField(boolean allowNull) {
         // Call an alias constructor
-        this(allowNull ? null : "", allowNull);
+        this(false, allowNull);
     }
 
     /**
      * Constructor.
      *
-     * @param value Value.
+     * @param state Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public TextPropertyField(String value, boolean allowNull) {
+    public GenderPropertyField(Boolean state, boolean allowNull) {
         // Call the super
         super(allowNull);
 
         // Build the UI
         buildUi();
 
-        // Set the text value
-        setText(value);
+        // Set the state value
+        setState(state);
     }
 
     @Override
     protected JComponent buildUiField() {
-        // Build the text field
-        this.textField = buildUiTextField();
+        // Create a panel with the two radio buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
+
+        // Create a button group
+        ButtonGroup buttonGroup = new ButtonGroup();
+
+        // Build the radio buttons
+        this.menButton = new JRadioButton("Men");
+        this.womenButton = new JRadioButton("Women");
+
+        // Add the radio buttons to the group
+        buttonGroup.add(menButton);
+        buttonGroup.add(womenButton);
 
         // Link the text field listeners
-        this.textField.addMouseListener(new MouseListener() {
+        final MouseListener mouseListener = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -93,8 +90,12 @@ public class TextPropertyField extends AbstractPropertyField {
 
             @Override
             public void mouseExited(MouseEvent e) { }
-        });
-        this.textField.addFocusListener(new FocusListener() {
+        };
+        this.menButton.addMouseListener(mouseListener);
+        this.womenButton.addMouseListener(mouseListener);
+
+        // Set the focus listeners
+        final FocusListener focusListener = new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
 
@@ -103,11 +104,12 @@ public class TextPropertyField extends AbstractPropertyField {
                 // Disable the property field if it's currently empty
                 disableIfEmpty();
             }
-        });
+        };
+        this.menButton.addFocusListener(focusListener);
+        this.womenButton.addFocusListener(focusListener);
 
         // Set the field back to null when the escape key is pressed
-        this.textField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.textField.getActionMap().put("Escape", new AbstractAction() {
+        final Action escapeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Make sure null is allowed
@@ -120,83 +122,29 @@ public class TextPropertyField extends AbstractPropertyField {
                 // Set the field to null
                 setNull(true);
             }
-        });
+        };
+        this.menButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.womenButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.menButton.getActionMap().put("Escape", escapeAction);
+        this.womenButton.getActionMap().put("Escape", escapeAction);
 
-        // Build the context menu, and attach it to the component
-        this.contextMenu = buildUiMenu();
-        if(this.contextMenu != null)
-            this.textField.setComponentPopupMenu(this.contextMenu);
+        // Add the radio buttons to the panel
+        buttonPanel.add(this.menButton);
+        buttonPanel.add(this.womenButton);
 
-        // Return the text field
-        return this.textField;
-    }
-
-    /**
-     * Build the text field.
-     *
-     * @return Build the text field.
-     */
-    protected JTextField buildUiTextField() {
-        return new JTextField();
-    }
-
-    /**
-     * Build the UI context menu for this component.
-     * @return Context menu, or null.
-     */
-    protected JPopupMenu buildUiMenu() {
-        // Create the context menu
-        JPopupMenu menu = new JPopupMenu();
-
-        // Create and set up the cut action
-        Action cutAction = new DefaultEditorKit.CutAction();
-        cutAction.putValue(Action.NAME, "Cut");
-        cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
-        menu.add(cutAction);
-
-        // Create and set up the copy action
-        Action copyAction = new DefaultEditorKit.CopyAction();
-        copyAction.putValue(Action.NAME, "Copy");
-        copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
-        menu.add(copyAction);
-
-        // Create and set up the paste action
-        Action pasteAction = new DefaultEditorKit.PasteAction();
-        pasteAction.putValue(Action.NAME, "Paste");
-        pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
-        menu.add(pasteAction);
-
-        // Create and set up the select all action
-        menu.add(new ContextSelectAllAction());
-
-        // Add a separator
-        menu.addSeparator();
-
-        // Create and set up the clear action
-        menu.add(new ContextClearAction(this));
-
-        // Return the menu
-        return menu;
-    }
-
-    /**
-     * Get the text field.
-     *
-     * @return Text field.
-     */
-    public JTextField getTextField() {
-        return this.textField;
+        // Return the panel with the checkboxes
+        return buttonPanel;
     }
 
     @Override
-    public String getValue() {
-        return getText();
+    public Boolean getValue() {
+        return isMen();
     }
 
     @Override
-    public void setValue(Object text) {
+    public void setValue(Object state) {
         // Set the text, or null
-        setText(text != null ? text.toString() : null);
+        setState((Boolean) state);
     }
 
     /**
@@ -206,29 +154,32 @@ public class TextPropertyField extends AbstractPropertyField {
      *
      * @return Text value, or null.
      */
-    public String getText() {
-        return !isNull() ? this.textField.getText() : (isNullAllowed() ? null : "");
+    public boolean isMen() {
+        // TODO: Return null?
+        return !isNull() && !this.womenButton.isSelected();
     }
 
     /**
      * Set the text value.
      *
-     * @param text Text value.
+     * @param state Text value.
      */
-    public void setText(String text) {
+    public void setState(Boolean state) {
         // Make sure null is allowed
-        if(text == null && !isNullAllowed())
+        if(state == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
 
         // Set the null state
-        if(text == null)
+        if(state == null)
             setNull(true);
         else if(isNull())
             setNull(false);
 
         // Set the text field text
-        if(!isNull())
-            this.textField.setText(text);
+        if(!isNull()) {
+            this.menButton.setSelected(state);
+            this.womenButton.setSelected(!state);
+        }
     }
 
     @Override
@@ -236,18 +187,22 @@ public class TextPropertyField extends AbstractPropertyField {
         // Set null in the super
         super.setNull(_null);
 
-        // Update the enabled state of the text field
-        this.textField.setEnabled(!_null);
+        // Update the enabled state of both components
+        this.menButton.setEnabled(!_null);
+        this.womenButton.setEnabled(!_null);
 
-        // Set the field text to the null placeholder if it's set to null
-        if(_null)
-            this.textField.setText(this.nullPlaceholderText);
+        // Disable the selection
+        if(_null) {
+            this.menButton.setSelected(false);
+            this.womenButton.setSelected(false);
+        }
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        //this.textField.transferFocus();
+        this.menButton.transferFocus();
+        this.womenButton.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
@@ -255,7 +210,7 @@ public class TextPropertyField extends AbstractPropertyField {
             if(isNullAllowed())
                 setNull(true);
             else
-                setText("");
+                setState(false);
         });
     }
 
@@ -301,7 +256,7 @@ public class TextPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.textField.hasFocus())
+        if(!allowEmpty && !this.menButton.hasFocus())
             disableIfEmpty();
     }
 
@@ -312,18 +267,20 @@ public class TextPropertyField extends AbstractPropertyField {
      * @return True if empty, false if not.
      */
     public boolean isEmpty() {
-        return isNull() || getText().isEmpty();
+        return isNull();
     }
 
-    @Override
+    /**
+     * Enable the field for editing.
+     * This will reset the null state, and select all the text inside the field.
+     */
     public void enableField() {
         // Enable the field if it's disabled because it's value is null
         if(isNull())
-            this.setText("");
+            this.setState(true);
 
         // Focus the field and select all
-        this.textField.grabFocus();
-        this.textField.selectAll();
+        this.menButton.grabFocus();
     }
 
     /**
