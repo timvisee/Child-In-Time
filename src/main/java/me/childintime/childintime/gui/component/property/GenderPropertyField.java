@@ -1,9 +1,10 @@
 package me.childintime.childintime.gui.component.property;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
-public class BooleanPropertyField extends AbstractPropertyField {
+public class GenderPropertyField extends AbstractPropertyField {
 
     /**
      * True if an empty value is allowed.
@@ -18,16 +19,21 @@ public class BooleanPropertyField extends AbstractPropertyField {
     private String nullPlaceholderText = "<null>";
 
     /**
-     * Boolean field.
+     * Radio button for men.
      */
-    protected JCheckBox checkBox;
+    protected JRadioButton menButton;
+
+    /**
+     * Radio button for women.
+     */
+    protected JRadioButton womenButton;
 
     /**
      * Constructor.
      *
      * @param allowNull True if null is allowed, false if not.
      */
-    public BooleanPropertyField(boolean allowNull) {
+    public GenderPropertyField(boolean allowNull) {
         // Call an alias constructor
         this(false, allowNull);
     }
@@ -38,7 +44,7 @@ public class BooleanPropertyField extends AbstractPropertyField {
      * @param state Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public BooleanPropertyField(Boolean state, boolean allowNull) {
+    public GenderPropertyField(Boolean state, boolean allowNull) {
         // Call the super
         super(allowNull);
 
@@ -51,11 +57,23 @@ public class BooleanPropertyField extends AbstractPropertyField {
 
     @Override
     protected JComponent buildUiField() {
-        // Build the text field
-        this.checkBox = new JCheckBox();
+        // Create a panel with the two radio buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
+
+        // Create a button group
+        ButtonGroup buttonGroup = new ButtonGroup();
+
+        // Build the radio buttons
+        this.menButton = new JRadioButton("Men");
+        this.womenButton = new JRadioButton("Women");
+
+        // Add the radio buttons to the group
+        buttonGroup.add(menButton);
+        buttonGroup.add(womenButton);
 
         // Link the text field listeners
-        this.checkBox.addMouseListener(new MouseListener() {
+        final MouseListener mouseListener = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -72,8 +90,12 @@ public class BooleanPropertyField extends AbstractPropertyField {
 
             @Override
             public void mouseExited(MouseEvent e) { }
-        });
-        this.checkBox.addFocusListener(new FocusListener() {
+        };
+        this.menButton.addMouseListener(mouseListener);
+        this.womenButton.addMouseListener(mouseListener);
+
+        // Set the focus listeners
+        final FocusListener focusListener = new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
 
@@ -82,11 +104,12 @@ public class BooleanPropertyField extends AbstractPropertyField {
                 // Disable the property field if it's currently empty
                 disableIfEmpty();
             }
-        });
+        };
+        this.menButton.addFocusListener(focusListener);
+        this.womenButton.addFocusListener(focusListener);
 
         // Set the field back to null when the escape key is pressed
-        this.checkBox.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.checkBox.getActionMap().put("Escape", new AbstractAction() {
+        final Action escapeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Make sure null is allowed
@@ -99,24 +122,23 @@ public class BooleanPropertyField extends AbstractPropertyField {
                 // Set the field to null
                 setNull(true);
             }
-        });
+        };
+        this.menButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.womenButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.menButton.getActionMap().put("Escape", escapeAction);
+        this.womenButton.getActionMap().put("Escape", escapeAction);
 
-        // Return the checkbox
-        return this.checkBox;
-    }
+        // Add the radio buttons to the panel
+        buttonPanel.add(this.menButton);
+        buttonPanel.add(this.womenButton);
 
-    /**
-     * Get the checkbox.
-     *
-     * @return Checkbox.
-     */
-    public JCheckBox getCheckBox() {
-        return this.checkBox;
+        // Return the panel with the checkboxes
+        return buttonPanel;
     }
 
     @Override
     public Boolean getValue() {
-        return getState();
+        return isMen();
     }
 
     @Override
@@ -132,30 +154,32 @@ public class BooleanPropertyField extends AbstractPropertyField {
      *
      * @return Text value, or null.
      */
-    public boolean getState() {
+    public boolean isMen() {
         // TODO: Return null?
-        return !isNull() && this.checkBox.isSelected();
+        return !isNull() && !this.womenButton.isSelected();
     }
 
     /**
      * Set the text value.
      *
-     * @param text Text value.
+     * @param state Text value.
      */
-    public void setState(Boolean text) {
+    public void setState(Boolean state) {
         // Make sure null is allowed
-        if(text == null && !isNullAllowed())
+        if(state == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
 
         // Set the null state
-        if(text == null)
+        if(state == null)
             setNull(true);
         else if(isNull())
             setNull(false);
 
         // Set the text field text
-        if(!isNull())
-            this.checkBox.setSelected(text);
+        if(!isNull()) {
+            this.menButton.setSelected(state);
+            this.womenButton.setSelected(!state);
+        }
     }
 
     @Override
@@ -164,17 +188,21 @@ public class BooleanPropertyField extends AbstractPropertyField {
         super.setNull(_null);
 
         // Update the enabled state of both components
-        this.checkBox.setEnabled(!_null);
+        this.menButton.setEnabled(!_null);
+        this.womenButton.setEnabled(!_null);
 
         // Disable the selection
-        if(_null)
-            this.checkBox.setSelected(false);
+        if(_null) {
+            this.menButton.setSelected(false);
+            this.womenButton.setSelected(false);
+        }
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        this.checkBox.transferFocus();
+        this.menButton.transferFocus();
+        this.womenButton.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
@@ -228,7 +256,7 @@ public class BooleanPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.checkBox.hasFocus())
+        if(!allowEmpty && !this.menButton.hasFocus())
             disableIfEmpty();
     }
 
@@ -252,7 +280,7 @@ public class BooleanPropertyField extends AbstractPropertyField {
             this.setState(true);
 
         // Focus the field and select all
-        this.checkBox.grabFocus();
+        this.menButton.grabFocus();
     }
 
     /**

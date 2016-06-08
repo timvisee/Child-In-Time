@@ -6,10 +6,7 @@ import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
-import me.childintime.childintime.gui.component.property.AbstractPropertyField;
-import me.childintime.childintime.gui.component.property.BooleanPropertyField;
-import me.childintime.childintime.gui.component.property.DatePropertyField;
-import me.childintime.childintime.gui.component.property.TextPropertyField;
+import me.childintime.childintime.gui.component.property.*;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
@@ -360,7 +357,14 @@ public class DatabaseObjectModifyDialog extends JDialog {
                     break;
 
                 case BOOLEAN:
-                    field = new BooleanPropertyField(Boolean.parseBoolean(value), true);
+                    switch(fieldType.getExtendedDataType()) {
+                        case GENDER:
+                            field = new GenderPropertyField(Boolean.parseBoolean(value), true);
+                            break;
+
+                        default:
+                            field = new BooleanPropertyField(Boolean.parseBoolean(value), true);
+                    }
                     break;
 
                 case STRING:
