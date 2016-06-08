@@ -1,6 +1,6 @@
 package me.childintime.childintime.database.object;
 
-public enum DataType {
+public enum DataTypeBase {
 
     /**
      * String type.

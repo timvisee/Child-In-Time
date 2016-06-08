@@ -10,9 +10,9 @@ public interface DatabaseFieldsInterface {
     String getDisplayName();
 
     /**
-     * Returns the fieldname in the database.
+     * Returns the field name in the database.
      *
-     * @return The database fieldname in a String.
+     * @return The database field name in a String.
      */
     String getDatabaseField();
 
@@ -24,11 +24,18 @@ public interface DatabaseFieldsInterface {
     boolean isEditable();
 
     /**
-     * Returns the DataType of the field in the database.
+     * Returns the extended data type of the field in the database.
      *
-     * @return INTEGER, DATE, STRING, BOOLEAN, REFERENCE.
+     * @return Extended data type.
      */
-    DataType getDataType();
+    DataTypeExtended getExtendedDataType();
+
+    /**
+     * Returns the base data type of the field in the database.
+     *
+     * @return Base data type.
+     */
+    DataTypeBase getBaseDataType();
 
     /**
      * Returns a Class Type.

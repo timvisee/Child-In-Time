@@ -254,7 +254,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * @param rawField Raw field data.
      */
     void parseField(DatabaseFieldsInterface field, String rawField) {
-        switch(field.getDataType()) {
+        switch(field.getExtendedDataType()) {
             case STRING:
                 this.cachedFields.put(field, rawField);
                 break;

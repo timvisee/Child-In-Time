@@ -343,7 +343,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
             // Create a variable for the property field instance
             AbstractPropertyField field;
 
-            switch(fieldType.getDataType()) {
+            switch(fieldType.getExtendedDataType()) {
                 case DATE:
                     field = new DatePropertyField(true);
                     break;
