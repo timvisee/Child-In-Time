@@ -327,11 +327,17 @@ public class TextPropertyField extends AbstractPropertyField {
 
     @Override
     public void clear() {
-        // Set the field to null, or an empty string if null isn't allowed
-        if(isNullAllowed())
-            setNull(true);
-        else
-            setText("");
+        // Transfer focus to another component
+        this.textField.transferFocus();
+
+        // Clear the field
+        SwingUtilities.invokeLater(() -> {
+            // Set the field to null, or an empty string if null isn't allowed
+            if(isNullAllowed())
+                setNull(true);
+            else
+                setText("");
+        });
     }
 
     /**
