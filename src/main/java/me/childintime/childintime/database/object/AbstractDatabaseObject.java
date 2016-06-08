@@ -245,9 +245,12 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * @return True on success, false on failure.
      */
     public boolean applyToDatabase() {
+
         // TODO: Loop through the cached fields that are in the hash map. (See this.cacedFields)
-        {
+        this.cachedFields.forEach((DatabaseFieldsInterface, o) -> {
             // TODO: If the current field is an ID field, skip it and continue; to the next field in the list
+            if(DatabaseFieldsInterface.getExtendedDataType().equals(DataTypeExtended.ID))
+                return;
 
             // TODO: Create a prepared statement (see line 126)
             //
@@ -261,9 +264,34 @@ public abstract class AbstractDatabaseObject implements Cloneable {
             // TODO: Attach the parameters/values to the prepared statement (attach the new value, and the ID)
 
             // TODO: Execute the prepared statement, with the attached parameters
-        }
+
+            try {
+                // Get the database connection
+                final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
+
+                // Prepare a statement to update
+                PreparedStatement updateStatement = connection.prepareStatement(
+                        "UPDATE `" + getTableName() + "` " +
+                                "SET `" + DatabaseFieldsInterface.getDatabaseField() + "` = ?" +
+                                "WHERE `id` = ?"
+                );
+
+                updateStatement.setObject(1, o);
+                updateStatement.setInt(2, getId());
+
+                int updateCount = updateStatement.executeUpdate();
+
+                if(updateCount == 1)
+                    return true;
+
+            } catch (Exception e) {
+                // Print the stack trace, and return the result
+                e.printStackTrace();
+            }
+        });
 
         // TODO: Return true, because everything seems to be fine.
+        return false;
     }
 
     @Override
