@@ -17,6 +17,8 @@ import java.util.Date;
 
 public class DatePropertyField extends TextPropertyField implements ActionListener, PropertyChangeListener {
 
+    // TODO: Make sure the user doesn't manually enter a date that is out of the specified minimum/maximum range.
+
     /**
      * Swing serial version UID.
      */
@@ -336,5 +338,41 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
         // Clear the field if it's empty, and empty is allowed
         if(isNullAllowed() && !isNull() && !isValidDate())
             setNull(true);
+    }
+
+    /**
+     * Get the minimum selectable date.
+     *
+     * @return Minimum selectable date.
+     */
+    public Date getMinimumDate() {
+        return this.dateChooser.getMinSelectableDate();
+    }
+
+    /**
+     * Set the minimum selectable date.
+     *
+     * @param date Minimum selectable date.
+     */
+    public void setMinimumDate(Date date) {
+        this.dateChooser.setMinSelectableDate(date);
+    }
+
+    /**
+     * Get the maximum selectable date.
+     *
+     * @return Maximum selectable date.
+     */
+    public Date getMaximumDate() {
+        return this.dateChooser.getMinSelectableDate();
+    }
+
+    /**
+     * Set the maximum selectable date.
+     *
+     * @param date Maximum selectable date.
+     */
+    public void setMaximumDate(Date date) {
+        this.dateChooser.setMaxSelectableDate(date);
     }
 }
