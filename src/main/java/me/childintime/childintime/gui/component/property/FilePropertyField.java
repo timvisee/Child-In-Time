@@ -1,28 +1,12 @@
 package me.childintime.childintime.gui.component.property;
 
+import me.childintime.childintime.gui.component.property.action.FileSelectAction;
 import me.childintime.childintime.gui.component.property.context.ContextFileAction;
-import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 
 public class FilePropertyField extends TextPropertyField {
-
-    /**
-     * Browse button text.
-     */
-    public static final String BUTTON_BROWSE_TEXT = "…";
-
-    /**
-     * Browse button tooltip.
-     */
-    public static final String BUTTON_BROWSE_TOOLTIP = "Browse...";
-
-    /**
-     * Browse button.
-     */
-    private JButton browseButton;
 
     /**
      * Constructor.
@@ -62,6 +46,15 @@ public class FilePropertyField extends TextPropertyField {
     }
 
     @Override
+    public void buildActionList() {
+        // Add the file browse action
+        this.actionsList.add(new FileSelectAction(this));
+
+        // Call the super
+        super.buildActionList();
+    }
+
+    @Override
     protected JPopupMenu buildUiMenu() {
         // Build the super context menu
         JPopupMenu contextMenu = super.buildUiMenu();
@@ -78,41 +71,6 @@ public class FilePropertyField extends TextPropertyField {
 
         // Return the context menu
         return contextMenu;
-    }
-
-    @Override
-    public JPanel getActionButtonPanel() {
-        // Create the super action button panel
-        JPanel actionButtonPanel = super.getActionButtonPanel();
-
-        // Create the clear button
-        this.browseButton = new JButton(BUTTON_BROWSE_TEXT);
-        this.browseButton.setToolTipText(BUTTON_BROWSE_TOOLTIP);
-
-        // Define the size of the clear button
-        this.browseButton.setPreferredSize(this.clearButton.getPreferredSize());
-        this.browseButton.setMinimumSize(this.clearButton.getPreferredSize());
-        this.browseButton.setMaximumSize(this.clearButton.getPreferredSize());
-        this.browseButton.setSize(this.clearButton.getPreferredSize());
-        this.browseButton.setBorder(null);
-        this.browseButton.setFocusable(false);
-
-        // Fix button styling on Mac OS X
-        if(Platform.isMacOsX()) {
-            this.browseButton.putClientProperty("JButton.sizeVariant", "mini");
-            this.browseButton.putClientProperty("JButton.buttonType", "square");
-            this.browseButton.setMargin(new Insets(0, 0, 0, 0));
-            this.browseButton.setFont(new Font(this.browseButton.getFont().getFontName(), Font.PLAIN, this.browseButton.getFont().getSize() - 2));
-        }
-
-        // Add an action listener to the browse button
-        this.browseButton.addActionListener(e -> showFileChooserDialog());
-
-        // Add the button
-        actionButtonPanel.add(this.browseButton);
-
-        // Return the action button panel
-        return actionButtonPanel;
     }
 
     /**

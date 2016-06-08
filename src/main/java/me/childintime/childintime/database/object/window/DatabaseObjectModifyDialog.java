@@ -7,6 +7,7 @@ import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest
 import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.gui.component.property.AbstractPropertyField;
+import me.childintime.childintime.gui.component.property.BooleanPropertyField;
 import me.childintime.childintime.gui.component.property.DatePropertyField;
 import me.childintime.childintime.gui.component.property.TextPropertyField;
 import me.childintime.childintime.util.Platform;
@@ -358,9 +359,13 @@ public class DatabaseObjectModifyDialog extends JDialog {
                     field = dateField;
                     break;
 
+                case BOOLEAN:
+                    field = new BooleanPropertyField(Boolean.parseBoolean(value), true);
+                    break;
+
                 case STRING:
                 default:
-                    field = new TextPropertyField(value, false);
+                    field = new TextPropertyField(value, true);
                     break;
             }
 

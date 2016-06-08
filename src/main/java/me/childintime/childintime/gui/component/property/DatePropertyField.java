@@ -1,13 +1,9 @@
 package me.childintime.childintime.gui.component.property;
 
 import com.toedter.calendar.JCalendar;
-import me.childintime.childintime.gui.component.property.context.ContextDateAction;
-import me.childintime.childintime.util.Platform;
+import me.childintime.childintime.gui.component.property.action.DateSelectAction;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
@@ -15,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DatePropertyField extends TextPropertyField implements ActionListener, PropertyChangeListener {
+public class DatePropertyField extends TextPropertyField implements PropertyChangeListener {
 
     // TODO: Make sure the user doesn't manually enter a date that is out of the specified minimum/maximum range.
 
@@ -23,16 +19,6 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
      * Swing serial version UID.
      */
     private static final long serialVersionUID = -2303712745720670722L;
-
-    /**
-     * Calendar button text.
-     */
-    public static final String BUTTON_CALENDAR_TEXT = "…";
-
-    /**
-     * Calendar button tooltip.
-     */
-    public static final String BUTTON_CALENDAR_TOOLTIP = "Choose date...";
 
     /**
      * Null placeholder text for the date property field.
@@ -43,16 +29,6 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
      * Date format to use.
      */
     public static final String DATE_FORMAT = "yyyy-MM-dd";
-
-    /**
-     * Calendar button icon.
-     */
-    public static final String RESOURCE_CALENDAR_BUTTON_ICON = "/com/toedter/calendar/images/JDateChooserColor16.gif";
-
-    /**
-     * Calendar button.
-     */
-    private JButton calendarButton;
 
     /**
      * Date formatter instance.
@@ -94,22 +70,12 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
     }
 
     @Override
-    protected JPopupMenu buildUiMenu() {
-        // Build the super context menu
-        JPopupMenu contextMenu = super.buildUiMenu();
+    public void buildActionList() {
+        // Add the file browse action
+        this.actionsList.add(new DateSelectAction(this));
 
-        // Return null if the super was null
-        if(contextMenu == null)
-            return null;
-
-        // Add a separator
-        contextMenu.addSeparator();
-
-        // Add the date selection context menu item
-        contextMenu.add(new ContextDateAction(this));
-
-        // Return the context menu
-        return contextMenu;
+        // Call the super
+        super.buildActionList();
     }
 
     /**
@@ -157,13 +123,6 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
         this.dateChooser.getDayChooser().addPropertyChangeListener("day", this);
         this.dateChooser.getDayChooser().setAlwaysFireDayProperty(true);
 
-        // Get and set the date chooser icon
-        this.calendarButton.setText("");
-        this.calendarButton.setIcon(new ImageIcon(this.getClass().getResource(RESOURCE_CALENDAR_BUTTON_ICON)));
-
-        // Link the calendar button listeners
-        this.calendarButton.addActionListener(this);
-
         // Store the current instance
         final DatePropertyField instance = this;
 
@@ -176,7 +135,7 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
 
             @Override
             public void setVisible(boolean visible) {
-                // Determine whether to fire a cancelled popup menu event
+                // Determine whether to run a cancelled popup menu event
                 Boolean fireCancelled = (Boolean) this.getClientProperty("JPopupMenu.firePopupMenuCanceled");
 
                 // Determine whether to make the popup visible
@@ -186,40 +145,6 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
         };
         this.dateChooserPopup.setLightWeightPopupEnabled(true);
         this.dateChooserPopup.add(this.dateChooser);
-    }
-
-    @Override
-    public JPanel getActionButtonPanel() {
-        // Create the clear button
-        this.calendarButton = new JButton(BUTTON_CALENDAR_TEXT);
-        this.calendarButton.setToolTipText(BUTTON_CALENDAR_TOOLTIP);
-
-        // Define the size of the clear button
-        final int buttonSize = this.textField.getPreferredSize().height - 4;
-        final Dimension buttonDimensions = new Dimension(buttonSize, buttonSize);
-        this.calendarButton.setPreferredSize(buttonDimensions);
-        this.calendarButton.setMinimumSize(buttonDimensions);
-        this.calendarButton.setMaximumSize(buttonDimensions);
-        this.calendarButton.setSize(buttonDimensions);
-        this.calendarButton.setBorder(null);
-        this.calendarButton.setFocusable(false);
-
-        // Fix button styling on Mac OS X
-        if(Platform.isMacOsX()) {
-            this.calendarButton.putClientProperty("JButton.sizeVariant", "mini");
-            this.calendarButton.putClientProperty("JButton.buttonType", "square");
-            this.calendarButton.setMargin(new Insets(0, 0, 0, 0));
-            this.calendarButton.setFont(new Font(this.clearButton.getFont().getFontName(), Font.PLAIN, this.clearButton.getFont().getSize() - 2));
-        }
-
-        // Create the button panel through the super
-        final JPanel button = super.getActionButtonPanel();
-
-        // Add the calendar button to the left of the panel
-        button.add(this.calendarButton, 0);
-
-        // Return the button panel
-        return button;
     }
 
     /**
@@ -263,12 +188,6 @@ public class DatePropertyField extends TextPropertyField implements ActionListen
      */
     public boolean isValidDate() {
         return getDate() != null;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent action) {
-        // Show the date chooser
-        showDateChooser();
     }
 
     @Override
