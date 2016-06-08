@@ -2,15 +2,11 @@ package me.childintime.childintime.gui.component.property;
 
 import me.childintime.childintime.gui.component.property.action.AbstractAction;
 import me.childintime.childintime.gui.component.property.action.ClearAction;
-import me.childintime.childintime.gui.component.property.context.ContextClearAction;
 import me.childintime.childintime.gui.component.property.context.ContextDynamicAction;
-import me.childintime.childintime.gui.component.property.context.ContextSelectAllAction;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;

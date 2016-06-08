@@ -11,15 +11,6 @@ import javax.swing.text.DefaultEditorKit;
 import java.awt.event.*;
 
 public class TextPropertyField extends AbstractPropertyField {
-    @Override
-    public void buildActionList() {
-        // Add the text cut/copy/paste actions
-        this.actionsList.add(new TextCutAction());
-        this.actionsList.add(new TextCopyAction());
-        this.actionsList.add(new TextPasteAction());
-
-        super.buildActionList();
-    }
 
     /**
      * True if an empty value is allowed.
@@ -68,6 +59,16 @@ public class TextPropertyField extends AbstractPropertyField {
 
         // Set the text value
         setText(value);
+    }
+
+    @Override
+    public void buildActionList() {
+        // Add the text cut/copy/paste actions
+        this.actionsList.add(new TextCutAction());
+        this.actionsList.add(new TextCopyAction());
+        this.actionsList.add(new TextPasteAction());
+
+        super.buildActionList();
     }
 
     @Override
