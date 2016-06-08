@@ -239,6 +239,33 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         return getFields(new DatabaseFieldsInterface[]{field}).get(0);
     }
 
+    /**
+     * Apply the properties stored by this database object, to the actual database.
+     *
+     * @return True on success, false on failure.
+     */
+    public boolean applyToDatabase() {
+        // TODO: Loop through the cached fields that are in the hash map. (See this.cacedFields)
+        {
+            // TODO: If the current field is an ID field, skip it and continue; to the next field in the list
+
+            // TODO: Create a prepared statement (see line 126)
+            //
+            //       UPDATE: current field (See: currentField.getFieldName() )
+            //       NEW VALUES: current field value (which is inside the this.cachedFields hash map)
+            //       WHERE: id = getId()
+            //
+            //       The new value, and the ID should be a '?' in the prepared statement. Their proper values will
+            //       be attached/set later on
+
+            // TODO: Attach the parameters/values to the prepared statement (attach the new value, and the ID)
+
+            // TODO: Execute the prepared statement, with the attached parameters
+        }
+
+        // TODO: Return true, because everything seems to be fine.
+    }
+
     @Override
     protected AbstractDatabaseObject clone() throws CloneNotSupportedException {
         // Clone through the super
