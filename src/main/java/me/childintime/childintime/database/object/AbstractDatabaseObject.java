@@ -22,7 +22,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Hashmap containing cached fields from the database object.
      */
-    protected HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
+    public HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
 
     /**
      * Constructor.

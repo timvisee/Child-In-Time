@@ -301,8 +301,6 @@ public class Core {
         // Hide the progress dialog
         this.progressDialog.setVisible(false);
 
-        DatabaseObjectModifyDialog.showModify(null, getStudentManager().getObjects().get(0));
-
         // TODO: Show a proper dashboard here, instead of this demo window!
         DashboardFrame dashboard = new DashboardFrame("My Dashboard");
         dashboard.setVisible(true);
