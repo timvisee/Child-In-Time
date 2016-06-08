@@ -65,8 +65,8 @@ public class GenderPropertyField extends AbstractPropertyField {
         ButtonGroup buttonGroup = new ButtonGroup();
 
         // Build the radio buttons
-        this.menButton = new JRadioButton("Men");
-        this.womenButton = new JRadioButton("Women");
+        this.menButton = new JRadioButton("Male");
+        this.womenButton = new JRadioButton("Female");
 
         // Add the radio buttons to the group
         buttonGroup.add(menButton);
