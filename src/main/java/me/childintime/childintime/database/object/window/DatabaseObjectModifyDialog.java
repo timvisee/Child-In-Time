@@ -4,6 +4,7 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.gui.component.property.AbstractPropertyField;
 import me.childintime.childintime.gui.component.property.DatePropertyField;
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashMap;
 
 public class DatabaseObjectModifyDialog extends JDialog {
@@ -343,9 +345,17 @@ public class DatabaseObjectModifyDialog extends JDialog {
             // Create a variable for the property field instance
             AbstractPropertyField field;
 
-            switch(fieldType.getExtendedDataType()) {
+            switch(fieldType.getBaseDataType()) {
                 case DATE:
-                    field = new DatePropertyField(true);
+                    // Create the date field
+                    DatePropertyField dateField =  new DatePropertyField(true);
+
+                    // Set the maximum selectable date if we're working with birthday fields
+                    if(fieldType.getExtendedDataType().equals(DataTypeExtended.BIRTHDAY))
+                        dateField.setMaximumDate(new Date());
+
+                    // Set the field
+                    field = dateField;
                     break;
 
                 case STRING:
