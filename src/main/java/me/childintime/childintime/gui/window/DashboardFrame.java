@@ -1,10 +1,13 @@
 package me.childintime.childintime.gui.window;
 
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.object.student.Student;
+import me.childintime.childintime.database.object.student.StudentFields;
 import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class DashboardFrame extends JFrame {
 
@@ -100,6 +103,20 @@ public class DashboardFrame extends JFrame {
         JPanel schoolPanel = new JPanel();
         schoolPanel.setBorder(BorderFactory.createTitledBorder("Schools"));
         schoolPanel.add(this.schoolButton = new JButton("Schools"));
+
+        // Test an update query
+        // TODO: This should be removed!
+        JButton testApplyToDatabase = new JButton("Test apply to database (student:id=0");
+        testApplyToDatabase.addActionListener(e -> {
+            Student s = new Student(1);
+
+            s.cachedFields.put(StudentFields.FIRST_NAME, String.valueOf(new Random().nextInt(12345678)));
+
+            System.out.println("Applying to database...");
+            boolean result = s.applyToDatabase();
+            System.out.println("Done! (result = " + (result ? "true" : "false") + ")");
+        });
+        studentPanel.add(testApplyToDatabase);
 
         // Add the student panel
         c.fill = GridBagConstraints.HORIZONTAL;
