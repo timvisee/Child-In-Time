@@ -381,9 +381,9 @@ public class TextPropertyField extends AbstractPropertyField {
         // Set the flag
         this.allowEmpty = allowEmpty;
 
-        // Clear the field if it's empty
-        // TODO: Only if not focussed?
-        disableIfEmpty();
+        // Clear the field if it's empty while it isn't currently focused
+        if(!allowEmpty && !this.textField.hasFocus())
+            disableIfEmpty();
     }
 
     /**
