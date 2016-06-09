@@ -12,38 +12,38 @@ public enum StudentFields implements DatabaseFieldsInterface {
      * ID.
      * Identifier of a student object.
      */
-    ID("ID", "id", false, DataTypeExtended.ID, null),
+    ID("ID", "id", false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Student first name.
      * The first name of a student.
      */
-    FIRST_NAME("First name", "first_name", true, DataTypeExtended.STRING, null),
+    FIRST_NAME("First name", "first_name", true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * Student last name.
      * The last name of a student.
      */
-    LAST_NAME("Last name", "last_name", true, DataTypeExtended.STRING, null),
+    LAST_NAME("Last name", "last_name", true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * Student gender.
      * The gender of a student.
      * True defines a man, false defines a woman.
      */
-    GENDER("Gender", "gender", true, DataTypeExtended.GENDER, null),
+    GENDER("Gender", "gender", true, false, false, DataTypeExtended.GENDER, null),
 
     /**
      * Student birthdate.
      * The birthdate of a student.
      */
-    BIRTHDAY("Birthdate", "birthdate", true, DataTypeExtended.BIRTHDAY, null),
+    BIRTHDAY("Birthdate", "birthdate", true, false, false, DataTypeExtended.BIRTHDAY, null),
 
     /**
      * Group ID.
      * The group instance a student is part of.
      */
-    GROUP_ID("Group", "group_id", true, DataTypeExtended.REFERENCE, Group.class);
+    GROUP_ID("Group", "group_id", true, false, false, DataTypeExtended.REFERENCE, Group.class);
 
     /**
      * The display name for this field.
@@ -59,6 +59,16 @@ public enum StudentFields implements DatabaseFieldsInterface {
      * Defines whether this field is editable by the user.
      */
     private boolean editable;
+
+    /**
+     * Defines whether a NULL value is allowed for this property.
+     */
+    private boolean nullAllowed;
+
+    /**
+     * Defines whether an empty value is allowed for this property field.
+     */
+    private boolean emptyAllowed;
 
     /**
      * The data type of the field.
@@ -77,13 +87,17 @@ public enum StudentFields implements DatabaseFieldsInterface {
      * @param displayName Display name.
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
+     * @param nullAllowed True if a NULL value is allowed for this property field.
+     * @param emptyAllowed True if an empty value is allowed for this property field.
      * @param dataType Data type of the field.
      * @param referenceType Referenced class if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    StudentFields(String displayName, String databaseField, boolean editable, DataTypeExtended dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    StudentFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, Class<? extends AbstractDatabaseObject> referenceType) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
+        this.nullAllowed = nullAllowed;
+        this.emptyAllowed = emptyAllowed;
         this.dataType = dataType;
         this.referenceType = referenceType;
     }
@@ -111,6 +125,16 @@ public enum StudentFields implements DatabaseFieldsInterface {
     @Override
     public boolean isEditable() {
         return this.editable;
+    }
+
+    @Override
+    public boolean isNullAllowed() {
+        return this.nullAllowed;
+    }
+
+    @Override
+    public boolean isEmptyAllowed() {
+        return this.emptyAllowed;
     }
 
     @Override
