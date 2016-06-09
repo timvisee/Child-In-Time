@@ -69,15 +69,6 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
         this((Object) value, allowNull);
     }
 
-    @Override
-    public void buildActionList() {
-        // Add the file browse action
-        this.actionsList.add(new DateSelectAction(this));
-
-        // Call the super
-        super.buildActionList();
-    }
-
     /**
      * Constructor.
      *
@@ -145,6 +136,15 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
         };
         this.dateChooserPopup.setLightWeightPopupEnabled(true);
         this.dateChooserPopup.add(this.dateChooser);
+    }
+
+    @Override
+    public void buildActionList() {
+        // Add the file browse action
+        this.actionsList.add(new DateSelectAction(this));
+
+        // Call the super
+        super.buildActionList();
     }
 
     /**
