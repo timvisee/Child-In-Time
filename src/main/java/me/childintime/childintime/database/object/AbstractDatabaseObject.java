@@ -383,4 +383,27 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         // Return the display name
         return getDisplayName();
     }
+
+    @Override
+    public boolean equals(Object other) {
+        // Return true if the object is the same instance
+        if(this == other)
+            return true;
+
+        // Return false if the other object is null
+        if(other == null || getClass() != other.getClass())
+            return false;
+
+        // If the ID is negative, use Java's default equals method
+        if(this.id < 0)
+            return super.equals(other);
+
+        // Compare the ID's
+        return this.id == ((AbstractDatabaseObject) other).id;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
 }
