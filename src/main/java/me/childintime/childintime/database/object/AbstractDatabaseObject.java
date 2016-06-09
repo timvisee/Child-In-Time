@@ -463,6 +463,36 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         return getDisplayName();
     }
 
+    /**
+     * Check whether the cached properties of this database object are equal to the cached fields of another database object.
+     * The ID of both objects must be the same, or false will be returned.
+     *
+     * @param other Other database object instance.
+     *
+     * @return True if the cache is equal, false if not.
+     */
+    public boolean isCacheEqual(AbstractDatabaseObject other) {
+        // Compare the ID
+        if(getId() != other.getId())
+            return false;
+
+        // Return true if both objects are perfectly equal
+        if(this == other)
+            return true;
+
+        // Return true if both objects don't have any cached fields
+        if(getCachedFields().size() == 0 && other.getCachedFields().size() == 0)
+            return true;
+
+        // Return false if the number of cached fields is different
+        if(getCachedFields().size() != other.getCachedFields().size())
+            return false;
+
+        // Compare both hash maps
+        // TODO: Is this comparison correct?
+        return getCachedFields().equals(other.getCachedFields());
+    }
+
     @Override
     public boolean equals(Object other) {
         // Return true if the object is the same instance
