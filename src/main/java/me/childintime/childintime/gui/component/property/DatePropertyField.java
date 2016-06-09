@@ -296,9 +296,9 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
     }
 
     @Override
-    public boolean isValid() {
+    public boolean isInputValid() {
         // Make sure the super is valid
-        if(!super.isValid())
+        if(!super.isInputValid())
             return false;
 
         // Check whether the date is valid

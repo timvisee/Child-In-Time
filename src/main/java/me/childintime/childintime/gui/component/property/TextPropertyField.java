@@ -307,9 +307,9 @@ public class TextPropertyField extends AbstractPropertyField {
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isInputEmpty() {
         // Call the super
-        if(super.isEmpty())
+        if(super.isInputEmpty())
             return true;
 
         // Check whether the string is empty
@@ -333,7 +333,7 @@ public class TextPropertyField extends AbstractPropertyField {
      */
     public void disableIfEmpty() {
         // Clear the field if it's empty, and empty is allowed
-        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && isEmpty())
+        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && isInputEmpty())
             setNull(true);
     }
 }

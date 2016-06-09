@@ -266,7 +266,7 @@ public class GenderPropertyField extends AbstractPropertyField {
      *
      * @return True if empty, false if not.
      */
-    public boolean isEmpty() {
+    public boolean isInputEmpty() {
         return isNull();
     }
 
@@ -289,7 +289,7 @@ public class GenderPropertyField extends AbstractPropertyField {
      */
     public void disableIfEmpty() {
         // Clear the field if it's empty, and empty is allowed
-        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && isEmpty())
+        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && isInputEmpty())
             setNull(true);
     }
 }
