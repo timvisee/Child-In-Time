@@ -2,6 +2,7 @@ package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.Core;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +18,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Hash map containing cached fields from the database object.
      */
-    public HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
+    protected HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
 
     /**
      * Constructor.
@@ -38,7 +39,25 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     }
 
     /**
-     * Clear the cached database object fields.
+     * Get the hash map containing the cached fields.
+     *
+     * @return Hash map containing the cached fields.
+     */
+    public HashMap<DatabaseFieldsInterface, Object> getCachedFields() {
+        return this.cachedFields;
+    }
+
+    /**
+     * Set the hash map containing the cached fields.
+     *
+     * @param cachedFields Hash map containing the cached fields.
+     */
+    public void setCachedFields(HashMap<DatabaseFieldsInterface, Object> cachedFields) {
+        this.cachedFields = cachedFields;
+    }
+
+    /**
+     * Clear/flush the cached database object fields.
      */
     @SuppressWarnings("unused")
     public void flushCache() {
@@ -263,8 +282,24 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
     @Override
     protected AbstractDatabaseObject clone() throws CloneNotSupportedException {
-        // Clone through the super
-        return (AbstractDatabaseObject) super.clone();
+        // Create a variable to put the new abstract database object in
+        AbstractDatabaseObject clone;
+
+        // Clone the database object class
+        try {
+            clone = getClass().getConstructor(int.class).newInstance(getId());
+
+        } catch(InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            // Try to clone using Java
+            clone = (AbstractDatabaseObject) super.clone();
+        }
+
+        // Create a new hash map, and put it into the cloned object
+        // TODO: Should we properly clone all hash map entries?
+        clone.setCachedFields(new HashMap<>(this.cachedFields));
+
+        // Return the cloned object
+        return clone;
     }
 
     /**
