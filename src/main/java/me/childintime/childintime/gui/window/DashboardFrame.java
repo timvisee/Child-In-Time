@@ -110,7 +110,7 @@ public class DashboardFrame extends JFrame {
         testApplyToDatabase.addActionListener(e -> {
             Student s = new Student(1);
 
-            s.cachedFields.put(StudentFields.FIRST_NAME, String.valueOf(new Random().nextInt(12345678)));
+            s.getCachedFields().put(StudentFields.FIRST_NAME, String.valueOf(new Random().nextInt(12345678)));
 
             System.out.println("Applying to database...");
             boolean result = s.applyToDatabase();
