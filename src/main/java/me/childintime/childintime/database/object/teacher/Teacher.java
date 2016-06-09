@@ -7,6 +7,13 @@ public class Teacher extends AbstractDatabaseObject {
 
     /**
      * Constructor.
+     */
+    public Teacher() {
+        super();
+    }
+
+    /**
+     * Constructor.
      *
      * @param id Database object id.
      */

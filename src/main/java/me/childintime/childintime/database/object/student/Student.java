@@ -7,6 +7,13 @@ public class Student extends AbstractDatabaseObject {
 
     /**
      * Constructor.
+     */
+    public Student() {
+        super();
+    }
+
+    /**
+     * Constructor.
      *
      * @param id Database object id.
      */

@@ -7,6 +7,13 @@ public class School extends AbstractDatabaseObject {
 
     /**
      * Constructor.
+     */
+    public School() {
+        super();
+    }
+
+    /**
+     * Constructor.
      *
      * @param id Database object id.
      */
