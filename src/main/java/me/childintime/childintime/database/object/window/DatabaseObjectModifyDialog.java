@@ -340,6 +340,12 @@ public class DatabaseObjectModifyDialog extends JDialog {
             c.insets = new Insets(0, 8, 8, 0);
             c.anchor = GridBagConstraints.CENTER;
 
+            // Show a label if the field is not editable
+            if(!fieldType.isEditable()) {
+                container.add(new JLabel(value), c);
+                continue;
+            }
+
             // Create a variable for the property field instance
             AbstractPropertyField field;
 
