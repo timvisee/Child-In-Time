@@ -266,6 +266,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True on success, false on failure.
      */
+    // FIXME: Implement this method!
     public boolean applyToDatabase() {
         // TODO: Loop through the cached fields that are in the hash map. (See this.cacedFields)
         {
@@ -286,6 +287,9 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         }
 
         // TODO: Return true, because everything seems to be fine.
+
+        // FIXME: This return is invalid, the method should be implemented!
+        return false;
     }
 
     @Override
