@@ -8,6 +8,13 @@ public class Measurement extends AbstractDatabaseObject {
 
     /**
      * Constructor.
+     */
+    public Measurement() {
+        super();
+    }
+
+    /**
+     * Constructor.
      *
      * @param id Database object id.
      */

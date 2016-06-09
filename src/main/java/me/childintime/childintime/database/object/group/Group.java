@@ -7,6 +7,13 @@ public class Group extends AbstractDatabaseObject {
 
     /**
      * Constructor.
+     */
+    public Group() {
+        super();
+    }
+
+    /**
+     * Constructor.
      *
      * @param id Database object id.
      */

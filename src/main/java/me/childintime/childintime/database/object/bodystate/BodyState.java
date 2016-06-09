@@ -7,6 +7,13 @@ public class BodyState extends AbstractDatabaseObject {
 
     /**
      * Constructor.
+     */
+    public BodyState() {
+        super();
+    }
+
+    /**
+     * Constructor.
      *
      * @param id Database object id.
      */

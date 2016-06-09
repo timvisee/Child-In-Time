@@ -11,7 +11,8 @@ import java.util.*;
 public abstract class AbstractDatabaseObject implements Cloneable {
 
     /**
-     * Database object ID.
+     * Database object ID'or negative one if the ID is unspecified.
+     * A new object should be added to the database when the object is applied to the database while the ID is negative one.
      */
     protected final int id;
 
@@ -19,6 +20,13 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * Hash map containing cached fields from the database object.
      */
     protected HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
+
+    /**
+     * Constructor.
+     */
+    public AbstractDatabaseObject() {
+        this.id = -1;
+    }
 
     /**
      * Constructor.
