@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public abstract class AbstractDatabaseObject implements Cloneable {
@@ -266,54 +267,57 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True on success, false on failure.
      */
+    // FIXME: Method not fully made yet, complete it!
     public boolean applyToDatabase() {
+        // Make sure the this object has any cached fields
+        if(this.cachedFields.size() == 0)
+            return true;
 
-        // TODO: Loop through the cached fields that are in the hash map. (See this.cacedFields)
-        this.cachedFields.forEach((DatabaseFieldsInterface, o) -> {
-            // TODO: If the current field is an ID field, skip it and continue; to the next field in the list
-            if(DatabaseFieldsInterface.getExtendedDataType().equals(DataTypeExtended.ID))
-                return;
+        // Get the database connection
+        final Connection connection;
+        try {
+            connection = Core.getInstance().getDatabaseConnector().getConnection();
+        } catch(SQLException e) {
+            throw new RuntimeException("Failed to connect to the database.", e);
+        }
 
-            // TODO: Create a prepared statement (see line 126)
-            //
-            //       UPDATE: current field (See: currentField.getFieldName() )
-            //       NEW VALUES: current field value (which is inside the this.cachedFields hash map)
-            //       WHERE: id = getId()
-            //
-            //       The new value, and the ID should be a '?' in the prepared statement. Their proper values will
-            //       be attached/set later on
+        // Loop through the hash map with cached fields
+        for(Map.Entry<DatabaseFieldsInterface, Object> entry : this.cachedFields.entrySet()) {
+            // Get the field and it's value
+            final DatabaseFieldsInterface field = entry.getKey();
+            final Object value = entry.getValue();
 
-            // TODO: Attach the parameters/values to the prepared statement (attach the new value, and the ID)
-
-            // TODO: Execute the prepared statement, with the attached parameters
+            // Skip cached ID fields, because the ID field may never change
+            if(field.getExtendedDataType().equals(DataTypeExtended.ID))
+                continue;
 
             try {
-                // Get the database connection
-                final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
-
                 // Prepare a statement to update
                 PreparedStatement updateStatement = connection.prepareStatement(
                         "UPDATE `" + getTableName() + "` " +
-                                "SET `" + DatabaseFieldsInterface.getDatabaseField() + "` = ?" +
-                                "WHERE `id` = ?"
+                        "SET `" + field.getDatabaseField() + "` = ? " +
+                        "WHERE `id` = ?"
                 );
 
-                updateStatement.setObject(1, o);
+                // Attach the parameters to the prepared statement
+                updateStatement.setObject(1, value);
                 updateStatement.setInt(2, getId());
 
-                int updateCount = updateStatement.executeUpdate();
-
-                if(updateCount == 1)
-                    return true;
+                // Make sure one database object is updated
+                if(updateStatement.executeUpdate() != 1)
+                    return false;
 
             } catch (Exception e) {
                 // Print the stack trace, and return the result
                 e.printStackTrace();
-            }
-        });
 
-        // TODO: Return true, because everything seems to be fine.
-        return false;
+                // Return false
+                return false;
+            }
+        }
+
+        // Successfully updated database object, return the result
+        return true;
     }
 
     @Override
