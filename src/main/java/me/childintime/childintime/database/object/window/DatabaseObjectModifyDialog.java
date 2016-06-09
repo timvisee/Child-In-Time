@@ -649,7 +649,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
             }
 
             // Make sure the field is valid
-            if(!field.isValid()) {
+            if(!field.isInputValid()) {
                 // Show a message
                 if(showMessage)
                     JOptionPane.showMessageDialog(this, "The '" + fieldSpec.getDisplayName() + "' field contains an invalid value.", "Invalid input", JOptionPane.ERROR_MESSAGE);
