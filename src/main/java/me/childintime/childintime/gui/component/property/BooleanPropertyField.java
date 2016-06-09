@@ -13,11 +13,6 @@ public class BooleanPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * Null placeholder text.
-     */
-    private String nullPlaceholderText = "<null>";
-
-    /**
      * Boolean field.
      */
     protected JCheckBox checkBox;
@@ -184,24 +179,6 @@ public class BooleanPropertyField extends AbstractPropertyField {
             else
                 setState(false);
         });
-    }
-
-    /**
-     * Get the null placeholder text.
-     *
-     * @return Null placeholder text.
-     */
-    public String getNullPlaceholderText() {
-        return this.nullPlaceholderText;
-    }
-
-    /**
-     * Set the null placeholder text.
-     *
-     * @param nullPlaceholderText Null placeholder text.
-     */
-    public void setNullPlaceholderText(String nullPlaceholderText) {
-        this.nullPlaceholderText = nullPlaceholderText;
     }
 
     @Override

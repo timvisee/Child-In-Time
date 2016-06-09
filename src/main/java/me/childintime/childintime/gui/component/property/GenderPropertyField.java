@@ -14,11 +14,6 @@ public class GenderPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * Null placeholder text.
-     */
-    private String nullPlaceholderText = "<null>";
-
-    /**
      * Radio button for men.
      */
     protected JRadioButton radioButtonMale;
@@ -212,24 +207,6 @@ public class GenderPropertyField extends AbstractPropertyField {
             else
                 setState(false);
         });
-    }
-
-    /**
-     * Get the null placeholder text.
-     *
-     * @return Null placeholder text.
-     */
-    public String getNullPlaceholderText() {
-        return this.nullPlaceholderText;
-    }
-
-    /**
-     * Set the null placeholder text.
-     *
-     * @param nullPlaceholderText Null placeholder text.
-     */
-    public void setNullPlaceholderText(String nullPlaceholderText) {
-        this.nullPlaceholderText = nullPlaceholderText;
     }
 
     @Override
