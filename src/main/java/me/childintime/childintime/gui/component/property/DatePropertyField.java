@@ -294,4 +294,14 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
     public void setMaximumDate(Date date) {
         this.dateChooser.setMaxSelectableDate(date);
     }
+
+    @Override
+    public boolean isValid() {
+        // Make sure the super is valid
+        if(!super.isValid())
+            return false;
+
+        // Check whether the date is valid
+        return isValidDate();
+    }
 }

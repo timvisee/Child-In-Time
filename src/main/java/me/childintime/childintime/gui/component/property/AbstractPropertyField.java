@@ -265,6 +265,29 @@ public abstract class AbstractPropertyField extends JComponent {
     }
 
     /**
+     * Check whether the property field is empty.
+     * If a field is null, it is marked as empty.
+     * For property fields that contain strings, the field is empty if the string has a length of zero.
+     *
+     * @return True if empty, false if not.
+     */
+    public boolean isEmpty() {
+        return isNull();
+    }
+
+    /**
+     * Check whether the property field contents are valid.
+     * This only does a basic check for some property fields.
+     * For example: the path is validated for fields holding a file (the file doesn't need to exist).
+     *
+     * @return True if valid.
+     */
+    public boolean isValid() {
+        // The field is invalid if it's null, while null isn't allowed
+        return isNullAllowed() || !isNull();
+    }
+
+    /**
      * Clear the field.
      */
     public abstract void clear();

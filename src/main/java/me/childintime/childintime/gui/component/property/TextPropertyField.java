@@ -306,14 +306,14 @@ public class TextPropertyField extends AbstractPropertyField {
             disableIfEmpty();
     }
 
-    /**
-     * Check whether the property field is empty.
-     * If the field is null, true is returned.
-     *
-     * @return True if empty, false if not.
-     */
+    @Override
     public boolean isEmpty() {
-        return isNull() || getText().isEmpty();
+        // Call the super
+        if(super.isEmpty())
+            return true;
+
+        // Check whether the string is empty
+        return getText().isEmpty();
     }
 
     @Override
