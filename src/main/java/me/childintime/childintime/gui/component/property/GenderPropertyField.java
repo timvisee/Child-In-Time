@@ -21,12 +21,12 @@ public class GenderPropertyField extends AbstractPropertyField {
     /**
      * Radio button for men.
      */
-    protected JRadioButton menButton;
+    protected JRadioButton radioButtonMale;
 
     /**
      * Radio button for women.
      */
-    protected JRadioButton womenButton;
+    protected JRadioButton radioButtonFemale;
 
     /**
      * Constructor.
@@ -65,12 +65,12 @@ public class GenderPropertyField extends AbstractPropertyField {
         ButtonGroup buttonGroup = new ButtonGroup();
 
         // Build the radio buttons
-        this.menButton = new JRadioButton("Male");
-        this.womenButton = new JRadioButton("Female");
+        this.radioButtonMale = new JRadioButton("Male");
+        this.radioButtonFemale = new JRadioButton("Female");
 
         // Add the radio buttons to the group
-        buttonGroup.add(menButton);
-        buttonGroup.add(womenButton);
+        buttonGroup.add(radioButtonMale);
+        buttonGroup.add(radioButtonFemale);
 
         // Link the text field listeners
         final MouseListener mouseListener = new MouseListener() {
@@ -91,8 +91,8 @@ public class GenderPropertyField extends AbstractPropertyField {
             @Override
             public void mouseExited(MouseEvent e) { }
         };
-        this.menButton.addMouseListener(mouseListener);
-        this.womenButton.addMouseListener(mouseListener);
+        this.radioButtonMale.addMouseListener(mouseListener);
+        this.radioButtonFemale.addMouseListener(mouseListener);
 
         // Set the focus listeners
         final FocusListener focusListener = new FocusListener() {
@@ -105,8 +105,8 @@ public class GenderPropertyField extends AbstractPropertyField {
                 disableIfEmpty();
             }
         };
-        this.menButton.addFocusListener(focusListener);
-        this.womenButton.addFocusListener(focusListener);
+        this.radioButtonMale.addFocusListener(focusListener);
+        this.radioButtonFemale.addFocusListener(focusListener);
 
         // Set the field back to null when the escape key is pressed
         final Action escapeAction = new AbstractAction() {
@@ -123,14 +123,14 @@ public class GenderPropertyField extends AbstractPropertyField {
                 setNull(true);
             }
         };
-        this.menButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.womenButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.menButton.getActionMap().put("Escape", escapeAction);
-        this.womenButton.getActionMap().put("Escape", escapeAction);
+        this.radioButtonMale.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.radioButtonFemale.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.radioButtonMale.getActionMap().put("Escape", escapeAction);
+        this.radioButtonFemale.getActionMap().put("Escape", escapeAction);
 
         // Add the radio buttons to the panel
-        buttonPanel.add(this.menButton);
-        buttonPanel.add(this.womenButton);
+        buttonPanel.add(this.radioButtonMale);
+        buttonPanel.add(this.radioButtonFemale);
 
         // Return the panel with the checkboxes
         return buttonPanel;
@@ -156,7 +156,7 @@ public class GenderPropertyField extends AbstractPropertyField {
      */
     public boolean isMen() {
         // TODO: Return null?
-        return !isNull() && !this.womenButton.isSelected();
+        return !isNull() && !this.radioButtonFemale.isSelected();
     }
 
     /**
@@ -177,8 +177,8 @@ public class GenderPropertyField extends AbstractPropertyField {
 
         // Set the text field text
         if(!isNull()) {
-            this.menButton.setSelected(state);
-            this.womenButton.setSelected(!state);
+            this.radioButtonMale.setSelected(state);
+            this.radioButtonFemale.setSelected(!state);
         }
     }
 
@@ -188,21 +188,21 @@ public class GenderPropertyField extends AbstractPropertyField {
         super.setNull(_null);
 
         // Update the enabled state of both components
-        this.menButton.setEnabled(!_null);
-        this.womenButton.setEnabled(!_null);
+        this.radioButtonMale.setEnabled(!_null);
+        this.radioButtonFemale.setEnabled(!_null);
 
         // Disable the selection
         if(_null) {
-            this.menButton.setSelected(false);
-            this.womenButton.setSelected(false);
+            this.radioButtonMale.setSelected(false);
+            this.radioButtonFemale.setSelected(false);
         }
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        this.menButton.transferFocus();
-        this.womenButton.transferFocus();
+        this.radioButtonMale.transferFocus();
+        this.radioButtonFemale.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
@@ -256,7 +256,7 @@ public class GenderPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.menButton.hasFocus())
+        if(!allowEmpty && !this.radioButtonMale.hasFocus())
             disableIfEmpty();
     }
 
@@ -280,7 +280,7 @@ public class GenderPropertyField extends AbstractPropertyField {
             this.setState(true);
 
         // Focus the field and select all
-        this.menButton.grabFocus();
+        this.radioButtonMale.grabFocus();
     }
 
     /**
