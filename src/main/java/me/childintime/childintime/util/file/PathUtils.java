@@ -3,9 +3,34 @@ package me.childintime.childintime.util.file;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 public class PathUtils {
+
+    /**
+     * Check whether a path is valid and parsable, without the file needing to exist.
+     *
+     * @param path Path to validate.
+     *
+     * @return True if the path is valid, false if not.
+     */
+    public static boolean isValidPath(String path) {
+        // TODO: Is this indeed true, does the file not need to exist?
+
+        // Validate the path
+        try {
+            // Try to parse the given path as string representation into a path instance
+            Paths.get(path);
+
+            // The path seems to be valid
+            return true;
+
+        } catch(Exception ignored) { }
+
+        // The path seems to be invalid, return false
+        return false;
+    }
 
     /**
      * Get the relative path from one file to another, specifying the directory separator.
