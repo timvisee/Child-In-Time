@@ -10,17 +10,12 @@ import java.util.*;
 public abstract class AbstractDatabaseObject implements Cloneable {
 
     /**
-     * The name of the constant located in each abstract database object to define the table name.
-     */
-    private static final String FIELD_DATABASE_TABLE_NAME = "DATABASE_TABLE_NAME";
-
-    /**
      * Database object ID.
      */
     protected final int id;
 
     /**
-     * Hashmap containing cached fields from the database object.
+     * Hash map containing cached fields from the database object.
      */
     public HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
 
@@ -127,7 +122,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
             PreparedStatement fetchStatement = connection.prepareStatement(
                     "SELECT `" + fieldsToFetch.toString() + "` " +
                     "FROM `" + getTableName() + "` " +
-                    "WHERE `id` = ?" +
+                    "WHERE `id` = ? " +
                     "LIMIT 1"
             );
 
