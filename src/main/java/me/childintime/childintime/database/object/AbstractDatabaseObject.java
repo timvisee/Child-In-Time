@@ -1,13 +1,12 @@
 package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.configuration.AbstractDatabase;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public abstract class AbstractDatabaseObject implements Cloneable {
 
@@ -346,8 +345,61 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                         "WHERE `id` = ?"
                 );
 
-                // Attach the parameters to the prepared statement
-                updateStatement.setObject(1, value);
+                // Set the parameter to null if the value is null, or properly attach the value
+                if(value != null)
+                    switch(field.getBaseDataType()) {
+                        case STRING:
+                        default:
+                            updateStatement.setString(1, String.valueOf(value));
+                            break;
+
+                        case BOOLEAN:
+                            updateStatement.setInt(1, Boolean.parseBoolean(String.valueOf(value)) ? 1 : 0);
+                            break;
+
+                        case DATE:
+                            // Cast the date to a Java date object
+                            Date date = (Date) value;
+
+                            // Convert the date into a SQL date
+                            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+                            // Attach the date
+                            updateStatement.setDate(1, sqlDate);
+                            break;
+
+                        case INTEGER:
+                            updateStatement.setInt(1, (Integer) value);
+                            break;
+
+                        case REFERENCE:
+                            // Cast the reference object to an abstract database object
+                            AbstractDatabaseObject reference = (AbstractDatabaseObject) value;
+
+                            // Put it's ID in the database
+                            updateStatement.setInt(1, reference.getId());
+                            break;
+                    }
+
+                else
+                    switch(field.getBaseDataType()) {
+                        case STRING:
+                        default:
+                            updateStatement.setNull(1, Types.VARCHAR);
+                            break;
+
+                        case BOOLEAN:
+                        case INTEGER:
+                        case REFERENCE:
+                            updateStatement.setNull(1, Types.INTEGER);
+                            break;
+
+                        case DATE:
+                            updateStatement.setNull(1, Types.DATE);
+                            break;
+                    }
+
+                // Attach the ID of the database object
                 updateStatement.setInt(2, getId());
 
                 // Make sure one database object is updated
