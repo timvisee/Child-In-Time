@@ -271,7 +271,7 @@ public abstract class AbstractPropertyField extends JComponent {
      *
      * @return True if empty, false if not.
      */
-    public boolean isEmpty() {
+    public boolean isInputEmpty() {
         return isNull();
     }
 
@@ -282,7 +282,7 @@ public abstract class AbstractPropertyField extends JComponent {
      *
      * @return True if valid.
      */
-    public boolean isValid() {
+    public boolean isInputValid() {
         // The field is invalid if it's null, while null isn't allowed
         return isNullAllowed() || !isNull();
     }

@@ -101,7 +101,7 @@ public class FilePropertyField extends TextPropertyField {
      */
     public File getFile() {
         // Return null if the value is null
-        if(isNull() || isEmpty())
+        if(isNull() || isInputEmpty())
             return null;
 
         // Return the file
@@ -129,7 +129,7 @@ public class FilePropertyField extends TextPropertyField {
      */
     public boolean isValidPath() {
         // Return false if field is empty
-        if(isEmpty())
+        if(isInputEmpty())
             return false;
 
         // Check whether the path is parsable
@@ -137,13 +137,13 @@ public class FilePropertyField extends TextPropertyField {
     }
 
     @Override
-    public boolean isValid() {
+    public boolean isInputValid() {
         // Make sure the super is valid
-        if(!super.isValid())
+        if(!super.isInputValid())
             return false;
 
         // Make sure the path isn't empty
-        if(isEmpty())
+        if(isInputEmpty())
             return false;
 
         // Make sure the path is valid/parsable
