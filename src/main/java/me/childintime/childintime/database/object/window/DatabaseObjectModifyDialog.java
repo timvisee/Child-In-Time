@@ -16,6 +16,7 @@ import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseObjectModifyDialog extends JDialog {
 
@@ -104,13 +105,19 @@ public class DatabaseObjectModifyDialog extends JDialog {
             throw new IllegalArgumentException("Invalid source type, must be an AbstractDatabaseObject or" +
                     "AbstractDatabaseObjectManifest type.");
 
-        // Set the result object
+        // Clone the source to create a result object, or create a new instance if the source is unspecified
         if(this.source != null)
-            // TODO: Clone the object!
-            this.result = this.source;
-        else {
-            // TODO: Create a new object instance, and put it into the result thing!
-        }
+            try {
+                this.result = this.source.clone();
+            } catch(CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        else
+            try {
+                this.result = this.sourceManifest.getObject().newInstance();
+            } catch(InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
         // Create the form UI
         buildUi();
@@ -349,6 +356,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
             // Create a variable for the property field instance
             AbstractPropertyField field;
 
+            // Create the proper field for the given field type
             switch(fieldType.getBaseDataType()) {
                 case DATE:
                     // Create the date field
@@ -378,6 +386,9 @@ public class DatabaseObjectModifyDialog extends JDialog {
                     field = new TextPropertyField(value, true);
                     break;
             }
+
+            // Put the field in the fields hash map
+            this.fields.put(fieldType, field);
 
             // Add the field
             container.add(field, c);
@@ -449,7 +460,8 @@ public class DatabaseObjectModifyDialog extends JDialog {
         JButton defaultsButton = new JButton("Defaults");
         defaultsButton.addActionListener(e -> {
             // Feature not yet implemented, show a dialog box
-            featureNotImplemented();
+            //featureNotImplemented();
+            validateInput(true);
 
 //            // Create a progress dialog
 //            ProgressDialog progressDialog = new ProgressDialog(this, "Testing database...", false, "Applying changes...", true);
@@ -690,5 +702,59 @@ public class DatabaseObjectModifyDialog extends JDialog {
     @Deprecated
     public void featureNotImplemented() {
         JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+    }
+
+
+    /**
+     * Validate the input of all fields.
+     *
+     * @param showMessage True to show a message for the field that is invalid, false if not.
+     *
+     * @return True if valid, false if invalid.
+     */
+    public boolean validateInput(boolean showMessage) {
+        // Make sure the hash map contains any fields
+        if(this.fields.size() == 0)
+            throw new RuntimeException("Failed to validate input. No fields available.");
+
+        // Loop through all the
+        for(Map.Entry<DatabaseFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
+            // Get the field specification and property field
+            DatabaseFieldsInterface fieldSpec = entry.getKey();
+            AbstractPropertyField field = entry.getValue();
+
+            // Check whether null is allowed if the field is null
+            if(!fieldSpec.isNullAllowed() && field.isNull()) {
+                // Show a message
+                if(showMessage)
+                    JOptionPane.showMessageDialog(this, "The '" + fieldSpec.getDisplayName() + "' field may not be null.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+
+                // Return the result
+                return false;
+            }
+
+            // Check whether an empty value is allowed
+            if(!fieldSpec.isEmptyAllowed() && field.isInputEmpty()) {
+                // Show a message
+                if(showMessage)
+                    JOptionPane.showMessageDialog(this, "The '" + fieldSpec.getDisplayName() + "' field may not be empty.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+
+                // Return the result
+                return false;
+            }
+
+            // Make sure the field is valid
+            if(!field.isValid()) {
+                // Show a message
+                if(showMessage)
+                    JOptionPane.showMessageDialog(this, "The '" + fieldSpec.getDisplayName() + "' field contains an invalid value.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+
+                // Return the result
+                return false;
+            }
+        }
+
+        // All fields seem to be valid, return the result
+        return true;
     }
 }
