@@ -449,7 +449,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * @param field Database field type.
      * @param rawField Raw field data.
      */
-    void parseField(DatabaseFieldsInterface field, String rawField) {
+    void parseField(DatabaseFieldsInterface field, Object rawField) {
         switch(field.getExtendedDataType().getDataTypeBase()) {
             case STRING:
                 this.cachedFields.put(field, rawField);
@@ -460,12 +460,12 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 break;
 
             case INTEGER:
-                this.cachedFields.put(field, Integer.parseInt(rawField));
+                this.cachedFields.put(field, Integer.parseInt(String.valueOf(rawField)));
                 break;
 
             case DATE:
                 // Split the raw date string
-                String[] rawDateSplitted = rawField.split("-");
+                String[] rawDateSplitted = rawField.toString().split("-");
 
                 // Parse the year, month and day values
                 int dateYear = Integer.valueOf(rawDateSplitted[0]);
@@ -481,7 +481,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
             case REFERENCE:
                 // Get the object ID
-                final int objectId = Integer.parseInt(rawField);
+                final int objectId = Integer.parseInt(String.valueOf(rawField));
 
                 // Parse the referenced object
                 try {
