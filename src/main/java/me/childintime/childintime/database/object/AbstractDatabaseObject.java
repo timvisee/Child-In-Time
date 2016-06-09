@@ -281,7 +281,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     }
 
     @Override
-    protected AbstractDatabaseObject clone() throws CloneNotSupportedException {
+    public AbstractDatabaseObject clone() throws CloneNotSupportedException {
         // Create a variable to put the new abstract database object in
         AbstractDatabaseObject clone;
 
