@@ -14,6 +14,11 @@ import java.util.List;
 public class EntityViewComponent extends EntityListComponent {
 
     /**
+     * Define whether a user can modify an entity.
+     */
+    private boolean canModify = true;
+
+    /**
      * Constructor.
      *
      * @param manager Entity manager.
@@ -22,7 +27,36 @@ public class EntityViewComponent extends EntityListComponent {
         // Construct the super
         super(manager);
 
-        addEntityActionListener(entities -> modifyEntity(entities.get(0)));
+        // Attach the entity action listener, to execute entity modifications
+        addEntityActionListener(entities -> {
+            // The modify flag must be enabled
+            if(!canModify)
+                return;
+
+            // Modify the entity
+            modifyEntity(entities);
+        });
+    }
+
+    /**
+     * Check whether a user can modify an entity.
+     *
+     * @return True if a user can modify, false if not.
+     */
+    public boolean isCanModify() {
+        return this.canModify;
+    }
+
+    /**
+     * Set whether a user can modify an entity.
+     *
+     * @param canModify True if a user can modify, false if not.
+     */
+    public void setCanModify(boolean canModify) {
+        // Set the editable flag
+        this.canModify = canModify;
+
+
     }
 
     /**
@@ -58,19 +92,29 @@ public class EntityViewComponent extends EntityListComponent {
             return;
         }
 
-        // Only one entity can be selected
+        // Modify the selected entity
+        modifyEntity(getSelectedEntities());
+    }
+
+    /**
+     * Modify the given entity.
+     * This method allows a list to be supplied, even though only one entity can be modified.
+     * This method is for ease of use, and thus can't be used to execute multiple modifications.
+     */
+    public void modifyEntity(List<AbstractEntity> entities) {
+        // Only one entity can be modified
         if(getSelectedCount() > 1) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Only one " + manifest.getTypeName(false, false) + " can be edited at a time.",
+                    "Only one " + getManager().getManifest().getTypeName(false, false) + " can be modified at a time.",
                     App.APP_NAME,
                     JOptionPane.WARNING_MESSAGE
             );
             return;
         }
 
-        // Edit the selected entity
-        modifyEntity(getSelectedEntity());
+        // Modify the entity
+        modifyEntity(entities.get(0));
     }
 
     /**
