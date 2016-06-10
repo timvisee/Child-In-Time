@@ -20,11 +20,6 @@ public class TextPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * Null placeholder text.
-     */
-    private String nullPlaceholderText = "<null>";
-
-    /**
      * Text field.
      */
     protected JTextField textField;
@@ -239,10 +234,6 @@ public class TextPropertyField extends AbstractPropertyField {
 
         // Update the enabled state of the text field
         this.textField.setEnabled(!_null);
-
-        // Set the field text to the null placeholder if it's set to null
-        if(_null)
-            this.textField.setText(this.nullPlaceholderText);
     }
 
     @Override
@@ -258,24 +249,6 @@ public class TextPropertyField extends AbstractPropertyField {
             else
                 setText("");
         });
-    }
-
-    /**
-     * Get the null placeholder text.
-     *
-     * @return Null placeholder text.
-     */
-    public String getNullPlaceholderText() {
-        return this.nullPlaceholderText;
-    }
-
-    /**
-     * Set the null placeholder text.
-     *
-     * @param nullPlaceholderText Null placeholder text.
-     */
-    public void setNullPlaceholderText(String nullPlaceholderText) {
-        this.nullPlaceholderText = nullPlaceholderText;
     }
 
     @Override
@@ -320,7 +293,7 @@ public class TextPropertyField extends AbstractPropertyField {
     public void enableField() {
         // Enable the field if it's disabled because it's value is null
         if(isNull())
-            this.setText("");
+            setNull(false);
 
         // Focus the field and select all
         this.textField.grabFocus();
