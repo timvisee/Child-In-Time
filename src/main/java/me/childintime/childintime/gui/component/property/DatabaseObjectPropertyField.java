@@ -166,7 +166,6 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
      *
      * @param selected Selected value.
      */
-    // TODO: Method isn't selecting properly!
     public void setSelected(AbstractDatabaseObject selected) {
         // Make sure null is allowed
         if(selected == null && !isNullAllowed())
@@ -175,7 +174,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
         // Set the null state
         if(selected == null)
             setNull(true);
-        else if(isNull())
+        else
             this.comboBox.setSelectedItem(selected);
     }
 
