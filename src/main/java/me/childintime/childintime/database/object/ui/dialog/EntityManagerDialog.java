@@ -1,9 +1,9 @@
-package me.childintime.childintime.database.object.window;
+package me.childintime.childintime.database.object.ui.dialog;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.database.object.AbstractEntity;
 import me.childintime.childintime.database.object.AbstractEntityManager;
-import me.childintime.childintime.database.object.window.list.DatabaseObjectListComponent;
+import me.childintime.childintime.database.object.ui.component.DatabaseObjectListComponent;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
