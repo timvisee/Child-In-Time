@@ -119,7 +119,7 @@ public class EntityListComponent extends JComponent {
      *
      * @return Swing table instance.
      */
-    public JTable getObjectTable() {
+    public JTable getSwingTable() {
         return this.uiTable;
     }
 
