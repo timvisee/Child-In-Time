@@ -1,13 +1,11 @@
 package me.childintime.childintime.gui.window;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.object.student.Student;
-import me.childintime.childintime.database.object.student.StudentFields;
 import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
+import me.childintime.childintime.database.object.window.list.DatabaseObjectListComponent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class DashboardFrame extends JFrame {
 
@@ -89,6 +87,11 @@ public class DashboardFrame extends JFrame {
         // Create a grid bag constraints instance
         GridBagConstraints c = new GridBagConstraints();
 
+        // TODO: Move this somewhere else
+        Core.getInstance().getStudentManager().fetchObjects();
+        Core.getInstance().getTeacherManager().fetchObjects();
+        Core.getInstance().getSchoolManager().fetchObjects();
+
         // Create the student panel
         JPanel studentPanel = new JPanel();
         studentPanel.setBorder(BorderFactory.createTitledBorder("Students"));
@@ -103,6 +106,21 @@ public class DashboardFrame extends JFrame {
         JPanel schoolPanel = new JPanel();
         schoolPanel.setBorder(BorderFactory.createTitledBorder("Schools"));
         schoolPanel.add(this.schoolButton = new JButton("Schools"));
+
+        // Add student list
+        DatabaseObjectListComponent listStudents = new DatabaseObjectListComponent(Core.getInstance().getStudentManager());
+        listStudents.setPreferredSize(new Dimension(200, 200));
+        studentPanel.add(listStudents);
+
+        // Add teacher list
+        DatabaseObjectListComponent listTeachers = new DatabaseObjectListComponent(Core.getInstance().getTeacherManager());
+        listTeachers.setPreferredSize(new Dimension(200, 200));
+        teacherPanel.add(listTeachers);
+
+        // Add school list
+        DatabaseObjectListComponent listSchools = new DatabaseObjectListComponent(Core.getInstance().getSchoolManager());
+        listSchools.setPreferredSize(new Dimension(200, 200));
+        schoolPanel.add(listSchools);
 
         // Add the student panel
         c.fill = GridBagConstraints.HORIZONTAL;
