@@ -4,37 +4,26 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
+import me.childintime.childintime.database.object.window.list.DatabaseObjectListComponent;
 import me.childintime.childintime.util.swing.ProgressDialog;
-import me.childintime.childintime.util.swing.TableUtils;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.AbstractTableModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseObjectManagerDialog extends JDialog {
 
     /**
      * The database object manager this dialog is used for.
      */
-    private AbstractDatabaseObjectManager objectManager;
+    private AbstractDatabaseObjectManager manager;
 
     /**
-     * Data table model instance.
+     * The list component.
      */
-    private AbstractTableModel objectTableModel;
-
-    /**
-     * Data list instance.
-     */
-    private JTable objectTable;
+    public DatabaseObjectListComponent list;
 
     /**
      * Add button instance.
@@ -67,26 +56,18 @@ public class DatabaseObjectManagerDialog extends JDialog {
     private JButton columnsButton;
 
     /**
-     * List of abstract database objects being shown.
-     */
-    private List<AbstractDatabaseObject> objects = new ArrayList<>();
-
-    /**
      * Constructor.
      *
      * @param owner Owner dialog.
-     * @param objectManager Database object manager instance.
+     * @param manager Database object manager instance.
      * @param show True to show the frame once it has been initialized.
      */
-    public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager objectManager, boolean show) {
+    public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager manager, boolean show) {
         // Construct the form
-        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTypeName(true, true), ModalityType.APPLICATION_MODAL);
+        super(owner, App.APP_NAME + " - " + manager.getManifest().getTypeName(true, true), ModalityType.APPLICATION_MODAL);
 
         // Set the database object manager
-        this.objectManager = objectManager;
-
-        // Fetch the databases
-        this.objects = this.objectManager.getObjectsClone();
+        this.manager = manager;
 
         // Create the form UI
         buildUi();
@@ -164,7 +145,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         JPanel mainPanel = new JPanel(new GridBagLayout());
 
         // Create the main label
-        final JLabel instructionLabel = new JLabel("Add, edit or delete " + this.objectManager.getManifest().getTypeName(false, true).toLowerCase() + ".");
+        final JLabel instructionLabel = new JLabel("Add, edit or delete " + this.manager.getManifest().getTypeName(false, true).toLowerCase() + ".");
 
         // Add the instruction label
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -219,7 +200,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
         // Create the object table panel, and give it a titled border
         JPanel objectPanel = new JPanel(new GridBagLayout());
-        objectPanel.setBorder(BorderFactory.createTitledBorder(this.objectManager.getManifest().getTypeName(true, true)));
+        objectPanel.setBorder(BorderFactory.createTitledBorder(this.manager.getManifest().getTypeName(true, true)));
 
         // Create the manage button panel
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -260,76 +241,27 @@ public class DatabaseObjectManagerDialog extends JDialog {
      *
      * @return Scroll pane with table.
      */
-    private JScrollPane buildUiTable() {
-        // Create the default list model
-        this.objectTableModel = new AbstractTableModel() {
-            @Override
-            public int getRowCount() {
-                return objectManager.getObjectCount();
-            }
-
-            @Override
-            public int getColumnCount() {
-                return objectManager.getManifest().getDefaultFields().length;
-            }
-
-            @Override
-            public Object getValueAt(int rowIndex, int columnIndex) {
-                // TODO: Return the field value
-                try {
-                    return objectManager.getObjects().get(rowIndex).getField(objectManager.getManifest().getDefaultFields()[columnIndex]);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            public String getColumnName(int column) {
-                return objectManager.getManifest().getDefaultFields()[column].getDisplayName();
-            }
-        };
-
-        // Refresh the list of databases objects and add them to the list
-        updateUiTable();
-
-        // Create the list and create an empty border
-        this.objectTable = new JTable(this.objectTableModel);
-        this.objectTable.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-        // Fit the table columns to it's content
-        TableUtils.fitColumns(this.objectTable);
+    private DatabaseObjectListComponent buildUiTable() {
+        // Create a new list view for the manager
+        this.list = new DatabaseObjectListComponent(this.manager);
 
         // Update the button panel on selection change
-        final ListSelectionModel selectionModel = this.objectTable.getSelectionModel();
-        selectionModel.addListSelectionListener(e -> updateUiButtons());
+        this.list.addSelectionChangeListenerListener(this::updateUiButtons);
 
         // Edit a table item when it's double clicked
-        this.objectTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent evt) {
-                if(evt.getClickCount() == 2)
-                    editDatabase();
+        this.list.addEntityActionListener(entities -> {
+            // Make sure only one entity is selected
+            if(entities.size() > 1) {
+                JOptionPane.showMessageDialog(this, "Only one " + manager.getManifest().getTypeName(false, false) + " can be edited at a time.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            // Edit the selected object
+            editObject(entities.get(0));
         });
 
-        // Create a scroll pane with the database table
-        JScrollPane tablePane = new JScrollPane(this.objectTable);
-
-        // Set the table pane background color, to match the table's color
-        objectTable.setFillsViewportHeight(true);
-
-        // Create a scroll pane with the database list and return it
-        return tablePane;
-    }
-
-    /**
-     * Update the UI list with the current table of database objects.
-     */
-    private void updateUiTable() {
-        // TODO: Update the table!
-        if(this.objectTableModel != null)
-            this.objectTableModel.fireTableDataChanged();
+        // Return the list view
+        return this.list;
     }
 
     /**
@@ -352,7 +284,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         buttonPanel.add(this.editButton);
         buttonPanel.add(this.removeButton);
         this.addButton.addActionListener(e -> addObject());
-        this.editButton.addActionListener(e -> editDatabase());
+        this.editButton.addActionListener(e -> editSelected());
         this.removeButton.addActionListener(e -> removeDatabases());
 
         // Return the button panel
@@ -432,49 +364,52 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public void addObject() {
         // Create a new database through the edit panel
-        final AbstractDatabaseObject databaseObject = DatabaseObjectModifyDialog.showCreate(this, this.objectManager.getManifest());
+        final AbstractDatabaseObject databaseObject = DatabaseObjectModifyDialog.showCreate(this, this.manager.getManifest());
 
         // Add the database object to the list if it isn't null
         if(databaseObject != null) {
-            // Add the database
-            this.objects.add(databaseObject);
+            // TODO: Only insert the created object, instead of refreshing everything?
 
-            // Refresh the table of databases
-            updateUiTable();
-
-            // TODO: Remove this!
-            refresh();
+            // Refresh the manager
+            this.manager.refresh();
         }
     }
 
     /**
-     * Edit the selected database.
+     * Edit the selected object.
      */
-    public void editDatabase() {
+    public void editSelected() {
+        // Make sure at least one entity is selected
+        if(this.list.getSelectedCount() > 1) {
+            JOptionPane.showMessageDialog(this, "Please select a " + manager.getManifest().getTypeName(false, false) + " to edit.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Make sure only one entity is selected
+        if(this.list.getSelectedCount() > 1) {
+            JOptionPane.showMessageDialog(this, "Only one " + manager.getManifest().getTypeName(false, false) + " can be edited at a time.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Edit the selected entity
+        editObject(this.list.getSelectedEntities().get(0));
+    }
+
+    /**
+     * Edit the given object.
+     */
+    public void editObject(AbstractDatabaseObject object) {
         // Make sure just one item is selected
         if(getSelectedCount() != 1)
             return;
 
-        // Get the selected row
-        final int selectedRow = this.objectTable.getSelectedRow();
-
-        // Get the selected database
-        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(selectedRow);
-
         // Show the edit dialog for this database
-        final AbstractDatabaseObject result = DatabaseObjectModifyDialog.showModify(this, selected);
+        final AbstractDatabaseObject result = DatabaseObjectModifyDialog.showModify(this, object);
 
-        // Set the result, or remove it from the list if it's null
-        if(result != null)
-            this.objects.set(selectedRow, result);
-        else
-            this.objects.remove(selectedRow);
+        // TODO: Only edit the given objec, instead of refreshing everything?
 
-        // Refresh the list
-        updateUiTable();
-
-        // TODO: Remove this!
-        refresh();
+        // Refresh the list of objects
+        this.manager.refresh();
     }
 
     /**
@@ -486,11 +421,11 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Get the type name
-        final String question = "Are you sure you'd like to delete " + (getSelectedCount() == 1 ? "this" : "these") + " " + this.objectManager.getManifest().getTypeName(false, getSelectedCount() != 1) + "?";
+        final String question = "Are you sure you'd like to delete " + (getSelectedCount() == 1 ? "this" : "these") + " " + this.manager.getManifest().getTypeName(false, getSelectedCount() != 1) + "?";
 
         // Ask whether the user wants to delete the databases
         // TODO: Show a proper message!
-        switch(JOptionPane.showConfirmDialog(this, question, "Delete " + this.objectManager.getManifest().getTypeName(false, true), JOptionPane.YES_NO_OPTION)) {
+        switch(JOptionPane.showConfirmDialog(this, question, "Delete " + this.manager.getManifest().getTypeName(false, true), JOptionPane.YES_NO_OPTION)) {
             case JOptionPane.NO_OPTION:
             case JOptionPane.CANCEL_OPTION:
             case JOptionPane.CLOSED_OPTION:
@@ -498,29 +433,28 @@ public class DatabaseObjectManagerDialog extends JDialog {
         }
 
         // Create a progress dialog
-        ProgressDialog progressDialog = new ProgressDialog(this, "Deleting...", false, "Deleting " + this.objectManager.getManifest().getTypeName(false, true) + "...", true);
+        ProgressDialog progressDialog = new ProgressDialog(this, "Deleting...", false, "Deleting " + this.manager.getManifest().getTypeName(false, true) + "...", true);
         progressDialog.setShowProgress(true);
         progressDialog.setProgressMax(getSelectedCount());
 
         // Delete the selected database object
-        for(Integer selectedColumn : this.objectTable.getSelectedRows()) {
+        for(AbstractDatabaseObject entity : this.list.getSelectedEntities()) {
             // Delete the object
-            if(!this.objects.get(selectedColumn).deleteFromDatabase())
+            if(!entity.deleteFromDatabase())
                 // TODO: Show improved message
-                JOptionPane.showMessageDialog(this, "Failed to delete " + this.objectManager.getManifest().getTypeName(false, false) + " from database.", "Failed to delete", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Failed to delete " + this.manager.getManifest().getTypeName(false, false) + " from database.", "Failed to delete", JOptionPane.ERROR_MESSAGE);
 
             // Set the progress
             progressDialog.increaseProgressValue();
         }
 
-        // Refresh the table
-        updateUiTable();
-
         // Dispose the progress dialog
         progressDialog.dispose();
 
-        // TODO: Remove this!
-        refresh();
+        // TODO: Only remove the above entities instead of refreshing everything?
+
+        // Refresh the manager
+        this.manager.refresh();
     }
 
     // TODO: This should be removed!
@@ -535,7 +469,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * @return Number of selected database objects.
      */
     public int getSelectedCount() {
-        return this.objectTable.getSelectedRowCount();
+        return this.list.getSelectedCount();
     }
 
     /**
@@ -625,12 +559,8 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // Create a progress dialog
         ProgressDialog progressDialog = new ProgressDialog(this, App.APP_NAME, false, "Refreshing...", true);
 
-        // Clear the manager's cache
-        this.objectManager.refresh();
-
-        // Fire a table change
-        // TODO: This is done automatically with the above method?
-        this.objectTableModel.fireTableDataChanged();
+        // Refresh the manager
+        this.manager.refresh();
 
         // Dispose the dialog
         progressDialog.dispose();
