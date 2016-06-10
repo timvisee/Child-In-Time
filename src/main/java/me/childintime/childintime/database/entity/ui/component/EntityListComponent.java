@@ -270,9 +270,14 @@ public class EntityListComponent extends JComponent {
             public void keyPressed(KeyEvent e) {
                 // Check whether the enter key is pressed
                 if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // Fire the entities action event if any entity is selected
-                    if(getSelectedCount() > 0)
+                    // Make sure any entity is selected
+                    if(getSelectedCount() > 0) {
+                        // Fire the entity action event
                         fireEntityActionEvent(getSelectedEntities());
+
+                        // Consume the key press
+                        e.consume();
+                    }
                 }
             }
 
