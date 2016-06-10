@@ -3,6 +3,7 @@ package me.childintime.childintime.database.configuration.gui.propertypanel;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.RemoteDatabase;
+import me.childintime.childintime.gui.component.property.IntegerPropertyField;
 import me.childintime.childintime.gui.component.property.PasswordPropertyField;
 import me.childintime.childintime.gui.component.property.TextPropertyField;
 
@@ -24,7 +25,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
     /**
      * Port field.
      */
-    private JSpinner portField;
+    private IntegerPropertyField portField;
 
     /**
      * User field.
@@ -56,7 +57,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         add(new JLabel("Database:"), c);
 
         // Create the host field
-        this.databaseField = new TextPropertyField("MY_DATABASE", true);
+        this.databaseField = new TextPropertyField(null, true);
         this.databaseField.setEmptyAllowed(false);
 
         // Add the host field
@@ -80,7 +81,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         add(new JLabel("Host:"), c);
 
         // Create the host field
-        this.hostField = new TextPropertyField("MY_HOST", true);
+        this.hostField = new TextPropertyField(null, true);
         this.hostField.setEmptyAllowed(false);
 
         // Add the host field
@@ -104,13 +105,12 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         add(new JLabel("Port:"), c);
 
         // Create the user field
-        this.portField = new JSpinner(new SpinnerNumberModel(3306, 1, 65535, 1));
+        this.portField = new IntegerPropertyField(3306, true);
+        this.portField.getSpinner().setModel(new SpinnerNumberModel(3306, 1, 65535, 1));
 
-        // Hide the comma in the port field
-        this.portField.setEditor(new JSpinner.NumberEditor(this.portField, "#"));
-
-        // Align the port field text to the left
-        JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) this.portField.getEditor();
+        // Hide the comma in the port field, and align the text
+        this.portField.getSpinner().setEditor(new JSpinner.NumberEditor(this.portField.getSpinner(), "#"));
+        JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) this.portField.getSpinner().getEditor();
         spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
 
         // Add the port field
@@ -134,7 +134,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         add(new JLabel("User:"), c);
 
         // Create the user field
-        this.userField = new TextPropertyField("USER", true);
+        this.userField = new TextPropertyField(null, true);
 
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -157,7 +157,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         add(new JLabel("Password:"), c);
 
         // Create the password field
-        this.passwordField = new PasswordPropertyField("PASSWORD", true);
+        this.passwordField = new PasswordPropertyField(null, true);
 
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -203,7 +203,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Apply properties
         remote.setDatabase(this.databaseField.getText());
         remote.setHost(this.hostField.getText());
-        remote.setPort((Integer) this.portField.getValue());
+        remote.setPort(this.portField.getNumber());
         remote.setUser(this.userField.getText());
         remote.setPassword(this.passwordField.getText());
 

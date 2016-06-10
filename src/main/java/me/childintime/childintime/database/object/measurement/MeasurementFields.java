@@ -1,8 +1,10 @@
 package me.childintime.childintime.database.object.measurement;
 
-import me.childintime.childintime.database.object.*;
-import me.childintime.childintime.database.object.parkour.Parkour;
-import me.childintime.childintime.database.object.student.Student;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.DataTypeBase;
+import me.childintime.childintime.database.object.DataTypeExtended;
+import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.parkour.ParkourManifest;
 
 public enum MeasurementFields implements DatabaseFieldsInterface{
 
@@ -16,7 +18,7 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
      * Student ID.
      * The student instance a measurement is for.
      */
-    STUDENT_ID("Student", "student_id", false, false, false, DataTypeExtended.REFERENCE, Student.class),
+    STUDENT_ID("Student", "student_id", false, false, false, DataTypeExtended.REFERENCE, ParkourManifest.getInstance()),
 
     /**
      * Measurement date.return MeasurementManifest.getInstance();
@@ -34,7 +36,7 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
      * Parkour ID.return MeasurementManifest.getInstance();
      * The parkour instance a measurement is tracked on.
      */
-    PARKOUR_ID("Parkour", "parkour_id", false, false, false, DataTypeExtended.REFERENCE, Parkour.class);
+    PARKOUR_ID("Parkour", "parkour_id", false, false, false, DataTypeExtended.REFERENCE, ParkourManifest.getInstance());
 
     /**
      * The display name for this field.
@@ -67,10 +69,10 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
     private DataTypeExtended dataType;
 
     /**
-     * The referenced type for fields of the {@link DataTypeExtended#REFERENCE} type.
+     * The referenced manifest of the type for fields of the {@link DataTypeExtended#REFERENCE} type.
      * Must be null if the data type is different.
      */
-    private Class<? extends AbstractDatabaseObject> referenceType;
+    private AbstractDatabaseObjectManifest referenceManifest;
 
     /**
      * Constructor.
@@ -81,16 +83,16 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
      * @param nullAllowed True if a NULL value is allowed for this property field.
      * @param emptyAllowed True if an empty value is allowed for this property field.
      * @param dataType Data type of the field.
-     * @param referenceType Referenced class if this field has the {@link DataTypeExtended#REFERENCE} type.
+     * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    MeasurementFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    MeasurementFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractDatabaseObjectManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
         this.emptyAllowed = emptyAllowed;
         this.dataType = dataType;
-        this.referenceType = referenceType;
+        this.referenceManifest = referenceManifest;
     }
 
     @Override
@@ -128,9 +130,13 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
         return this.emptyAllowed;
     }
 
+    public AbstractDatabaseObjectManifest getReferenceManifest() {
+        return this.referenceManifest;
+    }
+
     @Override
-    public Class<? extends AbstractDatabaseObject> getReferenceType() {
-        return this.referenceType;
+    public AbstractDatabaseObjectManifest getFieldManifest() {
+        return getReferenceManifest() != null ? getReferenceManifest() : getManifest();
     }
 
     @Override

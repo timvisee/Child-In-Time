@@ -89,9 +89,6 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
         // Construct the super
         super(allowNull);
 
-        // Set the null placeholder text
-        setNullPlaceholderText(NULL_PLACEHOLDER_TEXT);
-
         // Create a variable for the date value
         Date valueDate = null;
 

@@ -1,6 +1,7 @@
 package me.childintime.childintime.gui.component.property;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class IntegerPropertyField extends AbstractPropertyField {
@@ -55,7 +56,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
             ((JSpinner.DefaultEditor) spinnerEditor).getTextField().setHorizontalAlignment(SwingConstants.LEFT);
 
         // Link the text field listeners
-        this.spinner.addMouseListener(new MouseListener() {
+        final MouseListener spinnerMouseListener = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -72,7 +73,10 @@ public class IntegerPropertyField extends AbstractPropertyField {
 
             @Override
             public void mouseExited(MouseEvent e) { }
-        });
+        };
+        for(Component spinnerPart : this.spinner.getComponents())
+            spinnerPart.addMouseListener(spinnerMouseListener);
+        this.spinner.addMouseListener(spinnerMouseListener);
         this.spinner.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
