@@ -1,9 +1,9 @@
 package me.childintime.childintime.database.object.spec.measurement;
 
 import me.childintime.childintime.database.object.AbstractEntityManifest;
-import me.childintime.childintime.database.object.DataTypeBase;
-import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.datatype.DataTypeBase;
+import me.childintime.childintime.database.object.datatype.DataTypeExtended;
 import me.childintime.childintime.database.object.spec.parkour.ParkourManifest;
 
 public enum MeasurementFields implements DatabaseFieldsInterface{

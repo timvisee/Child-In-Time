@@ -1,6 +1,7 @@
 package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.object.datatype.DataTypeExtended;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
