@@ -2,6 +2,7 @@ package me.childintime.childintime.gui.component.property;
 
 import me.childintime.childintime.gui.component.property.action.FileSelectAction;
 import me.childintime.childintime.gui.component.property.context.ContextFileAction;
+import me.childintime.childintime.util.file.PathUtils;
 
 import javax.swing.*;
 import java.io.File;
@@ -100,7 +101,7 @@ public class FilePropertyField extends TextPropertyField {
      */
     public File getFile() {
         // Return null if the value is null
-        if(isNull() || isEmpty())
+        if(isNull() || isInputEmpty())
             return null;
 
         // Return the file
@@ -118,5 +119,34 @@ public class FilePropertyField extends TextPropertyField {
             setText(file.getAbsolutePath());
         else
             setNull(true);
+    }
+
+    /**
+     * Check whether the current path is valid/parsable.
+     * If the text box containing the file path is empty or null, false is returned.
+     *
+     * @return True if the path is valid, false if not.
+     */
+    public boolean isValidPath() {
+        // Return false if field is empty
+        if(isInputEmpty())
+            return false;
+
+        // Check whether the path is parsable
+        return PathUtils.isValidPath(getText());
+    }
+
+    @Override
+    public boolean isInputValid() {
+        // Make sure the super is valid
+        if(!super.isInputValid())
+            return false;
+
+        // Make sure the path isn't empty
+        if(isInputEmpty())
+            return false;
+
+        // Make sure the path is valid/parsable
+        return isValidPath();
     }
 }

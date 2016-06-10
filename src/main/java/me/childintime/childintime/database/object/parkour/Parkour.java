@@ -7,6 +7,13 @@ public class Parkour extends AbstractDatabaseObject {
 
     /**
      * Constructor.
+     */
+    public Parkour() {
+        super();
+    }
+
+    /**
+     * Constructor.
      *
      * @param id Database object id.
      */

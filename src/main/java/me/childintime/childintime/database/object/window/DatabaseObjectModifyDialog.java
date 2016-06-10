@@ -1,13 +1,13 @@
 package me.childintime.childintime.database.object.window;
 
 import me.childintime.childintime.App;
-import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.gui.component.property.*;
 import me.childintime.childintime.util.Platform;
+import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +16,7 @@ import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseObjectModifyDialog extends JDialog {
 
@@ -104,13 +105,19 @@ public class DatabaseObjectModifyDialog extends JDialog {
             throw new IllegalArgumentException("Invalid source type, must be an AbstractDatabaseObject or" +
                     "AbstractDatabaseObjectManifest type.");
 
-        // Set the result object
+        // Clone the source to create a result object, or create a new instance if the source is unspecified
         if(this.source != null)
-            // TODO: Clone the object!
-            this.result = this.source;
-        else {
-            // TODO: Create a new object instance, and put it into the result thing!
-        }
+            try {
+                this.result = this.source.clone();
+            } catch(CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        else
+            try {
+                this.result = this.sourceManifest.getObject().newInstance();
+            } catch(InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
         // Create the form UI
         buildUi();
@@ -176,7 +183,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
             throw new NullPointerException("The database object manifest may not be null.");
 
         // Show the modify dialog with a new database object and return the result
-        return showModify(owner, (Object) manifest);
+        return showModify(owner, manifest);
     }
 
     /**
@@ -323,10 +330,10 @@ public class DatabaseObjectModifyDialog extends JDialog {
             c.anchor = GridBagConstraints.WEST;
             container.add(new JLabel(fieldType.getDisplayName() + ":"), c);
 
-            String value = "";
+            Object value = null;
             if(this.source != null)
                 try {
-                    value = this.source.getField(fieldType).toString();
+                    value = this.source.getField(fieldType);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
@@ -340,13 +347,20 @@ public class DatabaseObjectModifyDialog extends JDialog {
             c.insets = new Insets(0, 8, 8, 0);
             c.anchor = GridBagConstraints.CENTER;
 
+            // Show a label if the field is not editable
+            if(!fieldType.isEditable()) {
+                container.add(new JLabel(value != null ? value.toString() : "?"), c);
+                continue;
+            }
+
             // Create a variable for the property field instance
             AbstractPropertyField field;
 
+            // Create the proper field for the given field type
             switch(fieldType.getBaseDataType()) {
                 case DATE:
                     // Create the date field
-                    DatePropertyField dateField =  new DatePropertyField(true);
+                    DatePropertyField dateField =  new DatePropertyField(value, true);
 
                     // Set the maximum selectable date if we're working with birthday fields
                     if(fieldType.getExtendedDataType().equals(DataTypeExtended.BIRTHDAY))
@@ -359,19 +373,33 @@ public class DatabaseObjectModifyDialog extends JDialog {
                 case BOOLEAN:
                     switch(fieldType.getExtendedDataType()) {
                         case GENDER:
-                            field = new GenderPropertyField(Boolean.parseBoolean(value), true);
+                            field = new GenderPropertyField((Boolean) value, true);
                             break;
 
                         default:
-                            field = new BooleanPropertyField(Boolean.parseBoolean(value), true);
+                            field = new BooleanPropertyField((Boolean) value, true);
                     }
+                    break;
+
+                case INTEGER:
+                    field = new IntegerPropertyField((Integer) value, true);
+                    break;
+
+                case REFERENCE:
+                    if(value != null)
+                        field = new DatabaseObjectPropertyField((AbstractDatabaseObject) value, true);
+                    else
+                        field = new DatabaseObjectPropertyField(fieldType.getManifest().getManagerInstance(), true);
                     break;
 
                 case STRING:
                 default:
-                    field = new TextPropertyField(value, true);
+                    field = new TextPropertyField(value != null ? value.toString() : null, true);
                     break;
             }
+
+            // Put the field in the fields hash map
+            this.fields.put(fieldType, field);
 
             // Add the field
             container.add(field, c);
@@ -420,13 +448,14 @@ public class DatabaseObjectModifyDialog extends JDialog {
         JButton applyButton = new JButton("Apply");
         okButton.addActionListener(e -> {
             // Apply the changes to the database
-            if(!applyChanges())
+            if(!applyToDatabase())
                 return;
 
             // Close the frame
             dispose();
         });
         cancelButton.addActionListener(e -> closeFrame());
+        applyButton.addActionListener(e -> applyToDatabase());
 
         // Add the commit buttons to the panel, use the proper order based on the operating system
         if(!Platform.isMacOsX()) {
@@ -516,114 +545,22 @@ public class DatabaseObjectModifyDialog extends JDialog {
     }
 
     /**
-     * Set the database that is shown.
-     *
-     * @param database Database.
-     */
-    public void updateComponents(AbstractDatabase database) {
-//        // Update the used database type
-//        this.currentType = database.getType();
-//
-//        // Set the question label
-//        this.databaseNameField.setText(database.getName());
-//
-//        // Select the proper database type
-//        this.databaseTypeBox.setSelectedItem(database.getType());
-//
-//        // TODO: Update the properties window
-//
-//        // Pack the frame
-//        //pack();
-//
-//        // Force the whole frame to repaint, to prevent graphical artifacts on some operating systems
-//        this.repaint();
-    }
-
-    /**
-     * Update the database property panel.
-     */
-    public void updatePropertyPanel() {
-//        // Apply the property panel values
-//        applyPropertyPanel();
-//
-//        // Get the selected database type
-//        DatabaseType selectedType = (DatabaseType) this.databaseTypeBox.getSelectedItem();
-//
-//        // Determine the panel class
-//        Class<? extends AbstractDatabasePropertyPanel> propertyPanelClass = selectedType.getPropertyPanelClass();
-//
-//        // Reset the property panel if a different property panel should be shown
-//        if(!propertyPanelClass.isInstance(this.propertyPanel)) {
-//            // Instantiate the property panel for the new database type
-//            try {
-//                this.propertyPanel = selectedType.getPropertyPanelClass().newInstance();
-//
-//            } catch (InstantiationException | IllegalAccessException ex) {
-//                ex.printStackTrace();
-//                // TODO: Show an error message
-//            }
-//
-//            // Build and update the property panel
-//            this.propertyPanel.buildUi();
-//            this.propertyPanel.update(getDatabase());
-//
-//            // Remove all current panels in the wrapper and add the new property panel
-//            this.propertyPanelWrapper.removeAll();
-//            this.propertyPanelWrapper.add(this.propertyPanel);
-//
-//            // Reconfigure the frame sizes
-//            configureSize();
-//
-//        } else
-//            // Update the property panel
-//            this.propertyPanel.update(getDatabase());
-    }
-
-    /**
-     * Apply the changes to the current database.
-     *
-     * @return True if the changes were valid, false if not.
-     */
-    public boolean applyChanges() {
-//        // Make sure the database isn't null
-//        if(this.getDatabase() == null)
-//            // TODO: Create database instance to apply to?
-//            return false;
-//
-//        // Apply the name
-//        this.getDatabase().setName(this.databaseNameField.getText());
-//
-//        // Make sure the database type corresponds to the current type
-//        // TODO: Should we 'apply' it instead of returning false
-//        if(!this.currentType.equals(this.databaseTypeBox.getSelectedItem()))
-//            return false;
-//
-//        // Apply the property panel values
-//        applyPropertyPanel();
-
-        // Save succeed, return the result
-        return true;
-    }
-
-    /**
-     * Apply the property panel values.
-     */
-    public void applyPropertyPanel() {
-//        // Apply the properties to the database
-//        if(this.propertyPanel != null)
-//            this.propertyPanel.apply(getDatabase());
-    }
-
-    /**
      * Close the frame. Ask whether the user wants to save the changes.
      */
     public void closeFrame() {
-        // TODO: Stop the closing process, when we fail!
-
         // Only ask to save if there are any unsaved changes
         if(hasUnsavedChanges()) {
             // Ask whether the user wants to save the questions
-            switch(JOptionPane.showConfirmDialog(this, "Would you like to save the changes?", "Database changed", JOptionPane.YES_NO_CANCEL_OPTION)) {
+            switch(JOptionPane.showConfirmDialog(this, "Would you like to save the changes?", this.sourceManifest.getTypeName(true, false) + " changed", JOptionPane.YES_NO_CANCEL_OPTION)) {
+                case JOptionPane.YES_OPTION:
+                    // Apply the changes
+                    if(!applyToDatabase())
+                        return;
+
+                    // Set the discarded flag
+                    discarded = false;
+                    break;
+
                 case JOptionPane.CANCEL_OPTION:
                     // Whoops, we don't want to close the frame
                     return;
@@ -647,28 +584,24 @@ public class DatabaseObjectModifyDialog extends JDialog {
     }
 
     /**
-     * Check whether this database has unsaved changes.
+     * Check whether this database object has unsaved changes.
      *
-     * @return True if this database has unsaved changes, false if not.
+     * @return True if this database object has unsaved changes, false if not.
      */
     public boolean hasUnsavedChanges() {
-//        // Get the current database
-//        AbstractDatabase database = getDatabase();
-//
-//        // Apply the changes
-//        applyChanges();
-//
-//        // Compare the source database with the current database
-//        if(this.source == null || database == null) {
-//            // Check whether they are equal
-//            if(this.source != database)
-//                return true;
-//
-//        } else if(!this.source.equals(database))
-//            return true;
+        // Make sure all input is valid
+        if(!validateInput(false))
+            return true;
 
-        // No differences, return false
-        return false;
+        // Apply the changes
+        applyInputToResult();
+
+        // Return true if the source is null
+        if(this.source == null)
+            return true;
+
+        // There are unsaved changes if the source doesn't equal the result
+        return !this.source.isCacheEqual(this.result);
     }
 
     /**
@@ -684,5 +617,128 @@ public class DatabaseObjectModifyDialog extends JDialog {
     @Deprecated
     public void featureNotImplemented() {
         JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Validate the input of all fields.
+     *
+     * @param showMessage True to show a message for the field that is invalid, false if not.
+     *
+     * @return True if valid, false if invalid.
+     */
+    public boolean validateInput(boolean showMessage) {
+        // Make sure the hash map contains any fields
+        if(this.fields.size() == 0)
+            throw new RuntimeException("Failed to validate input. No fields available.");
+
+        // Loop through all the
+        for(Map.Entry<DatabaseFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
+            // Get the field specification and property field
+            DatabaseFieldsInterface fieldSpec = entry.getKey();
+            AbstractPropertyField field = entry.getValue();
+
+            // Check whether null is allowed if the field is null
+            if(!fieldSpec.isNullAllowed() && field.isNull()) {
+                // Show a message
+                if(showMessage)
+                    JOptionPane.showMessageDialog(this, "Please enter the " + fieldSpec.getDisplayName().toLowerCase() + ".", "Invalid input", JOptionPane.ERROR_MESSAGE);
+
+                // Return the result
+                return false;
+            }
+
+            // Check whether an empty value is allowed
+            if(!fieldSpec.isEmptyAllowed() && field.isInputEmpty()) {
+                // Show a message
+                if(showMessage)
+                    JOptionPane.showMessageDialog(this, "The '" + fieldSpec.getDisplayName() + "' field may not be empty.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+
+                // Return the result
+                return false;
+            }
+
+            // Make sure the field is valid
+            if(!field.isInputValid()) {
+                // Show a message
+                if(showMessage)
+                    JOptionPane.showMessageDialog(this, "The '" + fieldSpec.getDisplayName() + "' field contains an invalid value.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+
+                // Return the result
+                return false;
+            }
+        }
+
+        // All fields seem to be valid, return the result
+        return true;
+    }
+
+    /**
+     * Apply the input to the result database object.
+     */
+    public void applyInputToResult() {
+        // Make sure the hash map contains any fields
+        if(this.fields.size() == 0)
+            throw new RuntimeException("Failed to validate input. No fields available.");
+
+        // Loop through all the
+        for(Map.Entry<DatabaseFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
+            // Get the field specification and property field
+            DatabaseFieldsInterface fieldSpec = entry.getKey();
+            AbstractPropertyField field = entry.getValue();
+
+            // Put the field value into the database object cache
+            this.result.getCachedFields().put(fieldSpec, field.getValue());
+        }
+    }
+
+    /**
+     * Apply the modifications to the database.
+     * This method will also validate the input, and it will be cancelled if the input is invalid.
+     *
+     * @return True on success, false on failure.
+     */
+    public boolean applyToDatabase() {
+        // Make sure all input is valid
+        if(!validateInput(true))
+            return false;
+
+        // Show a progress dialog
+        final ProgressDialog progressDialog = new ProgressDialog(this, "Saving changes...", false, "Processing changes...", true);
+
+        // Apply the changes to the result object
+        applyInputToResult();
+
+        // Apply the result to the database
+        progressDialog.setStatus("Saving changes...");
+        if(!this.result.applyToDatabase()) {
+            // Show an error message, and return false
+            JOptionPane.showMessageDialog(this, "Failed to store the " + this.sourceManifest.getTypeName(false, false) + " in the database.", "Database error", JOptionPane.ERROR_MESSAGE);
+            progressDialog.dispose();
+            return false;
+        }
+
+        // Update the source object by cloning the result
+        try {
+            this.source = this.result.clone();
+
+        } catch(CloneNotSupportedException e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Show an error message
+            JOptionPane.showMessageDialog(this, App.APP_NAME + " recovered an error. The " + this.sourceManifest.getTypeName(false, false) + " has been stored in the database successfully, the modification dialog must however close.", "Application error", JOptionPane.ERROR_MESSAGE);
+
+            // Set the discarded flag
+            this.discarded = false;
+
+            // Dispose the dialog
+            this.dispose();
+        }
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
+
+        // Return the result
+        return true;
     }
 }

@@ -11,15 +11,6 @@ import javax.swing.text.DefaultEditorKit;
 import java.awt.event.*;
 
 public class TextPropertyField extends AbstractPropertyField {
-    @Override
-    public void buildActionList() {
-        // Add the text cut/copy/paste actions
-        this.actionsList.add(new TextCutAction());
-        this.actionsList.add(new TextCopyAction());
-        this.actionsList.add(new TextPasteAction());
-
-        super.buildActionList();
-    }
 
     /**
      * True if an empty value is allowed.
@@ -68,6 +59,16 @@ public class TextPropertyField extends AbstractPropertyField {
 
         // Set the text value
         setText(value);
+    }
+
+    @Override
+    public void buildActionList() {
+        // Add the text cut/copy/paste actions
+        this.actionsList.add(new TextCutAction());
+        this.actionsList.add(new TextCopyAction());
+        this.actionsList.add(new TextPasteAction());
+
+        super.buildActionList();
     }
 
     @Override
@@ -305,14 +306,14 @@ public class TextPropertyField extends AbstractPropertyField {
             disableIfEmpty();
     }
 
-    /**
-     * Check whether the property field is empty.
-     * If the field is null, true is returned.
-     *
-     * @return True if empty, false if not.
-     */
-    public boolean isEmpty() {
-        return isNull() || getText().isEmpty();
+    @Override
+    public boolean isInputEmpty() {
+        // Call the super
+        if(super.isInputEmpty())
+            return true;
+
+        // Check whether the string is empty
+        return getText().isEmpty();
     }
 
     @Override
@@ -332,7 +333,7 @@ public class TextPropertyField extends AbstractPropertyField {
      */
     public void disableIfEmpty() {
         // Clear the field if it's empty, and empty is allowed
-        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && isEmpty())
+        if(isNullAllowed() && !isEmptyAllowed() && !isNull() && isInputEmpty())
             setNull(true);
     }
 }

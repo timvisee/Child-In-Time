@@ -1,10 +1,13 @@
 package me.childintime.childintime.gui.window;
 
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.object.student.Student;
+import me.childintime.childintime.database.object.student.StudentFields;
 import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class DashboardFrame extends JFrame {
 

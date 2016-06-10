@@ -2,15 +2,11 @@ package me.childintime.childintime.gui.component.property;
 
 import me.childintime.childintime.gui.component.property.action.AbstractAction;
 import me.childintime.childintime.gui.component.property.action.ClearAction;
-import me.childintime.childintime.gui.component.property.context.ContextClearAction;
 import me.childintime.childintime.gui.component.property.context.ContextDynamicAction;
-import me.childintime.childintime.gui.component.property.context.ContextSelectAllAction;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
@@ -266,6 +262,29 @@ public abstract class AbstractPropertyField extends JComponent {
         // Fire the null change event for all attached actions
         for(AbstractAction action : this.actionsList)
             action.onNullChange(_null);
+    }
+
+    /**
+     * Check whether the property field is empty.
+     * If a field is null, it is marked as empty.
+     * For property fields that contain strings, the field is empty if the string has a length of zero.
+     *
+     * @return True if empty, false if not.
+     */
+    public boolean isInputEmpty() {
+        return isNull();
+    }
+
+    /**
+     * Check whether the property field contents are valid.
+     * This only does a basic check for some property fields.
+     * For example: the path is validated for fields holding a file (the file doesn't need to exist).
+     *
+     * @return True if valid.
+     */
+    public boolean isInputValid() {
+        // The field is invalid if it's null, while null isn't allowed
+        return isNullAllowed() || !isNull();
     }
 
     /**

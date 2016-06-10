@@ -67,4 +67,11 @@ public abstract class AbstractDatabaseObjectManifest {
      * @return Manager class.
      */
     public abstract Class<? extends AbstractDatabaseObjectManager> getManager();
+
+    /**
+     * Get the manager instance.
+     *
+     * @return Manager instance.
+     */
+    public abstract AbstractDatabaseObjectManager getManagerInstance();
 }

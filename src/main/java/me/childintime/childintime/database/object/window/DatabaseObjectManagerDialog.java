@@ -80,7 +80,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
-        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTypeName(true, false) + " manager", ModalityType.APPLICATION_MODAL);
+        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTypeName(true, true), ModalityType.APPLICATION_MODAL);
 
         // Set the database object manager
         this.objectManager = objectManager;
@@ -432,10 +432,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public void addObject() {
         // Create a new database through the edit panel
-        // TODO: Implement modification dialog here!
         final AbstractDatabaseObject databaseObject = DatabaseObjectModifyDialog.showCreate(this, this.objectManager.getManifest());
-
-        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
         // Add the database object to the list if it isn't null
         if(databaseObject != null) {
@@ -444,6 +441,9 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
             // Refresh the table of databases
             updateUiTable();
+
+            // TODO: Remove this!
+            refresh();
         }
     }
 
@@ -455,25 +455,26 @@ public class DatabaseObjectManagerDialog extends JDialog {
         if(getSelectedCount() != 1)
             return;
 
+        // Get the selected row
+        final int selectedRow = this.objectTable.getSelectedRow();
+
         // Get the selected database
-        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(this.objectTable.getSelectedRow());
+        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(selectedRow);
 
         // Show the edit dialog for this database
-        // TODO: Implement the edit dialog here
         final AbstractDatabaseObject result = DatabaseObjectModifyDialog.showModify(this, selected);
 
-        // Feature not yet implemented, show a warning box
-        featureNotImplemented();
-
-        // TODO: Update this?
         // Set the result, or remove it from the list if it's null
         if(result != null)
-            this.objects.set(this.objectTable.getSelectedRow(), result);
+            this.objects.set(selectedRow, result);
         else
-            this.objects.remove(this.objectTable.getSelectedRow());
+            this.objects.remove(selectedRow);
 
         // Refresh the list
         updateUiTable();
+
+        // TODO: Remove this!
+        refresh();
     }
 
     /**
@@ -485,28 +486,41 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Get the type name
-        final String typeName = this.objectManager.getManifest().getTypeName(false, false);
+        final String question = "Are you sure you'd like to delete " + (getSelectedCount() == 1 ? "this" : "these") + " " + this.objectManager.getManifest().getTypeName(false, getSelectedCount() != 1) + "?";
 
         // Ask whether the user wants to delete the databases
         // TODO: Show a proper message!
-        switch(JOptionPane.showConfirmDialog(this, "Are you sure you'd like to delete this " + typeName + "?", "Delete " + typeName, JOptionPane.YES_NO_OPTION)) {
+        switch(JOptionPane.showConfirmDialog(this, question, "Delete " + this.objectManager.getManifest().getTypeName(false, true), JOptionPane.YES_NO_OPTION)) {
             case JOptionPane.NO_OPTION:
             case JOptionPane.CANCEL_OPTION:
             case JOptionPane.CLOSED_OPTION:
                 return;
         }
 
-        // Feature not yet implemented, show a warning box
-        featureNotImplemented();
+        // Create a progress dialog
+        ProgressDialog progressDialog = new ProgressDialog(this, "Deleting...", false, "Deleting " + this.objectManager.getManifest().getTypeName(false, true) + "...", true);
+        progressDialog.setShowProgress(true);
+        progressDialog.setProgressMax(getSelectedCount());
 
-        // TODO: Improve this!
-//        // Delete the selected database object
-//        for(Object databaseObject : this.objectList.getSelectedValuesList())
-//            //noinspection RedundantCast
-//            this.objects.remove((AbstractDatabaseObject) databaseObject);
+        // Delete the selected database object
+        for(Integer selectedColumn : this.objectTable.getSelectedRows()) {
+            // Delete the object
+            if(!this.objects.get(selectedColumn).deleteFromDatabase())
+                // TODO: Show improved message
+                JOptionPane.showMessageDialog(this, "Failed to delete " + this.objectManager.getManifest().getTypeName(false, false) + " from database.", "Failed to delete", JOptionPane.ERROR_MESSAGE);
+
+            // Set the progress
+            progressDialog.increaseProgressValue();
+        }
 
         // Refresh the table
         updateUiTable();
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
+
+        // TODO: Remove this!
+        refresh();
     }
 
     // TODO: This should be removed!

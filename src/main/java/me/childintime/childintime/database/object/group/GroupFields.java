@@ -1,9 +1,6 @@
 package me.childintime.childintime.database.object.group;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataTypeBase;
-import me.childintime.childintime.database.object.DataTypeExtended;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.*;
 import me.childintime.childintime.database.object.school.School;
 
 public enum GroupFields implements DatabaseFieldsInterface{
@@ -12,19 +9,19 @@ public enum GroupFields implements DatabaseFieldsInterface{
      * ID.
      * Identifier of a group object.
      */
-    ID("ID", "id", false, DataTypeExtended.ID, null),
+    ID("ID", "id", false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Group name.
      * Display name of a group.
      */
-    NAME("Group", "name", true, DataTypeExtended.STRING, null),
+    NAME("Group", "name", true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * School ID.
      * The school instance a group is in.
      */
-    SCHOOL_ID("School", "school_id", false, DataTypeExtended.REFERENCE, School.class);
+    SCHOOL_ID("School", "school_id", false, false, false, DataTypeExtended.REFERENCE, School.class);
 
     /**
      * The display name for this field.
@@ -40,6 +37,16 @@ public enum GroupFields implements DatabaseFieldsInterface{
      * Defines whether this field is editable by the user.
      */
     private boolean editable;
+
+    /**
+     * Defines whether a NULL value is allowed for this property.
+     */
+    private boolean nullAllowed;
+
+    /**
+     * Defines whether an empty value is allowed for this property field.
+     */
+    private boolean emptyAllowed;
 
     /**
      * The data type of the field.
@@ -58,13 +65,17 @@ public enum GroupFields implements DatabaseFieldsInterface{
      * @param displayName Display name.
      * @param databaseField Database field name.
      * @param editable True if this field is editable by the user, false if not.
+     * @param nullAllowed True if a NULL value is allowed for this property field.
+     * @param emptyAllowed True if an empty value is allowed for this property field.
      * @param dataType Data type of the field.
      * @param referenceType Referenced class if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    GroupFields(String displayName, String databaseField, boolean editable, DataTypeExtended dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    GroupFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, Class<? extends AbstractDatabaseObject> referenceType) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
+        this.nullAllowed = nullAllowed;
+        this.emptyAllowed = emptyAllowed;
         this.dataType = dataType;
         this.referenceType = referenceType;
     }
@@ -95,7 +106,22 @@ public enum GroupFields implements DatabaseFieldsInterface{
     }
 
     @Override
+    public boolean isNullAllowed() {
+        return this.nullAllowed;
+    }
+
+    @Override
+    public boolean isEmptyAllowed() {
+        return this.emptyAllowed;
+    }
+
+    @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public AbstractDatabaseObjectManifest getManifest() {
+        return GroupManifest.getInstance();
     }
 }

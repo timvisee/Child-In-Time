@@ -24,6 +24,20 @@ public interface DatabaseFieldsInterface {
     boolean isEditable();
 
     /**
+     * Check whether a NULL valid is allowed.
+     *
+     * @return True if null is allowed, false if not.
+     */
+    boolean isNullAllowed();
+
+    /**
+     * Check whether an empty property is allowed.
+     *
+     * @return true if empty properties are allowed, false if not.
+     */
+    boolean isEmptyAllowed();
+
+    /**
      * Returns the extended data type of the field in the database.
      *
      * @return Extended data type.
@@ -43,4 +57,11 @@ public interface DatabaseFieldsInterface {
      * @return Class Type.
      */
     Class<? extends AbstractDatabaseObject> getReferenceType();
+
+    /**
+     * Get the object's manifest.
+     *
+     * @return Object's manifest.
+     */
+    AbstractDatabaseObjectManifest getManifest();
 }
