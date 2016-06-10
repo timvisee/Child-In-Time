@@ -18,7 +18,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
     /**
      * Database object manager.
      */
-    private AbstractDatabaseObjectManager manager;
+    final private AbstractDatabaseObjectManager manager;
 
     /**
      * Object field.
