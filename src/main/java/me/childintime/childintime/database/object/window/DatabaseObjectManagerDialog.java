@@ -432,7 +432,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public void addObject() {
         // Create a new database through the edit panel
-        // TODO: Implement modification dialog here!
         final AbstractDatabaseObject databaseObject = DatabaseObjectModifyDialog.showCreate(this, this.objectManager.getManifest());
 
         // Add the database object to the list if it isn't null
@@ -442,6 +441,9 @@ public class DatabaseObjectManagerDialog extends JDialog {
 
             // Refresh the table of databases
             updateUiTable();
+
+            // TODO: Remove this!
+            refresh();
         }
     }
 
@@ -453,22 +455,26 @@ public class DatabaseObjectManagerDialog extends JDialog {
         if(getSelectedCount() != 1)
             return;
 
+        // Get the selected row
+        final int selectedRow = this.objectTable.getSelectedRow();
+
         // Get the selected database
-        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(this.objectTable.getSelectedRow());
+        final AbstractDatabaseObject selected = this.objectManager.getObjects().get(selectedRow);
 
         // Show the edit dialog for this database
-        // TODO: Implement the edit dialog here
         final AbstractDatabaseObject result = DatabaseObjectModifyDialog.showModify(this, selected);
 
-        // TODO: Update this?
         // Set the result, or remove it from the list if it's null
         if(result != null)
-            this.objects.set(this.objectTable.getSelectedRow(), result);
+            this.objects.set(selectedRow, result);
         else
-            this.objects.remove(this.objectTable.getSelectedRow());
+            this.objects.remove(selectedRow);
 
         // Refresh the list
         updateUiTable();
+
+        // TODO: Remove this!
+        refresh();
     }
 
     /**
