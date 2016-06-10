@@ -1,4 +1,4 @@
-package me.childintime.childintime.gui.window;
+package me.childintime.childintime.ui.window;
 
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.ui.component.EntityListComponent;

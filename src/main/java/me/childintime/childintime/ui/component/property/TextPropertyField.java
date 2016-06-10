@@ -1,10 +1,10 @@
-package me.childintime.childintime.gui.component.property;
+package me.childintime.childintime.ui.component.property;
 
-import me.childintime.childintime.gui.component.property.action.TextCopyAction;
-import me.childintime.childintime.gui.component.property.action.TextCutAction;
-import me.childintime.childintime.gui.component.property.action.TextPasteAction;
-import me.childintime.childintime.gui.component.property.context.ContextClearAction;
-import me.childintime.childintime.gui.component.property.context.ContextSelectAllAction;
+import me.childintime.childintime.ui.component.property.action.TextCopyAction;
+import me.childintime.childintime.ui.component.property.action.TextCutAction;
+import me.childintime.childintime.ui.component.property.action.TextPasteAction;
+import me.childintime.childintime.ui.component.property.context.ContextClearAction;
+import me.childintime.childintime.ui.component.property.context.ContextSelectAllAction;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;

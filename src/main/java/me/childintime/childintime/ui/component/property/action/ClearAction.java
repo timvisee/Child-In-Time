@@ -1,6 +1,6 @@
-package me.childintime.childintime.gui.component.property.action;
+package me.childintime.childintime.ui.component.property.action;
 
-import me.childintime.childintime.gui.component.property.AbstractPropertyField;
+import me.childintime.childintime.ui.component.property.AbstractPropertyField;
 
 public class ClearAction extends AbstractAction {
 

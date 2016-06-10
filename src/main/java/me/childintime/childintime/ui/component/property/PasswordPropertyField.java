@@ -1,4 +1,4 @@
-package me.childintime.childintime.gui.component.property;
+package me.childintime.childintime.ui.component.property;
 
 import javax.swing.*;
 

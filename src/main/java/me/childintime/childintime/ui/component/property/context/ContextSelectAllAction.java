@@ -1,4 +1,4 @@
-package me.childintime.childintime.gui.component.property.context;
+package me.childintime.childintime.ui.component.property.context;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;

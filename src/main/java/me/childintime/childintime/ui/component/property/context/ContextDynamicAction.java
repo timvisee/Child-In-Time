@@ -1,6 +1,6 @@
-package me.childintime.childintime.gui.component.property.context;
+package me.childintime.childintime.ui.component.property.context;
 
-import javax.swing.AbstractAction;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class ContextDynamicAction extends AbstractAction {
@@ -8,12 +8,12 @@ public class ContextDynamicAction extends AbstractAction {
     /**
      * Action.
      */
-    private me.childintime.childintime.gui.component.property.action.AbstractAction action;
+    private me.childintime.childintime.ui.component.property.action.AbstractAction action;
 
     /**
      * Constructor.
      */
-    public ContextDynamicAction(me.childintime.childintime.gui.component.property.action.AbstractAction action) {
+    public ContextDynamicAction(me.childintime.childintime.ui.component.property.action.AbstractAction action) {
         // Construct the super with the name
         super(action.getDescription());
 

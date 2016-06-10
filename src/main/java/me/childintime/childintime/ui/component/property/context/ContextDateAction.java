@@ -1,26 +1,26 @@
-package me.childintime.childintime.gui.component.property.context;
+package me.childintime.childintime.ui.component.property.context;
 
-import me.childintime.childintime.gui.component.property.FilePropertyField;
+import me.childintime.childintime.ui.component.property.DatePropertyField;
 
 import javax.swing.text.TextAction;
 import java.awt.event.ActionEvent;
 
-public class ContextFileAction extends TextAction {
+public class ContextDateAction extends TextAction {
 
     /**
      * Context action name.
      */
-    public static final String ACTION_NAME = "Browse...";
+    public static final String ACTION_NAME = "Choose date...";
 
     /**
      * Date property field.
      */
-    private FilePropertyField propertyField;
+    private DatePropertyField propertyField;
 
     /**
      * Constructor.
      */
-    public ContextFileAction(FilePropertyField propertyField) {
+    public ContextDateAction(DatePropertyField propertyField) {
         // Construct the super with the name
         super(ACTION_NAME);
 
@@ -34,7 +34,7 @@ public class ContextFileAction extends TextAction {
      * @param e Action event.
      */
     public void actionPerformed(ActionEvent e) {
-        /// Show the file chooser
-        this.propertyField.showFileChooserDialog();
+        /// Show the date chooser
+        this.propertyField.showDateChooser();
     }
 }

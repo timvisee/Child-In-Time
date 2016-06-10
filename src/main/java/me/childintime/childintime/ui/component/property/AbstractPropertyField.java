@@ -1,8 +1,8 @@
-package me.childintime.childintime.gui.component.property;
+package me.childintime.childintime.ui.component.property;
 
-import me.childintime.childintime.gui.component.property.action.AbstractAction;
-import me.childintime.childintime.gui.component.property.action.ClearAction;
-import me.childintime.childintime.gui.component.property.context.ContextDynamicAction;
+import me.childintime.childintime.ui.component.property.action.AbstractAction;
+import me.childintime.childintime.ui.component.property.action.ClearAction;
+import me.childintime.childintime.ui.component.property.context.ContextDynamicAction;
 import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;

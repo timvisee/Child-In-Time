@@ -1,26 +1,26 @@
-package me.childintime.childintime.gui.component.property.context;
+package me.childintime.childintime.ui.component.property.context;
 
-import me.childintime.childintime.gui.component.property.AbstractPropertyField;
+import me.childintime.childintime.ui.component.property.FilePropertyField;
 
 import javax.swing.text.TextAction;
 import java.awt.event.ActionEvent;
 
-public class ContextClearAction extends TextAction {
+public class ContextFileAction extends TextAction {
 
     /**
      * Context action name.
      */
-    public static final String ACTION_NAME = "Clear";
+    public static final String ACTION_NAME = "Browse...";
 
     /**
-     * Property field.
+     * Date property field.
      */
-    private AbstractPropertyField propertyField;
+    private FilePropertyField propertyField;
 
     /**
      * Constructor.
      */
-    public ContextClearAction(AbstractPropertyField propertyField) {
+    public ContextFileAction(FilePropertyField propertyField) {
         // Construct the super with the name
         super(ACTION_NAME);
 
@@ -34,7 +34,7 @@ public class ContextClearAction extends TextAction {
      * @param e Action event.
      */
     public void actionPerformed(ActionEvent e) {
-        // Clear the property field
-        this.propertyField.clear();
+        /// Show the file chooser
+        this.propertyField.showFileChooserDialog();
     }
 }

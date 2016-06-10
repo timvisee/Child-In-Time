@@ -1,26 +1,26 @@
-package me.childintime.childintime.gui.component.property.context;
+package me.childintime.childintime.ui.component.property.context;
 
-import me.childintime.childintime.gui.component.property.DatePropertyField;
+import me.childintime.childintime.ui.component.property.AbstractPropertyField;
 
 import javax.swing.text.TextAction;
 import java.awt.event.ActionEvent;
 
-public class ContextDateAction extends TextAction {
+public class ContextClearAction extends TextAction {
 
     /**
      * Context action name.
      */
-    public static final String ACTION_NAME = "Choose date...";
+    public static final String ACTION_NAME = "Clear";
 
     /**
-     * Date property field.
+     * Property field.
      */
-    private DatePropertyField propertyField;
+    private AbstractPropertyField propertyField;
 
     /**
      * Constructor.
      */
-    public ContextDateAction(DatePropertyField propertyField) {
+    public ContextClearAction(AbstractPropertyField propertyField) {
         // Construct the super with the name
         super(ACTION_NAME);
 
@@ -34,7 +34,7 @@ public class ContextDateAction extends TextAction {
      * @param e Action event.
      */
     public void actionPerformed(ActionEvent e) {
-        /// Show the date chooser
-        this.propertyField.showDateChooser();
+        // Clear the property field
+        this.propertyField.clear();
     }
 }

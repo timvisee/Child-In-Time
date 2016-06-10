@@ -1,7 +1,7 @@
-package me.childintime.childintime.gui.component.property;
+package me.childintime.childintime.ui.component.property;
 
-import me.childintime.childintime.gui.component.property.action.FileSelectAction;
-import me.childintime.childintime.gui.component.property.context.ContextFileAction;
+import me.childintime.childintime.ui.component.property.action.FileSelectAction;
+import me.childintime.childintime.ui.component.property.context.ContextFileAction;
 import me.childintime.childintime.util.file.PathUtils;
 
 import javax.swing.*;

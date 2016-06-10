@@ -1,12 +1,9 @@
-package me.childintime.childintime.gui.component.property;
-
-import me.childintime.childintime.database.object.AbstractEntity;
-import me.childintime.childintime.database.object.AbstractEntityManager;
+package me.childintime.childintime.ui.component.property;
 
 import javax.swing.*;
 import java.awt.event.*;
 
-public class DatabaseObjectPropertyField extends AbstractPropertyField {
+public class BooleanPropertyField extends AbstractPropertyField {
 
     /**
      * True if an empty value is allowed.
@@ -16,72 +13,44 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * Database object manager.
+     * Boolean field.
      */
-    final private AbstractEntityManager manager;
-
-    /**
-     * Object field.
-     */
-    private JComboBox<AbstractEntity> comboBox;
+    protected JCheckBox checkBox;
 
     /**
      * Constructor.
      *
-     * @param manager Database object manager.
      * @param allowNull True if null is allowed, false if not.
      */
-    public DatabaseObjectPropertyField(AbstractEntityManager manager, boolean allowNull) {
+    public BooleanPropertyField(boolean allowNull) {
         // Call an alias constructor
-        this((Object) manager, allowNull);
+        this(false, allowNull);
     }
 
     /**
      * Constructor.
      *
-     * @param value Value.
+     * @param state Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public DatabaseObjectPropertyField(AbstractEntity value, boolean allowNull) {
-        // Call the super
-        this((Object) value, allowNull);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param value Value or manager.
-     * @param allowNull True if null is allowed, false if not.
-     */
-    private DatabaseObjectPropertyField(Object value, boolean allowNull) {
+    public BooleanPropertyField(Boolean state, boolean allowNull) {
         // Call the super
         super(allowNull);
-
-        // Set the manager
-        if(value instanceof AbstractEntityManager)
-            this.manager = (AbstractEntityManager) value;
-        else if(value instanceof AbstractEntity)
-            this.manager = ((AbstractEntity) value).getManifest().getManagerInstance();
-        else
-            throw new IllegalArgumentException("Invalid value.");
 
         // Build the UI
         buildUi();
 
-        // Set the selected item
-        if(value instanceof AbstractEntity)
-            setSelected((AbstractEntity) value);
-        else
-            setSelected(null);
+        // Set the state value
+        setState(state);
     }
 
     @Override
     protected JComponent buildUiField() {
-        // Build the combo box
-        this.comboBox = new JComboBox<>(this.manager.getObjects().toArray(new AbstractEntity[]{}));
+        // Build the text field
+        this.checkBox = new JCheckBox();
 
         // Link the text field listeners
-        this.comboBox.addMouseListener(new MouseListener() {
+        this.checkBox.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -99,7 +68,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
             @Override
             public void mouseExited(MouseEvent e) { }
         });
-        this.comboBox.addFocusListener(new FocusListener() {
+        this.checkBox.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
 
@@ -111,8 +80,8 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
         });
 
         // Set the field back to null when the escape key is pressed
-        this.comboBox.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.comboBox.getActionMap().put("Escape", new AbstractAction() {
+        this.checkBox.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.checkBox.getActionMap().put("Escape", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Make sure null is allowed
@@ -128,54 +97,60 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
         });
 
         // Return the checkbox
-        return this.comboBox;
+        return this.checkBox;
     }
 
     /**
-     * Get the combo box.
+     * Get the checkbox.
      *
-     * @return combo box.
+     * @return Checkbox.
      */
-    public JComboBox<AbstractEntity> getComboBox() {
-        return this.comboBox;
+    public JCheckBox getCheckBox() {
+        return this.checkBox;
     }
 
     @Override
-    public AbstractEntity getValue() {
-        return getSelected();
+    public Boolean getValue() {
+        return getState();
     }
 
     @Override
-    public void setValue(Object value) {
-        // Set the selected database object, or null
-        setSelected((AbstractEntity) value);
+    public void setValue(Object state) {
+        // Set the text, or null
+        setState((Boolean) state);
     }
 
     /**
-     * Get the property field database object value.
+     * Get the property field text value.
      * If the field is null, null will be returned.
+     * If null is not allowed, an empty string will be returned instead of a null value.
      *
-     * @return Abstract database object, or null.
+     * @return Text value, or null.
      */
-    public AbstractEntity getSelected() {
-        return isNull() ? null : (AbstractEntity) this.comboBox.getSelectedItem();
+    public boolean getState() {
+        // TODO: Return null?
+        return !isNull() && this.checkBox.isSelected();
     }
 
     /**
-     * Set the selected value.
+     * Set the text value.
      *
-     * @param selected Selected value.
+     * @param text Text value.
      */
-    public void setSelected(AbstractEntity selected) {
+    public void setState(Boolean text) {
         // Make sure null is allowed
-        if(selected == null && !isNullAllowed())
+        if(text == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
 
         // Set the null state
-        if(selected == null)
+        if(text == null)
             setNull(true);
-        else
-            this.comboBox.setSelectedItem(selected);
+        else if(isNull())
+            setNull(false);
+
+        // Set the text field text
+        if(!isNull())
+            this.checkBox.setSelected(text);
     }
 
     @Override
@@ -184,19 +159,25 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
         super.setNull(_null);
 
         // Update the enabled state of both components
-        this.comboBox.setEnabled(!_null);
+        this.checkBox.setEnabled(!_null);
+
+        // Disable the selection
+        if(_null)
+            this.checkBox.setSelected(false);
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        this.comboBox.transferFocus();
+        this.checkBox.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
             // Set the field to null, or an empty string if null isn't allowed
             if(isNullAllowed())
                 setNull(true);
+            else
+                setState(false);
         });
     }
 
@@ -224,7 +205,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.comboBox.hasFocus())
+        if(!allowEmpty && !this.checkBox.hasFocus())
             disableIfEmpty();
     }
 
@@ -245,10 +226,10 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
     public void enableField() {
         // Enable the field if it's disabled because it's value is null
         if(isNull())
-            this.setNull(false);
+            this.setState(true);
 
         // Focus the field and select all
-        this.comboBox.grabFocus();
+        this.checkBox.grabFocus();
     }
 
     /**

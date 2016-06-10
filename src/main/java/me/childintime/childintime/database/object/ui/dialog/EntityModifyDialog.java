@@ -5,7 +5,7 @@ import me.childintime.childintime.database.object.AbstractEntity;
 import me.childintime.childintime.database.object.AbstractEntityManifest;
 import me.childintime.childintime.database.object.EntityFieldsInterface;
 import me.childintime.childintime.database.object.datatype.DataTypeExtended;
-import me.childintime.childintime.gui.component.property.*;
+import me.childintime.childintime.ui.component.property.*;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 

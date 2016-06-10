@@ -1,6 +1,6 @@
-package me.childintime.childintime.gui.component.property.action;
+package me.childintime.childintime.ui.component.property.action;
 
-import me.childintime.childintime.gui.component.property.FilePropertyField;
+import me.childintime.childintime.ui.component.property.FilePropertyField;
 
 public class FileSelectAction extends AbstractAction {
 

@@ -1,10 +1,12 @@
-package me.childintime.childintime.gui.component.property;
+package me.childintime.childintime.ui.component.property;
+
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
-public class GenderPropertyField extends AbstractPropertyField {
+public class DatabaseObjectPropertyField extends AbstractPropertyField {
 
     /**
      * True if an empty value is allowed.
@@ -14,61 +16,72 @@ public class GenderPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * Radio button for men.
+     * Database object manager.
      */
-    protected JRadioButton radioButtonMale;
+    final private AbstractEntityManager manager;
 
     /**
-     * Radio button for women.
+     * Object field.
      */
-    protected JRadioButton radioButtonFemale;
+    private JComboBox<AbstractEntity> comboBox;
 
     /**
      * Constructor.
      *
+     * @param manager Database object manager.
      * @param allowNull True if null is allowed, false if not.
      */
-    public GenderPropertyField(boolean allowNull) {
+    public DatabaseObjectPropertyField(AbstractEntityManager manager, boolean allowNull) {
         // Call an alias constructor
-        this(false, allowNull);
+        this((Object) manager, allowNull);
     }
 
     /**
      * Constructor.
      *
-     * @param state Value.
+     * @param value Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public GenderPropertyField(Boolean state, boolean allowNull) {
+    public DatabaseObjectPropertyField(AbstractEntity value, boolean allowNull) {
+        // Call the super
+        this((Object) value, allowNull);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param value Value or manager.
+     * @param allowNull True if null is allowed, false if not.
+     */
+    private DatabaseObjectPropertyField(Object value, boolean allowNull) {
         // Call the super
         super(allowNull);
+
+        // Set the manager
+        if(value instanceof AbstractEntityManager)
+            this.manager = (AbstractEntityManager) value;
+        else if(value instanceof AbstractEntity)
+            this.manager = ((AbstractEntity) value).getManifest().getManagerInstance();
+        else
+            throw new IllegalArgumentException("Invalid value.");
 
         // Build the UI
         buildUi();
 
-        // Set the state value
-        setState(state);
+        // Set the selected item
+        if(value instanceof AbstractEntity)
+            setSelected((AbstractEntity) value);
+        else
+            setSelected(null);
     }
 
     @Override
     protected JComponent buildUiField() {
-        // Create a panel with the two radio buttons
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
-
-        // Create a button group
-        ButtonGroup buttonGroup = new ButtonGroup();
-
-        // Build the radio buttons
-        this.radioButtonMale = new JRadioButton("Male");
-        this.radioButtonFemale = new JRadioButton("Female");
-
-        // Add the radio buttons to the group
-        buttonGroup.add(radioButtonMale);
-        buttonGroup.add(radioButtonFemale);
+        // Build the combo box
+        this.comboBox = new JComboBox<>(this.manager.getObjects().toArray(new AbstractEntity[]{}));
 
         // Link the text field listeners
-        final MouseListener mouseListener = new MouseListener() {
+        this.comboBox.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -85,12 +98,8 @@ public class GenderPropertyField extends AbstractPropertyField {
 
             @Override
             public void mouseExited(MouseEvent e) { }
-        };
-        this.radioButtonMale.addMouseListener(mouseListener);
-        this.radioButtonFemale.addMouseListener(mouseListener);
-
-        // Set the focus listeners
-        final FocusListener focusListener = new FocusListener() {
+        });
+        this.comboBox.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
 
@@ -99,12 +108,11 @@ public class GenderPropertyField extends AbstractPropertyField {
                 // Disable the property field if it's currently empty
                 disableIfEmpty();
             }
-        };
-        this.radioButtonMale.addFocusListener(focusListener);
-        this.radioButtonFemale.addFocusListener(focusListener);
+        });
 
         // Set the field back to null when the escape key is pressed
-        final Action escapeAction = new AbstractAction() {
+        this.comboBox.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.comboBox.getActionMap().put("Escape", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Make sure null is allowed
@@ -117,64 +125,57 @@ public class GenderPropertyField extends AbstractPropertyField {
                 // Set the field to null
                 setNull(true);
             }
-        };
-        this.radioButtonMale.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.radioButtonFemale.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.radioButtonMale.getActionMap().put("Escape", escapeAction);
-        this.radioButtonFemale.getActionMap().put("Escape", escapeAction);
+        });
 
-        // Add the radio buttons to the panel
-        buttonPanel.add(this.radioButtonMale);
-        buttonPanel.add(this.radioButtonFemale);
-
-        // Return the panel with the checkboxes
-        return buttonPanel;
-    }
-
-    @Override
-    public Boolean getValue() {
-        return isMen();
-    }
-
-    @Override
-    public void setValue(Object state) {
-        // Set the text, or null
-        setState((Boolean) state);
+        // Return the checkbox
+        return this.comboBox;
     }
 
     /**
-     * Get the property field text value.
+     * Get the combo box.
+     *
+     * @return combo box.
+     */
+    public JComboBox<AbstractEntity> getComboBox() {
+        return this.comboBox;
+    }
+
+    @Override
+    public AbstractEntity getValue() {
+        return getSelected();
+    }
+
+    @Override
+    public void setValue(Object value) {
+        // Set the selected database object, or null
+        setSelected((AbstractEntity) value);
+    }
+
+    /**
+     * Get the property field database object value.
      * If the field is null, null will be returned.
-     * If null is not allowed, an empty string will be returned instead of a null value.
      *
-     * @return Text value, or null.
+     * @return Abstract database object, or null.
      */
-    public boolean isMen() {
-        // TODO: Return null?
-        return !isNull() && !this.radioButtonFemale.isSelected();
+    public AbstractEntity getSelected() {
+        return isNull() ? null : (AbstractEntity) this.comboBox.getSelectedItem();
     }
 
     /**
-     * Set the text value.
+     * Set the selected value.
      *
-     * @param state Text value.
+     * @param selected Selected value.
      */
-    public void setState(Boolean state) {
+    public void setSelected(AbstractEntity selected) {
         // Make sure null is allowed
-        if(state == null && !isNullAllowed())
+        if(selected == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
 
         // Set the null state
-        if(state == null)
+        if(selected == null)
             setNull(true);
-        else if(isNull())
-            setNull(false);
-
-        // Set the text field text
-        if(!isNull()) {
-            this.radioButtonMale.setSelected(state);
-            this.radioButtonFemale.setSelected(!state);
-        }
+        else
+            this.comboBox.setSelectedItem(selected);
     }
 
     @Override
@@ -183,29 +184,19 @@ public class GenderPropertyField extends AbstractPropertyField {
         super.setNull(_null);
 
         // Update the enabled state of both components
-        this.radioButtonMale.setEnabled(!_null);
-        this.radioButtonFemale.setEnabled(!_null);
-
-        // Disable the selection
-        if(_null) {
-            this.radioButtonMale.setSelected(false);
-            this.radioButtonFemale.setSelected(false);
-        }
+        this.comboBox.setEnabled(!_null);
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        this.radioButtonMale.transferFocus();
-        this.radioButtonFemale.transferFocus();
+        this.comboBox.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
             // Set the field to null, or an empty string if null isn't allowed
             if(isNullAllowed())
                 setNull(true);
-            else
-                setState(false);
         });
     }
 
@@ -233,7 +224,7 @@ public class GenderPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.radioButtonMale.hasFocus())
+        if(!allowEmpty && !this.comboBox.hasFocus())
             disableIfEmpty();
     }
 
@@ -254,10 +245,10 @@ public class GenderPropertyField extends AbstractPropertyField {
     public void enableField() {
         // Enable the field if it's disabled because it's value is null
         if(isNull())
-            this.setState(true);
+            this.setNull(false);
 
         // Focus the field and select all
-        this.radioButtonMale.grabFocus();
+        this.comboBox.grabFocus();
     }
 
     /**

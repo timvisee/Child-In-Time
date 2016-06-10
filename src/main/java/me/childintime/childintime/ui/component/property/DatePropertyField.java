@@ -1,7 +1,7 @@
-package me.childintime.childintime.gui.component.property;
+package me.childintime.childintime.ui.component.property;
 
 import com.toedter.calendar.JCalendar;
-import me.childintime.childintime.gui.component.property.action.DateSelectAction;
+import me.childintime.childintime.ui.component.property.action.DateSelectAction;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;

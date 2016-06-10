@@ -1,10 +1,10 @@
-package me.childintime.childintime.gui.component.property;
+package me.childintime.childintime.ui.component.property;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class IntegerPropertyField extends AbstractPropertyField {
+public class GenderPropertyField extends AbstractPropertyField {
 
     /**
      * True if an empty value is allowed.
@@ -14,27 +14,32 @@ public class IntegerPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * Integer field.
+     * Radio button for men.
      */
-    protected JSpinner spinner;
+    protected JRadioButton radioButtonMale;
+
+    /**
+     * Radio button for women.
+     */
+    protected JRadioButton radioButtonFemale;
 
     /**
      * Constructor.
      *
      * @param allowNull True if null is allowed, false if not.
      */
-    public IntegerPropertyField(boolean allowNull) {
+    public GenderPropertyField(boolean allowNull) {
         // Call an alias constructor
-        this(0, allowNull);
+        this(false, allowNull);
     }
 
     /**
      * Constructor.
      *
-     * @param number Number alue.
+     * @param state Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public IntegerPropertyField(Integer number, boolean allowNull) {
+    public GenderPropertyField(Boolean state, boolean allowNull) {
         // Call the super
         super(allowNull);
 
@@ -42,21 +47,28 @@ public class IntegerPropertyField extends AbstractPropertyField {
         buildUi();
 
         // Set the state value
-        setNumber(number);
+        setState(state);
     }
 
     @Override
     protected JComponent buildUiField() {
-        // Build the text field
-        this.spinner = new JSpinner(new SpinnerNumberModel());
+        // Create a panel with the two radio buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
 
-        // Align the spinner number to the left
-        JComponent spinnerEditor = spinner.getEditor();
-        if(spinnerEditor instanceof JSpinner.DefaultEditor)
-            ((JSpinner.DefaultEditor) spinnerEditor).getTextField().setHorizontalAlignment(SwingConstants.LEFT);
+        // Create a button group
+        ButtonGroup buttonGroup = new ButtonGroup();
+
+        // Build the radio buttons
+        this.radioButtonMale = new JRadioButton("Male");
+        this.radioButtonFemale = new JRadioButton("Female");
+
+        // Add the radio buttons to the group
+        buttonGroup.add(radioButtonMale);
+        buttonGroup.add(radioButtonFemale);
 
         // Link the text field listeners
-        final MouseListener spinnerMouseListener = new MouseListener() {
+        final MouseListener mouseListener = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -74,10 +86,11 @@ public class IntegerPropertyField extends AbstractPropertyField {
             @Override
             public void mouseExited(MouseEvent e) { }
         };
-        for(Component spinnerPart : this.spinner.getComponents())
-            spinnerPart.addMouseListener(spinnerMouseListener);
-        this.spinner.addMouseListener(spinnerMouseListener);
-        this.spinner.addFocusListener(new FocusListener() {
+        this.radioButtonMale.addMouseListener(mouseListener);
+        this.radioButtonFemale.addMouseListener(mouseListener);
+
+        // Set the focus listeners
+        final FocusListener focusListener = new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
 
@@ -86,11 +99,12 @@ public class IntegerPropertyField extends AbstractPropertyField {
                 // Disable the property field if it's currently empty
                 disableIfEmpty();
             }
-        });
+        };
+        this.radioButtonMale.addFocusListener(focusListener);
+        this.radioButtonFemale.addFocusListener(focusListener);
 
         // Set the field back to null when the escape key is pressed
-        this.spinner.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.spinner.getActionMap().put("Escape", new AbstractAction() {
+        final Action escapeAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Make sure null is allowed
@@ -103,63 +117,64 @@ public class IntegerPropertyField extends AbstractPropertyField {
                 // Set the field to null
                 setNull(true);
             }
-        });
+        };
+        this.radioButtonMale.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.radioButtonFemale.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.radioButtonMale.getActionMap().put("Escape", escapeAction);
+        this.radioButtonFemale.getActionMap().put("Escape", escapeAction);
 
-        // Return the checkbox
-        return this.spinner;
-    }
+        // Add the radio buttons to the panel
+        buttonPanel.add(this.radioButtonMale);
+        buttonPanel.add(this.radioButtonFemale);
 
-    /**
-     * Get the spinner.
-     *
-     * @return Spinner.
-     */
-    public JSpinner getSpinner() {
-        return this.spinner;
-    }
-
-    @Override
-    public Integer getValue() {
-        return getNumber();
+        // Return the panel with the checkboxes
+        return buttonPanel;
     }
 
     @Override
-    public void setValue(Object number) {
+    public Boolean getValue() {
+        return isMen();
+    }
+
+    @Override
+    public void setValue(Object state) {
         // Set the text, or null
-        setNumber((Integer) number);
+        setState((Boolean) state);
     }
 
     /**
-     * Get the property field number value.
+     * Get the property field text value.
      * If the field is null, null will be returned.
-     * If null is not allowed, zero will be returned.
+     * If null is not allowed, an empty string will be returned instead of a null value.
      *
-     * @return Number value, or null.
+     * @return Text value, or null.
      */
-    public Integer getNumber() {
-        // Return null, if the value is null
-        if(isNull())
-            return null;
-
-        // Return the number otherwise
-        return (Integer) this.spinner.getValue();
+    public boolean isMen() {
+        // TODO: Return null?
+        return !isNull() && !this.radioButtonFemale.isSelected();
     }
 
     /**
-     * Set the number value.
+     * Set the text value.
      *
-     * @param number Number value.
+     * @param state Text value.
      */
-    public void setNumber(Integer number) {
+    public void setState(Boolean state) {
         // Make sure null is allowed
-        if(number == null && !isNullAllowed())
+        if(state == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
 
         // Set the null state
-        if(number == null)
+        if(state == null)
             setNull(true);
-        else
-            this.spinner.setValue(number);
+        else if(isNull())
+            setNull(false);
+
+        // Set the text field text
+        if(!isNull()) {
+            this.radioButtonMale.setSelected(state);
+            this.radioButtonFemale.setSelected(!state);
+        }
     }
 
     @Override
@@ -168,13 +183,21 @@ public class IntegerPropertyField extends AbstractPropertyField {
         super.setNull(_null);
 
         // Update the enabled state of both components
-        this.spinner.setEnabled(!_null);
+        this.radioButtonMale.setEnabled(!_null);
+        this.radioButtonFemale.setEnabled(!_null);
+
+        // Disable the selection
+        if(_null) {
+            this.radioButtonMale.setSelected(false);
+            this.radioButtonFemale.setSelected(false);
+        }
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        this.spinner.transferFocus();
+        this.radioButtonMale.transferFocus();
+        this.radioButtonFemale.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
@@ -182,7 +205,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
             if(isNullAllowed())
                 setNull(true);
             else
-                setNumber(0);
+                setState(false);
         });
     }
 
@@ -210,7 +233,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.spinner.hasFocus())
+        if(!allowEmpty && !this.radioButtonMale.hasFocus())
             disableIfEmpty();
     }
 
@@ -231,10 +254,10 @@ public class IntegerPropertyField extends AbstractPropertyField {
     public void enableField() {
         // Enable the field if it's disabled because it's value is null
         if(isNull())
-            this.setNull(false);
+            this.setState(true);
 
         // Focus the field and select all
-        this.spinner.grabFocus();
+        this.radioButtonMale.grabFocus();
     }
 
     /**

@@ -1,9 +1,10 @@
-package me.childintime.childintime.gui.component.property;
+package me.childintime.childintime.ui.component.property;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
-public class BooleanPropertyField extends AbstractPropertyField {
+public class IntegerPropertyField extends AbstractPropertyField {
 
     /**
      * True if an empty value is allowed.
@@ -13,27 +14,27 @@ public class BooleanPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * Boolean field.
+     * Integer field.
      */
-    protected JCheckBox checkBox;
+    protected JSpinner spinner;
 
     /**
      * Constructor.
      *
      * @param allowNull True if null is allowed, false if not.
      */
-    public BooleanPropertyField(boolean allowNull) {
+    public IntegerPropertyField(boolean allowNull) {
         // Call an alias constructor
-        this(false, allowNull);
+        this(0, allowNull);
     }
 
     /**
      * Constructor.
      *
-     * @param state Value.
+     * @param number Number alue.
      * @param allowNull True if null is allowed, false if not.
      */
-    public BooleanPropertyField(Boolean state, boolean allowNull) {
+    public IntegerPropertyField(Integer number, boolean allowNull) {
         // Call the super
         super(allowNull);
 
@@ -41,16 +42,21 @@ public class BooleanPropertyField extends AbstractPropertyField {
         buildUi();
 
         // Set the state value
-        setState(state);
+        setNumber(number);
     }
 
     @Override
     protected JComponent buildUiField() {
         // Build the text field
-        this.checkBox = new JCheckBox();
+        this.spinner = new JSpinner(new SpinnerNumberModel());
+
+        // Align the spinner number to the left
+        JComponent spinnerEditor = spinner.getEditor();
+        if(spinnerEditor instanceof JSpinner.DefaultEditor)
+            ((JSpinner.DefaultEditor) spinnerEditor).getTextField().setHorizontalAlignment(SwingConstants.LEFT);
 
         // Link the text field listeners
-        this.checkBox.addMouseListener(new MouseListener() {
+        final MouseListener spinnerMouseListener = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -67,8 +73,11 @@ public class BooleanPropertyField extends AbstractPropertyField {
 
             @Override
             public void mouseExited(MouseEvent e) { }
-        });
-        this.checkBox.addFocusListener(new FocusListener() {
+        };
+        for(Component spinnerPart : this.spinner.getComponents())
+            spinnerPart.addMouseListener(spinnerMouseListener);
+        this.spinner.addMouseListener(spinnerMouseListener);
+        this.spinner.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
 
@@ -80,8 +89,8 @@ public class BooleanPropertyField extends AbstractPropertyField {
         });
 
         // Set the field back to null when the escape key is pressed
-        this.checkBox.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.checkBox.getActionMap().put("Escape", new AbstractAction() {
+        this.spinner.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.spinner.getActionMap().put("Escape", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Make sure null is allowed
@@ -97,60 +106,60 @@ public class BooleanPropertyField extends AbstractPropertyField {
         });
 
         // Return the checkbox
-        return this.checkBox;
+        return this.spinner;
     }
 
     /**
-     * Get the checkbox.
+     * Get the spinner.
      *
-     * @return Checkbox.
+     * @return Spinner.
      */
-    public JCheckBox getCheckBox() {
-        return this.checkBox;
+    public JSpinner getSpinner() {
+        return this.spinner;
     }
 
     @Override
-    public Boolean getValue() {
-        return getState();
+    public Integer getValue() {
+        return getNumber();
     }
 
     @Override
-    public void setValue(Object state) {
+    public void setValue(Object number) {
         // Set the text, or null
-        setState((Boolean) state);
+        setNumber((Integer) number);
     }
 
     /**
-     * Get the property field text value.
+     * Get the property field number value.
      * If the field is null, null will be returned.
-     * If null is not allowed, an empty string will be returned instead of a null value.
+     * If null is not allowed, zero will be returned.
      *
-     * @return Text value, or null.
+     * @return Number value, or null.
      */
-    public boolean getState() {
-        // TODO: Return null?
-        return !isNull() && this.checkBox.isSelected();
+    public Integer getNumber() {
+        // Return null, if the value is null
+        if(isNull())
+            return null;
+
+        // Return the number otherwise
+        return (Integer) this.spinner.getValue();
     }
 
     /**
-     * Set the text value.
+     * Set the number value.
      *
-     * @param text Text value.
+     * @param number Number value.
      */
-    public void setState(Boolean text) {
+    public void setNumber(Integer number) {
         // Make sure null is allowed
-        if(text == null && !isNullAllowed())
+        if(number == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
 
         // Set the null state
-        if(text == null)
+        if(number == null)
             setNull(true);
-        else if(isNull())
-            setNull(false);
-
-        // Set the text field text
-        if(!isNull())
-            this.checkBox.setSelected(text);
+        else
+            this.spinner.setValue(number);
     }
 
     @Override
@@ -159,17 +168,13 @@ public class BooleanPropertyField extends AbstractPropertyField {
         super.setNull(_null);
 
         // Update the enabled state of both components
-        this.checkBox.setEnabled(!_null);
-
-        // Disable the selection
-        if(_null)
-            this.checkBox.setSelected(false);
+        this.spinner.setEnabled(!_null);
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        this.checkBox.transferFocus();
+        this.spinner.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
@@ -177,7 +182,7 @@ public class BooleanPropertyField extends AbstractPropertyField {
             if(isNullAllowed())
                 setNull(true);
             else
-                setState(false);
+                setNumber(0);
         });
     }
 
@@ -205,7 +210,7 @@ public class BooleanPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.checkBox.hasFocus())
+        if(!allowEmpty && !this.spinner.hasFocus())
             disableIfEmpty();
     }
 
@@ -226,10 +231,10 @@ public class BooleanPropertyField extends AbstractPropertyField {
     public void enableField() {
         // Enable the field if it's disabled because it's value is null
         if(isNull())
-            this.setState(true);
+            this.setNull(false);
 
         // Focus the field and select all
-        this.checkBox.grabFocus();
+        this.spinner.grabFocus();
     }
 
     /**
