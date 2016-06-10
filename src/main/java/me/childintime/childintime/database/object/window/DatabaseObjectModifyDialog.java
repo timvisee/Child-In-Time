@@ -548,14 +548,12 @@ public class DatabaseObjectModifyDialog extends JDialog {
      * Close the frame. Ask whether the user wants to save the changes.
      */
     public void closeFrame() {
-        // TODO: Stop the closing process, when we fail!
-
         // Only ask to save if there are any unsaved changes
         if(hasUnsavedChanges()) {
             // Ask whether the user wants to save the questions
             switch(JOptionPane.showConfirmDialog(this, "Would you like to save the changes?", this.sourceManifest.getTypeName(true, false) + " changed", JOptionPane.YES_NO_CANCEL_OPTION)) {
                 case JOptionPane.YES_OPTION:
-                    // Apply the chagnes
+                    // Apply the changes
                     if(!applyToDatabase())
                         return;
 
@@ -603,7 +601,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
             return true;
 
         // There are unsaved changes if the source doesn't equal the result
-        return this.source.isCacheEqual(this.result);
+        return !this.source.isCacheEqual(this.result);
     }
 
     /**
