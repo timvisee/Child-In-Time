@@ -1,8 +1,8 @@
 package me.childintime.childintime.ui.window;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.object.ui.component.EntityListComponent;
-import me.childintime.childintime.database.object.ui.dialog.EntityManagerDialog;
+import me.childintime.childintime.database.entity.ui.component.EntityListComponent;
+import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
 
 import javax.swing.*;
 import java.awt.*;
