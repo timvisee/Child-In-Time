@@ -626,12 +626,10 @@ public class DatabaseObjectManagerDialog extends JDialog {
         ProgressDialog progressDialog = new ProgressDialog(this, App.APP_NAME, false, "Refreshing...", true);
 
         // Clear the manager's cache
-        this.objectManager.flushCache();
-
-        // Fetch all data again
-        this.objectManager.fetchObjects();
+        this.objectManager.refresh();
 
         // Fire a table change
+        // TODO: This is done automatically with the above method?
         this.objectTableModel.fireTableDataChanged();
 
         // Dispose the dialog
