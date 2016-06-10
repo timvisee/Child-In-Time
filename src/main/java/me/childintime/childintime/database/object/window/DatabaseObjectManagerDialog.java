@@ -1,7 +1,6 @@
 package me.childintime.childintime.database.object.window;
 
 import me.childintime.childintime.App;
-import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.database.object.window.list.DatabaseObjectListComponent;
@@ -9,9 +8,6 @@ import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.IOException;
 
 public class DatabaseObjectManagerDialog extends JDialog {
 
@@ -73,31 +69,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         buildUi();
 
         // Do not close the window when pressing the red cross, execute the close method instead
-        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) { }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-                onClose();
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) { }
-
-            @Override
-            public void windowIconified(WindowEvent e) { }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) { }
-
-            @Override
-            public void windowActivated(WindowEvent e) { }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) { }
-        });
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         // Configure the frame size
         configureSize();
@@ -331,9 +303,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // Create the commit buttons
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(e -> {
-//            // Save the databases
-//            applyDatabases();
-
             // Close the frame
             dispose();
         });
@@ -470,85 +439,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public int getSelectedCount() {
         return this.list.getSelectedCount();
-    }
-
-    /**
-     * Apply and save the databases.
-     */
-    // TODO: Create a method that applies the difference between the original list, and the new list, to the database using proper queries.
-    public void applyDatabases() {
-        // Store a copy of the databases
-        // TODO: Reimplement this
-        //Core.getInstance().getDatabaseManager().setDatabases(this.objects);
-
-        // Create a progress dialog and save the database configuration
-        ProgressDialog progress = new ProgressDialog(this, "Working...", false, "Saving database configuration...", true);
-
-        try {
-            // Save the database configuration
-            Core.getInstance().getDatabaseManager().save();
-
-            // Dispose the progress dialog
-            progress.dispose();
-
-        } catch (IOException e) {
-            // Show a status message and print the stack trace
-            System.out.println("Failed to save database configuration.");
-            e.printStackTrace();
-
-            // Dispose the progress dialog
-            progress.dispose();
-
-
-            // Show a message dialog to inform the user
-            JOptionPane.showMessageDialog(null, "Failed to save database configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    /**
-     * Called when the frame should be closed.
-     * This method determines whether to close the frame, with a confirmation dialog if it contains any unsaved changes.
-     */
-    public void onClose() {
-        // Only ask to save if there are any unsaved changes
-        if(hasUnsavedChanges()) {
-            // Ask whether the user wants to save the databases
-            switch(JOptionPane.showConfirmDialog(this, "Would you like to save the changes?", "Databases changed", JOptionPane.YES_NO_CANCEL_OPTION)) {
-                case JOptionPane.YES_OPTION:
-                    // Save the changes
-                    applyDatabases();
-
-                case JOptionPane.NO_OPTION:
-                    // Dispose the frame
-                    this.dispose();
-                    break;
-            }
-
-        } else
-            this.dispose();
-    }
-
-    /**
-     * Check whether this question has unsaved changes.
-     *
-     * @return True if this question has unsaved changes, false if not.
-     */
-    public boolean hasUnsavedChanges() {
-        // TODO: Reimplement this!
-//        // Get the database manager
-//        AbstractDatabaseObject databaseManager = Core.getInstance().getDatabaseManager();
-//
-//        // Compare the number of databases
-//        if(databaseManager.getDatabaseCount() != this.objects.size())
-//            return true;
-//
-//        // Compare the databases
-//        for(int i = 0; i < this.objects.size(); i++)
-//            if(!databaseManager.getDatabase(i).equals(this.objects.get(i)))
-//                return true;
-
-        // There don't seem to be any unsaved changes, return the result
-        return false;
     }
 
     /**
