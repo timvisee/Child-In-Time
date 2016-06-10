@@ -435,8 +435,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // TODO: Implement modification dialog here!
         final AbstractDatabaseObject databaseObject = DatabaseObjectModifyDialog.showCreate(this, this.objectManager.getManifest());
 
-        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
-
         // Add the database object to the list if it isn't null
         if(databaseObject != null) {
             // Add the database
@@ -461,9 +459,6 @@ public class DatabaseObjectManagerDialog extends JDialog {
         // Show the edit dialog for this database
         // TODO: Implement the edit dialog here
         final AbstractDatabaseObject result = DatabaseObjectModifyDialog.showModify(this, selected);
-
-        // Feature not yet implemented, show a warning box
-        featureNotImplemented();
 
         // TODO: Update this?
         // Set the result, or remove it from the list if it's null

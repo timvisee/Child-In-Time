@@ -330,10 +330,10 @@ public class DatabaseObjectModifyDialog extends JDialog {
             c.anchor = GridBagConstraints.WEST;
             container.add(new JLabel(fieldType.getDisplayName() + ":"), c);
 
-            String value = "";
+            Object value = null;
             if(this.source != null)
                 try {
-                    value = this.source.getField(fieldType).toString();
+                    value = this.source.getField(fieldType);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
@@ -349,7 +349,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
 
             // Show a label if the field is not editable
             if(!fieldType.isEditable()) {
-                container.add(new JLabel(value), c);
+                container.add(new JLabel(value != null ? value.toString() : "?"), c);
                 continue;
             }
 
@@ -360,7 +360,8 @@ public class DatabaseObjectModifyDialog extends JDialog {
             switch(fieldType.getBaseDataType()) {
                 case DATE:
                     // Create the date field
-                    DatePropertyField dateField =  new DatePropertyField(true);
+                    // TODO: Use date instance?
+                    DatePropertyField dateField =  new DatePropertyField(value != null ? value.toString() : null, true);
 
                     // Set the maximum selectable date if we're working with birthday fields
                     if(fieldType.getExtendedDataType().equals(DataTypeExtended.BIRTHDAY))
@@ -373,17 +374,39 @@ public class DatabaseObjectModifyDialog extends JDialog {
                 case BOOLEAN:
                     switch(fieldType.getExtendedDataType()) {
                         case GENDER:
-                            field = new GenderPropertyField(Boolean.parseBoolean(value), true);
+                            field = new GenderPropertyField((Boolean) value, true);
                             break;
 
                         default:
-                            field = new BooleanPropertyField(Boolean.parseBoolean(value), true);
+                            field = new BooleanPropertyField((Boolean) value, true);
                     }
+                    break;
+
+                case INTEGER:
+                    field = new IntegerPropertyField((Integer) value, true);
+                    break;
+
+                case REFERENCE:
+                    // Determine the ID
+                    int id = 0;
+
+                    // Convert database objects to their ID
+                    if(value instanceof AbstractDatabaseObject) {
+                        // Get the database object
+                        AbstractDatabaseObject databaseObject = (AbstractDatabaseObject) value;
+
+                        // Get the ID
+                        id = databaseObject.getId();
+                    } else
+                        id = (Integer) value;
+
+                    // Create the field
+                    field = new IntegerPropertyField(id, true);
                     break;
 
                 case STRING:
                 default:
-                    field = new TextPropertyField(value, true);
+                    field = new TextPropertyField(value != null ? value.toString() : null, true);
                     break;
             }
 
