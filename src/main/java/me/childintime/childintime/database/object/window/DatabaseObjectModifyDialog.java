@@ -360,8 +360,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
             switch(fieldType.getBaseDataType()) {
                 case DATE:
                     // Create the date field
-                    // TODO: Use date instance?
-                    DatePropertyField dateField =  new DatePropertyField(value != null ? value.toString() : null, true);
+                    DatePropertyField dateField =  new DatePropertyField(value, true);
 
                     // Set the maximum selectable date if we're working with birthday fields
                     if(fieldType.getExtendedDataType().equals(DataTypeExtended.BIRTHDAY))

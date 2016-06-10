@@ -34,9 +34,8 @@ public enum TeacherFields implements DatabaseFieldsInterface {
     GENDER("Gender", "gender", true, false, false, DataTypeExtended.GENDER, null),
 
     /**
-     * Teacher gym.
-     * Defines whether this teacher is a gymnastics teacher.
-     * True if the teacher is a gymnastics teacher, false if not.
+     * Teacher gender.
+     * Defines the gender of the teacher. True is a male, false if female.
      */
     IS_GYM("Gymnastic teacher", "is_gym", true, false, false, DataTypeExtended.BOOLEAN, null),
 
