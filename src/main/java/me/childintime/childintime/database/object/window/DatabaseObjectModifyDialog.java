@@ -1,7 +1,6 @@
 package me.childintime.childintime.database.object.window;
 
 import me.childintime.childintime.App;
-import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
 import me.childintime.childintime.database.object.DataTypeExtended;
@@ -720,7 +719,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
 
         // Update the source object by cloning the result
         try {
-            this.result = this.source.clone();
+            this.source = this.result.clone();
 
         } catch(CloneNotSupportedException e) {
             // Print the stack trace
