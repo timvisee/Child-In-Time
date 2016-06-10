@@ -145,7 +145,7 @@ public class Core {
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
 
-        // Initialize the database object managers
+        // Initialize the entity managers
         this.bodyStateManager = new BodyStateManager();
         this.groupManager = new GroupManager();
         this.measurementManager = new MeasurementManager();

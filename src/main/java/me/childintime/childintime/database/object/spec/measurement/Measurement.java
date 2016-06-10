@@ -16,7 +16,7 @@ public class Measurement extends AbstractEntity {
     /**
      * Constructor.
      *
-     * @param id Database object id.
+     * @param id Entity id.
      */
     public Measurement(int id) {
         super(id);

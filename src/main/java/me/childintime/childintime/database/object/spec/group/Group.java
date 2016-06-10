@@ -15,7 +15,7 @@ public class Group extends AbstractEntity {
     /**
      * Constructor.
      *
-     * @param id Database object id.
+     * @param id Entity id.
      */
     public Group(int id) {
         super(id);

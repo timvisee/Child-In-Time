@@ -63,8 +63,8 @@ public interface EntityFieldsInterface {
 
     /**
      * Get the manifest instance for the current field.
-     * The field manifest is equal to the object's manifest, unless this field references a different database object.
-     * The manifest of the referencing database object is returned in that case.
+     * The field manifest is equal to the object's manifest, unless this field references a different entity.
+     * The manifest of the referencing entity is returned in that case.
      *
      * @return Field's manifest instance.
      */

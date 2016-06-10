@@ -10,12 +10,12 @@ public abstract class AbstractEntityManifest {
     public AbstractEntityManifest() { }
 
     /**
-     * Get the name of the current database object manager type.
+     * Get the name of the current entity manager type.
      *
      * @param capital True to make the first character capital.
      * @param plural True to make the type name a plural.
      *
-     * @return Database object manager type name.
+     * @return Entity manager type name.
      */
     public abstract String getTypeName(boolean capital, boolean plural);
 
@@ -27,21 +27,21 @@ public abstract class AbstractEntityManifest {
     public abstract String getTableName();
 
     /**
-     * Get the default database object fields.
+     * Get the default entity fields.
      *
      * @return Default object fields to fetch.
      */
     public abstract EntityFieldsInterface[] getDefaultFields();
 
     /**
-     * Get the fields class for this database object.
+     * Get the fields class for this entity.
      *
      * @return Fields class.
      */
     public abstract Class<? extends EntityFieldsInterface> getFields();
 
     /**
-     * Get the field values for this database object from the fields class.
+     * Get the field values for this entity from the fields class.
      *
      * @return Field values.
      *
@@ -55,14 +55,14 @@ public abstract class AbstractEntityManifest {
     }
 
     /**
-     * Get the object and instance class for this database object.
+     * Get the object and instance class for this entity.
      *
      * @return Object class
      */
     public abstract Class<? extends AbstractEntity> getObject();
 
     /**
-     * Get the manager class for this database object.
+     * Get the manager class for this entity.
      *
      * @return Manager class.
      */

@@ -15,7 +15,7 @@ public class School extends AbstractEntity {
     /**
      * Constructor.
      *
-     * @param id Database object id.
+     * @param id Entity id.
      */
     public School(int id) {
         super(id);

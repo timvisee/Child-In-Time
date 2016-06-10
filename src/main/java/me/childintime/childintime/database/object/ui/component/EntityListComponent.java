@@ -20,7 +20,7 @@ import java.util.List;
 public class EntityListComponent extends JComponent {
 
     /**
-     * Database object manager this list is for.
+     * Entity manager this list is for.
      */
     private AbstractEntityManager manager;
 
@@ -37,7 +37,7 @@ public class EntityListComponent extends JComponent {
     private boolean multiSelect = true;
 
     /**
-     * Table instance, to show the list of database objects.
+     * Table instance, to show the list of entitys.
      */
     private JTable uiTable;
 
@@ -59,7 +59,7 @@ public class EntityListComponent extends JComponent {
     /**
      * Constructor.
      *
-     * @param manager Database object manager.
+     * @param manager Entity manager.
      */
     public EntityListComponent(AbstractEntityManager manager) {
         // Set the attributes
@@ -76,9 +76,9 @@ public class EntityListComponent extends JComponent {
     }
 
     /**
-     * Get the database object manager.
+     * Get the entity manager.
      *
-     * @return Database object manager.
+     * @return Entity manager.
      */
     public AbstractEntityManager getManager() {
         return this.manager;
@@ -202,11 +202,11 @@ public class EntityListComponent extends JComponent {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 // Get the object
-                final AbstractEntity databaseObject = instance.getManager().getObjects().get(rowIndex);
+                final AbstractEntity entity = instance.getManager().getObjects().get(rowIndex);
 
                 // Return the value
                 try {
-                    return databaseObject.getField(manager.getManifest().getDefaultFields()[columnIndex]);
+                    return entity.getField(manager.getManifest().getDefaultFields()[columnIndex]);
 
                 } catch (Exception e) {
                     e.printStackTrace();

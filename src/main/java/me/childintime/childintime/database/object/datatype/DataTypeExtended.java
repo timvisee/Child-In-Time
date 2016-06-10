@@ -64,7 +64,7 @@ public enum DataTypeExtended {
 
     /**
      * Reference type.
-     * Used to reference to a different database object by it's ID.
+     * Used to reference to a different entity by it's ID.
      */
     REFERENCE(DataTypeBase.REFERENCE);
 

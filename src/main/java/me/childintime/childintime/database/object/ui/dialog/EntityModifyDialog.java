@@ -33,7 +33,7 @@ public class EntityModifyDialog extends JDialog {
     private AbstractEntityManifest sourceManifest;
 
     /**
-     * The source database object instance.
+     * The source entity instance.
      */
     private AbstractEntity source;
 
@@ -58,10 +58,10 @@ public class EntityModifyDialog extends JDialog {
     private HashMap<EntityFieldsInterface, AbstractPropertyField> fields = new HashMap<>();
 
     /**
-     * Constructor, to modify an existing database object.
+     * Constructor, to modify an existing entity.
      *
      * @param owner The parent window.
-     * @param source The source database object.
+     * @param source The source entity.
      * @param show True to show the frame once it has been initialized.
      */
     public EntityModifyDialog(Window owner, AbstractEntity source, boolean show) {
@@ -69,10 +69,10 @@ public class EntityModifyDialog extends JDialog {
     }
 
     /**
-     * Constructor, to create a new database object.
+     * Constructor, to create a new entity.
      *
      * @param owner The parent window.
-     * @param manifest The database object manifest to create a new object for.
+     * @param manifest The entity manifest to create a new object for.
      * @param show True to show the frame once it has been initialized.
      */
     public EntityModifyDialog(Window owner, AbstractEntityManifest manifest, boolean show) {
@@ -83,7 +83,7 @@ public class EntityModifyDialog extends JDialog {
      * Constructor.
      *
      * @param owner The parent window.
-     * @param source The database object manifest.
+     * @param source The entity manifest.
      * @param show True to show the frame once it has been initialized.
      */
     private EntityModifyDialog(Window owner, Object source, boolean show) {
@@ -168,35 +168,35 @@ public class EntityModifyDialog extends JDialog {
     }
 
     /**
-     * Create a new database object, and show the modification dialog.
+     * Create a new entity, and show the modification dialog.
      * The newly created object is returned when the dialog is closed.
      * Null is returned if the creation process is cancelled.
      *
      * @param owner Owner window.
      * @param manifest The manifest of the object to create.
      *
-     * @return The created database object, or null.
+     * @return The created entity, or null.
      */
     public static AbstractEntity showCreate(Window owner, AbstractEntityManifest manifest) {
         // Make sure the manifest object isn't null
         if(manifest == null)
-            throw new NullPointerException("The database object manifest may not be null.");
+            throw new NullPointerException("The entity manifest may not be null.");
 
-        // Show the modify dialog with a new database object and return the result
+        // Show the modify dialog with a new entity and return the result
         return showModify(owner, manifest);
     }
 
     /**
-     * Show the modification dialog for the given database object.
-     * The modified database object is returned when the modification dialog is closed.
+     * Show the modification dialog for the given entity.
+     * The modified entity is returned when the modification dialog is closed.
      * The source is returned if the modification process is cancelled.
      * The source may be null, in order to create a new database configuration,
-     * the source manifest must be specified in that case to determine the type of database object to create.
+     * the source manifest must be specified in that case to determine the type of entity to create.
      *
      * @param owner Owner window.
-     * @param source Source database object.
+     * @param source Source entity.
      *
-     * @return A database object, or null.
+     * @return A entity, or null.
      */
     public static AbstractEntity showModify(Window owner, AbstractEntity source) {
         // Make sure the source object isn't null
@@ -208,16 +208,16 @@ public class EntityModifyDialog extends JDialog {
     }
 
     /**
-     * Show the modification dialog for the given database object.
-     * The modified database object is returned when the modification dialog is closed.
+     * Show the modification dialog for the given entity.
+     * The modified entity is returned when the modification dialog is closed.
      * The source is returned if the modification process is cancelled.
      * The source may be null, in order to create a new database configuration,
-     * the source manifest must be specified in that case to determine the type of database object to create.
+     * the source manifest must be specified in that case to determine the type of entity to create.
      *
      * @param owner Owner window.
-     * @param source Source database object or database object manifest.
+     * @param source Source entity or entity manifest.
      *
-     * @return A database object, or null.
+     * @return A entity, or null.
      */
     private static AbstractEntity showModify(Window owner, Object source) {
         // Create a new dialog instance
@@ -235,9 +235,9 @@ public class EntityModifyDialog extends JDialog {
     }
 
     /**
-     * Get the database object fields list.
+     * Get the entity fields list.
      *
-     * @return Database objects field list.
+     * @return Entitys field list.
      */
     private EntityFieldsInterface[] getFields() {
         // Return the cached value if available
@@ -250,10 +250,10 @@ public class EntityModifyDialog extends JDialog {
 
         } catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             // Show an error message to the user
-            JOptionPane.showMessageDialog(this, "An error occurred while modifying the database object, the application will now quit.");
+            JOptionPane.showMessageDialog(this, "An error occurred while modifying the entity, the application will now quit.");
 
             // Throw an error
-            throw new Error("Failed to access database object fields list.", e);
+            throw new Error("Failed to access entity fields list.", e);
         }
 
         // Return the list of fields
@@ -387,9 +387,9 @@ public class EntityModifyDialog extends JDialog {
 
                 case REFERENCE:
                     if(value != null)
-                        field = new DatabaseObjectPropertyField((AbstractEntity) value, true);
+                        field = new EntityPropertyField((AbstractEntity) value, true);
                     else
-                        field = new DatabaseObjectPropertyField(fieldType.getFieldManifest().getManagerInstance(), true);
+                        field = new EntityPropertyField(fieldType.getFieldManifest().getManagerInstance(), true);
                     break;
 
                 case STRING:
@@ -527,18 +527,18 @@ public class EntityModifyDialog extends JDialog {
     }
 
     /**
-     * Get the source database object.
+     * Get the source entity.
      *
-     * @return Source database object.
+     * @return Source entity.
      */
     public AbstractEntity getSource() {
         return this.source;
     }
 
     /**
-     * Get the result database object.
+     * Get the result entity.
      *
-     * @return Result database object.
+     * @return Result entity.
      */
     public AbstractEntity getResult() {
         return this.result;
@@ -584,9 +584,9 @@ public class EntityModifyDialog extends JDialog {
     }
 
     /**
-     * Check whether this database object has unsaved changes.
+     * Check whether this entity has unsaved changes.
      *
-     * @return True if this database object has unsaved changes, false if not.
+     * @return True if this entity has unsaved changes, false if not.
      */
     public boolean hasUnsavedChanges() {
         // Make sure all input is valid
@@ -673,7 +673,7 @@ public class EntityModifyDialog extends JDialog {
     }
 
     /**
-     * Apply the input to the result database object.
+     * Apply the input to the result entity.
      */
     public void applyInputToResult() {
         // Make sure the hash map contains any fields
@@ -686,7 +686,7 @@ public class EntityModifyDialog extends JDialog {
             EntityFieldsInterface fieldSpec = entry.getKey();
             AbstractPropertyField field = entry.getValue();
 
-            // Put the field value into the database object cache
+            // Put the field value into the entity cache
             this.result.getCachedFields().put(fieldSpec, field.getValue());
         }
     }

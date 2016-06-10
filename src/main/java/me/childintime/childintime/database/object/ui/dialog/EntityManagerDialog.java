@@ -12,7 +12,7 @@ import java.awt.*;
 public class EntityManagerDialog extends JDialog {
 
     /**
-     * The database object manager this dialog is used for.
+     * The entity manager this dialog is used for.
      */
     private AbstractEntityManager manager;
 
@@ -55,14 +55,14 @@ public class EntityManagerDialog extends JDialog {
      * Constructor.
      *
      * @param owner Owner dialog.
-     * @param manager Database object manager instance.
+     * @param manager Entity manager instance.
      * @param show True to show the frame once it has been initialized.
      */
     public EntityManagerDialog(Window owner, AbstractEntityManager manager, boolean show) {
         // Construct the form
         super(owner, App.APP_NAME + " - " + manager.getManifest().getTypeName(true, true), ModalityType.APPLICATION_MODAL);
 
-        // Set the database object manager
+        // Set the entity manager
         this.manager = manager;
 
         // Create the form UI
@@ -209,7 +209,7 @@ public class EntityManagerDialog extends JDialog {
     }
 
     /**
-     * Create a table to manage the database objects in.
+     * Create a table to manage the entitys in.
      *
      * @return Scroll pane with table.
      */
@@ -329,14 +329,14 @@ public class EntityManagerDialog extends JDialog {
     }
 
     /**
-     * Create a new database object.
+     * Create a new entity.
      */
     public void addObject() {
         // Create a new database through the edit panel
-        final AbstractEntity databaseObject = EntityModifyDialog.showCreate(this, this.manager.getManifest());
+        final AbstractEntity entity = EntityModifyDialog.showCreate(this, this.manager.getManifest());
 
-        // Add the database object to the list if it isn't null
-        if(databaseObject != null) {
+        // Add the entity to the list if it isn't null
+        if(entity != null) {
             // TODO: Only insert the created object, instead of refreshing everything?
 
             // Refresh the manager
@@ -406,7 +406,7 @@ public class EntityManagerDialog extends JDialog {
         progressDialog.setShowProgress(true);
         progressDialog.setProgressMax(getSelectedCount());
 
-        // Delete the selected database object
+        // Delete the selected entity
         for(AbstractEntity entity : this.list.getSelectedEntities()) {
             // Delete the object
             if(!entity.deleteFromDatabase())
@@ -433,16 +433,16 @@ public class EntityManagerDialog extends JDialog {
     }
 
     /**
-     * Get the number of selected database objects.
+     * Get the number of selected entitys.
      *
-     * @return Number of selected database objects.
+     * @return Number of selected entitys.
      */
     public int getSelectedCount() {
         return this.list.getSelectedCount();
     }
 
     /**
-     * Refresh the list of database objects.
+     * Refresh the list of entitys.
      * This also flushes the cache and forces new objects to be fetched.
      */
     public void refresh() {

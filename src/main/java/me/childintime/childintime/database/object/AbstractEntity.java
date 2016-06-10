@@ -13,13 +13,13 @@ import java.util.Date;
 public abstract class AbstractEntity implements Cloneable {
 
     /**
-     * Database object ID'or negative one if the ID is unspecified.
+     * Entity ID or negative one if the ID is unspecified.
      * A new object should be added to the database when the object is applied to the database while the ID is negative one.
      */
     protected int id;
 
     /**
-     * Hash map containing cached fields from the database object.
+     * Hash map containing cached fields from the entity.
      */
     protected HashMap<EntityFieldsInterface, Object> cachedFields = new HashMap<>();
 
@@ -33,16 +33,16 @@ public abstract class AbstractEntity implements Cloneable {
     /**
      * Constructor.
      *
-     * @param id Database object id.
+     * @param id Entity id.
      */
     public AbstractEntity(int id) {
         this.id = id;
     }
 
     /**
-     * Get the database object ID.
+     * Get the entity ID.
      *
-     * @return Database object ID.
+     * @return Entity ID.
      */
     public int getId() {
         return this.id;
@@ -67,7 +67,7 @@ public abstract class AbstractEntity implements Cloneable {
     }
 
     /**
-     * Clear/flush the cached database object fields.
+     * Clear/flush the cached entity fields.
      */
     @SuppressWarnings("unused")
     public void flushCache() {
@@ -75,7 +75,7 @@ public abstract class AbstractEntity implements Cloneable {
     }
 
     /**
-     * Check whether the given database object fields are cached.
+     * Check whether the given entity fields are cached.
      *
      * @param fields The fields to check.
      *
@@ -101,7 +101,7 @@ public abstract class AbstractEntity implements Cloneable {
     }
 
     /**
-     * Check whether the given database object field is cached.
+     * Check whether the given entity field is cached.
      *
      * @param field The field.
      *
@@ -180,7 +180,7 @@ public abstract class AbstractEntity implements Cloneable {
     }
 
     /**
-     * Get the database table name for the database object.
+     * Get the database table name for the entity.
      *
      * @return Database table name.
      */
@@ -190,9 +190,9 @@ public abstract class AbstractEntity implements Cloneable {
     }
 
     /**
-     * Get the database object manifest.
+     * Get the entity manifest.
      *
-     * @return Database object manifest.
+     * @return Entity manifest.
      */
     public abstract AbstractEntityManifest getManifest();
 
@@ -228,8 +228,8 @@ public abstract class AbstractEntity implements Cloneable {
         for(EntityFieldsInterface field : fields) {
             // Make sure the field enum that is used is for the current class
             if(!getManifest().getFields().isInstance(field))
-                throw new Exception("Invalid database object fields configuration class used, not compatible with" +
-                        "current database object type.");
+                throw new Exception("Invalid entity fields configuration class used, not compatible with" +
+                        "current entity type.");
 
             // Fetch the field if we haven't cached it yet
             if(!hasField(field))
@@ -264,7 +264,7 @@ public abstract class AbstractEntity implements Cloneable {
     }
 
     /**
-     * Apply the properties stored by this database object, to the actual database.
+     * Apply the properties stored by this entity, to the actual database.
      *
      * @return True on success, false on failure.
      */
@@ -406,7 +406,7 @@ public abstract class AbstractEntity implements Cloneable {
                                     // Determine the reference ID
                                     int id;
 
-                                    // Get the ID from abstract database object instances
+                                    // Get the ID from abstract entity instances
                                     if(value instanceof AbstractEntity)
                                         id = ((AbstractEntity) value).getId();
                                     else
@@ -439,7 +439,7 @@ public abstract class AbstractEntity implements Cloneable {
                         }
                 }
 
-                // Execute the query to insert the database object into the database
+                // Execute the query to insert the entity into the database
                 insertStatement.execute();
 
                 // Fetch the last auto increment value from the database
@@ -455,7 +455,7 @@ public abstract class AbstractEntity implements Cloneable {
 
                 // Make sure at least one result is available
                 if(!result.next())
-                    throw new RuntimeException("Failed to create database object in database.");
+                    throw new RuntimeException("Failed to create entity in database.");
 
                 // Get the auto increment value, and set the object's ID
                 this.id = result.getInt(1);
@@ -523,7 +523,7 @@ public abstract class AbstractEntity implements Cloneable {
                                 // Determine the reference ID
                                 int id;
 
-                                // Get the ID from abstract database object instances
+                                // Get the ID from abstract entity instances
                                 if(value instanceof AbstractEntity)
                                     id = ((AbstractEntity) value).getId();
                                 else
@@ -552,10 +552,10 @@ public abstract class AbstractEntity implements Cloneable {
                                 break;
                         }
 
-                    // Attach the ID of the database object
+                    // Attach the ID of the entity
                     updateStatement.setInt(2, getId());
 
-                    // Make sure one database object is updated
+                    // Make sure one entity is updated
                     if(updateStatement.executeUpdate() != 1)
                         return false;
 
@@ -569,12 +569,12 @@ public abstract class AbstractEntity implements Cloneable {
             }
         }
 
-        // Successfully updated database object, return the result
+        // Successfully updated entity, return the result
         return true;
     }
 
     /**
-     * Delete this database object from the database.
+     * Delete this entity from the database.
      *
      * @return True on success, false on failure.
      */
@@ -609,10 +609,10 @@ public abstract class AbstractEntity implements Cloneable {
 
     @Override
     public AbstractEntity clone() throws CloneNotSupportedException {
-        // Create a variable to put the new abstract database object in
+        // Create a variable to put the new abstract entity in
         AbstractEntity clone;
 
-        // Clone the database object class
+        // Clone the entity class
         try {
             clone = getClass().getConstructor(int.class).newInstance(getId());
 
@@ -704,10 +704,10 @@ public abstract class AbstractEntity implements Cloneable {
     }
 
     /**
-     * Check whether the cached properties of this database object are equal to the cached fields of another database object.
+     * Check whether the cached properties of this entity are equal to the cached fields of another entity.
      * The ID of both objects must be the same, or false will be returned.
      *
-     * @param other Other database object instance.
+     * @param other Other entity instance.
      *
      * @return True if the cache is equal, false if not.
      */

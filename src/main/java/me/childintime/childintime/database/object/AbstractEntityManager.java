@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class AbstractEntityManager {
 
     /**
-     * List of database objects loaded in this manager.
+     * List of entitys loaded in this manager.
      */
     private List<AbstractEntity> objects = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public abstract class AbstractEntityManager {
      * The given fields will be cached into the objects itself, to prevent further queries from being executed.
      * The fetched list of objects will be cached in this manager for further usage.
      *
-     * @param fields Database object fields to fetch and cache (using the same query, to improve performance).
+     * @param fields Entity fields to fetch and cache (using the same query, to improve performance).
      *
      * @return List of fetched objects.
      */
@@ -71,15 +71,15 @@ public abstract class AbstractEntityManager {
                 // Get the object ID
                 int id = result.getInt("id");
 
-                // Create the database object instance
-                AbstractEntity databaseObject = getManifest().getObject().getConstructor(int.class).newInstance(id);
+                // Create the entity instance
+                AbstractEntity entity = getManifest().getObject().getConstructor(int.class).newInstance(id);
 
                 // Parse and cache the fields
                 for (EntityFieldsInterface field : fields)
-                    databaseObject.parseField(field, result.getString(field.getDatabaseField()));
+                    entity.parseField(field, result.getString(field.getDatabaseField()));
 
                 // Add the object to the list
-                newObjects.add(databaseObject);
+                newObjects.add(entity);
             }
 
         } catch(Exception e){
@@ -115,7 +115,7 @@ public abstract class AbstractEntityManager {
      * Get the list of objects.
      * The list of objects will be fetched automatically from the database if they aren't cached yet.
      *
-     * @param fields Database object fields to fetch and cache (using the same query, to improve performance).
+     * @param fields Entity fields to fetch and cache (using the same query, to improve performance).
      *
      * @return List of objects.
      */
@@ -143,7 +143,7 @@ public abstract class AbstractEntityManager {
      * Get a clone of the list of objects.
      * The list of objects will be fetched automatically from the database if they aren't cached yet.
      *
-     * @param fields Database object fields to fetch and cache (using the same query, to improve performance).
+     * @param fields Entity fields to fetch and cache (using the same query, to improve performance).
      *
      * @return List of objects.
      */
@@ -156,7 +156,7 @@ public abstract class AbstractEntityManager {
         // Create a list with clones
         List<AbstractEntity> clones = new ArrayList<>();
 
-        // Loop through each database object, and clone it
+        // Loop through each entity, and clone it
         for(AbstractEntity object : this.objects)
             try {
                 clones.add(object.clone());
@@ -199,7 +199,7 @@ public abstract class AbstractEntityManager {
     }
 
     /**
-     * Check whether any database objects are cached.
+     * Check whether any entitys are cached.
      *
      * @return True if cached, false if not.
      */
@@ -222,9 +222,9 @@ public abstract class AbstractEntityManager {
     }
 
     /**
-     * Get the database object manifest.
+     * Get the entity manifest.
      *
-     * @return Database object manifest.
+     * @return Entity manifest.
      */
     public abstract AbstractEntityManifest getManifest();
 

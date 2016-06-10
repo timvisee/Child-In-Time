@@ -15,7 +15,7 @@ public class BodyState extends AbstractEntity {
     /**
      * Constructor.
      *
-     * @param id Database object id.
+     * @param id Entity id.
      */
     public BodyState(int id) {
         super(id);

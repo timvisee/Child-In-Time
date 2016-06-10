@@ -365,13 +365,13 @@ public class DatabaseManagerDialog extends JDialog {
         List selected = this.databaseList.getSelectedValuesList();
 
         // Loop through the databases
-        for(Object databaseObject : selected) {
+        for(Object entity : selected) {
             // Make sure the instance is valid
-            if(!(databaseObject instanceof AbstractDatabase))
+            if(!(entity instanceof AbstractDatabase))
                 continue;
 
-            // Cast the database object
-            AbstractDatabase database = (AbstractDatabase) databaseObject;
+            // Cast the entity
+            AbstractDatabase database = (AbstractDatabase) entity;
 
             // Make sure the database is successfully configured
             if(!database.isConfigured()) {

@@ -9,7 +9,7 @@ import me.childintime.childintime.database.object.EntityFieldsInterface;
 public class BodyStateManifest extends AbstractEntityManifest {
 
     /**
-     * Database object type name.
+     * Entity type name.
      */
     public static final String TYPE_NAME = "Body state";
 

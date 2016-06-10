@@ -15,7 +15,7 @@ public class Parkour extends AbstractEntity {
     /**
      * Constructor.
      *
-     * @param id Database object id.
+     * @param id Entity id.
      */
     public Parkour(int id) {
         super(id);

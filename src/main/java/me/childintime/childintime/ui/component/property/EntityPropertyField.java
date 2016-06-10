@@ -6,7 +6,7 @@ import me.childintime.childintime.database.object.AbstractEntityManager;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class DatabaseObjectPropertyField extends AbstractPropertyField {
+public class EntityPropertyField extends AbstractPropertyField {
 
     /**
      * True if an empty value is allowed.
@@ -16,22 +16,22 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
-     * Database object manager.
+     * Entity manager.
      */
     final private AbstractEntityManager manager;
 
     /**
-     * Object field.
+     * Entity field.
      */
     private JComboBox<AbstractEntity> comboBox;
 
     /**
      * Constructor.
      *
-     * @param manager Database object manager.
+     * @param manager Entity manager.
      * @param allowNull True if null is allowed, false if not.
      */
-    public DatabaseObjectPropertyField(AbstractEntityManager manager, boolean allowNull) {
+    public EntityPropertyField(AbstractEntityManager manager, boolean allowNull) {
         // Call an alias constructor
         this((Object) manager, allowNull);
     }
@@ -42,7 +42,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
      * @param value Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public DatabaseObjectPropertyField(AbstractEntity value, boolean allowNull) {
+    public EntityPropertyField(AbstractEntity value, boolean allowNull) {
         // Call the super
         this((Object) value, allowNull);
     }
@@ -53,7 +53,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
      * @param value Value or manager.
      * @param allowNull True if null is allowed, false if not.
      */
-    private DatabaseObjectPropertyField(Object value, boolean allowNull) {
+    private EntityPropertyField(Object value, boolean allowNull) {
         // Call the super
         super(allowNull);
 
@@ -147,15 +147,15 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
 
     @Override
     public void setValue(Object value) {
-        // Set the selected database object, or null
+        // Set the selected entity, or null
         setSelected((AbstractEntity) value);
     }
 
     /**
-     * Get the property field database object value.
+     * Get the property field entity value.
      * If the field is null, null will be returned.
      *
-     * @return Abstract database object, or null.
+     * @return Abstract entity, or null.
      */
     public AbstractEntity getSelected() {
         return isNull() ? null : (AbstractEntity) this.comboBox.getSelectedItem();

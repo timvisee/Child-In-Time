@@ -15,7 +15,7 @@ public class Student extends AbstractEntity {
     /**
      * Constructor.
      *
-     * @param id Database object id.
+     * @param id Entity id.
      */
     public Student(int id) {
         super(id);
