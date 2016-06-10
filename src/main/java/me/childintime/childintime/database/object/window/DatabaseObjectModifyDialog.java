@@ -386,21 +386,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
                     break;
 
                 case REFERENCE:
-                    // Determine the ID
-                    int id = 0;
-
-                    // Convert database objects to their ID
-                    if(value instanceof AbstractDatabaseObject) {
-                        // Get the database object
-                        AbstractDatabaseObject databaseObject = (AbstractDatabaseObject) value;
-
-                        // Get the ID
-                        id = databaseObject.getId();
-                    } else
-                        id = (Integer) value;
-
-                    // Create the field
-                    field = new IntegerPropertyField(id, true);
+                    field = new DatabaseObjectPropertyField((AbstractDatabaseObject) value, true);
                     break;
 
                 case STRING:

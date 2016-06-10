@@ -1,5 +1,6 @@
 package me.childintime.childintime.database.object.parkour;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
@@ -69,5 +70,10 @@ public class ParkourManifest extends AbstractDatabaseObjectManifest {
     @Override
     public Class<? extends AbstractDatabaseObjectManager> getManager() {
         return ParkourManager.class;
+    }
+
+    @Override
+    public ParkourManager getManagerInstance() {
+        return Core.getInstance().getParkourManager();
     }
 }
