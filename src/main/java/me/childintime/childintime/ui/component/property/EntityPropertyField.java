@@ -1,7 +1,7 @@
 package me.childintime.childintime.ui.component.property;
 
-import me.childintime.childintime.database.object.AbstractEntity;
-import me.childintime.childintime.database.object.AbstractEntityManager;
+import me.childintime.childintime.database.entity.AbstractEntity;
+import me.childintime.childintime.database.entity.AbstractEntityManager;
 
 import javax.swing.*;
 import java.awt.event.*;
