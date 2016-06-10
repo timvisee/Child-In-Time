@@ -539,6 +539,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return True if the cache is equal, false if not.
      */
+    // TODO: This doesn't always seem to work. (Maybe because the ID field is included?)
     public boolean isCacheEqual(AbstractDatabaseObject other) {
         // Compare the ID
         if(getId() != other.getId())
@@ -556,9 +557,28 @@ public abstract class AbstractDatabaseObject implements Cloneable {
         if(getCachedFields().size() != other.getCachedFields().size())
             return false;
 
-        // Compare both hash maps
-        // TODO: Is this comparison correct?
-        return getCachedFields().equals(other.getCachedFields());
+        // Loop through the hash map to compare
+        for(Map.Entry<DatabaseFieldsInterface, Object> entry : this.cachedFields.entrySet()) {
+            // Skip ID fields
+            if(entry.getKey().getExtendedDataType().equals(DataTypeExtended.ID))
+                continue;
+
+            // Make sure the other has this key
+            if(!other.getCachedFields().containsKey(entry.getKey())) {
+                System.out.println("MISSING KEY: " + entry.getKey());
+                return false;
+            }
+
+            // Make sure the value is equal
+            if(!other.getCachedFields().get(entry.getKey()).equals(entry.getValue())) {
+                System.out.println("A: " + entry.getValue());
+                System.out.println("B: " + other.getCachedFields().get(entry.getKey()));
+                return false;
+            }
+        }
+
+        // Everything seems to be all right, return true
+        return true;
     }
 
     @Override
