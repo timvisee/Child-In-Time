@@ -13,7 +13,12 @@ public abstract class AbstractDatabaseObjectManager {
     /**
      * List of database objects loaded in this manager.
      */
-    private List<AbstractDatabaseObject> objects = null;
+    private List<AbstractDatabaseObject> objects = new ArrayList<>();
+
+    /**
+     * Change listeners.
+     */
+    private List<AbstractDatabaseObjectManagerChangeListener> changeListeners = new ArrayList<>();
 
     /**
      * Fetch all objects from the database.
@@ -44,7 +49,7 @@ public abstract class AbstractDatabaseObjectManager {
             fieldsToFetch.append("`, `").append(field.getDatabaseField());
 
         // Create a list with fetched objects
-        List<AbstractDatabaseObject> objects = new ArrayList<>();
+        List<AbstractDatabaseObject> newObjects = new ArrayList<>();
 
         // Fetch the objects and their data from the database
         try {
@@ -73,7 +78,7 @@ public abstract class AbstractDatabaseObjectManager {
                     databaseObject.parseField(field, result.getString(field.getDatabaseField()));
 
                 // Add the object to the list
-                objects.add(databaseObject);
+                newObjects.add(databaseObject);
             }
 
         } catch(Exception e){
@@ -85,7 +90,10 @@ public abstract class AbstractDatabaseObjectManager {
         }
 
         // Set the list of objects
-        this.objects = objects;
+        this.objects.addAll(newObjects);
+
+        // Fire the change event
+        fireChangeEvent();
 
         // Return the list of objects
         return this.objects;
@@ -200,15 +208,16 @@ public abstract class AbstractDatabaseObjectManager {
     }
 
     /**
-     * Flush the cached database objects.
+     * Refresh the objects, reloading them from the database.
      */
+    // TODO: Add parameter to define what fields to fetch with the first query?
     @SuppressWarnings("unused")
-    public void flushCache() {
+    public void refresh() {
         // Clear the list of objects
         this.objects.clear();
 
-        // Reset the cache
-        this.objects = null;
+        // Fetch the objects
+        fetchObjects();
     }
 
     /**
@@ -217,4 +226,57 @@ public abstract class AbstractDatabaseObjectManager {
      * @return Database object manifest.
      */
     public abstract AbstractDatabaseObjectManifest getManifest();
+
+    /**
+     * Add an change listener.
+     *
+     * @param listener Listener.
+     */
+    public void addChangeListener(AbstractDatabaseObjectManagerChangeListener listener) {
+        this.changeListeners.add(listener);
+    }
+
+    /**
+     * Get all the registered change listeners.
+     *
+     * @return List of change listeners.
+     */
+    public List<AbstractDatabaseObjectManagerChangeListener> getChangeListeners() {
+        return this.changeListeners;
+    }
+
+    /**
+     * Remove the given change listener.
+     *
+     * @param listener Listener to remove.
+     *
+     * @return True if any listener was removed, false if not.
+     */
+    public boolean removeChangeListener(AbstractDatabaseObjectManagerChangeListener listener) {
+        return this.changeListeners.remove(listener);
+    }
+
+    /**
+     * Remove all change listeners.
+     *
+     * @return Number of change listeners that were removed.
+     */
+    public int removeAllChangeListeners() {
+        // Remember the number of change listeners
+        final int listenerCount = this.changeListeners.size();
+
+        // Clear the list of listeners
+        this.changeListeners.clear();
+
+        // Return the number of cleared listeners
+        return listenerCount;
+    }
+
+    /**
+     * Fire the change listener event.
+     */
+    public void fireChangeEvent() {
+        // Fire each registered listener
+        this.changeListeners.forEach(AbstractDatabaseObjectManagerChangeListener::onChange);
+    }
 }
