@@ -2,21 +2,19 @@ package me.childintime.childintime;
 
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
+import me.childintime.childintime.database.DatabaseBuilder;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
-import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.database.configuration.DatabaseManager;
-import me.childintime.childintime.database.object.bodystate.BodyStateManager;
-import me.childintime.childintime.database.object.group.GroupManager;
-import me.childintime.childintime.database.object.measurement.MeasurementManager;
-import me.childintime.childintime.database.object.parkour.ParkourManager;
-import me.childintime.childintime.database.object.school.SchoolManager;
-import me.childintime.childintime.database.object.student.StudentManager;
-import me.childintime.childintime.database.object.student.StudentManifest;
-import me.childintime.childintime.database.object.teacher.TeacherManager;
-import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
-import me.childintime.childintime.database.object.window.DatabaseObjectModifyDialog;
-import me.childintime.childintime.gui.window.DashboardFrame;
-import me.childintime.childintime.gui.window.LoginDialog;
+import me.childintime.childintime.database.connector.DatabaseConnector;
+import me.childintime.childintime.database.object.spec.bodystate.BodyStateManager;
+import me.childintime.childintime.database.object.spec.group.GroupManager;
+import me.childintime.childintime.database.object.spec.measurement.MeasurementManager;
+import me.childintime.childintime.database.object.spec.parkour.ParkourManager;
+import me.childintime.childintime.database.object.spec.school.SchoolManager;
+import me.childintime.childintime.database.object.spec.student.StudentManager;
+import me.childintime.childintime.database.object.spec.teacher.TeacherManager;
+import me.childintime.childintime.ui.window.DashboardFrame;
+import me.childintime.childintime.ui.window.LoginDialog;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
@@ -147,7 +145,7 @@ public class Core {
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
 
-        // Initialize the database object managers
+        // Initialize the entity managers
         this.bodyStateManager = new BodyStateManager();
         this.groupManager = new GroupManager();
         this.measurementManager = new MeasurementManager();

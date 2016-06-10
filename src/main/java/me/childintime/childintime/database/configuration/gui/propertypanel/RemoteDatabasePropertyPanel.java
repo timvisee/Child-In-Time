@@ -3,9 +3,9 @@ package me.childintime.childintime.database.configuration.gui.propertypanel;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.RemoteDatabase;
-import me.childintime.childintime.gui.component.property.IntegerPropertyField;
-import me.childintime.childintime.gui.component.property.PasswordPropertyField;
-import me.childintime.childintime.gui.component.property.TextPropertyField;
+import me.childintime.childintime.ui.component.property.IntegerPropertyField;
+import me.childintime.childintime.ui.component.property.PasswordPropertyField;
+import me.childintime.childintime.ui.component.property.TextPropertyField;
 
 import javax.swing.*;
 import java.awt.*;
