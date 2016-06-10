@@ -5,6 +5,7 @@ import me.childintime.childintime.database.configuration.AbstractDatabase;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
@@ -358,11 +359,20 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                             break;
 
                         case DATE:
-                            // Cast the date to a Java date object
-                            Date date = (Date) value;
+                            // Determine the SQL date
+                            java.sql.Date sqlDate;
 
-                            // Convert the date into a SQL date
-                            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                            // Convert date objects
+                            if(value instanceof Date)
+                                sqlDate = new java.sql.Date(((Date) value).getTime());
+                            else {
+                                // Create a date format instance to parse the date
+                                // TODO: Define the date format somewhere global!
+                                final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                                // Try to parse the value to an SQL date
+                                sqlDate = new java.sql.Date(dateFormat.parse(value.toString()).getTime());
+                            }
 
                             // Attach the date
                             updateStatement.setDate(1, sqlDate);
@@ -373,11 +383,17 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                             break;
 
                         case REFERENCE:
-                            // Cast the reference object to an abstract database object
-                            AbstractDatabaseObject reference = (AbstractDatabaseObject) value;
+                            // Determine the reference ID
+                            int id;
+
+                            // Get the ID from abstract database object instances
+                            if(value instanceof AbstractDatabaseObject)
+                                id = ((AbstractDatabaseObject) value).getId();
+                            else
+                                id = (Integer) value;
 
                             // Put it's ID in the database
-                            updateStatement.setInt(1, reference.getId());
+                            updateStatement.setInt(1, id);
                             break;
                     }
 
