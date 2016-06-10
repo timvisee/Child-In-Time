@@ -8,6 +8,7 @@ import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.gui.component.property.*;
 import me.childintime.childintime.util.Platform;
+import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -702,13 +703,18 @@ public class DatabaseObjectModifyDialog extends JDialog {
         if(!validateInput(true))
             return false;
 
+        // Show a progress dialog
+        final ProgressDialog progressDialog = new ProgressDialog(this, "Saving changes...", false, "Processing changes...", true);
+
         // Apply the changes to the result object
         applyInputToResult();
 
         // Apply the result to the database
+        progressDialog.setStatus("Saving changes...");
         if(!this.result.applyToDatabase()) {
             // Show an error message, and return false
             JOptionPane.showMessageDialog(this, "Failed to store the " + this.sourceManifest.getTypeName(false, false) + " in the database.", "Database error", JOptionPane.ERROR_MESSAGE);
+            progressDialog.dispose();
             return false;
         }
 
@@ -729,6 +735,9 @@ public class DatabaseObjectModifyDialog extends JDialog {
             // Dispose the dialog
             this.dispose();
         }
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
 
         // Return the result
         return true;
