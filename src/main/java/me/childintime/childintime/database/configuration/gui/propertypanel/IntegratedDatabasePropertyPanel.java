@@ -35,7 +35,7 @@ public class IntegratedDatabasePropertyPanel extends AbstractDatabasePropertyPan
         add(new JLabel("File:"), c);
 
         // Create the file field
-        this.fileField = new FilePropertyField("MY_FILE_PATH", true);
+        this.fileField = new FilePropertyField((String) null, true);
         this.fileField.setEmptyAllowed(false);
 
         // Add the file box
