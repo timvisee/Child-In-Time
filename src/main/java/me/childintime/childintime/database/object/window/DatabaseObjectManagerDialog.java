@@ -80,7 +80,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager objectManager, boolean show) {
         // Construct the form
-        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTypeName(true, false) + " manager", ModalityType.APPLICATION_MODAL);
+        super(owner, App.APP_NAME + " - " + objectManager.getManifest().getTypeName(true, true), ModalityType.APPLICATION_MODAL);
 
         // Set the database object manager
         this.objectManager = objectManager;
