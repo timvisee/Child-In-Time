@@ -386,7 +386,10 @@ public class DatabaseObjectModifyDialog extends JDialog {
                     break;
 
                 case REFERENCE:
-                    field = new DatabaseObjectPropertyField((AbstractDatabaseObject) value, true);
+                    if(value != null)
+                        field = new DatabaseObjectPropertyField((AbstractDatabaseObject) value, true);
+                    else
+                        field = new DatabaseObjectPropertyField(fieldType.getManifest().getManagerInstance(), true);
                     break;
 
                 case STRING:
