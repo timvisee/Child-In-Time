@@ -2,7 +2,7 @@ package me.childintime.childintime.database.object.window.list;
 
 import me.childintime.childintime.database.object.AbstractEntity;
 import me.childintime.childintime.database.object.AbstractEntityManager;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.EntityFieldsInterface;
 import me.childintime.childintime.database.object.listener.EntityActionListener;
 import me.childintime.childintime.database.object.listener.SelectionChangeListener;
 import me.childintime.childintime.util.swing.TableUtils;
@@ -27,7 +27,7 @@ public class DatabaseObjectListComponent extends JComponent {
     /**
      * The columns to show in the list view.
      */
-    private DatabaseFieldsInterface[] columns;
+    private EntityFieldsInterface[] columns;
 
     /**
      * Flag with defines whether multi selection mode is enabled.
@@ -89,7 +89,7 @@ public class DatabaseObjectListComponent extends JComponent {
      *
      * @return Shown columns.
      */
-    public DatabaseFieldsInterface[] getColumns() {
+    public EntityFieldsInterface[] getColumns() {
         return this.columns;
     }
 
@@ -97,7 +97,7 @@ public class DatabaseObjectListComponent extends JComponent {
      * Set the columns that are shown.
      * This will automatically update the table to apply the changes.
      */
-    public void setColumns(DatabaseFieldsInterface[] columns) {
+    public void setColumns(EntityFieldsInterface[] columns) {
         // Set the columns
         this.columns = columns;
 

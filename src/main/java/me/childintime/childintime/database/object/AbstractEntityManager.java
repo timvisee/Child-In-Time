@@ -43,10 +43,10 @@ public abstract class AbstractEntityManager {
      * @return List of fetched objects.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractEntity> fetchObjects(DatabaseFieldsInterface fields[]) {
+    public List<AbstractEntity> fetchObjects(EntityFieldsInterface fields[]) {
         // Join the string, comma separated
         StringBuilder fieldsToFetch = new StringBuilder("id");
-        for (DatabaseFieldsInterface field : fields)
+        for (EntityFieldsInterface field : fields)
             fieldsToFetch.append("`, `").append(field.getDatabaseField());
 
         // Create a list with fetched objects
@@ -75,7 +75,7 @@ public abstract class AbstractEntityManager {
                 AbstractEntity databaseObject = getManifest().getObject().getConstructor(int.class).newInstance(id);
 
                 // Parse and cache the fields
-                for (DatabaseFieldsInterface field : fields)
+                for (EntityFieldsInterface field : fields)
                     databaseObject.parseField(field, result.getString(field.getDatabaseField()));
 
                 // Add the object to the list
@@ -120,7 +120,7 @@ public abstract class AbstractEntityManager {
      * @return List of objects.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractEntity> getObjects(DatabaseFieldsInterface[] fields) {
+    public List<AbstractEntity> getObjects(EntityFieldsInterface[] fields) {
         // Return the objects if cached
         if(hasCache())
             return this.objects;
@@ -148,7 +148,7 @@ public abstract class AbstractEntityManager {
      * @return List of objects.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractEntity> getObjectsClone(DatabaseFieldsInterface[] fields) {
+    public List<AbstractEntity> getObjectsClone(EntityFieldsInterface[] fields) {
         // Fetch the objects if they aren't fetched yet
         if(!hasCache())
             fetchObjects(fields);

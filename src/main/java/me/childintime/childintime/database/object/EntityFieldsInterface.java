@@ -3,7 +3,7 @@ package me.childintime.childintime.database.object;
 import me.childintime.childintime.database.object.datatype.DataTypeBase;
 import me.childintime.childintime.database.object.datatype.DataTypeExtended;
 
-public interface DatabaseFieldsInterface {
+public interface EntityFieldsInterface {
 
     /**
      * Get the display name for this field.

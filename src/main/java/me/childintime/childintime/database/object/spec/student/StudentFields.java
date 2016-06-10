@@ -1,12 +1,12 @@
 package me.childintime.childintime.database.object.spec.student;
 
 import me.childintime.childintime.database.object.AbstractEntityManifest;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.EntityFieldsInterface;
 import me.childintime.childintime.database.object.datatype.DataTypeBase;
 import me.childintime.childintime.database.object.datatype.DataTypeExtended;
 import me.childintime.childintime.database.object.spec.group.GroupManifest;
 
-public enum StudentFields implements DatabaseFieldsInterface {
+public enum StudentFields implements EntityFieldsInterface {
 
     /**
      * ID.

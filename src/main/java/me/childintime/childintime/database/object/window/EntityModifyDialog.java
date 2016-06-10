@@ -3,7 +3,7 @@ package me.childintime.childintime.database.object.window;
 import me.childintime.childintime.App;
 import me.childintime.childintime.database.object.AbstractEntity;
 import me.childintime.childintime.database.object.AbstractEntityManifest;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.EntityFieldsInterface;
 import me.childintime.childintime.database.object.datatype.DataTypeExtended;
 import me.childintime.childintime.gui.component.property.*;
 import me.childintime.childintime.util.Platform;
@@ -50,12 +50,12 @@ public class EntityModifyDialog extends JDialog {
     /**
      * Database fields cache.
      */
-    private DatabaseFieldsInterface[] fieldsCache = null;
+    private EntityFieldsInterface[] fieldsCache = null;
 
     /**
      * Hashmap containing all the fields.
      */
-    private HashMap<DatabaseFieldsInterface, AbstractPropertyField> fields = new HashMap<>();
+    private HashMap<EntityFieldsInterface, AbstractPropertyField> fields = new HashMap<>();
 
     /**
      * Constructor, to modify an existing database object.
@@ -239,7 +239,7 @@ public class EntityModifyDialog extends JDialog {
      *
      * @return Database objects field list.
      */
-    private DatabaseFieldsInterface[] getFields() {
+    private EntityFieldsInterface[] getFields() {
         // Return the cached value if available
         if(this.fieldsCache != null)
             return this.fieldsCache;
@@ -314,11 +314,11 @@ public class EntityModifyDialog extends JDialog {
         container.add(new JLabel("Modify " + this.sourceManifest.getTypeName(false, false) + ":"), c);
 
         // Get the list of fields
-        DatabaseFieldsInterface[] fieldTypes = getFields();
+        EntityFieldsInterface[] fieldTypes = getFields();
 
         for(int i = 0; i < fieldTypes.length; i++) {
             // Get the field type
-            DatabaseFieldsInterface fieldType = fieldTypes[i];
+            EntityFieldsInterface fieldType = fieldTypes[i];
 
             // Create and add the name label
             c.fill = GridBagConstraints.NONE;
@@ -632,9 +632,9 @@ public class EntityModifyDialog extends JDialog {
             throw new RuntimeException("Failed to validate input. No fields available.");
 
         // Loop through all the
-        for(Map.Entry<DatabaseFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
+        for(Map.Entry<EntityFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
             // Get the field specification and property field
-            DatabaseFieldsInterface fieldSpec = entry.getKey();
+            EntityFieldsInterface fieldSpec = entry.getKey();
             AbstractPropertyField field = entry.getValue();
 
             // Check whether null is allowed if the field is null
@@ -681,9 +681,9 @@ public class EntityModifyDialog extends JDialog {
             throw new RuntimeException("Failed to validate input. No fields available.");
 
         // Loop through all the
-        for(Map.Entry<DatabaseFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
+        for(Map.Entry<EntityFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
             // Get the field specification and property field
-            DatabaseFieldsInterface fieldSpec = entry.getKey();
+            EntityFieldsInterface fieldSpec = entry.getKey();
             AbstractPropertyField field = entry.getValue();
 
             // Put the field value into the database object cache

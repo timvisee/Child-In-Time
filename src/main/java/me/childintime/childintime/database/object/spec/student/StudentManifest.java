@@ -4,7 +4,7 @@ import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractEntity;
 import me.childintime.childintime.database.object.AbstractEntityManager;
 import me.childintime.childintime.database.object.AbstractEntityManifest;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.EntityFieldsInterface;
 
 public class StudentManifest extends AbstractEntityManifest {
 
@@ -51,7 +51,7 @@ public class StudentManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public DatabaseFieldsInterface[] getDefaultFields() {
+    public EntityFieldsInterface[] getDefaultFields() {
         return new StudentFields[]{
                 StudentFields.FIRST_NAME,
                 StudentFields.LAST_NAME,
@@ -60,7 +60,7 @@ public class StudentManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public Class<? extends DatabaseFieldsInterface> getFields() {
+    public Class<? extends EntityFieldsInterface> getFields() {
         return StudentFields.class;
     }
 

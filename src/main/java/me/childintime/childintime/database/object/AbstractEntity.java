@@ -21,7 +21,7 @@ public abstract class AbstractEntity implements Cloneable {
     /**
      * Hash map containing cached fields from the database object.
      */
-    protected HashMap<DatabaseFieldsInterface, Object> cachedFields = new HashMap<>();
+    protected HashMap<EntityFieldsInterface, Object> cachedFields = new HashMap<>();
 
     /**
      * Constructor.
@@ -53,7 +53,7 @@ public abstract class AbstractEntity implements Cloneable {
      *
      * @return Hash map containing the cached fields.
      */
-    public HashMap<DatabaseFieldsInterface, Object> getCachedFields() {
+    public HashMap<EntityFieldsInterface, Object> getCachedFields() {
         return this.cachedFields;
     }
 
@@ -62,7 +62,7 @@ public abstract class AbstractEntity implements Cloneable {
      *
      * @param cachedFields Hash map containing the cached fields.
      */
-    public void setCachedFields(HashMap<DatabaseFieldsInterface, Object> cachedFields) {
+    public void setCachedFields(HashMap<EntityFieldsInterface, Object> cachedFields) {
         this.cachedFields = cachedFields;
     }
 
@@ -84,9 +84,9 @@ public abstract class AbstractEntity implements Cloneable {
      * If no fields are given, true will be returned.
      */
     @SuppressWarnings("WeakerAccess")
-    public boolean hasFields(DatabaseFieldsInterface[] fields) {
+    public boolean hasFields(EntityFieldsInterface[] fields) {
         // Loop through all given fields
-        for(DatabaseFieldsInterface field : fields) {
+        for(EntityFieldsInterface field : fields) {
             // Make sure the proper fields enum is used for this object
             if(!getManifest().getFields().isInstance(field))
                 return false;
@@ -108,8 +108,8 @@ public abstract class AbstractEntity implements Cloneable {
      * @return True if the given field is cached, false if not.
      */
     @SuppressWarnings("WeakerAccess")
-    public boolean hasField(DatabaseFieldsInterface field) {
-        return hasFields(new DatabaseFieldsInterface[]{field});
+    public boolean hasField(EntityFieldsInterface field) {
+        return hasFields(new EntityFieldsInterface[]{field});
     }
 
     /**
@@ -122,7 +122,7 @@ public abstract class AbstractEntity implements Cloneable {
      * @return True on success, false on failure.
      */
     @SuppressWarnings("WeakerAccess")
-    public boolean fetchFields(DatabaseFieldsInterface[] fields) {
+    public boolean fetchFields(EntityFieldsInterface[] fields) {
         // Make sure at least one field is fetched
         if(fields.length == 0)
             return true;
@@ -131,7 +131,7 @@ public abstract class AbstractEntity implements Cloneable {
         List<String> fieldNames = new ArrayList<>();
 
         // Put the fields name into the field names list
-        for(DatabaseFieldsInterface field : fields) {
+        for(EntityFieldsInterface field : fields) {
             // Make sure the field is of the correct instance
             if(!getManifest().getFields().isInstance(field))
                 return false;
@@ -166,7 +166,7 @@ public abstract class AbstractEntity implements Cloneable {
                 throw new Exception("Failed to fetch object data for [" + getClass().getSimpleName() + ";id=" + getId() + "], empty result received from the database.");
 
             // Get the raw data for each field, and parse it
-            for (DatabaseFieldsInterface field : fields)
+            for (EntityFieldsInterface field : fields)
                 parseField(field, result.getObject(field.getDatabaseField()));
 
             // Return the result
@@ -204,8 +204,8 @@ public abstract class AbstractEntity implements Cloneable {
      * @return True if the given field was fetched successfully.
      */
     @SuppressWarnings("WeakerAccess")
-    public boolean fetchField(DatabaseFieldsInterface field) {
-        return fetchFields(new DatabaseFieldsInterface[]{field});
+    public boolean fetchField(EntityFieldsInterface field) {
+        return fetchFields(new EntityFieldsInterface[]{field});
     }
 
     /**
@@ -219,13 +219,13 @@ public abstract class AbstractEntity implements Cloneable {
      *
      * @throws Exception Throws if an error occurred.
      */
-    public List<Object> getFields(DatabaseFieldsInterface[] fields) throws Exception {
+    public List<Object> getFields(EntityFieldsInterface[] fields) throws Exception {
         // Create a list to put the field values into
         List<Object> fieldValues = new ArrayList<>();
 
         // Create a list of fields that need to be fetched
-        List<DatabaseFieldsInterface> fieldsToFetch = new ArrayList<>();
-        for(DatabaseFieldsInterface field : fields) {
+        List<EntityFieldsInterface> fieldsToFetch = new ArrayList<>();
+        for(EntityFieldsInterface field : fields) {
             // Make sure the field enum that is used is for the current class
             if(!getManifest().getFields().isInstance(field))
                 throw new Exception("Invalid database object fields configuration class used, not compatible with" +
@@ -237,11 +237,11 @@ public abstract class AbstractEntity implements Cloneable {
         }
 
         // Fetch the given fields
-        if(!fetchFields(fieldsToFetch.toArray(new DatabaseFieldsInterface[]{})))
+        if(!fetchFields(fieldsToFetch.toArray(new EntityFieldsInterface[]{})))
             throw new Exception("Failed to fetch database fields.");
 
         // Get all fields values, add it to the result list
-        for(DatabaseFieldsInterface field : fields)
+        for(EntityFieldsInterface field : fields)
             fieldValues.add(this.cachedFields.get(field));
 
         // Return the list of field values
@@ -259,8 +259,8 @@ public abstract class AbstractEntity implements Cloneable {
      * @throws Exception Throws if an error occurred.
      */
     @SuppressWarnings("WeakerAccess")
-    public Object getField(DatabaseFieldsInterface field) throws Exception {
-        return getFields(new DatabaseFieldsInterface[]{field}).get(0);
+    public Object getField(EntityFieldsInterface field) throws Exception {
+        return getFields(new EntityFieldsInterface[]{field}).get(0);
     }
 
     /**
@@ -271,9 +271,9 @@ public abstract class AbstractEntity implements Cloneable {
     // FIXME: Method not fully made yet, complete it!
     public boolean applyToDatabase() {
 //        // TODO: Loop through the cached fields that are in the hash map. (See this.cacedFields)
-//        this.cachedFields.forEach((DatabaseFieldsInterface, o) -> {
+//        this.cachedFields.forEach((EntityFieldsInterface, o) -> {
 //            // TODO: If the current field is an ID field, skip it and continue; to the next field in the list
-//            if(DatabaseFieldsInterface.getExtendedDataType().equals(DataTypeExtended.ID))
+//            if(EntityFieldsInterface.getExtendedDataType().equals(DataTypeExtended.ID))
 //                return;
 //
 //            // TODO: Create a prepared statement (see line 126)
@@ -296,7 +296,7 @@ public abstract class AbstractEntity implements Cloneable {
 //                // Prepare a statement to update
 //                PreparedStatement updateStatement = connection.prepareStatement(
 //                        "UPDATE `" + getTableName() + "` " +
-//                                "SET `" + DatabaseFieldsInterface.getDatabaseField() + "` = ?" +
+//                                "SET `" + EntityFieldsInterface.getDatabaseField() + "` = ?" +
 //                                "WHERE `id` = ?"
 //                );
 //
@@ -332,7 +332,7 @@ public abstract class AbstractEntity implements Cloneable {
         // Check whether a new object should be added, or whether the object should be updated
         if(getId() < 0) {
             // Create a list of fields, field names and field values
-            final List<DatabaseFieldsInterface> fields = new ArrayList<>();
+            final List<EntityFieldsInterface> fields = new ArrayList<>();
             final List<String> fieldNames = new ArrayList<>();
             final List<String> fieldValues = new ArrayList<>();
             this.cachedFields.forEach((field, obj) -> {
@@ -356,7 +356,7 @@ public abstract class AbstractEntity implements Cloneable {
                 // Loop through the hash map with cached fields
                 for(int i = 0; i < fields.size(); i++) {
                     // Get the field and it's value
-                    final DatabaseFieldsInterface field = fields.get(i);
+                    final EntityFieldsInterface field = fields.get(i);
                     final Object value = this.cachedFields.get(field);
 
                     // Set the ID field to null
@@ -466,9 +466,9 @@ public abstract class AbstractEntity implements Cloneable {
 
         } else {
             // Loop through the hash map with cached fields
-            for(Map.Entry<DatabaseFieldsInterface, Object> entry : this.cachedFields.entrySet()) {
+            for(Map.Entry<EntityFieldsInterface, Object> entry : this.cachedFields.entrySet()) {
                 // Get the field and it's value
-                final DatabaseFieldsInterface field = entry.getKey();
+                final EntityFieldsInterface field = entry.getKey();
                 final Object value = entry.getValue();
 
                 // Skip cached ID fields, because the ID field may never change
@@ -637,7 +637,7 @@ public abstract class AbstractEntity implements Cloneable {
      * @param field Database field type.
      * @param rawField Raw field data.
      */
-    void parseField(DatabaseFieldsInterface field, Object rawField) {
+    void parseField(EntityFieldsInterface field, Object rawField) {
         switch(field.getExtendedDataType().getDataTypeBase()) {
             case STRING:
                 this.cachedFields.put(field, rawField);
@@ -730,7 +730,7 @@ public abstract class AbstractEntity implements Cloneable {
             return false;
 
         // Loop through the hash map to compare
-        for(Map.Entry<DatabaseFieldsInterface, Object> entry : this.cachedFields.entrySet()) {
+        for(Map.Entry<EntityFieldsInterface, Object> entry : this.cachedFields.entrySet()) {
             // Skip ID fields
             if(entry.getKey().getExtendedDataType().equals(DataTypeExtended.ID))
                 continue;

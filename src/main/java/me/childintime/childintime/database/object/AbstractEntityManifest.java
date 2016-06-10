@@ -31,14 +31,14 @@ public abstract class AbstractEntityManifest {
      *
      * @return Default object fields to fetch.
      */
-    public abstract DatabaseFieldsInterface[] getDefaultFields();
+    public abstract EntityFieldsInterface[] getDefaultFields();
 
     /**
      * Get the fields class for this database object.
      *
      * @return Fields class.
      */
-    public abstract Class<? extends DatabaseFieldsInterface> getFields();
+    public abstract Class<? extends EntityFieldsInterface> getFields();
 
     /**
      * Get the field values for this database object from the fields class.
@@ -49,9 +49,9 @@ public abstract class AbstractEntityManifest {
      * @throws InvocationTargetException Throws if an error occurred.
      * @throws IllegalAccessException Throws if an error occurred.
      */
-    public DatabaseFieldsInterface[] getFieldValues() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public EntityFieldsInterface[] getFieldValues() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         // Get the field values from the fields class instance
-        return (DatabaseFieldsInterface[]) getFields().getMethod("values").invoke(getFields());
+        return (EntityFieldsInterface[]) getFields().getMethod("values").invoke(getFields());
     }
 
     /**
