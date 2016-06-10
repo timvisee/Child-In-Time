@@ -24,7 +24,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
      */
     public IntegerPropertyField(boolean allowNull) {
         // Call an alias constructor
-        this(false, allowNull);
+        this(0, allowNull);
     }
 
     /**
@@ -33,7 +33,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
      * @param state Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public IntegerPropertyField(Boolean state, boolean allowNull) {
+    public IntegerPropertyField(Integer state, boolean allowNull) {
         // Call the super
         super(allowNull);
 
@@ -41,7 +41,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
         buildUi();
 
         // Set the state value
-        setState(state);
+        setNumber(state);
     }
 
     @Override
@@ -115,9 +115,9 @@ public class IntegerPropertyField extends AbstractPropertyField {
     }
 
     @Override
-    public void setValue(Object state) {
+    public void setValue(Object number) {
         // Set the text, or null
-        setState((Boolean) state);
+        setNumber((Integer) number);
     }
 
     /**
@@ -137,20 +137,20 @@ public class IntegerPropertyField extends AbstractPropertyField {
     }
 
     /**
-     * Set the text value.
+     * Set the number value.
      *
-     * @param text Text value.
+     * @param number Number value.
      */
-    public void setState(Boolean text) {
+    public void setNumber(Integer number) {
         // Make sure null is allowed
-        if(text == null && !isNullAllowed())
+        if(number == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
 
         // Set the null state
-        if(text == null)
+        if(number == null)
             setNull(true);
-        else if(isNull())
-            setNull(false);
+        else
+            this.spinner.setValue(number);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
             if(isNullAllowed())
                 setNull(true);
             else
-                setState(false);
+                setNumber(0);
         });
     }
 
@@ -222,7 +222,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
     public void enableField() {
         // Enable the field if it's disabled because it's value is null
         if(isNull())
-            this.setState(true);
+            this.setNull(false);
 
         // Focus the field and select all
         this.spinner.grabFocus();
