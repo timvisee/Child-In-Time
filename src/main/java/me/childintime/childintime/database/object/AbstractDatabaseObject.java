@@ -596,8 +596,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
             deleteStatement.setInt(1, getId());
 
             // Execute the query
-            if(!deleteStatement.execute())
-                throw new RuntimeException("Failed to delete database object.");
+            deleteStatement.execute();
 
             // Return the result
             return true;
