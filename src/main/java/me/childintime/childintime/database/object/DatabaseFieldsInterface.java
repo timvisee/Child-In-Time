@@ -1,5 +1,7 @@
 package me.childintime.childintime.database.object;
 
+import me.childintime.childintime.database.object.bodystate.BodyStateManifest;
+
 public interface DatabaseFieldsInterface {
 
     /**
@@ -52,16 +54,25 @@ public interface DatabaseFieldsInterface {
     DataTypeBase getBaseDataType();
 
     /**
-     * Returns a Class Type.
+     * Returns a reference manifest of the referenced class.
      *
-     * @return Class Type.
+     * @return Reference manifest.
      */
-    Class<? extends AbstractDatabaseObject> getReferenceType();
+    AbstractDatabaseObjectManifest getReferenceManifest();
 
     /**
-     * Get the object's manifest.
+     * Get the manifest instance for the current field.
+     * The field manifest is equal to the object's manifest, unless this field references a different database object.
+     * The manifest of the referencing database object is returned in that case.
      *
-     * @return Object's manifest.
+     * @return Field's manifest instance.
+     */
+    AbstractDatabaseObjectManifest getFieldManifest();
+
+    /**
+     * Get the manifest instance of the class this fields class if for.
+     *
+     * @return Object's manifest instance.
      */
     AbstractDatabaseObjectManifest getManifest();
 }

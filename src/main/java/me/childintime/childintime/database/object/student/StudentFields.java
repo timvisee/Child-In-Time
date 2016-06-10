@@ -2,6 +2,7 @@ package me.childintime.childintime.database.object.student;
 
 import me.childintime.childintime.database.object.*;
 import me.childintime.childintime.database.object.group.Group;
+import me.childintime.childintime.database.object.group.GroupManifest;
 
 public enum StudentFields implements DatabaseFieldsInterface {
 
@@ -40,7 +41,7 @@ public enum StudentFields implements DatabaseFieldsInterface {
      * Group ID.return StudentManifest.getInstance();
      * The group instance a student is part of.
      */
-    GROUP_ID("Group", "group_id", true, false, false, DataTypeExtended.REFERENCE, Group.class);
+    GROUP_ID("Group", "group_id", true, false, false, DataTypeExtended.REFERENCE, GroupManifest.getInstance());
 
     /**
      * The display name for this field.
@@ -73,10 +74,10 @@ public enum StudentFields implements DatabaseFieldsInterface {
     private DataTypeExtended dataType;
 
     /**
-     * The referenced type for fields of the {@link DataTypeExtended#REFERENCE} type.
+     * The referenced manifest of the type for fields of the {@link DataTypeExtended#REFERENCE} type.
      * Must be null if the data type is different.
      */
-    private Class<? extends AbstractDatabaseObject> referenceType;
+    private AbstractDatabaseObjectManifest referenceManifest;
 
     /**
      * Constructor.
@@ -87,16 +88,16 @@ public enum StudentFields implements DatabaseFieldsInterface {
      * @param nullAllowed True if a NULL value is allowed for this property field.
      * @param emptyAllowed True if an empty value is allowed for this property field.
      * @param dataType Data type of the field.
-     * @param referenceType Referenced class if this field has the {@link DataTypeExtended#REFERENCE} type.
+     * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    StudentFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, Class<? extends AbstractDatabaseObject> referenceType) {
+    StudentFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractDatabaseObjectManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
         this.emptyAllowed = emptyAllowed;
         this.dataType = dataType;
-        this.referenceType = referenceType;
+        this.referenceManifest = referenceManifest;
     }
 
     @Override
@@ -134,9 +135,13 @@ public enum StudentFields implements DatabaseFieldsInterface {
         return this.emptyAllowed;
     }
 
+    public AbstractDatabaseObjectManifest getReferenceManifest() {
+        return this.referenceManifest;
+    }
+
     @Override
-    public Class<? extends AbstractDatabaseObject> getReferenceType() {
-        return this.referenceType;
+    public AbstractDatabaseObjectManifest getFieldManifest() {
+        return getReferenceManifest() != null ? getReferenceManifest() : getManifest();
     }
 
     @Override
