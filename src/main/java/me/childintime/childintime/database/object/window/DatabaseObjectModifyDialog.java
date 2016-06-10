@@ -389,7 +389,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
                     if(value != null)
                         field = new DatabaseObjectPropertyField((AbstractDatabaseObject) value, true);
                     else
-                        field = new DatabaseObjectPropertyField(fieldType.getManifest().getManagerInstance(), true);
+                        field = new DatabaseObjectPropertyField(fieldType.getFieldManifest().getManagerInstance(), true);
                     break;
 
                 case STRING:
