@@ -17,7 +17,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseObjectListComponent extends JComponent {
+public class EntityListComponent extends JComponent {
 
     /**
      * Database object manager this list is for.
@@ -61,7 +61,7 @@ public class DatabaseObjectListComponent extends JComponent {
      *
      * @param manager Database object manager.
      */
-    public DatabaseObjectListComponent(AbstractEntityManager manager) {
+    public EntityListComponent(AbstractEntityManager manager) {
         // Set the attributes
         this.manager = manager;
 
@@ -185,7 +185,7 @@ public class DatabaseObjectListComponent extends JComponent {
         setLayout(new BorderLayout());
 
         // Store the current instance
-        final DatabaseObjectListComponent instance = this;
+        final EntityListComponent instance = this;
 
         // Create the table model
         this.uiTableModel = new AbstractTableModel() {

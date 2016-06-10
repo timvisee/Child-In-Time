@@ -1,7 +1,7 @@
 package me.childintime.childintime.gui.window;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.object.ui.component.DatabaseObjectListComponent;
+import me.childintime.childintime.database.object.ui.component.EntityListComponent;
 import me.childintime.childintime.database.object.ui.dialog.EntityManagerDialog;
 
 import javax.swing.*;
@@ -108,17 +108,17 @@ public class DashboardFrame extends JFrame {
         schoolPanel.add(this.schoolButton = new JButton("Schools"));
 
         // Add student list
-        DatabaseObjectListComponent listStudents = new DatabaseObjectListComponent(Core.getInstance().getStudentManager());
+        EntityListComponent listStudents = new EntityListComponent(Core.getInstance().getStudentManager());
         listStudents.setPreferredSize(new Dimension(200, 200));
         studentPanel.add(listStudents);
 
         // Add teacher list
-        DatabaseObjectListComponent listTeachers = new DatabaseObjectListComponent(Core.getInstance().getTeacherManager());
+        EntityListComponent listTeachers = new EntityListComponent(Core.getInstance().getTeacherManager());
         listTeachers.setPreferredSize(new Dimension(200, 200));
         teacherPanel.add(listTeachers);
 
         // Add school list
-        DatabaseObjectListComponent listSchools = new DatabaseObjectListComponent(Core.getInstance().getSchoolManager());
+        EntityListComponent listSchools = new EntityListComponent(Core.getInstance().getSchoolManager());
         listSchools.setPreferredSize(new Dimension(200, 200));
         schoolPanel.add(listSchools);
 

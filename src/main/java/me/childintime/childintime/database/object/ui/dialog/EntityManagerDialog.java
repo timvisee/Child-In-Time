@@ -3,7 +3,7 @@ package me.childintime.childintime.database.object.ui.dialog;
 import me.childintime.childintime.App;
 import me.childintime.childintime.database.object.AbstractEntity;
 import me.childintime.childintime.database.object.AbstractEntityManager;
-import me.childintime.childintime.database.object.ui.component.DatabaseObjectListComponent;
+import me.childintime.childintime.database.object.ui.component.EntityListComponent;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class EntityManagerDialog extends JDialog {
     /**
      * The list component.
      */
-    public DatabaseObjectListComponent list;
+    public EntityListComponent list;
 
     /**
      * Add button instance.
@@ -213,9 +213,9 @@ public class EntityManagerDialog extends JDialog {
      *
      * @return Scroll pane with table.
      */
-    private DatabaseObjectListComponent buildUiTable() {
+    private EntityListComponent buildUiTable() {
         // Create a new list view for the manager
-        this.list = new DatabaseObjectListComponent(this.manager);
+        this.list = new EntityListComponent(this.manager);
 
         // Update the button panel on selection change
         this.list.addSelectionChangeListenerListener(this::updateUiButtons);
