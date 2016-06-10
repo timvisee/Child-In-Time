@@ -303,6 +303,21 @@ public class EntityListComponent extends JComponent {
     }
 
     /**
+     * Get a selected entity.
+     * If multiple entities are selected, the entity that was first selected is returned.
+     *
+     * @return Selected entity, or null.
+     */
+    public AbstractEntity getSelectedEntity() {
+        // Return null if no entity is selected
+        if(getSelectedCount() == 0)
+            return null;
+
+        // Return the first selected item
+        return getSelectedEntities().get(0);
+    }
+
+    /**
      * Get the number of selected database entities.
      *
      * @return Number of selected database entities.
