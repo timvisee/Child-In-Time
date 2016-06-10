@@ -568,10 +568,43 @@ public abstract class AbstractDatabaseObject implements Cloneable {
             }
         }
 
-
-
         // Successfully updated database object, return the result
         return true;
+    }
+
+    /**
+     * Delete this database object from the database.
+     *
+     * @return True on success, false on failure.
+     */
+    public boolean deleteFromDatabase() {
+        // Return false if the ID is negative
+        if(getId() < 0)
+            return false;
+
+        try {
+            // Get the database connection
+            final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
+
+            // Create a prepared statement
+            PreparedStatement deleteStatement = connection.prepareStatement(
+                    "DELETE FROM `" + getTableName() + "`" +
+                    "WHERE `id`=?"
+            );
+
+            // Attach the ID
+            deleteStatement.setInt(1, getId());
+
+            // Execute the query
+            if(!deleteStatement.execute())
+                throw new RuntimeException("Failed to delete database object.");
+
+            // Return the result
+            return true;
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Failed to connect to the database.", e);
+        }
     }
 
     @Override
