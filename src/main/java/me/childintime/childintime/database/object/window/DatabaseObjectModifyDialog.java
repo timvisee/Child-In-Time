@@ -642,7 +642,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
             if(!fieldSpec.isNullAllowed() && field.isNull()) {
                 // Show a message
                 if(showMessage)
-                    JOptionPane.showMessageDialog(this, "The '" + fieldSpec.getDisplayName() + "' field may not be null.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Please enter the " + fieldSpec.getDisplayName().toLowerCase() + ".", "Invalid input", JOptionPane.ERROR_MESSAGE);
 
                 // Return the result
                 return false;
