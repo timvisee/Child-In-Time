@@ -2,6 +2,7 @@ package me.childintime.childintime;
 
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
+import me.childintime.childintime.database.DatabaseBuilder;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.DatabaseManager;
 import me.childintime.childintime.database.connector.DatabaseConnector;

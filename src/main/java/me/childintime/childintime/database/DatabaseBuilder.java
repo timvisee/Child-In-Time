@@ -1,7 +1,8 @@
-package me.childintime.childintime;
+package me.childintime.childintime.database;
 
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
+import me.childintime.childintime.App;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
