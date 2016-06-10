@@ -57,4 +57,11 @@ public interface DatabaseFieldsInterface {
      * @return Class Type.
      */
     Class<? extends AbstractDatabaseObject> getReferenceType();
+
+    /**
+     * Get the object's manifest.
+     *
+     * @return Object's manifest.
+     */
+    AbstractDatabaseObjectManifest getManifest();
 }

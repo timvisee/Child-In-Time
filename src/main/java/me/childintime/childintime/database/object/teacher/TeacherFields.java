@@ -1,9 +1,6 @@
 package me.childintime.childintime.database.object.teacher;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataTypeBase;
-import me.childintime.childintime.database.object.DataTypeExtended;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.*;
 import me.childintime.childintime.database.object.school.School;
 
 public enum TeacherFields implements DatabaseFieldsInterface {
@@ -140,5 +137,10 @@ public enum TeacherFields implements DatabaseFieldsInterface {
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public AbstractDatabaseObjectManifest getManifest() {
+        return TeacherManifest.getInstance();
     }
 }

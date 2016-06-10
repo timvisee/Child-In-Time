@@ -1,9 +1,6 @@
 package me.childintime.childintime.database.object.parkour;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataTypeBase;
-import me.childintime.childintime.database.object.DataTypeExtended;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.*;
 
 public enum ParkourFields implements DatabaseFieldsInterface{
 
@@ -114,5 +111,10 @@ public enum ParkourFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public AbstractDatabaseObjectManifest getManifest() {
+        return ParkourManifest.getInstance();
     }
 }
