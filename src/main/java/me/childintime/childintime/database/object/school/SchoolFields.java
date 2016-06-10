@@ -1,9 +1,6 @@
 package me.childintime.childintime.database.object.school;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataTypeBase;
-import me.childintime.childintime.database.object.DataTypeExtended;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.*;
 
 public enum SchoolFields implements DatabaseFieldsInterface{
 
@@ -20,7 +17,7 @@ public enum SchoolFields implements DatabaseFieldsInterface{
     NAME("School", "name", true, false, false, DataTypeExtended.STRING, null),
 
     /**
-     * School commune.
+     * School commune.return SchoolManifest.getInstance();
      * The commune a school is located in.
      */
     COMMUNE("Commune", "commune", true, false, false, DataTypeExtended.STRING, null);
@@ -120,5 +117,10 @@ public enum SchoolFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public AbstractDatabaseObjectManifest getManifest() {
+        return SchoolManifest.getInstance();
     }
 }

@@ -1,9 +1,6 @@
 package me.childintime.childintime.database.object.student;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataTypeBase;
-import me.childintime.childintime.database.object.DataTypeExtended;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.*;
 import me.childintime.childintime.database.object.group.Group;
 
 public enum StudentFields implements DatabaseFieldsInterface {
@@ -21,26 +18,26 @@ public enum StudentFields implements DatabaseFieldsInterface {
     FIRST_NAME("First name", "first_name", true, false, false, DataTypeExtended.STRING, null),
 
     /**
-     * Student last name.
+     * Student last name.return StudentManifest.getInstance();
      * The last name of a student.
      */
     LAST_NAME("Last name", "last_name", true, false, false, DataTypeExtended.STRING, null),
 
     /**
-     * Student gender.
+     * Student gender.return StudentManifest.getInstance();
      * The gender of a student.
      * True defines a man, false defines a woman.
      */
     GENDER("Gender", "gender", true, false, false, DataTypeExtended.GENDER, null),
 
     /**
-     * Student birthdate.
+     * Student birthdate.return StudentManifest.getInstance();
      * The birthdate of a student.
      */
     BIRTHDAY("Birthdate", "birthdate", true, false, false, DataTypeExtended.BIRTHDAY, null),
 
     /**
-     * Group ID.
+     * Group ID.return StudentManifest.getInstance();
      * The group instance a student is part of.
      */
     GROUP_ID("Group", "group_id", true, false, false, DataTypeExtended.REFERENCE, Group.class);
@@ -140,5 +137,10 @@ public enum StudentFields implements DatabaseFieldsInterface {
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public AbstractDatabaseObjectManifest getManifest() {
+        return StudentManifest.getInstance();
     }
 }

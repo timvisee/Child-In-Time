@@ -1,9 +1,6 @@
 package me.childintime.childintime.database.object.measurement;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataTypeBase;
-import me.childintime.childintime.database.object.DataTypeExtended;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.*;
 import me.childintime.childintime.database.object.parkour.Parkour;
 import me.childintime.childintime.database.object.student.Student;
 
@@ -22,19 +19,19 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
     STUDENT_ID("Student", "student_id", false, false, false, DataTypeExtended.REFERENCE, Student.class),
 
     /**
-     * Measurement date.
+     * Measurement date.return MeasurementManifest.getInstance();
      * The date a measurement was tracked on.
      */
     DATE("Measurement date", "date", true, false, false, DataTypeExtended.DATE, null),
 
     /**
-     * Measurement time.
+     * Measurement time.return MeasurementManifest.getInstance();
      * The time in milliseconds of a measurement.
      */
     TIME("Time", "time", true, false, false, DataTypeExtended.MILLISECONDS, null),
 
     /**
-     * Parkour ID.
+     * Parkour ID.return MeasurementManifest.getInstance();
      * The parkour instance a measurement is tracked on.
      */
     PARKOUR_ID("Parkour", "parkour_id", false, false, false, DataTypeExtended.REFERENCE, Parkour.class);
@@ -134,5 +131,10 @@ public enum MeasurementFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public AbstractDatabaseObjectManifest getManifest() {
+        return MeasurementManifest.getInstance();
     }
 }

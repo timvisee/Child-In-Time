@@ -1,9 +1,6 @@
 package me.childintime.childintime.database.object.bodystate;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.DataTypeBase;
-import me.childintime.childintime.database.object.DataTypeExtended;
-import me.childintime.childintime.database.object.DatabaseFieldsInterface;
+import me.childintime.childintime.database.object.*;
 import me.childintime.childintime.database.object.student.Student;
 
 public enum BodyStateFields implements DatabaseFieldsInterface{
@@ -115,7 +112,6 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
         return this.dataType.getDataTypeBase();
     }
 
-
     @Override
     public boolean isEditable() {
         return this.editable;
@@ -134,5 +130,10 @@ public enum BodyStateFields implements DatabaseFieldsInterface{
     @Override
     public Class<? extends AbstractDatabaseObject> getReferenceType() {
         return this.referenceType;
+    }
+
+    @Override
+    public AbstractDatabaseObjectManifest getManifest() {
+        return BodyStateManifest.getInstance();
     }
 }
