@@ -85,7 +85,7 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
      * @param value Date value, as date object, date string or null.
      * @param allowNull True to allow null, false if not.
      */
-    private DatePropertyField(Object value, boolean allowNull) {
+    public DatePropertyField(Object value, boolean allowNull) {
         // Construct the super
         super(allowNull);
 
@@ -104,9 +104,6 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
             try {
                 valueDate = this.dateFormat.parse((String) value);
             } catch(ParseException ignored) { }
-
-        // Set the date, and the last selected date
-        setDate(valueDate);
 
         // Create the calendar chooser
         this.dateChooser = new JCalendar(valueDate);
@@ -136,6 +133,9 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
         };
         this.dateChooserPopup.setLightWeightPopupEnabled(true);
         this.dateChooserPopup.add(this.dateChooser);
+
+        // Set the date
+        setDate(valueDate);
     }
 
     @Override
