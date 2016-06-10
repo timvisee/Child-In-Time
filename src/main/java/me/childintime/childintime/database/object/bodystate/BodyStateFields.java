@@ -1,6 +1,9 @@
 package me.childintime.childintime.database.object.bodystate;
 
-import me.childintime.childintime.database.object.*;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.DataTypeBase;
+import me.childintime.childintime.database.object.DataTypeExtended;
+import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.student.StudentManifest;
 
 public enum BodyStateFields implements DatabaseFieldsInterface{

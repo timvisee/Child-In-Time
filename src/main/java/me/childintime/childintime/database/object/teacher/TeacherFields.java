@@ -1,7 +1,9 @@
 package me.childintime.childintime.database.object.teacher;
 
-import me.childintime.childintime.database.object.*;
-import me.childintime.childintime.database.object.school.School;
+import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.DataTypeBase;
+import me.childintime.childintime.database.object.DataTypeExtended;
+import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.database.object.school.SchoolManifest;
 
 public enum TeacherFields implements DatabaseFieldsInterface {

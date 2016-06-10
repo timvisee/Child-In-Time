@@ -1,7 +1,5 @@
 package me.childintime.childintime.database.object;
 
-import me.childintime.childintime.database.object.bodystate.BodyStateManifest;
-
 public interface DatabaseFieldsInterface {
 
     /**
