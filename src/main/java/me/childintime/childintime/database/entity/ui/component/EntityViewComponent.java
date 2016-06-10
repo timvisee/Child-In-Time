@@ -9,6 +9,8 @@ import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 public class EntityViewComponent extends EntityListComponent {
@@ -17,6 +19,11 @@ public class EntityViewComponent extends EntityListComponent {
      * Define whether a user can modify an entity.
      */
     private boolean canModify = true;
+
+    /**
+     * Define whether a user can delete an entry.
+     */
+    private boolean canDelete = true;
 
     /**
      * Constructor.
@@ -35,6 +42,31 @@ public class EntityViewComponent extends EntityListComponent {
 
             // Modify the entity
             modifyEntity(entities);
+        });
+
+        // Create a key listener to catch delete key presses
+        getSwingTable().addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) { }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // The delete flag must be enabled
+                if(!canDelete)
+                    return;
+
+                // Check whether the delete key is pressed
+                if(e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    // Delete the selected entities
+                    deleteSelectedEntities();
+
+                    // Consume the key press
+                    e.consume();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) { }
         });
     }
 
@@ -55,8 +87,25 @@ public class EntityViewComponent extends EntityListComponent {
     public void setCanModify(boolean canModify) {
         // Set the editable flag
         this.canModify = canModify;
+    }
 
+    /**
+     * Check whether a user can delete an entity.
+     *
+     * @return True if a user can delete, false if not.
+     */
+    public boolean isCanDelete() {
+        return this.canDelete;
+    }
 
+    /**
+     * Set whether a user can delete an entity.
+     *
+     * @param canDelete True if a user can delete, false if not.
+     */
+    public void setCanDelete(boolean canDelete) {
+        // Set the editable flag
+        this.canDelete = canDelete;
     }
 
     /**
