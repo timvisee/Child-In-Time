@@ -30,10 +30,10 @@ public class IntegerPropertyField extends AbstractPropertyField {
     /**
      * Constructor.
      *
-     * @param state Value.
+     * @param number Number alue.
      * @param allowNull True if null is allowed, false if not.
      */
-    public IntegerPropertyField(Integer state, boolean allowNull) {
+    public IntegerPropertyField(Integer number, boolean allowNull) {
         // Call the super
         super(allowNull);
 
@@ -41,13 +41,18 @@ public class IntegerPropertyField extends AbstractPropertyField {
         buildUi();
 
         // Set the state value
-        setNumber(state);
+        setNumber(number);
     }
 
     @Override
     protected JComponent buildUiField() {
         // Build the text field
         this.spinner = new JSpinner(new SpinnerNumberModel());
+
+        // Align the spinner number to the left
+        JComponent spinnerEditor = spinner.getEditor();
+        if(spinnerEditor instanceof JSpinner.DefaultEditor)
+            ((JSpinner.DefaultEditor) spinnerEditor).getTextField().setHorizontalAlignment(SwingConstants.LEFT);
 
         // Link the text field listeners
         this.spinner.addMouseListener(new MouseListener() {
