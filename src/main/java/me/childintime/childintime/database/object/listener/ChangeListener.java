@@ -1,4 +1,4 @@
-package me.childintime.childintime.database.object;
+package me.childintime.childintime.database.object.listener;
 
 import java.util.EventListener;
 

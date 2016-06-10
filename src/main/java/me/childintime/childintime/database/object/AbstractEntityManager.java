@@ -1,6 +1,7 @@
 package me.childintime.childintime.database.object;
 
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.object.listener.ChangeListener;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
