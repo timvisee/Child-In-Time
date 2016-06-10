@@ -8,17 +8,17 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDatabaseObjectManager {
+public abstract class AbstractEntityManager {
 
     /**
      * List of database objects loaded in this manager.
      */
-    private List<AbstractDatabaseObject> objects = new ArrayList<>();
+    private List<AbstractEntity> objects = new ArrayList<>();
 
     /**
      * Change listeners.
      */
-    private List<AbstractDatabaseObjectManagerChangeListener> changeListeners = new ArrayList<>();
+    private List<ChangeListener> changeListeners = new ArrayList<>();
 
     /**
      * Fetch all objects from the database.
@@ -28,7 +28,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of fetched objects.
      */
     @SuppressWarnings("unused")
-    public List<AbstractDatabaseObject> fetchObjects() {
+    public List<AbstractEntity> fetchObjects() {
         return fetchObjects(getManifest().getDefaultFields());
     }
 
@@ -42,14 +42,14 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of fetched objects.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractDatabaseObject> fetchObjects(DatabaseFieldsInterface fields[]) {
+    public List<AbstractEntity> fetchObjects(DatabaseFieldsInterface fields[]) {
         // Join the string, comma separated
         StringBuilder fieldsToFetch = new StringBuilder("id");
         for (DatabaseFieldsInterface field : fields)
             fieldsToFetch.append("`, `").append(field.getDatabaseField());
 
         // Create a list with fetched objects
-        List<AbstractDatabaseObject> newObjects = new ArrayList<>();
+        List<AbstractEntity> newObjects = new ArrayList<>();
 
         // Fetch the objects and their data from the database
         try {
@@ -71,7 +71,7 @@ public abstract class AbstractDatabaseObjectManager {
                 int id = result.getInt("id");
 
                 // Create the database object instance
-                AbstractDatabaseObject databaseObject = getManifest().getObject().getConstructor(int.class).newInstance(id);
+                AbstractEntity databaseObject = getManifest().getObject().getConstructor(int.class).newInstance(id);
 
                 // Parse and cache the fields
                 for (DatabaseFieldsInterface field : fields)
@@ -106,7 +106,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of objects.
      */
     @SuppressWarnings("unused")
-    public List<AbstractDatabaseObject> getObjects() {
+    public List<AbstractEntity> getObjects() {
         return getObjects(getManifest().getDefaultFields());
     }
 
@@ -119,7 +119,7 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of objects.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractDatabaseObject> getObjects(DatabaseFieldsInterface[] fields) {
+    public List<AbstractEntity> getObjects(DatabaseFieldsInterface[] fields) {
         // Return the objects if cached
         if(hasCache())
             return this.objects;
@@ -134,7 +134,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return Clone of the list of objects.
      */
-    public List<AbstractDatabaseObject> getObjectsClone() {
+    public List<AbstractEntity> getObjectsClone() {
         return getObjectsClone(getManifest().getDefaultFields());
     }
 
@@ -147,16 +147,16 @@ public abstract class AbstractDatabaseObjectManager {
      * @return List of objects.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractDatabaseObject> getObjectsClone(DatabaseFieldsInterface[] fields) {
+    public List<AbstractEntity> getObjectsClone(DatabaseFieldsInterface[] fields) {
         // Fetch the objects if they aren't fetched yet
         if(!hasCache())
             fetchObjects(fields);
 
         // Create a list with clones
-        List<AbstractDatabaseObject> clones = new ArrayList<>();
+        List<AbstractEntity> clones = new ArrayList<>();
 
         // Loop through each database object, and clone it
-        for(AbstractDatabaseObject object : this.objects)
+        for(AbstractEntity object : this.objects)
             try {
                 clones.add(object.clone());
 
@@ -225,14 +225,14 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return Database object manifest.
      */
-    public abstract AbstractDatabaseObjectManifest getManifest();
+    public abstract AbstractEntityManifest getManifest();
 
     /**
      * Add an change listener.
      *
      * @param listener Listener.
      */
-    public void addChangeListener(AbstractDatabaseObjectManagerChangeListener listener) {
+    public void addChangeListener(ChangeListener listener) {
         this.changeListeners.add(listener);
     }
 
@@ -241,7 +241,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return List of change listeners.
      */
-    public List<AbstractDatabaseObjectManagerChangeListener> getChangeListeners() {
+    public List<ChangeListener> getChangeListeners() {
         return this.changeListeners;
     }
 
@@ -252,7 +252,7 @@ public abstract class AbstractDatabaseObjectManager {
      *
      * @return True if any listener was removed, false if not.
      */
-    public boolean removeChangeListener(AbstractDatabaseObjectManagerChangeListener listener) {
+    public boolean removeChangeListener(ChangeListener listener) {
         return this.changeListeners.remove(listener);
     }
 
@@ -277,6 +277,6 @@ public abstract class AbstractDatabaseObjectManager {
      */
     public void fireChangeEvent() {
         // Fire each registered listener
-        this.changeListeners.forEach(AbstractDatabaseObjectManagerChangeListener::onChange);
+        this.changeListeners.forEach(ChangeListener::onChange);
     }
 }

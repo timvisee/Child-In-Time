@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
-public abstract class AbstractDatabaseObject implements Cloneable {
+public abstract class AbstractEntity implements Cloneable {
 
     /**
      * Database object ID'or negative one if the ID is unspecified.
@@ -25,7 +25,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     /**
      * Constructor.
      */
-    public AbstractDatabaseObject() {
+    public AbstractEntity() {
         this.id = -1;
     }
 
@@ -34,7 +34,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @param id Database object id.
      */
-    public AbstractDatabaseObject(int id) {
+    public AbstractEntity(int id) {
         this.id = id;
     }
 
@@ -193,7 +193,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      *
      * @return Database object manifest.
      */
-    public abstract AbstractDatabaseObjectManifest getManifest();
+    public abstract AbstractEntityManifest getManifest();
 
     /**
      * Fetch the given database field.
@@ -406,8 +406,8 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                                     int id;
 
                                     // Get the ID from abstract database object instances
-                                    if(value instanceof AbstractDatabaseObject)
-                                        id = ((AbstractDatabaseObject) value).getId();
+                                    if(value instanceof AbstractEntity)
+                                        id = ((AbstractEntity) value).getId();
                                     else
                                         id = (Integer) value;
 
@@ -523,8 +523,8 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                                 int id;
 
                                 // Get the ID from abstract database object instances
-                                if(value instanceof AbstractDatabaseObject)
-                                    id = ((AbstractDatabaseObject) value).getId();
+                                if(value instanceof AbstractEntity)
+                                    id = ((AbstractEntity) value).getId();
                                 else
                                     id = (Integer) value;
 
@@ -607,9 +607,9 @@ public abstract class AbstractDatabaseObject implements Cloneable {
     }
 
     @Override
-    public AbstractDatabaseObject clone() throws CloneNotSupportedException {
+    public AbstractEntity clone() throws CloneNotSupportedException {
         // Create a variable to put the new abstract database object in
-        AbstractDatabaseObject clone;
+        AbstractEntity clone;
 
         // Clone the database object class
         try {
@@ -617,7 +617,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
 
         } catch(InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             // Try to clone using Java
-            clone = (AbstractDatabaseObject) super.clone();
+            clone = (AbstractEntity) super.clone();
         }
 
         // Create a new hash map, and put it into the cloned object
@@ -673,7 +673,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
                 // Parse the referenced object
                 try {
                     // Find the proper constructor of the referenced class, and instantiate the object with the fetched object ID
-                    AbstractDatabaseObject object = field.getReferenceManifest().getObject().getDeclaredConstructor(int.class).newInstance(objectId);
+                    AbstractEntity object = field.getReferenceManifest().getObject().getDeclaredConstructor(int.class).newInstance(objectId);
 
                     // Put the reference into the cached fields
                     this.cachedFields.put(field, object);
@@ -711,7 +711,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
      * @return True if the cache is equal, false if not.
      */
     // TODO: This doesn't always seem to work. (Maybe because the ID field is included?)
-    public boolean isCacheEqual(AbstractDatabaseObject other) {
+    public boolean isCacheEqual(AbstractEntity other) {
         // Compare the ID
         if(getId() != other.getId())
             return false;
@@ -767,7 +767,7 @@ public abstract class AbstractDatabaseObject implements Cloneable {
             return super.equals(other);
 
         // Compare the ID's
-        return this.id == ((AbstractDatabaseObject) other).id;
+        return this.id == ((AbstractEntity) other).id;
     }
 
     @Override

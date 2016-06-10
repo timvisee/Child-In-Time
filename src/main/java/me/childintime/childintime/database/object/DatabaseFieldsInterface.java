@@ -56,7 +56,7 @@ public interface DatabaseFieldsInterface {
      *
      * @return Reference manifest.
      */
-    AbstractDatabaseObjectManifest getReferenceManifest();
+    AbstractEntityManifest getReferenceManifest();
 
     /**
      * Get the manifest instance for the current field.
@@ -65,12 +65,12 @@ public interface DatabaseFieldsInterface {
      *
      * @return Field's manifest instance.
      */
-    AbstractDatabaseObjectManifest getFieldManifest();
+    AbstractEntityManifest getFieldManifest();
 
     /**
      * Get the manifest instance of the class this fields class if for.
      *
      * @return Object's manifest instance.
      */
-    AbstractDatabaseObjectManifest getManifest();
+    AbstractEntityManifest getManifest();
 }

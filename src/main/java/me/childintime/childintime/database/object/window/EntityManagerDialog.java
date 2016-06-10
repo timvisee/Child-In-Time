@@ -1,20 +1,20 @@
 package me.childintime.childintime.database.object.window;
 
 import me.childintime.childintime.App;
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManager;
 import me.childintime.childintime.database.object.window.list.DatabaseObjectListComponent;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DatabaseObjectManagerDialog extends JDialog {
+public class EntityManagerDialog extends JDialog {
 
     /**
      * The database object manager this dialog is used for.
      */
-    private AbstractDatabaseObjectManager manager;
+    private AbstractEntityManager manager;
 
     /**
      * The list component.
@@ -58,7 +58,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      * @param manager Database object manager instance.
      * @param show True to show the frame once it has been initialized.
      */
-    public DatabaseObjectManagerDialog(Window owner, AbstractDatabaseObjectManager manager, boolean show) {
+    public EntityManagerDialog(Window owner, AbstractEntityManager manager, boolean show) {
         // Construct the form
         super(owner, App.APP_NAME + " - " + manager.getManifest().getTypeName(true, true), ModalityType.APPLICATION_MODAL);
 
@@ -333,7 +333,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
      */
     public void addObject() {
         // Create a new database through the edit panel
-        final AbstractDatabaseObject databaseObject = DatabaseObjectModifyDialog.showCreate(this, this.manager.getManifest());
+        final AbstractEntity databaseObject = EntityModifyDialog.showCreate(this, this.manager.getManifest());
 
         // Add the database object to the list if it isn't null
         if(databaseObject != null) {
@@ -367,13 +367,13 @@ public class DatabaseObjectManagerDialog extends JDialog {
     /**
      * Edit the given object.
      */
-    public void editObject(AbstractDatabaseObject object) {
+    public void editObject(AbstractEntity object) {
         // Make sure just one item is selected
         if(getSelectedCount() != 1)
             return;
 
         // Show the edit dialog for this database
-        final AbstractDatabaseObject result = DatabaseObjectModifyDialog.showModify(this, object);
+        final AbstractEntity result = EntityModifyDialog.showModify(this, object);
 
         // TODO: Only edit the given objec, instead of refreshing everything?
 
@@ -407,7 +407,7 @@ public class DatabaseObjectManagerDialog extends JDialog {
         progressDialog.setProgressMax(getSelectedCount());
 
         // Delete the selected database object
-        for(AbstractDatabaseObject entity : this.list.getSelectedEntities()) {
+        for(AbstractEntity entity : this.list.getSelectedEntities()) {
             // Delete the object
             if(!entity.deleteFromDatabase())
                 // TODO: Show improved message

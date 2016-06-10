@@ -1,12 +1,12 @@
 package me.childintime.childintime.database.object.spec.group;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.AbstractEntityManager;
+import me.childintime.childintime.database.object.AbstractEntityManifest;
 
-public class GroupManager extends AbstractDatabaseObjectManager {
+public class GroupManager extends AbstractEntityManager {
 
     @Override
-    public AbstractDatabaseObjectManifest getManifest() {
+    public AbstractEntityManifest getManifest() {
         return GroupManifest.getInstance();
     }
 }

@@ -1,10 +1,10 @@
 package me.childintime.childintime.database.object.spec.measurement;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManifest;
 import me.childintime.childintime.database.object.spec.group.GroupManifest;
 
-public class Measurement extends AbstractDatabaseObject {
+public class Measurement extends AbstractEntity {
 
     /**
      * Constructor.
@@ -23,7 +23,7 @@ public class Measurement extends AbstractDatabaseObject {
     }
 
     @Override
-    public AbstractDatabaseObjectManifest getManifest() {
+    public AbstractEntityManifest getManifest() {
         return GroupManifest.getInstance();
     }
 

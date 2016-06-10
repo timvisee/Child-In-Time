@@ -1,9 +1,9 @@
 package me.childintime.childintime.database.object.spec.student;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManifest;
 
-public class Student extends AbstractDatabaseObject {
+public class Student extends AbstractEntity {
 
     /**
      * Constructor.
@@ -22,7 +22,7 @@ public class Student extends AbstractDatabaseObject {
     }
 
     @Override
-    public AbstractDatabaseObjectManifest getManifest() {
+    public AbstractEntityManifest getManifest() {
         return StudentManifest.getInstance();
     }
 

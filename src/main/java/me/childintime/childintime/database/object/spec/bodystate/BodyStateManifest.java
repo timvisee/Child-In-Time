@@ -1,12 +1,12 @@
 package me.childintime.childintime.database.object.spec.bodystate;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManager;
+import me.childintime.childintime.database.object.AbstractEntityManifest;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 
-public class BodyStateManifest extends AbstractDatabaseObjectManifest {
+public class BodyStateManifest extends AbstractEntityManifest {
 
     /**
      * Database object type name.
@@ -64,12 +64,12 @@ public class BodyStateManifest extends AbstractDatabaseObjectManifest {
     }
 
     @Override
-    public Class<? extends AbstractDatabaseObject> getObject() {
+    public Class<? extends AbstractEntity> getObject() {
         return BodyState.class;
     }
 
     @Override
-    public Class<? extends AbstractDatabaseObjectManager> getManager() {
+    public Class<? extends AbstractEntityManager> getManager() {
         return BodyStateManager.class;
     }
 

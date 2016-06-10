@@ -1,7 +1,7 @@
 package me.childintime.childintime.database.object.window.list;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManager;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.util.swing.TableUtils;
 
@@ -20,7 +20,7 @@ public class DatabaseObjectListComponent extends JComponent {
     /**
      * Database object manager this list is for.
      */
-    private AbstractDatabaseObjectManager manager;
+    private AbstractEntityManager manager;
 
     /**
      * The columns to show in the list view.
@@ -59,7 +59,7 @@ public class DatabaseObjectListComponent extends JComponent {
      *
      * @param manager Database object manager.
      */
-    public DatabaseObjectListComponent(AbstractDatabaseObjectManager manager) {
+    public DatabaseObjectListComponent(AbstractEntityManager manager) {
         // Set the attributes
         this.manager = manager;
 
@@ -78,7 +78,7 @@ public class DatabaseObjectListComponent extends JComponent {
      *
      * @return Database object manager.
      */
-    public AbstractDatabaseObjectManager getManager() {
+    public AbstractEntityManager getManager() {
         return this.manager;
     }
 
@@ -200,7 +200,7 @@ public class DatabaseObjectListComponent extends JComponent {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 // Get the object
-                final AbstractDatabaseObject databaseObject = instance.getManager().getObjects().get(rowIndex);
+                final AbstractEntity databaseObject = instance.getManager().getObjects().get(rowIndex);
 
                 // Return the value
                 try {
@@ -288,9 +288,9 @@ public class DatabaseObjectListComponent extends JComponent {
      *
      * @return List of selected database entities.
      */
-    public List<AbstractDatabaseObject> getSelectedEntities() {
+    public List<AbstractEntity> getSelectedEntities() {
         // Create a list of entities
-        List<AbstractDatabaseObject> entities = new ArrayList<>();
+        List<AbstractEntity> entities = new ArrayList<>();
 
         // Add each selected entity to the list
         for(int i : this.uiTable.getSelectedRows())
@@ -359,7 +359,7 @@ public class DatabaseObjectListComponent extends JComponent {
      *
      * @param entities List of entities.
      */
-    public void fireEntityActionEvent(List<AbstractDatabaseObject> entities) {
+    public void fireEntityActionEvent(List<AbstractEntity> entities) {
         // Fire each registered listener
         for(EntityActionListener listener : this.entityActionListeners)
             listener.onEntityAction(entities);

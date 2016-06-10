@@ -2,7 +2,7 @@ package me.childintime.childintime.database.object;
 
 import java.util.EventListener;
 
-public interface AbstractDatabaseObjectManagerChangeListener extends EventListener {
+public interface ChangeListener extends EventListener {
 
     /**
      * Called when the data of a database object manager is changed.

@@ -2,12 +2,12 @@ package me.childintime.childintime.database.object;
 
 import java.lang.reflect.InvocationTargetException;
 
-public abstract class AbstractDatabaseObjectManifest {
+public abstract class AbstractEntityManifest {
 
     /**
      * Base constructor.
      */
-    public AbstractDatabaseObjectManifest() { }
+    public AbstractEntityManifest() { }
 
     /**
      * Get the name of the current database object manager type.
@@ -59,19 +59,19 @@ public abstract class AbstractDatabaseObjectManifest {
      *
      * @return Object class
      */
-    public abstract Class<? extends AbstractDatabaseObject> getObject();
+    public abstract Class<? extends AbstractEntity> getObject();
 
     /**
      * Get the manager class for this database object.
      *
      * @return Manager class.
      */
-    public abstract Class<? extends AbstractDatabaseObjectManager> getManager();
+    public abstract Class<? extends AbstractEntityManager> getManager();
 
     /**
      * Get the manager instance.
      *
      * @return Manager instance.
      */
-    public abstract AbstractDatabaseObjectManager getManagerInstance();
+    public abstract AbstractEntityManager getManagerInstance();
 }

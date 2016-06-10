@@ -1,7 +1,7 @@
 package me.childintime.childintime.gui.window;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.object.window.DatabaseObjectManagerDialog;
+import me.childintime.childintime.database.object.window.EntityManagerDialog;
 import me.childintime.childintime.database.object.window.list.DatabaseObjectListComponent;
 
 import javax.swing.*;
@@ -155,9 +155,9 @@ public class DashboardFrame extends JFrame {
      */
     private void linkComponents() {
         // Link the buttons to their managers
-        this.studentButton.addActionListener(e -> new DatabaseObjectManagerDialog(this, Core.getInstance().getStudentManager(), true));
-        this.teacherButton.addActionListener(e -> new DatabaseObjectManagerDialog(this, Core.getInstance().getTeacherManager(), true));
-        this.schoolButton.addActionListener(e -> new DatabaseObjectManagerDialog(this, Core.getInstance().getSchoolManager(), true));
+        this.studentButton.addActionListener(e -> new EntityManagerDialog(this, Core.getInstance().getStudentManager(), true));
+        this.teacherButton.addActionListener(e -> new EntityManagerDialog(this, Core.getInstance().getTeacherManager(), true));
+        this.schoolButton.addActionListener(e -> new EntityManagerDialog(this, Core.getInstance().getSchoolManager(), true));
 
 //        // Store the current instance
 //        final LoginDialog instance = this;

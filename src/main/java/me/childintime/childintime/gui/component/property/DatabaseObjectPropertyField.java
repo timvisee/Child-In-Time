@@ -1,7 +1,7 @@
 package me.childintime.childintime.gui.component.property;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManager;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -18,12 +18,12 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
     /**
      * Database object manager.
      */
-    final private AbstractDatabaseObjectManager manager;
+    final private AbstractEntityManager manager;
 
     /**
      * Object field.
      */
-    private JComboBox<AbstractDatabaseObject> comboBox;
+    private JComboBox<AbstractEntity> comboBox;
 
     /**
      * Constructor.
@@ -31,7 +31,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
      * @param manager Database object manager.
      * @param allowNull True if null is allowed, false if not.
      */
-    public DatabaseObjectPropertyField(AbstractDatabaseObjectManager manager, boolean allowNull) {
+    public DatabaseObjectPropertyField(AbstractEntityManager manager, boolean allowNull) {
         // Call an alias constructor
         this((Object) manager, allowNull);
     }
@@ -42,7 +42,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
      * @param value Value.
      * @param allowNull True if null is allowed, false if not.
      */
-    public DatabaseObjectPropertyField(AbstractDatabaseObject value, boolean allowNull) {
+    public DatabaseObjectPropertyField(AbstractEntity value, boolean allowNull) {
         // Call the super
         this((Object) value, allowNull);
     }
@@ -58,10 +58,10 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
         super(allowNull);
 
         // Set the manager
-        if(value instanceof AbstractDatabaseObjectManager)
-            this.manager = (AbstractDatabaseObjectManager) value;
-        else if(value instanceof AbstractDatabaseObject)
-            this.manager = ((AbstractDatabaseObject) value).getManifest().getManagerInstance();
+        if(value instanceof AbstractEntityManager)
+            this.manager = (AbstractEntityManager) value;
+        else if(value instanceof AbstractEntity)
+            this.manager = ((AbstractEntity) value).getManifest().getManagerInstance();
         else
             throw new IllegalArgumentException("Invalid value.");
 
@@ -69,8 +69,8 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
         buildUi();
 
         // Set the selected item
-        if(value instanceof AbstractDatabaseObject)
-            setSelected((AbstractDatabaseObject) value);
+        if(value instanceof AbstractEntity)
+            setSelected((AbstractEntity) value);
         else
             setSelected(null);
     }
@@ -78,7 +78,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
     @Override
     protected JComponent buildUiField() {
         // Build the combo box
-        this.comboBox = new JComboBox<>(this.manager.getObjects().toArray(new AbstractDatabaseObject[]{}));
+        this.comboBox = new JComboBox<>(this.manager.getObjects().toArray(new AbstractEntity[]{}));
 
         // Link the text field listeners
         this.comboBox.addMouseListener(new MouseListener() {
@@ -136,19 +136,19 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
      *
      * @return combo box.
      */
-    public JComboBox<AbstractDatabaseObject> getComboBox() {
+    public JComboBox<AbstractEntity> getComboBox() {
         return this.comboBox;
     }
 
     @Override
-    public AbstractDatabaseObject getValue() {
+    public AbstractEntity getValue() {
         return getSelected();
     }
 
     @Override
     public void setValue(Object value) {
         // Set the selected database object, or null
-        setSelected((AbstractDatabaseObject) value);
+        setSelected((AbstractEntity) value);
     }
 
     /**
@@ -157,8 +157,8 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
      *
      * @return Abstract database object, or null.
      */
-    public AbstractDatabaseObject getSelected() {
-        return isNull() ? null : (AbstractDatabaseObject) this.comboBox.getSelectedItem();
+    public AbstractEntity getSelected() {
+        return isNull() ? null : (AbstractEntity) this.comboBox.getSelectedItem();
     }
 
     /**
@@ -166,7 +166,7 @@ public class DatabaseObjectPropertyField extends AbstractPropertyField {
      *
      * @param selected Selected value.
      */
-    public void setSelected(AbstractDatabaseObject selected) {
+    public void setSelected(AbstractEntity selected) {
         // Make sure null is allowed
         if(selected == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");

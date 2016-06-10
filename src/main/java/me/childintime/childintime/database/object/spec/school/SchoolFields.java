@@ -1,6 +1,6 @@
 package me.childintime.childintime.database.object.spec.school;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.AbstractEntityManifest;
 import me.childintime.childintime.database.object.DataTypeBase;
 import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
@@ -59,7 +59,7 @@ public enum SchoolFields implements DatabaseFieldsInterface{
      * The referenced manifest of the type for fields of the {@link DataTypeExtended#REFERENCE} type.
      * Must be null if the data type is different.
      */
-    private AbstractDatabaseObjectManifest referenceManifest;
+    private AbstractEntityManifest referenceManifest;
 
     /**
      * Constructor.
@@ -72,7 +72,7 @@ public enum SchoolFields implements DatabaseFieldsInterface{
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    SchoolFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractDatabaseObjectManifest referenceManifest) {
+    SchoolFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.editable = editable;
@@ -117,17 +117,17 @@ public enum SchoolFields implements DatabaseFieldsInterface{
         return this.emptyAllowed;
     }
 
-    public AbstractDatabaseObjectManifest getReferenceManifest() {
+    public AbstractEntityManifest getReferenceManifest() {
         return this.referenceManifest;
     }
 
     @Override
-    public AbstractDatabaseObjectManifest getFieldManifest() {
+    public AbstractEntityManifest getFieldManifest() {
         return getReferenceManifest() != null ? getReferenceManifest() : getManifest();
     }
 
     @Override
-    public AbstractDatabaseObjectManifest getManifest() {
+    public AbstractEntityManifest getManifest() {
         return SchoolManifest.getInstance();
     }
 }

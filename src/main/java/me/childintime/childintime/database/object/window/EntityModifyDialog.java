@@ -1,8 +1,8 @@
 package me.childintime.childintime.database.object.window;
 
 import me.childintime.childintime.App;
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManifest;
 import me.childintime.childintime.database.object.DataTypeExtended;
 import me.childintime.childintime.database.object.DatabaseFieldsInterface;
 import me.childintime.childintime.gui.component.property.*;
@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DatabaseObjectModifyDialog extends JDialog {
+public class EntityModifyDialog extends JDialog {
 
     /**
      * Frame title.
@@ -30,17 +30,17 @@ public class DatabaseObjectModifyDialog extends JDialog {
      * The manifest of the source object.
      * If the source object is null, the manifest must be set manually.
      */
-    private AbstractDatabaseObjectManifest sourceManifest;
+    private AbstractEntityManifest sourceManifest;
 
     /**
      * The source database object instance.
      */
-    private AbstractDatabaseObject source;
+    private AbstractEntity source;
 
     /**
      * The result object instance.
      */
-    private AbstractDatabaseObject result;
+    private AbstractEntity result;
 
     /**
      * Defines whether the database changes have been discarded.
@@ -64,7 +64,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
      * @param source The source database object.
      * @param show True to show the frame once it has been initialized.
      */
-    public DatabaseObjectModifyDialog(Window owner, AbstractDatabaseObject source, boolean show) {
+    public EntityModifyDialog(Window owner, AbstractEntity source, boolean show) {
         this(owner, (Object) source, show);
     }
 
@@ -75,7 +75,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
      * @param manifest The database object manifest to create a new object for.
      * @param show True to show the frame once it has been initialized.
      */
-    public DatabaseObjectModifyDialog(Window owner, AbstractDatabaseObjectManifest manifest, boolean show) {
+    public EntityModifyDialog(Window owner, AbstractEntityManifest manifest, boolean show) {
         this(owner, (Object) manifest, show);
     }
 
@@ -86,7 +86,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
      * @param source The database object manifest.
      * @param show True to show the frame once it has been initialized.
      */
-    private DatabaseObjectModifyDialog(Window owner, Object source, boolean show) {
+    private EntityModifyDialog(Window owner, Object source, boolean show) {
         // Construct the form
         super(owner, FORM_TITLE, ModalityType.DOCUMENT_MODAL);
 
@@ -94,16 +94,16 @@ public class DatabaseObjectModifyDialog extends JDialog {
         if(source == null)
             throw new NullPointerException("The source may not be null.");
 
-        else if(source instanceof AbstractDatabaseObject) {
-            this.source = (AbstractDatabaseObject) source;
+        else if(source instanceof AbstractEntity) {
+            this.source = (AbstractEntity) source;
             this.sourceManifest = this.source.getManifest();
 
-        } else if(source instanceof AbstractDatabaseObjectManifest)
-            this.sourceManifest = (AbstractDatabaseObjectManifest) source;
+        } else if(source instanceof AbstractEntityManifest)
+            this.sourceManifest = (AbstractEntityManifest) source;
 
         else
-            throw new IllegalArgumentException("Invalid source type, must be an AbstractDatabaseObject or" +
-                    "AbstractDatabaseObjectManifest type.");
+            throw new IllegalArgumentException("Invalid source type, must be an AbstractEntity or" +
+                    "AbstractEntityManifest type.");
 
         // Clone the source to create a result object, or create a new instance if the source is unspecified
         if(this.source != null)
@@ -177,7 +177,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
      *
      * @return The created database object, or null.
      */
-    public static AbstractDatabaseObject showCreate(Window owner, AbstractDatabaseObjectManifest manifest) {
+    public static AbstractEntity showCreate(Window owner, AbstractEntityManifest manifest) {
         // Make sure the manifest object isn't null
         if(manifest == null)
             throw new NullPointerException("The database object manifest may not be null.");
@@ -198,7 +198,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
      *
      * @return A database object, or null.
      */
-    public static AbstractDatabaseObject showModify(Window owner, AbstractDatabaseObject source) {
+    public static AbstractEntity showModify(Window owner, AbstractEntity source) {
         // Make sure the source object isn't null
         if(source == null)
             throw new NullPointerException("The source object may not be null.");
@@ -219,9 +219,9 @@ public class DatabaseObjectModifyDialog extends JDialog {
      *
      * @return A database object, or null.
      */
-    private static AbstractDatabaseObject showModify(Window owner, Object source) {
+    private static AbstractEntity showModify(Window owner, Object source) {
         // Create a new dialog instance
-        DatabaseObjectModifyDialog dialog = new DatabaseObjectModifyDialog(owner, source, true);
+        EntityModifyDialog dialog = new EntityModifyDialog(owner, source, true);
 
         // TODO: Is this correct?
         // TODO: Use getters, instead of directly accessing the fields.
@@ -387,7 +387,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
 
                 case REFERENCE:
                     if(value != null)
-                        field = new DatabaseObjectPropertyField((AbstractDatabaseObject) value, true);
+                        field = new DatabaseObjectPropertyField((AbstractEntity) value, true);
                     else
                         field = new DatabaseObjectPropertyField(fieldType.getFieldManifest().getManagerInstance(), true);
                     break;
@@ -531,7 +531,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
      *
      * @return Source database object.
      */
-    public AbstractDatabaseObject getSource() {
+    public AbstractEntity getSource() {
         return this.source;
     }
 
@@ -540,7 +540,7 @@ public class DatabaseObjectModifyDialog extends JDialog {
      *
      * @return Result database object.
      */
-    public AbstractDatabaseObject getResult() {
+    public AbstractEntity getResult() {
         return this.result;
     }
 

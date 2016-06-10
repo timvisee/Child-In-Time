@@ -1,6 +1,6 @@
 package me.childintime.childintime.database.object.window.list;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
+import me.childintime.childintime.database.object.AbstractEntity;
 
 import java.util.EventListener;
 import java.util.List;
@@ -12,5 +12,5 @@ public interface EntityActionListener extends EventListener {
      *
      * @param entities Entities.
      */
-    void onEntityAction(List<AbstractDatabaseObject> entities);
+    void onEntityAction(List<AbstractEntity> entities);
 }

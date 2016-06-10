@@ -1,9 +1,9 @@
 package me.childintime.childintime.database.object.spec.group;
 
-import me.childintime.childintime.database.object.AbstractDatabaseObject;
-import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
+import me.childintime.childintime.database.object.AbstractEntity;
+import me.childintime.childintime.database.object.AbstractEntityManifest;
 
-public class Group extends AbstractDatabaseObject {
+public class Group extends AbstractEntity {
 
     /**
      * Constructor.
@@ -22,7 +22,7 @@ public class Group extends AbstractDatabaseObject {
     }
 
     @Override
-    public AbstractDatabaseObjectManifest getManifest() {
+    public AbstractEntityManifest getManifest() {
         return GroupManifest.getInstance();
     }
 
