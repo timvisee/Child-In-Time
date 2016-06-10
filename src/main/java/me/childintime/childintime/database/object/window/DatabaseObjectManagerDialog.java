@@ -486,28 +486,41 @@ public class DatabaseObjectManagerDialog extends JDialog {
             return;
 
         // Get the type name
-        final String typeName = this.objectManager.getManifest().getTypeName(false, false);
+        final String question = "Are you sure you'd like to delete " + (getSelectedCount() == 1 ? "this" : "these") + " " + this.objectManager.getManifest().getTypeName(false, getSelectedCount() != 1) + "?";
 
         // Ask whether the user wants to delete the databases
         // TODO: Show a proper message!
-        switch(JOptionPane.showConfirmDialog(this, "Are you sure you'd like to delete this " + typeName + "?", "Delete " + typeName, JOptionPane.YES_NO_OPTION)) {
+        switch(JOptionPane.showConfirmDialog(this, question, "Delete " + this.objectManager.getManifest().getTypeName(false, true), JOptionPane.YES_NO_OPTION)) {
             case JOptionPane.NO_OPTION:
             case JOptionPane.CANCEL_OPTION:
             case JOptionPane.CLOSED_OPTION:
                 return;
         }
 
-        // Feature not yet implemented, show a warning box
-        featureNotImplemented();
+        // Create a progress dialog
+        ProgressDialog progressDialog = new ProgressDialog(this, "Deleting...", false, "Deleting " + this.objectManager.getManifest().getTypeName(false, true) + "...", true);
+        progressDialog.setShowProgress(true);
+        progressDialog.setProgressMax(getSelectedCount());
 
-        // TODO: Improve this!
-//        // Delete the selected database object
-//        for(Object databaseObject : this.objectList.getSelectedValuesList())
-//            //noinspection RedundantCast
-//            this.objects.remove((AbstractDatabaseObject) databaseObject);
+        // Delete the selected database object
+        for(Integer selectedColumn : this.objectTable.getSelectedRows()) {
+            // Delete the object
+            if(!this.objects.get(selectedColumn).deleteFromDatabase())
+                // TODO: Show improved message
+                JOptionPane.showMessageDialog(this, "Failed to delete " + this.objectManager.getManifest().getTypeName(false, false) + " from database.", "Failed to delete", JOptionPane.ERROR_MESSAGE);
+
+            // Set the progress
+            progressDialog.increaseProgressValue();
+        }
 
         // Refresh the table
         updateUiTable();
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
+
+        // TODO: Remove this!
+        refresh();
     }
 
     // TODO: This should be removed!
