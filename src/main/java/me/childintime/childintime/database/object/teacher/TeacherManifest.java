@@ -1,5 +1,6 @@
 package me.childintime.childintime.database.object.teacher;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.object.AbstractDatabaseObject;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManager;
 import me.childintime.childintime.database.object.AbstractDatabaseObjectManifest;
@@ -71,5 +72,10 @@ public class TeacherManifest extends AbstractDatabaseObjectManifest {
     @Override
     public Class<? extends AbstractDatabaseObjectManager> getManager() {
         return TeacherManager.class;
+    }
+
+    @Override
+    public TeacherManager getManagerInstance() {
+        return Core.getInstance().getTeacherManager();
     }
 }
