@@ -161,7 +161,7 @@ public class EntityModifyDialog extends JDialog {
         this.setLocationRelativeTo(owner);
 
         // Update the title
-        setTitle(FORM_TITLE + " - Modify " + this.sourceManifest.getTypeName(false, false));
+        setTitle(FORM_TITLE + " - " + (this.source != null ? "Modify" : "Create") + " " + this.sourceManifest.getTypeName(false, false));
 
         // Show the form
         this.setVisible(show);
