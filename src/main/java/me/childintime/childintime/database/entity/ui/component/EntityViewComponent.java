@@ -111,8 +111,10 @@ public class EntityViewComponent extends EntityListComponent {
 
     /**
      * Create a new entity.
+     *
+     * @return Created entity, or null when cancelled.
      */
-    public void createEntity() {
+    public AbstractEntity createEntity() {
         // Show the modification dialog to create a new entity
         final AbstractEntity entity = EntityModifyDialog.showCreate(getWindow(), getManager().getManifest());
 
@@ -122,6 +124,9 @@ public class EntityViewComponent extends EntityListComponent {
         if(entity != null)
             // Refresh the manager
             getManager().refresh();
+
+        // Return the created entity
+        return entity;
     }
 
     /**
