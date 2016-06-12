@@ -300,11 +300,20 @@ public class EntityListComponent extends JComponent {
         List<AbstractEntity> entities = new ArrayList<>();
 
         // Add each selected entity to the list
-        for(int i : this.uiTable.getSelectedRows())
+        for(int i : getSelectedIndices())
             entities.add(this.manager.getEntities().get(i));
 
         // Return the list of entities
         return entities;
+    }
+
+    /**
+     * Get the selected indices.
+     *
+     * @return Selected indices. An empty array will be returned if no entity is selected.
+     */
+    public int[] getSelectedIndices() {
+        return this.uiTable.getSelectedRows();
     }
 
     /**
@@ -320,6 +329,21 @@ public class EntityListComponent extends JComponent {
 
         // Return the first selected item
         return getSelectedEntities().get(0);
+    }
+
+    /**
+     * Get a selected index.
+     * If multiple entities are selected, the index of the entity that was first selected is returned.
+     *
+     * @return
+     */
+    public int getSelectedIndex() {
+        // Return negative one if no entity is selected
+        if(getSelectedCount() == 0)
+            return -1;
+
+        // Return the first selected index
+        return getSelectedIndices()[0];
     }
 
     /**
