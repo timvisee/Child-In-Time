@@ -88,9 +88,9 @@ public class DashboardFrame extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
 
         // TODO: Move this somewhere else
-        Core.getInstance().getStudentManager().fetchObjects();
-        Core.getInstance().getTeacherManager().fetchObjects();
-        Core.getInstance().getSchoolManager().fetchObjects();
+        Core.getInstance().getStudentManager().fetchEntities();
+        Core.getInstance().getTeacherManager().fetchEntities();
+        Core.getInstance().getSchoolManager().fetchEntities();
 
         // Create the student panel
         JPanel studentPanel = new JPanel();

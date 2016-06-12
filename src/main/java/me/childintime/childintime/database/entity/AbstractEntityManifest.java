@@ -20,7 +20,7 @@ public abstract class AbstractEntityManifest {
     public abstract String getTypeName(boolean capital, boolean plural);
 
     /**
-     * Get the database table name for the manifest´s object.
+     * Get the database table name for the manifest´s entity.
      *
      * @return Database table name.
      */
@@ -29,7 +29,7 @@ public abstract class AbstractEntityManifest {
     /**
      * Get the default entity fields.
      *
-     * @return Default object fields to fetch.
+     * @return Default entity fields to fetch.
      */
     public abstract EntityFieldsInterface[] getDefaultFields();
 
@@ -55,11 +55,11 @@ public abstract class AbstractEntityManifest {
     }
 
     /**
-     * Get the object and instance class for this entity.
+     * Get the entity and instance class for this entity.
      *
-     * @return Object class
+     * @return Entity class
      */
-    public abstract Class<? extends AbstractEntity> getObject();
+    public abstract Class<? extends AbstractEntity> getEntity();
 
     /**
      * Get the manager class for this entity.

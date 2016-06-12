@@ -191,7 +191,7 @@ public class EntityListComponent extends JComponent {
         this.uiTableModel = new AbstractTableModel() {
             @Override
             public int getRowCount() {
-                return instance.getManager().getObjectCount();
+                return instance.getManager().getEntityCount();
             }
 
             @Override
@@ -202,7 +202,7 @@ public class EntityListComponent extends JComponent {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 // Get the object
-                final AbstractEntity entity = instance.getManager().getObjects().get(rowIndex);
+                final AbstractEntity entity = instance.getManager().getEntities().get(rowIndex);
 
                 // Return the value
                 try {
@@ -301,7 +301,7 @@ public class EntityListComponent extends JComponent {
 
         // Add each selected entity to the list
         for(int i : this.uiTable.getSelectedRows())
-            entities.add(this.manager.getObjects().get(i));
+            entities.add(this.manager.getEntities().get(i));
 
         // Return the list of entities
         return entities;

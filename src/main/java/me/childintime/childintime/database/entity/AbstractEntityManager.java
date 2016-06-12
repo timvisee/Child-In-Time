@@ -12,9 +12,9 @@ import java.util.List;
 public abstract class AbstractEntityManager {
 
     /**
-     * List of entitys loaded in this manager.
+     * List of entities loaded in this manager.
      */
-    private List<AbstractEntity> objects = new ArrayList<>();
+    private List<AbstractEntity> entities = new ArrayList<>();
 
     /**
      * Change listeners.
@@ -22,42 +22,42 @@ public abstract class AbstractEntityManager {
     private List<ChangeListener> changeListeners = new ArrayList<>();
 
     /**
-     * Fetch all objects from the database.
-     * The given fields will be cached into the objects itself, to prevent further queries from being executed.
-     * The fetched list of objects will be cached in this manager for further usage.
+     * Fetch all entities from the database.
+     * The given fields will be cached into the entities itself, to prevent further queries from being executed.
+     * The fetched list of entities will be cached in this manager for further usage.
      *
-     * @return List of fetched objects.
+     * @return List of fetched entities.
      */
     @SuppressWarnings("unused")
-    public List<AbstractEntity> fetchObjects() {
-        return fetchObjects(getManifest().getDefaultFields());
+    public List<AbstractEntity> fetchEntities() {
+        return fetchEntities(getManifest().getDefaultFields());
     }
 
     /**
-     * Fetch all objects from the database.
-     * The given fields will be cached into the objects itself, to prevent further queries from being executed.
-     * The fetched list of objects will be cached in this manager for further usage.
+     * Fetch all entities from the database.
+     * The given fields will be cached into the entities itself, to prevent further queries from being executed.
+     * The fetched list of entities will be cached in this manager for further usage.
      *
      * @param fields Entity fields to fetch and cache (using the same query, to improve performance).
      *
-     * @return List of fetched objects.
+     * @return List of fetched entities.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractEntity> fetchObjects(EntityFieldsInterface fields[]) {
+    public List<AbstractEntity> fetchEntities(EntityFieldsInterface fields[]) {
         // Join the string, comma separated
         StringBuilder fieldsToFetch = new StringBuilder("id");
         for (EntityFieldsInterface field : fields)
             fieldsToFetch.append("`, `").append(field.getDatabaseField());
 
-        // Create a list with fetched objects
-        List<AbstractEntity> newObjects = new ArrayList<>();
+        // Create a list with fetched entities
+        List<AbstractEntity> newEntities = new ArrayList<>();
 
-        // Fetch the objects and their data from the database
+        // Fetch the entities and their data from the database
         try {
             // Get the database connection
             final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
-            // Create a statement to fetch the objects
+            // Create a statement to fetch the entities
             PreparedStatement fetchStatement = connection.prepareStatement(
                     "SELECT `" + fieldsToFetch.toString() + "` " +
                     "FROM `" + getManifest().getTableName() + "`"
@@ -68,18 +68,18 @@ public abstract class AbstractEntityManager {
 
             // Parse all data
             while(result.next()) {
-                // Get the object ID
+                // Get the entity ID
                 int id = result.getInt("id");
 
                 // Create the entity instance
-                AbstractEntity entity = getManifest().getObject().getConstructor(int.class).newInstance(id);
+                AbstractEntity entity = getManifest().getEntity().getConstructor(int.class).newInstance(id);
 
                 // Parse and cache the fields
                 for (EntityFieldsInterface field : fields)
                     entity.parseField(field, result.getString(field.getDatabaseField()));
 
-                // Add the object to the list
-                newObjects.add(entity);
+                // Add the entity to the list
+                newEntities.add(entity);
             }
 
         } catch(Exception e){
@@ -90,102 +90,102 @@ public abstract class AbstractEntityManager {
             return null;
         }
 
-        // Set the list of objects
-        this.objects.addAll(newObjects);
+        // Set the list of entities
+        this.entities.addAll(newEntities);
 
         // Fire the change event
         fireChangeEvent();
 
-        // Return the list of objects
-        return this.objects;
+        // Return the list of entities
+        return this.entities;
     }
 
     /**
-     * Get the list of objects.
-     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     * Get the list of entities.
+     * The list of entities will be fetched automatically from the database if they aren't cached yet.
      *
-     * @return List of objects.
+     * @return List of entities.
      */
     @SuppressWarnings("unused")
-    public List<AbstractEntity> getObjects() {
-        return getObjects(getManifest().getDefaultFields());
+    public List<AbstractEntity> getEntities() {
+        return getEntities(getManifest().getDefaultFields());
     }
 
     /**
-     * Get the list of objects.
-     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     * Get the list of entities.
+     * The list of entities will be fetched automatically from the database if they aren't cached yet.
      *
      * @param fields Entity fields to fetch and cache (using the same query, to improve performance).
      *
-     * @return List of objects.
+     * @return List of entities.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractEntity> getObjects(EntityFieldsInterface[] fields) {
-        // Return the objects if cached
+    public List<AbstractEntity> getEntities(EntityFieldsInterface[] fields) {
+        // Return the entities if cached
         if(hasCache())
-            return this.objects;
+            return this.entities;
 
-        // Fetch the objects first, then return
-        return fetchObjects(fields);
+        // Fetch the entities first, then return
+        return fetchEntities(fields);
     }
 
     /**
-     * Get a clone of the list of objects.
-     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     * Get a clone of the list of entities.
+     * The list of entities will be fetched automatically from the database if they aren't cached yet.
      *
-     * @return Clone of the list of objects.
+     * @return Clone of the list of entities.
      */
-    public List<AbstractEntity> getObjectsClone() {
-        return getObjectsClone(getManifest().getDefaultFields());
+    public List<AbstractEntity> getEntitiesClone() {
+        return getEntitiesClone(getManifest().getDefaultFields());
     }
 
     /**
-     * Get a clone of the list of objects.
-     * The list of objects will be fetched automatically from the database if they aren't cached yet.
+     * Get a clone of the list of entities.
+     * The list of entities will be fetched automatically from the database if they aren't cached yet.
      *
      * @param fields Entity fields to fetch and cache (using the same query, to improve performance).
      *
-     * @return List of objects.
+     * @return List of entities.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<AbstractEntity> getObjectsClone(EntityFieldsInterface[] fields) {
-        // Fetch the objects if they aren't fetched yet
+    public List<AbstractEntity> getEntitiesClone(EntityFieldsInterface[] fields) {
+        // Fetch the entities if they aren't fetched yet
         if(!hasCache())
-            fetchObjects(fields);
+            fetchEntities(fields);
 
         // Create a list with clones
         List<AbstractEntity> clones = new ArrayList<>();
 
         // Loop through each entity, and clone it
-        for(AbstractEntity object : this.objects)
+        for(AbstractEntity entity : this.entities)
             try {
-                clones.add(object.clone());
+                clones.add(entity.clone());
 
             } catch(CloneNotSupportedException e) {
                 e.printStackTrace();
             }
 
-        // Return the list of cloned objects
+        // Return the list of cloned entities
         return clones;
     }
 
     /**
-     * Get the number of objects in the database.
+     * Get the number of entities in the database.
      *
-     * @return Number of objects, returns zero if an error occurred.
+     * @return Number of entities, returns zero if an error occurred.
      */
     @SuppressWarnings("unused")
-    public int getObjectCount() {
-        // Return the number of objects from cache, if cached
+    public int getEntityCount() {
+        // Return the number of entities from cache, if cached
         if(hasCache())
-            return this.objects.size();
+            return this.entities.size();
 
-        // Query the database to get the object count
+        // Query the database to get the entity count
         try {
             // Get the database connection
             final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
 
-            // Prepare a query to count the number of objects
+            // Prepare a query to count the number of entities
             PreparedStatement countQuery = connection.prepareStatement("SELECT count(`id`) FROM `" + getManifest().getTableName() + "`");
 
             // Execute the query, and return the results
@@ -205,20 +205,20 @@ public abstract class AbstractEntityManager {
      */
     @SuppressWarnings("WeakerAccess")
     public boolean hasCache() {
-        return this.objects != null;
+        return this.entities != null;
     }
 
     /**
-     * Refresh the objects, reloading them from the database.
+     * Refresh the entities, reloading them from the database.
      */
     // TODO: Add parameter to define what fields to fetch with the first query?
     @SuppressWarnings("unused")
     public void refresh() {
-        // Clear the list of objects
-        this.objects.clear();
+        // Clear the list of entities
+        this.entities.clear();
 
-        // Fetch the objects
-        fetchObjects();
+        // Fetch the entities
+        fetchEntities();
     }
 
     /**

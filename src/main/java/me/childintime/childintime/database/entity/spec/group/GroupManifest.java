@@ -63,7 +63,7 @@ public class GroupManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public Class<? extends AbstractEntity> getObject() {
+    public Class<? extends AbstractEntity> getEntity() {
         return Group.class;
     }
 

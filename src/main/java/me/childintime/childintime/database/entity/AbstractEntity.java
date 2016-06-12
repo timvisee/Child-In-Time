@@ -674,7 +674,7 @@ public abstract class AbstractEntity implements Cloneable {
                 // Parse the referenced object
                 try {
                     // Find the proper constructor of the referenced class, and instantiate the object with the fetched object ID
-                    AbstractEntity object = field.getReferenceManifest().getObject().getDeclaredConstructor(int.class).newInstance(objectId);
+                    AbstractEntity object = field.getReferenceManifest().getEntity().getDeclaredConstructor(int.class).newInstance(objectId);
 
                     // Put the reference into the cached fields
                     this.cachedFields.put(field, object);

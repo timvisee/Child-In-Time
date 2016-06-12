@@ -78,7 +78,7 @@ public class EntityPropertyField extends AbstractPropertyField {
     @Override
     protected JComponent buildUiField() {
         // Build the combo box
-        this.comboBox = new JComboBox<>(this.manager.getObjects().toArray(new AbstractEntity[]{}));
+        this.comboBox = new JComboBox<>(this.manager.getEntities().toArray(new AbstractEntity[]{}));
 
         // Link the text field listeners
         this.comboBox.addMouseListener(new MouseListener() {

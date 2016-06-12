@@ -114,7 +114,7 @@ public class EntityModifyDialog extends JDialog {
             }
         else
             try {
-                this.result = this.sourceManifest.getObject().newInstance();
+                this.result = this.sourceManifest.getEntity().newInstance();
             } catch(InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
