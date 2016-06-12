@@ -72,4 +72,15 @@ public class SwingUtils {
             System.out.println("Failed to set window icon.");
         }
     }
+
+    /**
+     * Get the window the given component is located in.
+     *
+     * @param component Component.
+     *
+     * @return Window.
+     */
+    public static Window getComponentWindow(Component component) {
+        return SwingUtilities.getWindowAncestor(component);
+    }
 }

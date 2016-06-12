@@ -2,6 +2,7 @@ package me.childintime.childintime.database.entity.ui.component;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
+import me.childintime.childintime.util.swing.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -195,7 +196,7 @@ public class EntityManagerComponent extends JComponent {
      * @return Component window.
      */
     private Window getWindow() {
-        return SwingUtilities.getWindowAncestor(this);
+        return SwingUtils.getComponentWindow(this);
     }
 
     // TODO: This should be removed!

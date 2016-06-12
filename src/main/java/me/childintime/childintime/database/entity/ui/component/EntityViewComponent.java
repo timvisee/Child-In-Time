@@ -6,6 +6,7 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.ui.dialog.EntityModifyDialog;
 import me.childintime.childintime.util.swing.ProgressDialog;
+import me.childintime.childintime.util.swing.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -277,6 +278,6 @@ public class EntityViewComponent extends EntityListComponent {
      * @return Component window.
      */
     private Window getWindow() {
-        return SwingUtilities.getWindowAncestor(this);
+        return SwingUtils.getComponentWindow(this);
     }
 }
