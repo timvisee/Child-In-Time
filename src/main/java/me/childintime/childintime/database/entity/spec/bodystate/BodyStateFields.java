@@ -124,7 +124,7 @@ public enum BodyStateFields implements EntityFieldsInterface {
 
     @Override
     public boolean isCreatable() {
-        return this.isCreatable();
+        return this.creatable;
     }
 
     @Override
