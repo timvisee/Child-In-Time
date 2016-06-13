@@ -136,9 +136,10 @@ public class Core {
         // Set some Mac OS X properties
         if(Platform.isMacOsX()) {
             System.out.println("Configuring application for Mac OS X...");
-            System.setProperty( "com.apple.macos.useScreenMenuBar", "true");
+            System.setProperty("com.apple.macos.useScreenMenuBar", "true");
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", App.APP_NAME);
+            System.setProperty("apple.awt.application.name", App.APP_NAME);
         }
 
         // Enable hardware accelerated rendering using OpenGL for Java2D on non-OSX platforms, including AWT and Swing

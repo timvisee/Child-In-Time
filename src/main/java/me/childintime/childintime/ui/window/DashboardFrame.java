@@ -1,12 +1,13 @@
 package me.childintime.childintime.ui.window;
 
+import com.jtechdev.macwidgets.MacButtonFactory;
+import com.jtechdev.macwidgets.UnifiedToolBar;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
-import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -204,15 +205,13 @@ public class DashboardFrame extends JFrame {
         // Toolbar button
         JButton myButton = new JButton("Test");
         myButton.setIcon(new ImageIcon(this.getClass().getResource("/com/toedter/calendar/images/JDateChooserColor16.gif")));
+        AbstractButton abstractMyButton = MacButtonFactory.makeUnifiedToolBarButton(myButton);
 
         // Toolbar
-        JToolBar tb = new JToolBar();
-        tb.add(myButton);
+        UnifiedToolBar tb = new UnifiedToolBar();
+        tb.addComponentToLeft(abstractMyButton);
 
-        if(Platform.isMacOsX())
-            tb.setBackground(new Color(237, 237, 237));
-
-        add(tb, BorderLayout.PAGE_START);
+        add(tb.getComponent(), BorderLayout.PAGE_START);
     }
 
     /**
