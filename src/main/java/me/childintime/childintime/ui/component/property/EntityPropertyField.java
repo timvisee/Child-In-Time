@@ -295,4 +295,14 @@ public class EntityPropertyField extends AbstractPropertyField {
         if(isNullAllowed() && !isEmptyAllowed() && !isNull() && isInputEmpty())
             setNull(true);
     }
+
+    @Override
+    public boolean isNull() {
+        // Return true if the super is null
+        if(super.isNull())
+            return true;
+
+        // Return true if the selected value is null/undefined
+        return this.selected == null;
+    }
 }
