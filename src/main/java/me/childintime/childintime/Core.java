@@ -1,5 +1,6 @@
 package me.childintime.childintime;
 
+import com.apple.osx.adapter.OSXAdapter;
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
 import me.childintime.childintime.database.DatabaseBuilder;
@@ -13,6 +14,7 @@ import me.childintime.childintime.database.entity.spec.parkour.ParkourManager;
 import me.childintime.childintime.database.entity.spec.school.SchoolManager;
 import me.childintime.childintime.database.entity.spec.student.StudentManager;
 import me.childintime.childintime.database.entity.spec.teacher.TeacherManager;
+import me.childintime.childintime.ui.window.AboutDialog;
 import me.childintime.childintime.ui.window.DashboardFrame;
 import me.childintime.childintime.ui.window.LoginDialog;
 import me.childintime.childintime.util.Platform;
@@ -153,6 +155,19 @@ public class Core {
 
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
+
+        // Set up Mac OS X native menu items
+        if(Platform.isMacOsX()) {
+            // Show a status message
+            this.progressDialog.setStatus("Setting up Mac OS X menus...");
+
+            // Attach the about dialog to the Mac OS X about menu item
+            try {
+                OSXAdapter.setAboutHandler(this, getClass().getDeclaredMethod("about", (Class[]) null));
+            } catch(NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
 
         // Initialize the entity managers
         this.bodyStateManager = new BodyStateManager();
@@ -454,5 +469,12 @@ public class Core {
      */
     public TeacherManager getTeacherManager() {
         return this.teacherManager;
+    }
+
+    /**
+     * Show the about dialog.
+     */
+    public void about() {
+        new AboutDialog(null, true);
     }
 }
