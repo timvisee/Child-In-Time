@@ -133,7 +133,7 @@ public class DashboardFrame extends JFrame {
         c.weightx = 1;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 16, 16);
-        container.add(createDashboardPanel(Core.getInstance().getParkourManager()), c);
+        container.add(createDashboardPanel(Core.getInstance().getMeasurementManager()), c);
 
         // Add the student panel
         c.fill = GridBagConstraints.BOTH;
