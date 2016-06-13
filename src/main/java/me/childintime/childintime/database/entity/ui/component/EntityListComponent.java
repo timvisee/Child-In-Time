@@ -137,7 +137,11 @@ public class EntityListComponent extends JComponent {
      * This must be called to make data changes visible.
      */
     public void updateViewData() {
+        // Update the table
         this.uiTableModel.fireTableDataChanged();
+
+        // Fit the columns
+        fitColumns();
     }
 
     /**
