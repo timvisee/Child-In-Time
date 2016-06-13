@@ -2,9 +2,11 @@ package me.childintime.childintime.ui.window;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
+import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -162,13 +164,19 @@ public class DashboardFrame extends JFrame {
      */
     public void buildUiMenu() {
         // Create the menu
-        JMenuBar menu = new JMenuBar();
+        MenuBar menu = new MenuBar();
 
         // Create the file menu
-        JMenu fileMenu = new JMenu("File");
+        Menu fileMenu = new Menu("File");
+
+        // Create the database manager action
+        MenuItem databaseManagerAction = new MenuItem("Manage databases");
+        databaseManagerAction.addActionListener(e -> new DatabaseManagerDialog(this, true));
+        fileMenu.add(databaseManagerAction);
+        fileMenu.addSeparator();
 
         // Create exit action
-        JMenuItem exitAction = new JMenuItem("Exit");
+        MenuItem exitAction = new MenuItem("Exit");
         exitAction.addActionListener(e -> exit());
         fileMenu.add(exitAction);
 
@@ -176,10 +184,10 @@ public class DashboardFrame extends JFrame {
         menu.add(fileMenu);
 
         // Create the help menu
-        JMenu helpMenu = new JMenu("Help");
+        Menu helpMenu = new Menu("Help");
 
         // Create the about action
-        JMenuItem aboutAction = new JMenuItem("About");
+        MenuItem aboutAction = new MenuItem("About");
         aboutAction.addActionListener(e -> new AboutDialog(this, true));
         helpMenu.add(aboutAction);
 
@@ -187,7 +195,24 @@ public class DashboardFrame extends JFrame {
         menu.add(helpMenu);
 
         // Set the menu
-        setJMenuBar(menu);
+        setMenuBar(menu);
+
+
+
+        // TODO: Toolbar test
+
+        // Toolbar button
+        JButton myButton = new JButton("Test");
+        myButton.setIcon(new ImageIcon(this.getClass().getResource("/com/toedter/calendar/images/JDateChooserColor16.gif")));
+
+        // Toolbar
+        JToolBar tb = new JToolBar();
+        tb.add(myButton);
+
+        if(Platform.isMacOsX())
+            tb.setBackground(new Color(237, 237, 237));
+
+        add(tb, BorderLayout.PAGE_START);
     }
 
     /**
