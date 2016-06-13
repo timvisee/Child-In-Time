@@ -1,11 +1,13 @@
 package me.childintime.childintime.ui.window;
 
+import com.apple.osx.adapter.OSXAdapter;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
+import me.childintime.childintime.util.Platform;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -187,7 +189,7 @@ public class DashboardFrame extends JFrame {
 
         // Create the about action
         MenuItem aboutAction = new MenuItem("About");
-        aboutAction.addActionListener(e -> new AboutDialog(this, true));
+        aboutAction.addActionListener(e -> about());
         helpMenu.add(aboutAction);
 
         // Add the help menu to the menu bar
@@ -195,6 +197,16 @@ public class DashboardFrame extends JFrame {
 
         // Set the menu
         setMenuBar(menu);
+
+        // Set up Mac OS X native menu items
+        if(Platform.isMacOsX()) {
+            // Attach the about dialog to the Mac OS X about menu item
+            try {
+                OSXAdapter.setAboutHandler(this, getClass().getDeclaredMethod("about", (Class[]) null));
+            } catch(NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -257,6 +269,13 @@ public class DashboardFrame extends JFrame {
 
         // Return the container
         return container;
+    }
+
+    /**
+     * Show the about dialog.
+     */
+    public void about() {
+        new AboutDialog(this, true);
     }
 
     /**
