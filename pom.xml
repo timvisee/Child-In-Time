@@ -136,12 +136,5 @@
             <version>1.4</version>
         </dependency>
 
-        <!-- Mac widgets library, http://mvnrepository.com/artifact/com.jtechdev/macwidgets -->
-        <dependency>
-            <groupId>com.jtechdev</groupId>
-            <artifactId>macwidgets</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-
     </dependencies>
 </project>

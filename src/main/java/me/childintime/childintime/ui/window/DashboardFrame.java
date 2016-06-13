@@ -1,7 +1,5 @@
 package me.childintime.childintime.ui.window;
 
-import com.jtechdev.macwidgets.MacButtonFactory;
-import com.jtechdev.macwidgets.UnifiedToolBar;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
@@ -197,21 +195,6 @@ public class DashboardFrame extends JFrame {
 
         // Set the menu
         setMenuBar(menu);
-
-
-
-        // TODO: Toolbar test
-
-        // Toolbar button
-        JButton myButton = new JButton("Test");
-        myButton.setIcon(new ImageIcon(this.getClass().getResource("/com/toedter/calendar/images/JDateChooserColor16.gif")));
-        AbstractButton abstractMyButton = MacButtonFactory.makeUnifiedToolBarButton(myButton);
-
-        // Toolbar
-        UnifiedToolBar tb = new UnifiedToolBar();
-        tb.addComponentToLeft(abstractMyButton);
-
-        add(tb.getComponent(), BorderLayout.PAGE_START);
     }
 
     /**
