@@ -348,7 +348,7 @@ public class EntityModifyDialog extends JDialog {
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label if the field is not editable
-            if(!fieldType.isEditable()) {
+            if(this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) {
                 container.add(new JLabel(value != null ? value.toString() : "?"), c);
                 continue;
             }
