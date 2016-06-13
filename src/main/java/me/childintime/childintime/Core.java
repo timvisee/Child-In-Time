@@ -133,6 +133,13 @@ public class Core {
         // Show a status message
         System.out.println("Starting application core...");
 
+        // Set some Mac OS X properties
+        if(Platform.isMacOsX()) {
+            System.out.println("Configuring application for Mac OS X...");
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", App.APP_NAME);
+        }
+
         // Enable hardware accelerated rendering using OpenGL for Java2D on non-OSX platforms, including AWT and Swing
         if(!Platform.isMacOsX()) {
             System.out.println("Enabling hardware acceleration...");
