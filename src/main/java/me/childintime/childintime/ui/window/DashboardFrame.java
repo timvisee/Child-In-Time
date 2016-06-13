@@ -4,6 +4,7 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
+import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
 
@@ -34,7 +35,7 @@ public class DashboardFrame extends JFrame {
         buildUI();
 
         // Configure the close button behaviour
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Configure the window sizes
         configureSize();
@@ -45,6 +46,9 @@ public class DashboardFrame extends JFrame {
 
         // Bring the window to the front
         toFront();
+
+        // Refresh everything after the dashboard is loaded
+        SwingUtilities.invokeLater(this::refreshAll);
     }
 
     /**
@@ -75,14 +79,6 @@ public class DashboardFrame extends JFrame {
 
         // Create a grid bag constraints instance
         GridBagConstraints c = new GridBagConstraints();
-
-        // TODO: Move this somewhere else
-        Core.getInstance().getStudentManager().fetchEntities();
-        Core.getInstance().getTeacherManager().fetchEntities();
-        Core.getInstance().getSchoolManager().fetchEntities();
-        Core.getInstance().getGroupManager().fetchEntities();
-        Core.getInstance().getMeasurementManager().fetchEntities();
-        Core.getInstance().getBodyStateManager().fetchEntities();
 
         // Create a main actions panel
         JPanel mainActions = new JPanel();
@@ -165,35 +161,61 @@ public class DashboardFrame extends JFrame {
         // Create the menu
         MenuBar menu = new MenuBar();
 
-        // Create the file menu
-        Menu fileMenu = new Menu("File");
+        // Create the dashboard menu
+        Menu dashboardMenu = new Menu("Dashboard");
 
         // Create the change user action
-        MenuItem changeUserAction = new MenuItem("Change user");
+        MenuItem changeUserAction = new MenuItem("Change user...");
         // TODO: An action placeholder is used, assign a proper action!
         changeUserAction.addActionListener(e -> restart());
-        fileMenu.add(changeUserAction);
+        dashboardMenu.add(changeUserAction);
 
         // Create the change database action
-        MenuItem changeDatabaseAction = new MenuItem("Change database");
+        MenuItem changeDatabaseAction = new MenuItem("Change database...");
         // TODO: An action placeholder is used, assign a proper action!
         changeDatabaseAction.addActionListener(e -> restart());
-        fileMenu.add(changeDatabaseAction);
-        fileMenu.addSeparator();
-
-        // Create the database manager action
-        MenuItem databaseManagerAction = new MenuItem("Manage databases");
-        databaseManagerAction.addActionListener(e -> new DatabaseManagerDialog(this, true));
-        fileMenu.add(databaseManagerAction);
-        fileMenu.addSeparator();
+        dashboardMenu.add(changeDatabaseAction);
+        dashboardMenu.addSeparator();
 
         // Create exit action
         MenuItem exitAction = new MenuItem("Exit");
         exitAction.addActionListener(e -> exit());
-        fileMenu.add(exitAction);
+        dashboardMenu.add(exitAction);
 
-        // Add the file menu to the menu bar
-        menu.add(fileMenu);
+        // Add the dashboard menu to the menu bar
+        menu.add(dashboardMenu);
+
+        // Create the edit menu
+        Menu editMenu = new Menu("Edit");
+
+        // Create the database manager action
+        MenuItem databaseManagerAction = new MenuItem("Databases...");
+        databaseManagerAction.addActionListener(e -> new DatabaseManagerDialog(this, true));
+        editMenu.add(databaseManagerAction);
+        editMenu.addSeparator();
+
+        // Create the refresh all action
+        MenuItem refreshAllAction = new MenuItem("Refresh all");
+        refreshAllAction.addActionListener(e -> refreshAll());
+        editMenu.add(refreshAllAction);
+
+        // Add the edit menu to the menu bar
+        menu.add(editMenu);
+
+        // Create the entity menu
+        Menu entityMenu = new Menu("Entity");
+
+        // Create a menu for each entity
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getStudentManager()));
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getTeacherManager()));
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getSchoolManager()));
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getGroupManager()));
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getMeasurementManager()));
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getBodyStateManager()));
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getParkourManager()));
+
+        // Add the entity menu to the menu bar
+        menu.add(entityMenu);
 
         // Create the help menu
         Menu helpMenu = new Menu("Help");
@@ -208,6 +230,40 @@ public class DashboardFrame extends JFrame {
 
         // Set the menu
         setMenuBar(menu);
+    }
+
+    /**
+     * Build a menu for the given entity.
+     *
+     * @param manager Entity manager to create the menu for.
+     *
+     * @return Entity menu.
+     */
+    private Menu buildUiMenuEntity(AbstractEntityManager manager) {
+        // Create the base menu
+        Menu menu = new Menu(manager.getManifest().getTypeName(true, true));
+
+        // Get the manifest
+        final AbstractEntityManifest manifest = manager.getManifest();
+
+        // Add a manage action
+        MenuItem manageAction = new MenuItem("Manage " + manager.getManifest().getTypeName(false, true) + "...");
+        manageAction.addActionListener(e -> manifest.showManagerDialog(this));
+        menu.add(manageAction);
+
+        // Add a create action
+        MenuItem createAction = new MenuItem("Create " + manager.getManifest().getTypeName(false, false) + "...");
+        createAction.addActionListener(e -> manifest.showCreateDialog(this));
+        menu.add(createAction);
+        menu.addSeparator();
+
+        // Add a refresh action
+        MenuItem refreshAction = new MenuItem("Refresh " + manager.getManifest().getTypeName(false, true));
+        refreshAction.addActionListener(e -> manager.refresh());
+        menu.add(refreshAction);
+
+        // Return the menu
+        return menu;
     }
 
     /**
@@ -270,6 +326,32 @@ public class DashboardFrame extends JFrame {
 
         // Return the container
         return container;
+    }
+
+    /**
+     * Refresh all managers.
+     */
+    // TODO: Improve this method!
+    private void refreshAll() {
+        // Store the visibility state of the progress dialog
+        final boolean progressDialogVisible = Core.getInstance().getProgressDialog().isVisible();
+
+        // Show the progress dialog and set the state
+        Core.getInstance().getProgressDialog().setVisible(true);
+        Core.getInstance().getProgressDialog().setStatus("Refreshing...");
+        // TODO: Show a progress bar!
+
+        // Refresh all managers
+        Core.getInstance().getStudentManager().refresh();
+        Core.getInstance().getTeacherManager().refresh();
+        Core.getInstance().getSchoolManager().refresh();
+        Core.getInstance().getGroupManager().refresh();
+        Core.getInstance().getMeasurementManager().refresh();
+        Core.getInstance().getBodyStateManager().refresh();
+        Core.getInstance().getParkourManager().refresh();
+
+        // Revert the visibility state of the progress dialog
+        Core.getInstance().getProgressDialog().setVisible(progressDialogVisible);
     }
 
     /**
