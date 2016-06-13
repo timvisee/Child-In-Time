@@ -316,20 +316,15 @@ public class EntityModifyDialog extends JDialog {
         // Get the list of fields
         EntityFieldsInterface[] fieldTypes = getFields();
 
+        // Create a field offset variable, which is the positional offset for fields
+        int fieldOffset = 1;
+
+        // Loop through all the fields
         for(int i = 0; i < fieldTypes.length; i++) {
             // Get the field type
             EntityFieldsInterface fieldType = fieldTypes[i];
 
-            // Create and add the name label
-            c.fill = GridBagConstraints.NONE;
-            c.gridx = 0;
-            c.gridy = i + 1;
-            c.gridwidth = 1;
-            c.weightx = 0;
-            c.insets = new Insets(0, 0, 8, 8);
-            c.anchor = GridBagConstraints.WEST;
-            container.add(new JLabel(fieldType.getDisplayName() + ":"), c);
-
+            // Get the field value
             Object value = null;
             if(this.source != null)
                 try {
@@ -338,10 +333,29 @@ public class EntityModifyDialog extends JDialog {
                     e.printStackTrace();
                 }
 
+            // Hide empty fields that aren't editable/creatable
+            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && value == null) {
+                // Change the offset
+                fieldOffset--;
+
+                // The field should be skipped, continue
+                continue;
+            }
+
+            // Create and add the name label
+            c.fill = GridBagConstraints.NONE;
+            c.gridx = 0;
+            c.gridy = i + fieldOffset;
+            c.gridwidth = 1;
+            c.weightx = 0;
+            c.insets = new Insets(0, 0, 8, 8);
+            c.anchor = GridBagConstraints.WEST;
+            container.add(new JLabel(fieldType.getDisplayName() + ":"), c);
+
             // Create and add the name label
             c.fill = GridBagConstraints.HORIZONTAL;
             c.gridx = 1;
-            c.gridy = i + 1;
+            c.gridy = i + fieldOffset;
             c.gridwidth = 1;
             c.weightx = 1;
             c.insets = new Insets(0, 8, 8, 0);
