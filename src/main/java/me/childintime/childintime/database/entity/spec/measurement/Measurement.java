@@ -2,7 +2,6 @@ package me.childintime.childintime.database.entity.spec.measurement;
 
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
-import me.childintime.childintime.database.entity.spec.group.GroupManifest;
 
 public class Measurement extends AbstractEntity {
 
@@ -24,7 +23,7 @@ public class Measurement extends AbstractEntity {
 
     @Override
     public AbstractEntityManifest getManifest() {
-        return GroupManifest.getInstance();
+        return MeasurementManifest.getInstance();
     }
 
     @Override
