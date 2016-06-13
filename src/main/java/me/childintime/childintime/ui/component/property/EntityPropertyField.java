@@ -2,8 +2,11 @@ package me.childintime.childintime.ui.component.property;
 
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
+import me.childintime.childintime.database.entity.ui.component.EntityListSelectorDialog;
+import me.childintime.childintime.util.swing.SwingUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class EntityPropertyField extends AbstractPropertyField {
@@ -16,14 +19,19 @@ public class EntityPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
+     * The selected abstract entity.
+     */
+    private AbstractEntity selected = null;
+
+    /**
      * Entity manager.
      */
     final private AbstractEntityManager manager;
 
     /**
-     * Entity field.
+     * Entity field (button).
      */
-    private JComboBox<AbstractEntity> comboBox;
+    private JButton button;
 
     /**
      * Constructor.
@@ -78,10 +86,32 @@ public class EntityPropertyField extends AbstractPropertyField {
     @Override
     protected JComponent buildUiField() {
         // Build the combo box
-        this.comboBox = new JComboBox<>(this.manager.getEntities().toArray(new AbstractEntity[]{}));
+        this.button = new JButton();
+
+        // Set the button text alignment, the margin, and the layout for later use
+        this.button.setHorizontalAlignment(SwingConstants.LEFT);
+        this.button.setMargin(new Insets(1, 4, 1, 1));
+        this.button.setLayout(new BorderLayout());
+
+        // Add an arrow icon to the button
+        final JLabel arrowLabel = new JLabel("▾ ");
+        this.button.add(arrowLabel, BorderLayout.EAST);
+
+        // Validate the button, to update everything
+        this.button.validate();
+
+        // Create a button action
+        this.button.addActionListener(e -> {
+            // Show the selection dialog
+            final AbstractEntity newSelected = EntityListSelectorDialog.showDialog(SwingUtils.getComponentWindow(this), this.manager, this.selected);
+
+            // Set the selected entity if one is selected
+            if(newSelected != null)
+                setSelected(newSelected);
+        });
 
         // Link the text field listeners
-        this.comboBox.addMouseListener(new MouseListener() {
+        this.button.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 enableField();
@@ -99,7 +129,7 @@ public class EntityPropertyField extends AbstractPropertyField {
             @Override
             public void mouseExited(MouseEvent e) { }
         });
-        this.comboBox.addFocusListener(new FocusListener() {
+        this.button.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
 
@@ -111,8 +141,8 @@ public class EntityPropertyField extends AbstractPropertyField {
         });
 
         // Set the field back to null when the escape key is pressed
-        this.comboBox.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
-        this.comboBox.getActionMap().put("Escape", new AbstractAction() {
+        this.button.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Escape");
+        this.button.getActionMap().put("Escape", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Make sure null is allowed
@@ -128,16 +158,16 @@ public class EntityPropertyField extends AbstractPropertyField {
         });
 
         // Return the checkbox
-        return this.comboBox;
+        return this.button;
     }
 
     /**
-     * Get the combo box.
+     * Get the button.
      *
-     * @return combo box.
+     * @return Button.
      */
-    public JComboBox<AbstractEntity> getComboBox() {
-        return this.comboBox;
+    public JButton getButton() {
+        return this.button;
     }
 
     @Override
@@ -158,7 +188,7 @@ public class EntityPropertyField extends AbstractPropertyField {
      * @return Abstract entity, or null.
      */
     public AbstractEntity getSelected() {
-        return isNull() ? null : (AbstractEntity) this.comboBox.getSelectedItem();
+        return isNull() ? null : this.selected;
     }
 
     /**
@@ -174,8 +204,13 @@ public class EntityPropertyField extends AbstractPropertyField {
         // Set the null state
         if(selected == null)
             setNull(true);
-        else
-            this.comboBox.setSelectedItem(selected);
+        else {
+            // Set the selected value
+            this.selected = selected;
+
+            // Set the button text
+            this.button.setText(this.selected.toString());
+        }
     }
 
     @Override
@@ -184,13 +219,13 @@ public class EntityPropertyField extends AbstractPropertyField {
         super.setNull(_null);
 
         // Update the enabled state of both components
-        this.comboBox.setEnabled(!_null);
+        this.button.setEnabled(!_null);
     }
 
     @Override
     public void clear() {
         // Transfer focus to another component
-        this.comboBox.transferFocus();
+        this.button.transferFocus();
 
         // Clear the field
         SwingUtilities.invokeLater(() -> {
@@ -224,7 +259,7 @@ public class EntityPropertyField extends AbstractPropertyField {
         this.allowEmpty = allowEmpty;
 
         // Clear the field if it's empty while it isn't currently focused
-        if(!allowEmpty && !this.comboBox.hasFocus())
+        if(!allowEmpty && !this.button.hasFocus())
             disableIfEmpty();
     }
 
@@ -248,7 +283,7 @@ public class EntityPropertyField extends AbstractPropertyField {
             this.setNull(false);
 
         // Focus the field and select all
-        this.comboBox.grabFocus();
+        this.button.grabFocus();
     }
 
     /**
