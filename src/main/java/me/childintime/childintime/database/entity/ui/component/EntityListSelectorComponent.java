@@ -71,18 +71,14 @@ public class EntityListSelectorComponent extends EntityViewComponent {
 
     /**
      * Select the given item in the list.
-     * No row will be selected if the list is empty.
+     * No item will be selected if the item is null, or if the list is empty.
      *
-     * @param item Item to select, or null to select the first row.
+     * @param item Item to select, or null.
      */
     public void setSelectedItem(AbstractEntity item) {
-        // Do not select anything if the list is empty
-        if(getSwingTable().getRowCount() == 0)
-            return;
-
-        // Select the first row if the item is null
-        if(item == null) {
-            setSelectedItem(0);
+        // Clear the selection if the list is empty or if the item is null
+        if(getSwingTable().getRowCount() == 0 || item == null) {
+            getSwingTable().clearSelection();
             return;
         }
 
@@ -98,11 +94,10 @@ public class EntityListSelectorComponent extends EntityViewComponent {
             }
         }
 
-        // Make sure a valid index is found
+        // Clear the selection if no valid item was found
         if(itemIndex == -1) {
-            // Select the first item if none has been selected yet
-            if(getSelectedCount() == 0)
-                setSelectedItem(0);
+            // Clear the selection
+            getSwingTable().clearSelection();
 
             // We're done, return
             return;

@@ -27,6 +27,11 @@ public class EntityListSelectorDialog extends JDialog {
     private boolean discarded = true;
 
     /**
+     * Select button instance.
+     */
+    private JButton selectButton;
+
+    /**
      * Constructor.
      *
      * @param owner Owner window.
@@ -49,6 +54,13 @@ public class EntityListSelectorDialog extends JDialog {
         // Pack the frame
         // TODO: Configure the frame size.
         pack();
+
+        // Make the dialog modal
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setModal(true);
+
+        // Set the location relative to the owner
+        setLocationRelativeTo(owner);
 
         // Create a world close listener
         addWindowListener(new WindowListener() {
@@ -80,12 +92,8 @@ public class EntityListSelectorDialog extends JDialog {
         // Create a listener when an entity is double clicked
         this.list.addEntityActionListener(entities -> select());
 
-        // Set the location relative to the owner
-        setLocationRelativeTo(owner);
-
-        // Make the dialog modal
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        setModal(true);
+        // Update the IU buttons
+        updateUiButtons();
     }
 
     /**
@@ -111,7 +119,6 @@ public class EntityListSelectorDialog extends JDialog {
      */
     public static AbstractEntity showDialog(Window owner, AbstractEntityManager manager, AbstractEntity selected) {
         // Create the dialog
-        // TODO: Use proper dialog name here!
         EntityListSelectorDialog dialog = new EntityListSelectorDialog(owner, manager, "Select a " + manager.getManifest().getTypeName(false, false) + "...");
 
         // Select the proper entity
@@ -145,6 +152,9 @@ public class EntityListSelectorDialog extends JDialog {
         // Create the list
         // TODO: Define the default selected item!
         this.list = new EntityListSelectorComponent(this.manager);
+
+        // Update the UI buttons when the selection changes
+        this.list.addSelectionChangeListenerListener(this::updateUiButtons);
 
         // Add the list to the container
         c.fill = GridBagConstraints.BOTH;
@@ -192,25 +202,33 @@ public class EntityListSelectorDialog extends JDialog {
      */
     public JPanel buildUiCommitButtons() {
         // Create a commit button panel
-        JPanel commitButtonPanel = new JPanel(new GridLayout(1, 2, 8, 8));
+        final JPanel commitButtonPanel = new JPanel(new GridLayout(1, 2, 8, 8));
 
         // Create the buttons
-        JButton selectButton = new JButton("Select");
-        JButton closeButton = new JButton("Close");
-        selectButton.addActionListener(e -> select());
+        this.selectButton = new JButton("Select");
+        final JButton closeButton = new JButton("Close");
+        this.selectButton.addActionListener(e -> select());
         closeButton.addActionListener(e -> close());
 
         // Add the buttons, reverse the order on Mac OS X
         if(!Platform.isMacOsX()) {
-            commitButtonPanel.add(selectButton);
+            commitButtonPanel.add(this.selectButton);
             commitButtonPanel.add(closeButton);
         } else {
             commitButtonPanel.add(closeButton);
-            commitButtonPanel.add(selectButton);
+            commitButtonPanel.add(this.selectButton);
         }
 
         // Return the button panel
         return commitButtonPanel;
+    }
+
+    /**
+     * Update the UI buttons.
+     */
+    public void updateUiButtons() {
+        // Enable the select button if one entity is selected
+        this.selectButton.setEnabled(this.list.getSelectedCount() == 1);
     }
 
     /**
