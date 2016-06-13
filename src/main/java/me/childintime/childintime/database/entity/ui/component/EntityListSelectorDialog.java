@@ -51,9 +51,8 @@ public class EntityListSelectorDialog extends JDialog {
         // Build the dialog UI
         buildUi();
 
-        // Pack the frame
-        // TODO: Configure the frame size.
-        pack();
+        // Configure the frame size
+        configureSize();
 
         // Make the dialog modal
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -133,6 +132,23 @@ public class EntityListSelectorDialog extends JDialog {
 
         // Return the selected entity
         return dialog.list.getSelectedItem();
+    }
+
+    /**
+     * Properly configure the window sizes for the current content.
+     */
+    private void configureSize() {
+        // Pack everything
+        pack();
+
+        // Get the packed width and height
+        final int width = getSize().width;
+        final int height = getSize().height;
+
+        // Configure the sizes
+        setMinimumSize(new Dimension((int) (width / 1.5), height / 2));
+        setPreferredSize(new Dimension((int) (width / 1.5), (int) (height / 1.5)));
+        setSize(new Dimension((int) (width / 1.5), (int) (height / 1.5)));
     }
 
     /**
