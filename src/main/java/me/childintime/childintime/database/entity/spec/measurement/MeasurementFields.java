@@ -5,6 +5,7 @@ import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.spec.parkour.ParkourManifest;
+import me.childintime.childintime.database.entity.spec.student.StudentManifest;
 
 public enum MeasurementFields implements EntityFieldsInterface {
 
@@ -18,7 +19,7 @@ public enum MeasurementFields implements EntityFieldsInterface {
      * Student ID.
      * The student instance a measurement is for.
      */
-    STUDENT_ID("Student", "student_id", true, false, false, false, DataTypeExtended.REFERENCE, ParkourManifest.getInstance()),
+    STUDENT_ID("Student", "student_id", true, false, false, false, DataTypeExtended.REFERENCE, StudentManifest.getInstance()),
 
     /**
      * Measurement date.return MeasurementManifest.getInstance();
