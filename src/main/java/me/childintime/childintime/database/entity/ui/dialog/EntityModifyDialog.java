@@ -311,7 +311,7 @@ public class EntityModifyDialog extends JDialog {
         c.gridy = 0;
         c.gridwidth = 2;
         c.insets = new Insets(0, 0, 16, 8);
-        container.add(new JLabel("Modify " + this.sourceManifest.getTypeName(false, false) + ":"), c);
+        container.add(new JLabel((this.source != null ? "Modify" : "Create") + " " + this.sourceManifest.getTypeName(false, false) + ":"), c);
 
         // Get the list of fields
         EntityFieldsInterface[] fieldTypes = getFields();
