@@ -20,6 +20,13 @@ public interface EntityFieldsInterface {
     String getDatabaseField();
 
     /**
+     * Check whether this field is creatable by the user.
+     *
+     * @return True if creatable, false if not.
+     */
+    boolean isCreatable();
+
+    /**
      * Check whether this field is editable by the user.
      *
      * @return True if editable, false if not.

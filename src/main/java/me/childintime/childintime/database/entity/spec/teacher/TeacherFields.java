@@ -12,38 +12,38 @@ public enum TeacherFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a teacher object.
      */
-    ID("ID", "id", false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Teacher first name.
      * The first name of a teacher.
      */
-    FIRST_NAME("First name", "first_name", true, false, false, DataTypeExtended.STRING, null),
+    FIRST_NAME("First name", "first_name", true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * Teacher last name.
      * The last name of a teacher.
      */
-    LAST_NAME("Last name", "last_name", true, false, false, DataTypeExtended.STRING, null),
+    LAST_NAME("Last name", "last_name", true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * Teacher gym.
      * Defines whether this teacher is a gymnastics teacher.
      * True if the teacher is a gymnastics teacher, false if not.
      */
-    GENDER("Gender", "gender", true, false, false, DataTypeExtended.GENDER, null),
+    GENDER("Gender", "gender", true, true, false, false, DataTypeExtended.GENDER, null),
 
     /**
      * Teacher gender.
      * Defines the gender of the teacher. True is a male, false if female.
      */
-    IS_GYM("Gymnastic teacher", "is_gym", true, false, false, DataTypeExtended.BOOLEAN, null),
+    IS_GYM("Gymnastic teacher", "is_gym", true, true, false, false, DataTypeExtended.BOOLEAN, null),
 
     /**
      * School ID.
      * The school instance a teacher works at.
      */
-    SCHOOL_ID("School", "school_id", true, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
+    SCHOOL_ID("School", "school_id", true, true, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
 
     /**
      * The display name for this field.
@@ -54,6 +54,11 @@ public enum TeacherFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Defines whether this field is creatable by the user.
+     */
+    private boolean creatable;
 
     /**
      * Defines whether this field is editable by the user.
@@ -86,15 +91,17 @@ public enum TeacherFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
      * @param emptyAllowed True if an empty value is allowed for this property field.
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    TeacherFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    TeacherFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
         this.emptyAllowed = emptyAllowed;
@@ -120,6 +127,11 @@ public enum TeacherFields implements EntityFieldsInterface {
     @Override
     public DataTypeBase getBaseDataType() {
         return this.dataType.getDataTypeBase();
+    }
+
+    @Override
+    public boolean isCreatable() {
+        return this.creatable;
     }
 
     @Override
