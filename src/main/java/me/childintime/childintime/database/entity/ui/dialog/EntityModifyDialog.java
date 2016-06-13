@@ -377,7 +377,7 @@ public class EntityModifyDialog extends JDialog {
                             break;
 
                         default:
-                            field = new BooleanPropertyField((Boolean) value, true);
+                            field = new BooleanPropertyField((Boolean) value, "Is " + fieldType.getDisplayName().toLowerCase(), true);
                     }
                     break;
 

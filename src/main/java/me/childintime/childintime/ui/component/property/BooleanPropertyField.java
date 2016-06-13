@@ -13,6 +13,11 @@ public class BooleanPropertyField extends AbstractPropertyField {
     private boolean allowEmpty = true;
 
     /**
+     * Checkbox text.
+     */
+    private String text;
+
+    /**
      * Boolean field.
      */
     protected JCheckBox checkBox;
@@ -24,18 +29,22 @@ public class BooleanPropertyField extends AbstractPropertyField {
      */
     public BooleanPropertyField(boolean allowNull) {
         // Call an alias constructor
-        this(false, allowNull);
+        this(false, null, allowNull);
     }
 
     /**
      * Constructor.
      *
      * @param state Value.
+     * @param text Check box text, or null.
      * @param allowNull True if null is allowed, false if not.
      */
-    public BooleanPropertyField(Boolean state, boolean allowNull) {
+    public BooleanPropertyField(Boolean state, String text, boolean allowNull) {
         // Call the super
         super(allowNull);
+
+        // Set the text
+        this.text = text;
 
         // Build the UI
         buildUi();
@@ -95,6 +104,10 @@ public class BooleanPropertyField extends AbstractPropertyField {
                 setNull(true);
             }
         });
+
+        // Set the text
+        if(this.text != null)
+            this.checkBox.setText(text);
 
         // Return the checkbox
         return this.checkBox;
