@@ -1,4 +1,4 @@
-package me.childintime.childintime.database.entity.ui.component;
+package me.childintime.childintime.database.entity.ui.selector;
 
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;

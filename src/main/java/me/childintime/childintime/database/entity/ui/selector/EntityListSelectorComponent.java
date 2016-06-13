@@ -1,7 +1,8 @@
-package me.childintime.childintime.database.entity.ui.component;
+package me.childintime.childintime.database.entity.ui.selector;
 
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
+import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.util.swing.SwingUtils;
 
 import javax.swing.*;

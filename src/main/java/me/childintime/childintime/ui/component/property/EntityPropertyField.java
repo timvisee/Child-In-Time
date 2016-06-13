@@ -2,7 +2,7 @@ package me.childintime.childintime.ui.component.property;
 
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
-import me.childintime.childintime.database.entity.ui.component.EntityListSelectorDialog;
+import me.childintime.childintime.database.entity.ui.selector.EntityListSelectorDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 
 import javax.swing.*;
