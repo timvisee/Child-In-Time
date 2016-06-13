@@ -168,6 +168,19 @@ public class DashboardFrame extends JFrame {
         // Create the file menu
         Menu fileMenu = new Menu("File");
 
+        // Create the change user action
+        MenuItem changeUserAction = new MenuItem("Change user");
+        // TODO: An action placeholder is used, assign a proper action!
+        changeUserAction.addActionListener(e -> restart());
+        fileMenu.add(changeUserAction);
+
+        // Create the change database action
+        MenuItem changeDatabaseAction = new MenuItem("Change database");
+        // TODO: An action placeholder is used, assign a proper action!
+        changeDatabaseAction.addActionListener(e -> restart());
+        fileMenu.add(changeDatabaseAction);
+        fileMenu.addSeparator();
+
         // Create the database manager action
         MenuItem databaseManagerAction = new MenuItem("Manage databases");
         databaseManagerAction.addActionListener(e -> new DatabaseManagerDialog(this, true));
@@ -262,14 +275,29 @@ public class DashboardFrame extends JFrame {
     /**
      * Show the about dialog.
      */
-    public void about() {
+    private void about() {
         new AboutDialog(this, true);
+    }
+
+    /**
+     * Restart the application.
+     */
+    // TODO: Properly restart, don't just destroy and reinitialize!
+    private void restart() {
+        // Dispose the current frame
+        dispose();
+
+        // Destroy the core
+        Core.getInstance().destroy();
+
+        // Initialize the core again
+        Core.getInstance().init();
     }
 
     /**
      * Exit the application.
      */
-    public void exit() {
+    private void exit() {
         // Dispose the dashboard frame
         dispose();
 
