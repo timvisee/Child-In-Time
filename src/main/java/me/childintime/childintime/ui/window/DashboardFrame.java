@@ -1,5 +1,6 @@
 package me.childintime.childintime.ui.window;
 
+import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
@@ -17,28 +18,16 @@ public class DashboardFrame extends JFrame {
     private static final long serialVersionUID = 9067983491873285740L;
 
     /**
-     * Student button instance.
+     * Frame title.
      */
-    private JButton studentButton;
-
-    /**
-     * Teacher button instance.
-     */
-    private JButton teacherButton;
-
-    /**
-     * School button instance.
-     */
-    private JButton schoolButton;
+    public static final String FRAME_TITLE = App.APP_NAME + " - Dashboard";
 
     /**
      * Constructor.
-     *
-     * @param title Window title.
      */
-    public DashboardFrame(String title) {
+    public DashboardFrame() {
         // Build the super
-        super(title);
+        super(FRAME_TITLE);
 
         // Build the dialog UI
         buildUI();
@@ -80,7 +69,7 @@ public class DashboardFrame extends JFrame {
     private void buildUI() {
         // Create the base panel
         JPanel container = new JPanel();
-        container.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+        container.setBorder(BorderFactory.createEmptyBorder(16, 16, 0, 0));
         container.setLayout(new GridBagLayout());
 
         // Create a grid bag constraints instance
@@ -99,13 +88,28 @@ public class DashboardFrame extends JFrame {
         mainActions.setBorder(BorderFactory.createTitledBorder("Actions"));
         mainActions.add(new JLabel("Main actions should be shown here!"));
 
+        // Create a main actions panel
+        JPanel statistics = new JPanel();
+        statistics.setBorder(BorderFactory.createTitledBorder("Statistics"));
+        statistics.add(new JLabel("Some statistics should be shown here!"));
+
         // Add the main actions panel
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
         c.weightx = 1;
         c.weighty = 1;
+        c.insets = new Insets(0, 0, 16, 16);
         container.add(mainActions, c);
+
+        // Add the main actions panel
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.insets = new Insets(0, 0, 16, 16);
+        container.add(statistics, c);
 
         // Add the student panel
         c.fill = GridBagConstraints.BOTH;
@@ -113,6 +117,7 @@ public class DashboardFrame extends JFrame {
         c.gridy = 0;
         c.weightx = 1;
         c.weighty = 1;
+        c.insets = new Insets(0, 0, 16, 16);
         container.add(createDashboardPanel(Core.getInstance().getStudentManager()), c);
 
         // Add the student panel
@@ -121,6 +126,7 @@ public class DashboardFrame extends JFrame {
         c.gridy = 0;
         c.weightx = 1;
         c.weighty = 1;
+        c.insets = new Insets(0, 0, 16, 16);
         container.add(createDashboardPanel(Core.getInstance().getTeacherManager()), c);
 
         // Add the student panel
@@ -129,7 +135,8 @@ public class DashboardFrame extends JFrame {
         c.gridy = 1;
         c.weightx = 1;
         c.weighty = 1;
-        //container.add(createDashboardPanel(Core.getInstance().getMeasurementManager()), c);
+        c.insets = new Insets(0, 0, 16, 16);
+        container.add(createDashboardPanel(Core.getInstance().getParkourManager()), c);
 
         // Add the student panel
         c.fill = GridBagConstraints.BOTH;
@@ -137,13 +144,50 @@ public class DashboardFrame extends JFrame {
         c.gridy = 1;
         c.weightx = 1;
         c.weighty = 1;
+        c.insets = new Insets(0, 0, 16, 16);
         container.add(createDashboardPanel(Core.getInstance().getBodyStateManager()), c);
 
         // Add the container to the dialog
         add(container);
 
+        // Build the menu bar
+        buildUiMenu();
+
         // Pack everything
         pack();
+    }
+
+    /**
+     * Build the menu bar for this frame.
+     */
+    public void buildUiMenu() {
+        // Create the menu
+        JMenuBar menu = new JMenuBar();
+
+        // Create the file menu
+        JMenu fileMenu = new JMenu("File");
+
+        // Create exit action
+        JMenuItem exitAction = new JMenuItem("Exit");
+        exitAction.addActionListener(e -> exit());
+        fileMenu.add(exitAction);
+
+        // Add the file menu to the menu bar
+        menu.add(fileMenu);
+
+        // Create the help menu
+        JMenu helpMenu = new JMenu("Help");
+
+        // Create the about action
+        JMenuItem aboutAction = new JMenuItem("About");
+        aboutAction.addActionListener(e -> new AboutDialog(this, true));
+        helpMenu.add(aboutAction);
+
+        // Add the help menu to the menu bar
+        menu.add(helpMenu);
+
+        // Set the menu
+        setJMenuBar(menu);
     }
 
     /**
@@ -206,5 +250,16 @@ public class DashboardFrame extends JFrame {
 
         // Return the container
         return container;
+    }
+
+    /**
+     * Exit the application.
+     */
+    public void exit() {
+        // Dispose the dashboard frame
+        dispose();
+
+        // Destroy the application core
+        Core.getInstance().destroy();
     }
 }

@@ -300,7 +300,7 @@ public class Core {
         this.progressDialog.setVisible(false);
 
         // TODO: Show a proper dashboard here, instead of this demo window!
-        DashboardFrame dashboard = new DashboardFrame("My Dashboard");
+        DashboardFrame dashboard = new DashboardFrame();
         dashboard.setVisible(true);
     }
 
