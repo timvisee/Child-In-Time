@@ -119,7 +119,7 @@ public class EntityListComponent extends JComponent {
      *
      * @return Swing table instance.
      */
-    public JTable getObjectTable() {
+    public JTable getSwingTable() {
         return this.uiTable;
     }
 
@@ -191,7 +191,7 @@ public class EntityListComponent extends JComponent {
         this.uiTableModel = new AbstractTableModel() {
             @Override
             public int getRowCount() {
-                return instance.getManager().getObjectCount();
+                return instance.getManager().getEntityCount();
             }
 
             @Override
@@ -202,7 +202,7 @@ public class EntityListComponent extends JComponent {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 // Get the object
-                final AbstractEntity entity = instance.getManager().getObjects().get(rowIndex);
+                final AbstractEntity entity = instance.getManager().getEntities().get(rowIndex);
 
                 // Return the value
                 try {
@@ -270,9 +270,14 @@ public class EntityListComponent extends JComponent {
             public void keyPressed(KeyEvent e) {
                 // Check whether the enter key is pressed
                 if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // Fire the entities action event if any entity is selected
-                    if(getSelectedCount() > 0)
+                    // Make sure any entity is selected
+                    if(getSelectedCount() > 0) {
+                        // Fire the entity action event
                         fireEntityActionEvent(getSelectedEntities());
+
+                        // Consume the key press
+                        e.consume();
+                    }
                 }
             }
 
@@ -295,11 +300,50 @@ public class EntityListComponent extends JComponent {
         List<AbstractEntity> entities = new ArrayList<>();
 
         // Add each selected entity to the list
-        for(int i : this.uiTable.getSelectedRows())
-            entities.add(this.manager.getObjects().get(i));
+        for(int i : getSelectedIndices())
+            entities.add(this.manager.getEntities().get(i));
 
         // Return the list of entities
         return entities;
+    }
+
+    /**
+     * Get the selected indices.
+     *
+     * @return Selected indices. An empty array will be returned if no entity is selected.
+     */
+    public int[] getSelectedIndices() {
+        return this.uiTable.getSelectedRows();
+    }
+
+    /**
+     * Get a selected entity.
+     * If multiple entities are selected, the entity that was first selected is returned.
+     *
+     * @return Selected entity, or null.
+     */
+    public AbstractEntity getSelectedEntity() {
+        // Return null if no entity is selected
+        if(getSelectedCount() == 0)
+            return null;
+
+        // Return the first selected item
+        return getSelectedEntities().get(0);
+    }
+
+    /**
+     * Get a selected index.
+     * If multiple entities are selected, the index of the entity that was first selected is returned.
+     *
+     * @return
+     */
+    public int getSelectedIndex() {
+        // Return negative one if no entity is selected
+        if(getSelectedCount() == 0)
+            return -1;
+
+        // Return the first selected index
+        return getSelectedIndices()[0];
     }
 
     /**

@@ -1,7 +1,7 @@
 package me.childintime.childintime.ui.window;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.entity.ui.component.EntityListComponent;
+import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
 
 import javax.swing.*;
@@ -88,9 +88,9 @@ public class DashboardFrame extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
 
         // TODO: Move this somewhere else
-        Core.getInstance().getStudentManager().fetchObjects();
-        Core.getInstance().getTeacherManager().fetchObjects();
-        Core.getInstance().getSchoolManager().fetchObjects();
+        Core.getInstance().getStudentManager().fetchEntities();
+        Core.getInstance().getTeacherManager().fetchEntities();
+        Core.getInstance().getSchoolManager().fetchEntities();
 
         // Create the student panel
         JPanel studentPanel = new JPanel();
@@ -108,17 +108,17 @@ public class DashboardFrame extends JFrame {
         schoolPanel.add(this.schoolButton = new JButton("Schools"));
 
         // Add student list
-        EntityListComponent listStudents = new EntityListComponent(Core.getInstance().getStudentManager());
+        EntityViewComponent listStudents = new EntityViewComponent(Core.getInstance().getStudentManager());
         listStudents.setPreferredSize(new Dimension(200, 200));
         studentPanel.add(listStudents);
 
         // Add teacher list
-        EntityListComponent listTeachers = new EntityListComponent(Core.getInstance().getTeacherManager());
+        EntityViewComponent listTeachers = new EntityViewComponent(Core.getInstance().getTeacherManager());
         listTeachers.setPreferredSize(new Dimension(200, 200));
         teacherPanel.add(listTeachers);
 
         // Add school list
-        EntityListComponent listSchools = new EntityListComponent(Core.getInstance().getSchoolManager());
+        EntityViewComponent listSchools = new EntityViewComponent(Core.getInstance().getSchoolManager());
         listSchools.setPreferredSize(new Dimension(200, 200));
         schoolPanel.add(listSchools);
 

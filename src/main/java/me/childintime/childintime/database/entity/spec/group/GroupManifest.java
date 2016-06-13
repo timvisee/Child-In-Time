@@ -53,7 +53,8 @@ public class GroupManifest extends AbstractEntityManifest {
     @Override
     public EntityFieldsInterface[] getDefaultFields() {
         return new GroupFields[]{
-                GroupFields.NAME
+                GroupFields.NAME,
+                GroupFields.SCHOOL_ID
         };
     }
 
@@ -63,7 +64,7 @@ public class GroupManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public Class<? extends AbstractEntity> getObject() {
+    public Class<? extends AbstractEntity> getEntity() {
         return Group.class;
     }
 

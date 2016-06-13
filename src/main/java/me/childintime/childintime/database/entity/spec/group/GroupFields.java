@@ -24,7 +24,7 @@ public enum GroupFields implements EntityFieldsInterface {
      * School ID.
      * The school instance a group is in.
      */
-    SCHOOL_ID("School", "school_id", false, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
+    SCHOOL_ID("School", "school_id", true, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
 
     /**
      * The display name for this field.

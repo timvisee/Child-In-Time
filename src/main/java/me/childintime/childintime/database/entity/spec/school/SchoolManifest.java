@@ -64,7 +64,7 @@ public class SchoolManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public Class<? extends AbstractEntity> getObject() {
+    public Class<? extends AbstractEntity> getEntity() {
         return School.class;
     }
 

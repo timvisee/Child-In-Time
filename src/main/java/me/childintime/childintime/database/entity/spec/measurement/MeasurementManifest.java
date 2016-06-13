@@ -63,7 +63,7 @@ public class MeasurementManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public Class<? extends AbstractEntity> getObject() {
+    public Class<? extends AbstractEntity> getEntity() {
         return Measurement.class;
     }
 
