@@ -1,10 +1,12 @@
 package me.childintime.childintime.ui.window;
 
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 
 public class DashboardFrame extends JFrame {
@@ -40,9 +42,6 @@ public class DashboardFrame extends JFrame {
 
         // Build the dialog UI
         buildUI();
-
-        // Link all components
-        linkComponents();
 
         // Configure the close button behaviour
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,57 +90,54 @@ public class DashboardFrame extends JFrame {
         Core.getInstance().getStudentManager().fetchEntities();
         Core.getInstance().getTeacherManager().fetchEntities();
         Core.getInstance().getSchoolManager().fetchEntities();
+        Core.getInstance().getGroupManager().fetchEntities();
+        Core.getInstance().getMeasurementManager().fetchEntities();
+        Core.getInstance().getBodyStateManager().fetchEntities();
 
-        // Create the student panel
-        JPanel studentPanel = new JPanel();
-        studentPanel.setBorder(BorderFactory.createTitledBorder("Students"));
-        studentPanel.add(this.studentButton = new JButton("Students"));
+        // Create a main actions panel
+        JPanel mainActions = new JPanel();
+        mainActions.setBorder(BorderFactory.createTitledBorder("Actions"));
+        mainActions.add(new JLabel("Main actions should be shown here!"));
 
-        // Create the teacher panel
-        JPanel teacherPanel = new JPanel();
-        teacherPanel.setBorder(BorderFactory.createTitledBorder("Teachers"));
-        teacherPanel.add(this.teacherButton = new JButton("Teachers"));
-
-        // Create the school panel
-        JPanel schoolPanel = new JPanel();
-        schoolPanel.setBorder(BorderFactory.createTitledBorder("Schools"));
-        schoolPanel.add(this.schoolButton = new JButton("Schools"));
-
-        // Add student list
-        EntityViewComponent listStudents = new EntityViewComponent(Core.getInstance().getStudentManager());
-        listStudents.setPreferredSize(new Dimension(200, 200));
-        studentPanel.add(listStudents);
-
-        // Add teacher list
-        EntityViewComponent listTeachers = new EntityViewComponent(Core.getInstance().getTeacherManager());
-        listTeachers.setPreferredSize(new Dimension(200, 200));
-        teacherPanel.add(listTeachers);
-
-        // Add school list
-        EntityViewComponent listSchools = new EntityViewComponent(Core.getInstance().getSchoolManager());
-        listSchools.setPreferredSize(new Dimension(200, 200));
-        schoolPanel.add(listSchools);
-
-        // Add the student panel
-        c.fill = GridBagConstraints.HORIZONTAL;
+        // Add the main actions panel
+        c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
         c.weightx = 1;
-        container.add(studentPanel, c);
+        c.weighty = 1;
+        container.add(mainActions, c);
 
-        // Add the teacher panel
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
+        // Add the student panel
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        container.add(createDashboardPanel(Core.getInstance().getStudentManager()), c);
+
+        // Add the student panel
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 2;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        container.add(createDashboardPanel(Core.getInstance().getTeacherManager()), c);
+
+        // Add the student panel
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
         c.gridy = 1;
         c.weightx = 1;
-        container.add(teacherPanel, c);
+        c.weighty = 1;
+        //container.add(createDashboardPanel(Core.getInstance().getMeasurementManager()), c);
 
-        // Add the school panel
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 2;
+        // Add the student panel
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 2;
+        c.gridy = 1;
         c.weightx = 1;
-        container.add(schoolPanel, c);
+        c.weighty = 1;
+        container.add(createDashboardPanel(Core.getInstance().getBodyStateManager()), c);
 
         // Add the container to the dialog
         add(container);
@@ -151,82 +147,64 @@ public class DashboardFrame extends JFrame {
     }
 
     /**
-     * Link all action listeners to it's components.
+     * Create a dashboard panel for the given manager.
+     *
+     * @param manager Manager to create a dashboard panel for.
+     *
+     * @return Dashboard panel.
      */
-    private void linkComponents() {
-        // Link the buttons to their managers
-        this.studentButton.addActionListener(e -> new EntityManagerDialog(this, Core.getInstance().getStudentManager(), true));
-        this.teacherButton.addActionListener(e -> new EntityManagerDialog(this, Core.getInstance().getTeacherManager(), true));
-        this.schoolButton.addActionListener(e -> new EntityManagerDialog(this, Core.getInstance().getSchoolManager(), true));
+    private JPanel createDashboardPanel(AbstractEntityManager manager) {
+        // Create a grid bag constraints configuration
+        GridBagConstraints c = new GridBagConstraints();
 
-//        // Store the current instance
-//        final LoginDialog instance = this;
-//
-//        // Create a runnable for the close action
-//        Runnable closeAction = () -> {
-//            // Set the success status flag
-//            instance.success = false;
-//
-//            // Dispose the dialog
-//            instance.dispose();
-//        };
-//
-//        // Add an action to the configure button
-//        this.configureButton.addActionListener(e -> {
-//            // Show the database manager form
-//            new DatabaseManagerDialog(instance, true);
-//
-//            // Get the selected combo box value
-//            AbstractDatabase selected = getSelectedDatabase();
-//
-//            // Reset the combo box data model
-//            comboBox.setModel(new DefaultComboBoxModel<>(Core.getInstance().getDatabaseManager().getDatabases().toArray(new AbstractDatabase[] {})));
-//
-//            // Set the selected value to it's original
-//            comboBox.setSelectedItem(selected);
-//        });
-//
-//        // Add an action to the continue button
-//        continueButton.addActionListener(e -> {
-//            // Validate the user input and set the success status flag
-//            instance.success = check();
-//
-//            // Dispose the dialog if the user input is valid
-//            if(instance.success)
-//                instance.dispose();
-//        });
-//
-//        // Add an action to the quit button
-//        quitButton.addActionListener(e -> {
-//            // Run the close action
-//            closeAction.run();
-//        });
-//
-//        // Handle window close events
-//        instance.addWindowListener(new WindowListener() {
-//            @Override
-//            public void windowOpened(WindowEvent e) { }
-//
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//                // Run the close action
-//                closeAction.run();
-//            }
-//
-//            @Override
-//            public void windowClosed(WindowEvent e) { }
-//
-//            @Override
-//            public void windowIconified(WindowEvent e) { }
-//
-//            @Override
-//            public void windowDeiconified(WindowEvent e) { }
-//
-//            @Override
-//            public void windowActivated(WindowEvent e) { }
-//
-//            @Override
-//            public void windowDeactivated(WindowEvent e) { }
-//        });
+        // Create a container
+        final JPanel container = new JPanel(new GridBagLayout());
+
+        // Create a titled border
+        container.setBorder(new CompoundBorder(
+                BorderFactory.createTitledBorder(manager.getManifest().getTypeName(true, true)),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)
+        ));
+
+        // Create the list
+        final EntityViewComponent list = new EntityViewComponent(manager);
+        list.setPreferredSize(new Dimension(200, 200));
+
+        // Create the button panel
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 8, 8));
+
+        // Create the buttons
+        final JButton manageButton = new JButton("Manage");
+        final JButton refreshButton = new JButton("Refresh");
+
+        // Create the button action listeners
+        manageButton.addActionListener(e -> new EntityManagerDialog(this, list.getManager(), true));
+        refreshButton.addActionListener(e -> list.getManager().refresh());
+
+        // Add the buttons
+        buttonPanel.add(manageButton);
+        buttonPanel.add(refreshButton);
+
+        // Add the list to the container
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        container.add(list, c);
+
+        // Create and add the button panel to the container
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.anchor = GridBagConstraints.NORTH;
+        c.insets = new Insets(0, 0, 0, 8);
+        container.add(buttonPanel, c);
+
+        // Return the container
+        return container;
     }
 }
