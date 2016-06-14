@@ -228,6 +228,9 @@ public class EntityListComponent extends JComponent {
         this.uiTable = new JTable(this.uiTableModel);
         this.uiTable.setFillsViewportHeight(true);
 
+        // Automatically create a row sorter
+        this.uiTable.setAutoCreateRowSorter(true);
+
         // Create a scroll pane container for the table, and add it to the base component
         final JScrollPane container = new JScrollPane(this.uiTable);
         add(container);
@@ -317,7 +320,18 @@ public class EntityListComponent extends JComponent {
      * @return Selected indices. An empty array will be returned if no entity is selected.
      */
     public int[] getSelectedIndices() {
-        return this.uiTable.getSelectedRows();
+        // Get the raw selected rows
+        int[] selectedRaw = this.uiTable.getSelectedRows();
+
+        // Create a new array with the converted indices
+        int[] selected = new int[selectedRaw.length];
+
+        // Convert the indices
+        for(int i = 0; i < selectedRaw.length; i++)
+            selected[i] = this.uiTable.convertRowIndexToModel(selectedRaw[i]);
+
+        // Return the converted list
+        return selected;
     }
 
     /**
