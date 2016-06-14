@@ -7,7 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DecimalFormat;
 
-public class TimePropertyField extends IntegerPropertyField {
+public class MillisecondPropertyField extends IntegerPropertyField {
 
     /**
      * Number format.
@@ -24,7 +24,7 @@ public class TimePropertyField extends IntegerPropertyField {
      *
      * @param allowNull True if null is allowed, false if not.
      */
-    public TimePropertyField(boolean allowNull) {
+    public MillisecondPropertyField(boolean allowNull) {
         // Call an alias constructor
         this(0, allowNull);
     }
@@ -35,7 +35,7 @@ public class TimePropertyField extends IntegerPropertyField {
      * @param milliseconds Time in milliseconds.
      * @param allowNull True if null is allowed, false if not.
      */
-    public TimePropertyField(Integer milliseconds, boolean allowNull) {
+    public MillisecondPropertyField(Integer milliseconds, boolean allowNull) {
         // Call the super
         super(milliseconds, allowNull);
 
@@ -104,7 +104,7 @@ public class TimePropertyField extends IntegerPropertyField {
      *
      * @return Time in milliseconds.
      */
-    public int getTime() {
+    public int getMilliseconds() {
         return (int) getValue();
     }
 
@@ -113,7 +113,7 @@ public class TimePropertyField extends IntegerPropertyField {
      *
      * @param milliseconds Time in milliseconds.
      */
-    public void setTime(int milliseconds) {
+    public void setMilliseconds(int milliseconds) {
         setValue(milliseconds);
     }
 }

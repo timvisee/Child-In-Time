@@ -399,11 +399,11 @@ public class EntityModifyDialog extends JDialog {
                 case INTEGER:
                     switch(fieldType.getExtendedDataType()) {
                         case MILLISECONDS:
-                            field = new TimePropertyField((Integer) value, true);
+                            field = new MillisecondPropertyField((Integer) value, true);
                             break;
 
                         case CENTIMETER:
-                            field = new LengthPropertyField((Integer) value, true);
+                            field = new CentimeterPropertyField((Integer) value, true);
                             break;
 
                         default:

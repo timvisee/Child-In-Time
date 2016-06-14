@@ -7,7 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DecimalFormat;
 
-public class LengthPropertyField extends IntegerPropertyField {
+public class CentimeterPropertyField extends IntegerPropertyField {
 
     /**
      * Number format.
@@ -24,7 +24,7 @@ public class LengthPropertyField extends IntegerPropertyField {
      *
      * @param allowNull True if null is allowed, false if not.
      */
-    public LengthPropertyField(boolean allowNull) {
+    public CentimeterPropertyField(boolean allowNull) {
         // Call an alias constructor
         this(0, allowNull);
     }
@@ -35,7 +35,7 @@ public class LengthPropertyField extends IntegerPropertyField {
      * @param centimeters Length in centimeters.
      * @param allowNull True if null is allowed, false if not.
      */
-    public LengthPropertyField(Integer centimeters, boolean allowNull) {
+    public CentimeterPropertyField(Integer centimeters, boolean allowNull) {
         // Call the super
         super(centimeters, allowNull);
 
@@ -104,7 +104,7 @@ public class LengthPropertyField extends IntegerPropertyField {
      *
      * @return Length in centimeters.
      */
-    public int getLength() {
+    public int getCentimeter() {
         return (int) getValue();
     }
 
@@ -113,7 +113,7 @@ public class LengthPropertyField extends IntegerPropertyField {
      *
      * @param centimeters Length in centimeters.
      */
-    public void setLength(int centimeters) {
+    public void setCentimeter(int centimeters) {
         setValue(centimeters);
     }
 }
