@@ -278,6 +278,8 @@ public abstract class AbstractEntity implements Cloneable {
         // Get the raw value
         Object raw = getField(field);
 
+        // TODO: Move these formatter to a global class!
+
         // Format the value
         switch(field.getExtendedDataType()) {
             case MILLISECONDS:
