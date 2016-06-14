@@ -172,6 +172,7 @@ public class GenderPropertyField extends AbstractPropertyField {
 
         // Set the text field text
         if(!isNull()) {
+            //noinspection ConstantConditions
             this.radioButtonMale.setSelected(state);
             this.radioButtonFemale.setSelected(!state);
         }

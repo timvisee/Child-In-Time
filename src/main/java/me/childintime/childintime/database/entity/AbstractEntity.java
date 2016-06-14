@@ -642,7 +642,7 @@ public abstract class AbstractEntity implements Cloneable {
                 break;
 
             case BOOLEAN:
-                this.cachedFields.put(field, !rawField.equals("0"));
+                this.cachedFields.put(field, Integer.valueOf(String.valueOf(rawField)) != 0);
                 break;
 
             case INTEGER:
