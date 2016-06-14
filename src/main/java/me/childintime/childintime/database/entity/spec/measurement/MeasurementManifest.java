@@ -53,7 +53,9 @@ public class MeasurementManifest extends AbstractEntityManifest {
     @Override
     public EntityFieldsInterface[] getDefaultFields() {
         return new MeasurementFields[]{
-                MeasurementFields.TIME
+                MeasurementFields.STUDENT_ID,
+                MeasurementFields.TIME,
+                MeasurementFields.PARKOUR_ID
         };
     }
 

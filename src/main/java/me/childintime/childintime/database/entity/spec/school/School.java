@@ -29,15 +29,8 @@ public class School extends AbstractEntity {
     @Override
     public String getDisplayName() {
         try {
-            // Pre-fetch the required fields if not cached
-            getFields(new SchoolFields[]{
-                    SchoolFields.NAME,
-                    SchoolFields.COMMUNE
-            });
-
             // Build and return the display name
-            return String.valueOf(getField(SchoolFields.NAME)) + ", " +
-                    String.valueOf(getField(SchoolFields.COMMUNE));
+            return String.valueOf(getField(SchoolFields.NAME));
 
         } catch(Exception e) {
             // Print the stack trace

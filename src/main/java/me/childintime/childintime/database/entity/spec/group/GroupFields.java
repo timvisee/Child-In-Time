@@ -12,19 +12,19 @@ public enum GroupFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a group object.
      */
-    ID("ID", "id", false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Group name.
      * Display name of a group.
      */
-    NAME("Group", "name", true, false, false, DataTypeExtended.STRING, null),
+    NAME("Group", "name", true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * School ID.
      * The school instance a group is in.
      */
-    SCHOOL_ID("School", "school_id", true, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
+    SCHOOL_ID("School", "school_id", true, true, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
 
     /**
      * The display name for this field.
@@ -35,6 +35,11 @@ public enum GroupFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Defines whether this field is creatable by the user.
+     */
+    private boolean creatable;
 
     /**
      * Defines whether this field is editable by the user.
@@ -67,15 +72,17 @@ public enum GroupFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
      * @param emptyAllowed True if an empty value is allowed for this property field.
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    GroupFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    GroupFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
         this.emptyAllowed = emptyAllowed;
@@ -101,6 +108,11 @@ public enum GroupFields implements EntityFieldsInterface {
     @Override
     public DataTypeBase getBaseDataType() {
         return this.dataType.getDataTypeBase();
+    }
+
+    @Override
+    public boolean isCreatable() {
+        return this.creatable;
     }
 
     @Override

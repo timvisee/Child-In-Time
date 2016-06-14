@@ -12,31 +12,31 @@ public enum BodyStateFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a body state object.
      */
-    ID("ID", "id", false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Student ID.
      * The student of a body state instance.
      */
-    STUDENT_ID("Student", "student_id", false, false, false, DataTypeExtended.REFERENCE, StudentManifest.getInstance()),
+    STUDENT_ID("Student", "student_id", true, false, false, false, DataTypeExtended.REFERENCE, StudentManifest.getInstance()),
 
     /**
      * Measurement date.
      * The date a body state has been measured on.
      */
-    DATE("Measurement date", "date", true, false, false, DataTypeExtended.DATE, null),
+    DATE("Measurement date", "date", true, true, false, false, DataTypeExtended.DATE, null),
 
     /**
      * Body state length.
      * The body length in centimeters.
      */
-    LENGTH("Length", "length", true, false, false, DataTypeExtended.CENTIMETER, null),
+    LENGTH("Length", "length", true, true, false, false, DataTypeExtended.CENTIMETER, null),
 
     /**
      * Body state weight.
      * The body weight in grams.
      */
-    WEIGHT("Weight", "weight", true, false, false, DataTypeExtended.GRAM, null);
+    WEIGHT("Weight", "weight", true, true, false, false, DataTypeExtended.GRAM, null);
 
     /**
      * The display name for this field.
@@ -47,6 +47,11 @@ public enum BodyStateFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Defines whether this field is creatable by the user.
+     */
+    private boolean creatable;
 
     /**
      * Defines whether this field is editable by the user.
@@ -79,15 +84,17 @@ public enum BodyStateFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a null value is allowed for this property.
      * @param emptyAllowed True if an empty value is allowed for this property field.
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeBase#REFERENCE} type.
      */
-    BodyStateFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    BodyStateFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
         this.emptyAllowed = emptyAllowed;
@@ -113,6 +120,11 @@ public enum BodyStateFields implements EntityFieldsInterface {
     @Override
     public DataTypeBase getBaseDataType() {
         return this.dataType.getDataTypeBase();
+    }
+
+    @Override
+    public boolean isCreatable() {
+        return this.creatable;
     }
 
     @Override

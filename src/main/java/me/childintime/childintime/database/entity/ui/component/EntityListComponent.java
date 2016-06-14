@@ -137,7 +137,11 @@ public class EntityListComponent extends JComponent {
      * This must be called to make data changes visible.
      */
     public void updateViewData() {
+        // Update the table
         this.uiTableModel.fireTableDataChanged();
+
+        // Fit the columns
+        fitColumns();
     }
 
     /**
@@ -223,6 +227,9 @@ public class EntityListComponent extends JComponent {
         // Create the table
         this.uiTable = new JTable(this.uiTableModel);
         this.uiTable.setFillsViewportHeight(true);
+
+        // Create the entity list row sorter
+        this.uiTable.setRowSorter(new EntityListSorter(this.uiTableModel));
 
         // Create a scroll pane container for the table, and add it to the base component
         final JScrollPane container = new JScrollPane(this.uiTable);
@@ -313,7 +320,18 @@ public class EntityListComponent extends JComponent {
      * @return Selected indices. An empty array will be returned if no entity is selected.
      */
     public int[] getSelectedIndices() {
-        return this.uiTable.getSelectedRows();
+        // Get the raw selected rows
+        int[] selectedRaw = this.uiTable.getSelectedRows();
+
+        // Create a new array with the converted indices
+        int[] selected = new int[selectedRaw.length];
+
+        // Convert the indices
+        for(int i = 0; i < selectedRaw.length; i++)
+            selected[i] = this.uiTable.convertRowIndexToModel(selectedRaw[i]);
+
+        // Return the converted list
+        return selected;
     }
 
     /**

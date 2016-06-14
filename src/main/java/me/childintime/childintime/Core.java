@@ -1,5 +1,6 @@
 package me.childintime.childintime;
 
+import com.apple.osx.adapter.OSXAdapter;
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
 import me.childintime.childintime.database.DatabaseBuilder;
@@ -13,6 +14,7 @@ import me.childintime.childintime.database.entity.spec.parkour.ParkourManager;
 import me.childintime.childintime.database.entity.spec.school.SchoolManager;
 import me.childintime.childintime.database.entity.spec.student.StudentManager;
 import me.childintime.childintime.database.entity.spec.teacher.TeacherManager;
+import me.childintime.childintime.ui.window.AboutDialog;
 import me.childintime.childintime.ui.window.DashboardFrame;
 import me.childintime.childintime.ui.window.LoginDialog;
 import me.childintime.childintime.util.Platform;
@@ -133,6 +135,15 @@ public class Core {
         // Show a status message
         System.out.println("Starting application core...");
 
+        // Set some Mac OS X properties
+        if(Platform.isMacOsX()) {
+            System.out.println("Configuring application for Mac OS X...");
+            System.setProperty("com.apple.macos.useScreenMenuBar", "true");
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", App.APP_NAME);
+            System.setProperty("apple.awt.application.name", App.APP_NAME);
+        }
+
         // Enable hardware accelerated rendering using OpenGL for Java2D on non-OSX platforms, including AWT and Swing
         if(!Platform.isMacOsX()) {
             System.out.println("Enabling hardware acceleration...");
@@ -144,6 +155,19 @@ public class Core {
 
         // Initialize and show the progress dialog
         this.progressDialog = new ProgressDialog(null, App.APP_NAME, false, "Initializing...", true);
+
+        // Set up Mac OS X native menu items
+        if(Platform.isMacOsX()) {
+            // Show a status message
+            this.progressDialog.setStatus("Setting up Mac OS X menus...");
+
+            // Attach the about dialog to the Mac OS X about menu item
+            try {
+                OSXAdapter.setAboutHandler(this, getClass().getDeclaredMethod("about", (Class[]) null));
+            } catch(NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
 
         // Initialize the entity managers
         this.bodyStateManager = new BodyStateManager();
@@ -300,7 +324,7 @@ public class Core {
         this.progressDialog.setVisible(false);
 
         // TODO: Show a proper dashboard here, instead of this demo window!
-        DashboardFrame dashboard = new DashboardFrame("My Dashboard");
+        DashboardFrame dashboard = new DashboardFrame();
         dashboard.setVisible(true);
     }
 
@@ -445,5 +469,12 @@ public class Core {
      */
     public TeacherManager getTeacherManager() {
         return this.teacherManager;
+    }
+
+    /**
+     * Show the about dialog.
+     */
+    public void about() {
+        new AboutDialog(null, true);
     }
 }

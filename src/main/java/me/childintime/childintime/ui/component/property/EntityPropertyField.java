@@ -3,6 +3,7 @@ package me.childintime.childintime.ui.component.property;
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.ui.selector.EntityListSelectorDialog;
+import me.childintime.childintime.ui.component.property.action.EntitySelectAction;
 import me.childintime.childintime.util.swing.SwingUtils;
 
 import javax.swing.*;
@@ -84,6 +85,15 @@ public class EntityPropertyField extends AbstractPropertyField {
     }
 
     @Override
+    public void buildActionList() {
+        // Add the file browse action
+        this.actionsList.add(new EntitySelectAction(this));
+
+        // Call the super
+        super.buildActionList();
+    }
+
+    @Override
     protected JComponent buildUiField() {
         // Build the combo box
         this.button = new JButton();
@@ -101,14 +111,7 @@ public class EntityPropertyField extends AbstractPropertyField {
         this.button.validate();
 
         // Create a button action
-        this.button.addActionListener(e -> {
-            // Show the selection dialog
-            final AbstractEntity newSelected = EntityListSelectorDialog.showDialog(SwingUtils.getComponentWindow(this), this.manager, this.selected);
-
-            // Set the selected entity if one is selected
-            if(newSelected != null)
-                setSelected(newSelected);
-        });
+        this.button.addActionListener(e -> showSelect());
 
         // Link the text field listeners
         this.button.addMouseListener(new MouseListener() {
@@ -159,6 +162,18 @@ public class EntityPropertyField extends AbstractPropertyField {
 
         // Return the checkbox
         return this.button;
+    }
+
+    /**
+     * Show the selection dialog.
+     */
+    public void showSelect() {
+        // Show the selection dialog
+        final AbstractEntity newSelected = EntityListSelectorDialog.showDialog(SwingUtils.getComponentWindow(this), this.manager, this.selected);
+
+        // Set the selected entity if one is selected
+        if(newSelected != null)
+            setSelected(newSelected);
     }
 
     /**

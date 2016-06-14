@@ -5,6 +5,7 @@ import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.spec.parkour.ParkourManifest;
+import me.childintime.childintime.database.entity.spec.student.StudentManifest;
 
 public enum MeasurementFields implements EntityFieldsInterface {
 
@@ -12,31 +13,31 @@ public enum MeasurementFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a measurement object.
      */
-    ID("ID", "id", false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Student ID.
      * The student instance a measurement is for.
      */
-    STUDENT_ID("Student", "student_id", false, false, false, DataTypeExtended.REFERENCE, ParkourManifest.getInstance()),
+    STUDENT_ID("Student", "student_id", true, false, false, false, DataTypeExtended.REFERENCE, StudentManifest.getInstance()),
 
     /**
      * Measurement date.return MeasurementManifest.getInstance();
      * The date a measurement was tracked on.
      */
-    DATE("Measurement date", "date", true, false, false, DataTypeExtended.DATE, null),
+    DATE("Measurement date", "date", true, true, false, false, DataTypeExtended.DATE, null),
 
     /**
      * Measurement time.return MeasurementManifest.getInstance();
      * The time in milliseconds of a measurement.
      */
-    TIME("Time", "time", true, false, false, DataTypeExtended.MILLISECONDS, null),
+    TIME("Time", "time", true, true, false, false, DataTypeExtended.MILLISECONDS, null),
 
     /**
      * Parkour ID.return MeasurementManifest.getInstance();
      * The parkour instance a measurement is tracked on.
      */
-    PARKOUR_ID("Parkour", "parkour_id", false, false, false, DataTypeExtended.REFERENCE, ParkourManifest.getInstance());
+    PARKOUR_ID("Parkour", "parkour_id", true, false, false, false, DataTypeExtended.REFERENCE, ParkourManifest.getInstance());
 
     /**
      * The display name for this field.
@@ -47,6 +48,11 @@ public enum MeasurementFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Defines whether this field is creatable by the user.
+     */
+    private boolean creatable;
 
     /**
      * Defines whether this field is editable by the user.
@@ -79,15 +85,17 @@ public enum MeasurementFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
      * @param emptyAllowed True if an empty value is allowed for this property field.
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    MeasurementFields(String displayName, String databaseField, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    MeasurementFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
         this.emptyAllowed = emptyAllowed;
@@ -113,6 +121,11 @@ public enum MeasurementFields implements EntityFieldsInterface {
     @Override
     public DataTypeBase getBaseDataType() {
         return this.dataType.getDataTypeBase();
+    }
+
+    @Override
+    public boolean isCreatable() {
+        return this.creatable;
     }
 
     @Override

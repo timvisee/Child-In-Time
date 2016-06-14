@@ -53,6 +53,7 @@ public class BodyStateManifest extends AbstractEntityManifest {
     @Override
     public EntityFieldsInterface[] getDefaultFields() {
         return new BodyStateFields[]{
+                BodyStateFields.STUDENT_ID,
                 BodyStateFields.LENGTH,
                 BodyStateFields.WEIGHT
         };
