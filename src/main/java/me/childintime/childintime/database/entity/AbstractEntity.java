@@ -379,23 +379,22 @@ public abstract class AbstractEntity implements Cloneable {
                                     break;
 
                                 case DATE:
-                                    // Determine the SQL date
-                                    java.sql.Date sqlDate;
+                                    // Create a string to store the formatted ISO date in
+                                    String dateString;
 
-                                    // Convert date objects
-                                    if(value instanceof Date)
-                                        sqlDate = new java.sql.Date(((Date) value).getTime());
-                                    else {
-                                        // Create a date format instance to parse the date
-                                        // TODO: Define the date format somewhere global!
-                                        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    // Create a date formatter
+                                    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                                        // Try to parse the value to an SQL date
-                                        sqlDate = new java.sql.Date(dateFormat.parse(value.toString()).getTime());
-                                    }
+                                    // Store the value in
+                                    if(!(value instanceof Date))
+                                        // TODO: Does this work properly for strings
+                                        dateString = dateFormat.format(dateFormat.parse(String.valueOf(value)));
+                                    else
+                                        // Format the date string to an ISO date
+                                        dateString = dateFormat.format(value);
 
                                     // Attach the date
-                                    insertStatement.setDate(i + 1, sqlDate);
+                                    insertStatement.setString(i + 1, dateString);
                                     break;
 
                                 case INTEGER:
@@ -496,23 +495,22 @@ public abstract class AbstractEntity implements Cloneable {
                                 break;
 
                             case DATE:
-                                // Determine the SQL date
-                                java.sql.Date sqlDate;
+                                // Create a string to store the formatted ISO date in
+                                String dateString;
 
-                                // Convert date objects
-                                if(value instanceof Date)
-                                    sqlDate = new java.sql.Date(((Date) value).getTime());
-                                else {
-                                    // Create a date format instance to parse the date
-                                    // TODO: Define the date format somewhere global!
-                                    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                // Create a date formatter
+                                final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                                    // Try to parse the value to an SQL date
-                                    sqlDate = new java.sql.Date(dateFormat.parse(value.toString()).getTime());
-                                }
+                                // Store the value in
+                                if(!(value instanceof Date))
+                                    // TODO: Does this work properly for strings
+                                    dateString = dateFormat.format(dateFormat.parse(String.valueOf(value)));
+                                else
+                                    // Format the date string to an ISO date
+                                    dateString = dateFormat.format(value);
 
                                 // Attach the date
-                                updateStatement.setDate(1, sqlDate);
+                                updateStatement.setString(1, dateString);
                                 break;
 
                             case INTEGER:
@@ -632,7 +630,7 @@ public abstract class AbstractEntity implements Cloneable {
     /**
      * Parse a raw database field.
      * This parses the field into it's proper data type.
-     * The parsed fields are added to the hashmap.
+     * The parsed fields are added to the hash map.
      *
      * @param field Database field type.
      * @param rawField Raw field data.
@@ -652,19 +650,15 @@ public abstract class AbstractEntity implements Cloneable {
                 break;
 
             case DATE:
-                // Split the raw date string
-                String[] rawDateSplitted = rawField.toString().split("-");
+                // Create a date formatter to parse the date
+                final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                // Parse the year, month and day values
-                int dateYear = Integer.valueOf(rawDateSplitted[0]);
-                int dateMonth = Integer.valueOf(rawDateSplitted[1]);
-                int dateDay = Integer.valueOf(rawDateSplitted[2]);
-
-                // Create a calender object with the proper date
-                Calendar calendar = new GregorianCalendar(dateYear, dateMonth, dateDay);
-
-                // Put the date into the cached fields
-                this.cachedFields.put(field, calendar.getTime());
+                // Parse the date and put it in the cached fields
+                try {
+                    this.cachedFields.put(field, dateFormat.parse(String.valueOf(rawField)));
+                } catch(ParseException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case REFERENCE:
