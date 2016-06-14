@@ -402,6 +402,10 @@ public class EntityModifyDialog extends JDialog {
                             field = new TimePropertyField((Integer) value, true);
                             break;
 
+                        case CENTIMETER:
+                            field = new LengthPropertyField((Integer) value, true);
+                            break;
+
                         default:
                             field = new IntegerPropertyField((Integer) value, true);
                             break;
