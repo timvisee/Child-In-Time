@@ -37,7 +37,7 @@ public class EntityListComponent extends JComponent {
     private boolean multiSelect = true;
 
     /**
-     * Table instance, to show the list of entitys.
+     * Table instance, to show the list of entities.
      */
     private JTable uiTable;
 
@@ -210,7 +210,7 @@ public class EntityListComponent extends JComponent {
 
                 // Return the value
                 try {
-                    return entity.getField(manager.getManifest().getDefaultFields()[columnIndex]);
+                    return entity.getFieldFormatted(manager.getManifest().getDefaultFields()[columnIndex]);
 
                 } catch (Exception e) {
                     e.printStackTrace();
