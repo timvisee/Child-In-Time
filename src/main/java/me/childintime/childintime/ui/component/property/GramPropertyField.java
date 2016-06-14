@@ -7,24 +7,24 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DecimalFormat;
 
-public class MillisecondPropertyField extends IntegerPropertyField {
+public class GramPropertyField extends IntegerPropertyField {
 
     /**
      * Number format.
      */
-    private static final String NUMBER_FORMAT = "#0.000";
+    private static final String NUMBER_FORMAT = "#0.00";
 
     /**
      * Number format suffix.
      */
-    private static final String NUMBER_FORMAT_SUFFIX = " s";
+    private static final String NUMBER_FORMAT_SUFFIX = " kg";
 
     /**
      * Constructor.
      *
      * @param allowNull True if null is allowed, false if not.
      */
-    public MillisecondPropertyField(boolean allowNull) {
+    public GramPropertyField(boolean allowNull) {
         // Call an alias constructor
         this(0, allowNull);
     }
@@ -32,22 +32,22 @@ public class MillisecondPropertyField extends IntegerPropertyField {
     /**
      * Constructor.
      *
-     * @param milliseconds Time in milliseconds.
+     * @param gram Weight in grams.
      * @param allowNull True if null is allowed, false if not.
      */
-    public MillisecondPropertyField(Integer milliseconds, boolean allowNull) {
+    public GramPropertyField(Integer gram, boolean allowNull) {
         // Call the super
-        super(milliseconds, allowNull);
+        super(gram, allowNull);
 
         // Set the time to zero if it's undefined
-        if(milliseconds == null)
-            milliseconds = 0;
+        if(gram == null)
+            gram = 0;
 
-        // Convert the milliseconds into seconds
-        double seconds = milliseconds / 1000.0;
+        // Convert the gram into kilogram
+        double kilogram = gram / 1000.0;
 
         // Set the spinner model
-        this.spinner.setModel(new SpinnerNumberModel(seconds, 0.0, 9999999.0, 0.01));
+        this.spinner.setModel(new SpinnerNumberModel(kilogram, 0.0, 9999999.0, 0.01));
 
         // Create and set a basic number formatter
         final JSpinner.NumberEditor editor = new JSpinner.NumberEditor(this.spinner);
@@ -100,20 +100,20 @@ public class MillisecondPropertyField extends IntegerPropertyField {
     }
 
     /**
-     * Get the time in milliseconds.
+     * Get the weight in grams.
      *
-     * @return Time in milliseconds.
+     * @return Weight in grams.
      */
-    public int getMilliseconds() {
+    public int getGrams() {
         return (int) getValue();
     }
 
     /**
-     * Set the time in milliseconds.
+     * Set the weight in grams.
      *
-     * @param milliseconds Time in milliseconds.
+     * @param grams Weight in grams.
      */
-    public void setMilliseconds(int milliseconds) {
-        setValue(milliseconds);
+    public void setGrams(int grams) {
+        setValue(grams);
     }
 }
