@@ -203,7 +203,7 @@ public class RemoteDatabasePropertyPanel extends AbstractDatabasePropertyPanel {
         // Apply properties
         remote.setDatabase(this.databaseField.getText());
         remote.setHost(this.hostField.getText());
-        remote.setPort(this.portField.getNumber());
+        remote.setPort(this.portField.getInteger());
         remote.setUser(this.userField.getText());
         remote.setPassword(this.passwordField.getText());
 
