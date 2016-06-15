@@ -5,6 +5,7 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.spec.user.User;
 import me.childintime.childintime.database.entity.spec.user.UserFields;
 import me.childintime.childintime.database.entity.spec.user.UserManifest;
+import me.childintime.childintime.hash.HashUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,34 +32,40 @@ public class UserHelper {
      *
      * @return The user object if the credentials are valid, null otherwise.
      */
-    public static User validateUser(String username, String password) {
-        // Create a database connection
-        Connection connection;
-        try {
-            connection = Core.getInstance().getDatabaseConnector().createConnection();
+    public static User validateUser(String username, String password) throws SQLException {
+        return validateUser(Core.getInstance().getDatabaseConnector().createConnection(), username, password);
+    }
 
-        } catch(SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+    /**
+     * Validate the given user.
+     *
+     * @param databaseConnector Database connection.
+     * @param username Username of the user.
+     * @param password Password of the user.
+     *
+     * @return The user object if the credentials are valid, null otherwise.
+     */
+    public static User validateUser(Connection databaseConnector, String username, String password) {
         // Get the users manifest
         UserManifest manifest = UserManifest.getInstance();
 
         try {
-            // Create a prepared statement to check the user credentials\
+            // Hash the password
+            final String passwordHash = HashUtil.hash(password);
+
+            // Create a prepared statement to authenticate the user credentials\
             // TODO: Select the permission level field here
-            final PreparedStatement authStatement = connection.prepareStatement("SELECT" +
+            final PreparedStatement authStatement = databaseConnector.prepareStatement("SELECT" +
                     "   `" + UserFields.ID.getDatabaseField() + "`," +
-                    "   `" + UserFields.PASSWORD_HASH.getDatabaseField() + "` " +
+                    "   `" + UserFields.PERMISSION_LEVEL.getDatabaseField() + "` " +
                     "FROM `" + manifest.getTableName() + "` " +
                     "WHERE" +
                     "   `" + UserFields.USERNAME.getDatabaseField() + "`=? AND " +
-                    "   `" + UserFields.PERMISSION_LEVEL.getDatabaseField() + "`=?");
+                    "   `" + UserFields.PASSWORD_HASH.getDatabaseField() + "`=?");
 
             // Fill in the username and password hash
             authStatement.setString(1, username);
-            authStatement.setString(2, password);
+            authStatement.setString(2, passwordHash);
 
             // Execute the statement
             ResultSet result = authStatement.executeQuery();
@@ -79,7 +86,7 @@ public class UserHelper {
             // Return the user object
             return authenticatedUser;
 
-        } catch(SQLException e) {
+        } catch(Exception e) {
             // Print the stack trace
             e.printStackTrace();
 

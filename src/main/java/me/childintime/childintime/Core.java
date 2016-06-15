@@ -18,6 +18,7 @@ import me.childintime.childintime.database.entity.spec.user.UserManager;
 import me.childintime.childintime.ui.window.AboutDialog;
 import me.childintime.childintime.ui.window.DashboardFrame;
 import me.childintime.childintime.ui.window.LoginDialog;
+import me.childintime.childintime.user.Authenticator;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
@@ -103,6 +104,11 @@ public class Core {
      * Progress dialog instance.
      */
     private ProgressDialog progressDialog;
+
+    /**
+     * Authenticator.
+     */
+    private Authenticator authenticator = new Authenticator();
 
     /**
      * Get the instance.
@@ -485,6 +491,15 @@ public class Core {
      */
     public TeacherManager getTeacherManager() {
         return this.teacherManager;
+    }
+
+    /**
+     * Get the authenticator.
+     *
+     * @return Authenticator.
+     */
+    public Authenticator getAuthenticator() {
+        return this.authenticator;
     }
 
     /**
