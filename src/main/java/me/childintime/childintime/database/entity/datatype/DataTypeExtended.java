@@ -45,6 +45,12 @@ public enum DataTypeExtended {
     MILLISECONDS(DataTypeBase.INTEGER),
 
     /**
+     * Permission level type.
+     * Used to store the permission level.
+     */
+    PERMISSION_LEVEL(DataTypeBase.INTEGER),
+
+    /**
      * Boolean type.
      * Used to store boolean types.
      */
