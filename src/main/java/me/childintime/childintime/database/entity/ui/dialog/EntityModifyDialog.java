@@ -1,6 +1,7 @@
 package me.childintime.childintime.database.entity.ui.dialog;
 
 import me.childintime.childintime.App;
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
@@ -26,7 +27,6 @@ public class EntityModifyDialog extends JDialog {
     /**
      * Frame title.
      */
-    // TODO: Put object type name in here?
     private static final String FORM_TITLE = App.APP_NAME;
 
     /**
@@ -322,6 +322,9 @@ public class EntityModifyDialog extends JDialog {
         // Create a field offset variable, which is the positional offset for fields
         int fieldOffset = 1;
 
+        // Check whether the user has rights to edit values
+        final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
+
         // Loop through all the fields
         for(int i = 0; i < fieldTypes.length; i++) {
             // Get the field type
@@ -365,7 +368,7 @@ public class EntityModifyDialog extends JDialog {
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label if the field is not editable
-            if(this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) {
+            if(!canEdit || (this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable())) {
                 container.add(new JLabel(value != null ? value.toString() : "?"), c);
                 continue;
             }
