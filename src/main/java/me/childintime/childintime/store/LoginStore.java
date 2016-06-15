@@ -24,7 +24,7 @@ public class LoginStore {
      *
      * @return Stored username.
      */
-    public String getUsername(String def) {
+    public static String getUsername(String def) {
         return GlobalStore.getValue(STORE_SECTION, STORE_KEY_USER, def);
     }
 
@@ -33,7 +33,7 @@ public class LoginStore {
      *
      * @return Stored username.
      */
-    public boolean hasUsername() {
+    public static boolean hasUsername() {
         return GlobalStore.hasValue(STORE_SECTION, STORE_KEY_USER);
     }
 
@@ -42,7 +42,7 @@ public class LoginStore {
      *
      * @param username Stored username.
      */
-    public void setUsername(String username) {
+    public static void setUsername(String username) {
         GlobalStore.setValue(STORE_SECTION, STORE_KEY_USER, username);
     }
 
@@ -53,7 +53,7 @@ public class LoginStore {
      *
      * @return Stored password.
      */
-    public String getPassword(String def) {
+    public static String getPassword(String def) {
         return GlobalStore.getValue(STORE_SECTION, STORE_KEY_PASSWORD, def);
     }
 
@@ -62,7 +62,7 @@ public class LoginStore {
      *
      * @return Stored password.
      */
-    public boolean hasPassword() {
+    public static boolean hasPassword() {
         return GlobalStore.hasValue(STORE_SECTION, STORE_KEY_PASSWORD);
     }
 
@@ -71,7 +71,7 @@ public class LoginStore {
      *
      * @param password Stored password.
      */
-    public void setPassword(String password) {
+    public static void setPassword(String password) {
         GlobalStore.setValue(STORE_SECTION, STORE_KEY_PASSWORD, password);
     }
 }

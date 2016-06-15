@@ -309,6 +309,16 @@ public class Core {
         if(databaseConnector != null)
             this.databaseConnector.destroy();
 
+        // Save the configuration
+        if(this.config != null) {
+            // Show a status message
+            this.progressDialog.setStatus("Saving configuration...");
+
+            // Save the configuration
+            // TODO: Handle errors!
+            getConfig().save();
+        }
+
         // Destroy the progress dialog if it hasn't been disposed yet
         if(this.progressDialog != null)
             this.progressDialog.dispose();

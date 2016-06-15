@@ -7,6 +7,7 @@ import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseModifyDialog;
 import me.childintime.childintime.database.connector.DatabaseConnector;
+import me.childintime.childintime.store.LoginStore;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -109,6 +110,9 @@ public class LoginDialog extends JDialog {
 
         // Bring the window to the front
         toFront();
+
+        // Load the credentials from store
+        loadStore();
     }
 
     /**
@@ -433,6 +437,9 @@ public class LoginDialog extends JDialog {
             return false;
         }
 
+        // Save the credentials to store
+        saveStore();
+
         // TODO: Return the proper result
         return true;
     }
@@ -585,5 +592,39 @@ public class LoginDialog extends JDialog {
 
         // Everything seems all right, return the connection
         return connection;
+    }
+
+    /**
+     * Load the credentials from store.
+     */
+    public void loadStore() {
+        // Fill in the username from store
+        if(LoginStore.hasUsername())
+            this.userField.setText(LoginStore.getUsername(""));
+
+        // Fill in the password from store
+        if(LoginStore.hasPassword())
+            this.passField.setText(LoginStore.getPassword(""));
+
+        // Select the proper component
+        if(this.userField.getText().length() == 0)
+            this.userField.grabFocus();
+        else if(this.passField.getPassword().length == 0)
+            this.passField.grabFocus();
+        else
+            this.loginButton.grabFocus();
+    }
+
+    /**
+     * Save the credentials to store.
+     */
+    public void saveStore() {
+        // Save the username to store
+        if(userField.getText().length() != 0)
+            LoginStore.setUsername(userField.getText());
+
+        // Save the password to store
+        if(passField.getPassword().length != 0)
+            LoginStore.setPassword(String.valueOf(passField.getPassword()));
     }
 }
