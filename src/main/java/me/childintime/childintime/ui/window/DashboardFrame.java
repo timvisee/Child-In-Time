@@ -92,7 +92,7 @@ public class DashboardFrame extends JFrame {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 1;
+        c.weightx = 0;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 16, 16);
         container.add(buildUiMainActionsPanel(), c);
@@ -101,7 +101,7 @@ public class DashboardFrame extends JFrame {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
-        c.weightx = 1;
+        c.weightx = 0;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 16, 16);
         container.add(statistics, c);
@@ -185,6 +185,9 @@ public class DashboardFrame extends JFrame {
         final LinkLabel bodyStateToolLink = new LinkLabel("Open body state tool");
         bodyStateToolLink.addActionListener(e -> BodyStateToolDialog.showDialog(this));
         mainActions.add(bodyStateToolLink);
+
+        // Set the preferred size
+        mainActions.setPreferredSize(new Dimension(300, 200));
 
         // Return the main actions panel
         return mainActions;
