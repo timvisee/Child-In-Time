@@ -7,6 +7,9 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
+import me.childintime.childintime.ui.component.LinkLabel;
+import me.childintime.childintime.ui.window.tool.BodyStateToolDialog;
+import me.childintime.childintime.ui.window.tool.MeasurementToolDialog;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -81,11 +84,6 @@ public class DashboardFrame extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
 
         // Create a main actions panel
-        JPanel mainActions = new JPanel();
-        mainActions.setBorder(BorderFactory.createTitledBorder("Actions"));
-        mainActions.add(new JLabel("Main actions should be shown here!"));
-
-        // Create a main actions panel
         JPanel statistics = new JPanel();
         statistics.setBorder(BorderFactory.createTitledBorder("Statistics"));
         statistics.add(new JLabel("Some statistics should be shown here!"));
@@ -97,7 +95,7 @@ public class DashboardFrame extends JFrame {
         c.weightx = 1;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 16, 16);
-        container.add(mainActions, c);
+        container.add(buildUiMainActionsPanel(), c);
 
         // Add the main actions panel
         c.fill = GridBagConstraints.BOTH;
@@ -152,6 +150,44 @@ public class DashboardFrame extends JFrame {
 
         // Pack everything
         pack();
+    }
+
+    /**
+     * Build the main actions panel.
+     *
+     * @return Main actions panel.
+     */
+    private JPanel buildUiMainActionsPanel() {
+        // Create a main actions panel
+        final JPanel mainActions = new JPanel();
+        mainActions.setLayout(new BoxLayout(mainActions, BoxLayout.Y_AXIS));
+        mainActions.setBorder(new CompoundBorder(
+                BorderFactory.createTitledBorder("Actions"),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)
+        ));
+
+        // Add the main label
+        mainActions.add(new JLabel("<html>" +
+                "Welcome to the " + App.APP_NAME + " dashboard.<br>" +
+                "<br>" +
+                "Use the measurement tool to create new measurements for a student:<br>"));
+
+        // Create and add the measurement tool link
+        final LinkLabel measurementToolLink = new LinkLabel("Open measurement tool");
+        measurementToolLink.addActionListener(e -> MeasurementToolDialog.showDialog(this));
+        mainActions.add(measurementToolLink);
+
+        // Add the main label
+        mainActions.add(new JLabel("<html><br>" +
+                "Use the body state tool to store new body states for a student:<br>"));
+
+        // Create and add the body state tool link
+        final LinkLabel bodyStateToolLink = new LinkLabel("Open body state tool");
+        bodyStateToolLink.addActionListener(e -> BodyStateToolDialog.showDialog(this));
+        mainActions.add(bodyStateToolLink);
+
+        // Return the main actions panel
+        return mainActions;
     }
 
     /**
@@ -216,6 +252,22 @@ public class DashboardFrame extends JFrame {
 
         // Add the entity menu to the menu bar
         menu.add(entityMenu);
+
+        // Create the tools menu
+        Menu toolsMenu = new Menu("Tools");
+
+        // Create the measurement tool menu item
+        MenuItem measurementToolAction = new MenuItem("Measurement tool");
+        measurementToolAction.addActionListener(e -> MeasurementToolDialog.showDialog(this));
+        toolsMenu.add(measurementToolAction);
+
+        // Create the body state tool menu item
+        MenuItem bodyStateToolAction = new MenuItem("Body state tool");
+        bodyStateToolAction.addActionListener(e -> BodyStateToolDialog.showDialog(this));
+        toolsMenu.add(bodyStateToolAction);
+
+        // Add the tools menu to the menu bar
+        menu.add(toolsMenu);
 
         // Create the help menu
         Menu helpMenu = new Menu("Help");
@@ -299,7 +351,7 @@ public class DashboardFrame extends JFrame {
 
         // Create the button action listeners
         manageButton.addActionListener(e -> new EntityManagerDialog(this, list.getManager(), true));
-        refreshButton.addActionListener(e -> list.getManager().refresh());
+        refreshButton.addActionListener(e -> list.refresh());
 
         // Add the buttons
         buttonPanel.add(manageButton);
