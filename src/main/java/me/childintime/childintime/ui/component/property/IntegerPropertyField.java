@@ -158,8 +158,14 @@ public class IntegerPropertyField extends AbstractPropertyField {
         // Set the null state
         if(number == null)
             setNull(true);
-        else
+        else {
+            // Disable the null state of the field
+            if(isNull())
+                setNull(false);
+
+            // Set the value
             this.spinner.setValue(number);
+        }
     }
 
     @Override
