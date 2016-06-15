@@ -439,6 +439,13 @@ public class LoginDialog extends JDialog {
                 String.valueOf(this.passField.getPassword())
         );
 
+        // Close the connection
+        try {
+            connection.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
         // Dispose the progress dialog since we're done
         progress.dispose();
 
