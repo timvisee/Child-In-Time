@@ -2,6 +2,7 @@ package me.childintime.childintime.database.entity;
 
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.permission.PermissionLevel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -691,8 +692,24 @@ public abstract class AbstractEntity implements Cloneable {
                 break;
 
             case INTEGER:
-                this.cachedFields.put(field, Integer.parseInt(String.valueOf(rawField)));
-                break;
+                // Extended integer types
+                switch(field.getExtendedDataType()) {
+                    case PERMISSION_LEVEL:
+                        // Convert the value in a permission level instance
+                        PermissionLevel permissionLevel;
+                        if(rawField instanceof PermissionLevel)
+                            permissionLevel = (PermissionLevel) rawField;
+                        else
+                            permissionLevel = PermissionLevel.getByLevel((Integer) rawField);
+
+                        // Put the permission level in the list
+                        this.cachedFields.put(field, permissionLevel);
+                        break;
+
+                    default:
+                        this.cachedFields.put(field, Integer.parseInt(String.valueOf(rawField)));
+                        break;
+                }
 
             case DATE:
                 // If the raw field is a date object already, put it in the cached fields list
