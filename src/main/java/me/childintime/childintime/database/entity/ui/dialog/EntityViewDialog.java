@@ -337,7 +337,7 @@ public class EntityViewDialog extends JDialog {
         JButton modifyButton = new JButton("Modify");
         modifyButton.addActionListener(e -> {
             // Make sure the user can edit
-            if(canEdit)
+            if(!canEdit)
                 return;
 
             // Show the modify dialog for this entity
