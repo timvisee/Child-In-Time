@@ -44,4 +44,21 @@ public enum PermissionLevel {
     public int getLevel() {
         return this.level;
     }
+
+    /**
+     * Get the permission level by the given level number.
+     *
+     * @param level Level number.
+     *
+     * @return Permission level.
+     */
+    public static PermissionLevel getByLevel(int level) {
+        // Loop through all the permission levels to find the proper one
+        for(PermissionLevel permissionLevel : values())
+            if(permissionLevel.getLevel() == level)
+                return permissionLevel;
+
+        // Return the base level
+        return VIEW_ANONYMOUS;
+    }
 }
