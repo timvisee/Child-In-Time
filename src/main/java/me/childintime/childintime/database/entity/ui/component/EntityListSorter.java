@@ -34,7 +34,7 @@ public class EntityListSorter extends TableRowSorter<AbstractTableModel> {
                 new RowFilter<Object, Integer>() {
                     public boolean include(Entry entry) {
                         // Include if the filter is disabled
-                        if(filterField == null || filterValue == null)
+                        if(filterField == null)
                             return true;
 
                         // Get the row identifier
