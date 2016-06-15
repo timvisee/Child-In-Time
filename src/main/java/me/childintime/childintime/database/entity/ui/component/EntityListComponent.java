@@ -47,6 +47,11 @@ public class EntityListComponent extends JComponent {
     private AbstractTableModel uiTableModel;
 
     /**
+     * List sorter.
+     */
+    private EntityListSorter sorter;
+
+    /**
      * List of entity action listeners.
      */
     private List<EntityActionListener> entityActionListeners = new ArrayList<>();
@@ -228,8 +233,9 @@ public class EntityListComponent extends JComponent {
         this.uiTable = new JTable(this.uiTableModel);
         this.uiTable.setFillsViewportHeight(true);
 
-        // Create the entity list row sorter
-        this.uiTable.setRowSorter(new EntityListSorter(this.uiTableModel));
+        // Build the sorter
+        this.sorter = new EntityListSorter(this.uiTableModel, this.manager);
+        this.uiTable.setRowSorter(sorter);
 
         // Create a scroll pane container for the table, and add it to the base component
         final JScrollPane container = new JScrollPane(this.uiTable);
@@ -371,6 +377,31 @@ public class EntityListComponent extends JComponent {
      */
     public int getSelectedCount() {
         return this.uiTable.getSelectedRowCount();
+    }
+
+    /**
+     * Set the filter.
+     *
+     * @param field Filter field.
+     * @param value Filter value.
+     */
+    public void setFilter(EntityFieldsInterface field, Object value) {
+        // Set the filter
+        this.sorter.setFilter(field, value);
+
+        // Update the data
+        updateViewData();
+    }
+
+    /**
+     * Clear the filter.
+     */
+    public void clearFilter() {
+        // Clear the filter
+        this.sorter.clearFilter();
+
+        // Update the data
+        updateViewData();
     }
 
     /**
