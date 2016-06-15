@@ -5,6 +5,8 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.listener.EntityActionListener;
 import me.childintime.childintime.database.entity.listener.SelectionChangeListener;
+import me.childintime.childintime.util.swing.ProgressDialog;
+import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.swing.TableUtils;
 
 import javax.swing.*;
@@ -405,6 +407,26 @@ public class EntityListComponent extends JComponent {
     }
 
     /**
+     * Refresh the entities.
+     */
+    public void refresh() {
+        // Create a progress dialog
+        final ProgressDialog progressDialog = new ProgressDialog(
+                getWindow(),
+                "Refreshing... ",
+                false,
+                "Refreshing " + getManager().getManifest().getTypeName(false, true) + "...",
+                true
+        );
+
+        // Refresh the entities
+        getManager().refresh();
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
+    }
+
+    /**
      * Add an entity action listener.
      *
      * @param listener Listener.
@@ -511,5 +533,14 @@ public class EntityListComponent extends JComponent {
     public void fireSelectionChangeListenerEvent() {
         // Fire each registered listener
         this.selectionChangeListeners.forEach(SelectionChangeListener::onSelectionChange);
+    }
+
+    /**
+     * Get the window this component is placed in.
+     *
+     * @return Component window.
+     */
+    private Window getWindow() {
+        return SwingUtils.getComponentWindow(this);
     }
 }
