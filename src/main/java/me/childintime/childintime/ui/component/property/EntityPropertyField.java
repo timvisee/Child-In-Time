@@ -2,6 +2,7 @@ package me.childintime.childintime.ui.component.property;
 
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
+import me.childintime.childintime.database.entity.listener.ValueChangeListener;
 import me.childintime.childintime.database.entity.ui.selector.EntityListSelectorDialog;
 import me.childintime.childintime.ui.component.property.action.EntitySelectAction;
 import me.childintime.childintime.util.swing.SwingUtils;
@@ -9,6 +10,8 @@ import me.childintime.childintime.util.swing.SwingUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityPropertyField extends AbstractPropertyField {
 
@@ -33,6 +36,11 @@ public class EntityPropertyField extends AbstractPropertyField {
      * Entity field (button).
      */
     private JButton button;
+
+    /**
+     * List of value change listeners.
+     */
+    private List<ValueChangeListener> valueChangeListeners = new ArrayList<>();
 
     /**
      * Constructor.
@@ -225,6 +233,9 @@ public class EntityPropertyField extends AbstractPropertyField {
 
             // Set the button text
             this.button.setText(this.selected.toString());
+
+            // Fire the value change event
+            fireValueChangeListenerEvent(this.selected);
         }
     }
 
@@ -235,6 +246,9 @@ public class EntityPropertyField extends AbstractPropertyField {
 
         // Update the enabled state of both components
         this.button.setEnabled(!_null);
+
+        // Fire the value change event
+        fireValueChangeListenerEvent(null);
     }
 
     @Override
@@ -319,5 +333,60 @@ public class EntityPropertyField extends AbstractPropertyField {
 
         // Return true if the selected value is null/undefined
         return this.selected == null;
+    }
+
+    /**
+     * Add an value change listener.
+     *
+     * @param listener Listener.
+     */
+    public void addValueChangeListenerListener(ValueChangeListener listener) {
+        this.valueChangeListeners.add(listener);
+    }
+
+    /**
+     * Get all the registered value change listeners.
+     *
+     * @return List of value change listeners.
+     */
+    public List<ValueChangeListener> getValueChangeListenerListeners() {
+        return this.valueChangeListeners;
+    }
+
+    /**
+     * Remove the given value change listener.
+     *
+     * @param listener Listener to remove.
+     *
+     * @return True if any listener was removed, false if not.
+     */
+    public boolean removeValueChangeListenerListeners(ValueChangeListener listener) {
+        return this.valueChangeListeners.remove(listener);
+    }
+
+    /**
+     * Remove all value change listeners.
+     *
+     * @return Number of value change listeners that were removed.
+     */
+    public int removeAllValueChangeListeners() {
+        // Remember the number of value change listeners
+        final int listenerCount = this.valueChangeListeners.size();
+
+        // Clear the list of listeners
+        this.valueChangeListeners.clear();
+
+        // Return the number of cleared listeners
+        return listenerCount;
+    }
+
+    /**
+     * Fire the value change listener event.
+     *
+     * @param newValue New value.
+     */
+    public void fireValueChangeListenerEvent(Object newValue) {
+        // Fire each registered listener
+        this.valueChangeListeners.forEach(valueChangeListener -> valueChangeListener.onValueChange(newValue));
     }
 }
