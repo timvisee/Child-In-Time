@@ -5,6 +5,7 @@ import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.permission.PermissionLevel;
 
 public class StudentManifest extends AbstractEntityManifest {
 
@@ -52,11 +53,17 @@ public class StudentManifest extends AbstractEntityManifest {
 
     @Override
     public EntityFieldsInterface[] getDefaultFields() {
-        return new StudentFields[]{
-                StudentFields.FIRST_NAME,
-                StudentFields.LAST_NAME,
-                StudentFields.GROUP_ID
-        };
+        if(PermissionLevel.VIEW.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()))
+            return new StudentFields[]{
+                    StudentFields.FIRST_NAME,
+                    StudentFields.LAST_NAME,
+                    StudentFields.GROUP_ID
+            };
+        else
+            return new StudentFields[]{
+                    StudentFields.ID,
+                    StudentFields.GROUP_ID
+            };
     }
 
     @Override
