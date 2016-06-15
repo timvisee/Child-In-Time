@@ -132,7 +132,7 @@ public class BodyStateToolDialog extends JDialog {
         c.weighty = 0;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0, 0, 0, 0);
-        container.add(new JLabel("Select a student and the current parkour, track the time of the student and save the body state."), c);
+        container.add(new JLabel("Select a student, and fill in the fields and save a new body state."), c);
 
         // Add the body state panel to the container
         c.fill = GridBagConstraints.BOTH;
