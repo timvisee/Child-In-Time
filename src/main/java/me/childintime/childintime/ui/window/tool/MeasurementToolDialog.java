@@ -60,6 +60,9 @@ public class MeasurementToolDialog extends JDialog {
         // Build the UI
         buildUi();
 
+        // Make the dialog modal
+        setModal(true);
+
         // Configure the frame size
         configureSize();
 
