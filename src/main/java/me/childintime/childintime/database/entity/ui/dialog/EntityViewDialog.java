@@ -240,22 +240,22 @@ public class EntityViewDialog extends JDialog {
             EntityFieldsInterface fieldType = fieldTypes[i];
 
             // Get the field value
-            Object value = null;
+            String value = null;
             if(this.source != null)
                 try {
-                    value = this.source.getField(fieldType);
+                    value = this.source.getFieldFormatted(fieldType);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
 
-            // Hide empty fields that aren't editable/creatable
-            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && value == null) {
-                // Change the offset
-                fieldOffset--;
-
-                // The field should be skipped, continue
-                continue;
-            }
+//            // Hide empty fields that aren't editable/creatable
+//            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && value == null) {
+//                // Change the offset
+//                fieldOffset--;
+//
+//                // The field should be skipped, continue
+//                continue;
+//            }
 
             // Create and add the name label
             c.fill = GridBagConstraints.NONE;
@@ -277,7 +277,7 @@ public class EntityViewDialog extends JDialog {
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label
-            container.add(new JLabel(value != null ? value.toString() : "?"), c);
+            container.add(new JLabel(value), c);
         }
 
         // Create the control button panel and add it to the main panel
