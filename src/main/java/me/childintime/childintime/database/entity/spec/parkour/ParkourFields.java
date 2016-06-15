@@ -154,8 +154,7 @@ public enum ParkourFields implements EntityFieldsInterface {
         return ParkourManifest.getInstance();
     }
 
-    @Override
-    public ParkourFields[] valuesAllowed() {
+    public static ParkourFields[] valuesAllowed() {
         // Create a list of allowed values
         List<ParkourFields> list = new ArrayList<>();
 

@@ -161,8 +161,7 @@ public enum GroupFields implements EntityFieldsInterface {
         return GroupManifest.getInstance();
     }
 
-    @Override
-    public GroupFields[] valuesAllowed() {
+    public static GroupFields[] valuesAllowed() {
         // Create a list of allowed values
         List<GroupFields> list = new ArrayList<>();
 

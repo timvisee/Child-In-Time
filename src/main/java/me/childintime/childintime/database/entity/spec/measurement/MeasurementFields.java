@@ -174,8 +174,7 @@ public enum MeasurementFields implements EntityFieldsInterface {
         return MeasurementManifest.getInstance();
     }
 
-    @Override
-    public MeasurementFields[] valuesAllowed() {
+    public static MeasurementFields[] valuesAllowed() {
         // Create a list of allowed values
         List<MeasurementFields> list = new ArrayList<>();
 

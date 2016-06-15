@@ -173,8 +173,7 @@ public enum BodyStateFields implements EntityFieldsInterface {
         return BodyStateManifest.getInstance();
     }
 
-    @Override
-    public BodyStateFields[] valuesAllowed() {
+    public static BodyStateFields[] valuesAllowed() {
         // Create a list of allowed values
         List<BodyStateFields> list = new ArrayList<>();
 

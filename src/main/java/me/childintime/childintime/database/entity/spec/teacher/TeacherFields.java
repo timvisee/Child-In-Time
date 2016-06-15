@@ -180,8 +180,7 @@ public enum TeacherFields implements EntityFieldsInterface {
         return TeacherManifest.getInstance();
     }
 
-    @Override
-    public TeacherFields[] valuesAllowed() {
+    public static TeacherFields[] valuesAllowed() {
         // Create a list of allowed values
         List<TeacherFields> list = new ArrayList<>();
 

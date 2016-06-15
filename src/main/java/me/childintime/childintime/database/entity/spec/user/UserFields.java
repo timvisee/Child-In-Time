@@ -166,8 +166,7 @@ public enum UserFields implements EntityFieldsInterface {
         return UserManifest.getInstance();
     }
 
-    @Override
-    public UserFields[] valuesAllowed() {
+    public static UserFields[] valuesAllowed() {
         // Create a list of allowed values
         List<UserFields> list = new ArrayList<>();
 

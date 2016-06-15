@@ -91,11 +91,4 @@ public interface EntityFieldsInterface {
      * @return Object's manifest instance.
      */
     AbstractEntityManifest getManifest();
-
-    /**
-     * Get all values that the current user has permission for.
-     *
-     * @return Allowed values.
-     */
-    EntityFieldsInterface[] valuesAllowed();
 }
