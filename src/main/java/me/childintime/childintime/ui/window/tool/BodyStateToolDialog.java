@@ -2,15 +2,16 @@ package me.childintime.childintime.ui.window.tool;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.entity.spec.measurement.Measurement;
-import me.childintime.childintime.database.entity.spec.measurement.MeasurementFields;
+import me.childintime.childintime.database.entity.spec.bodystate.BodyState;
+import me.childintime.childintime.database.entity.spec.bodystate.BodyStateFields;
 import me.childintime.childintime.database.entity.spec.student.Student;
 import me.childintime.childintime.database.entity.spec.student.StudentFields;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.selector.EntityListSelectorComponent;
-import me.childintime.childintime.ui.component.StopwatchComponent;
+import me.childintime.childintime.ui.component.property.CentimeterPropertyField;
+import me.childintime.childintime.ui.component.property.DatePropertyField;
 import me.childintime.childintime.ui.component.property.EntityPropertyField;
-import me.childintime.childintime.ui.component.property.MillisecondPropertyField;
+import me.childintime.childintime.ui.component.property.GramPropertyField;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
@@ -18,12 +19,12 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.Date;
 
-public class MeasurementToolDialog extends JDialog {
+public class BodyStateToolDialog extends JDialog {
 
     /**
      * Dialog title.
      */
-    private static final String DIALOG_TITLE = App.APP_NAME + " - Measurement tool";
+    private static final String DIALOG_TITLE = App.APP_NAME + " - Body state tool";
 
     /**
      * Group filter field.
@@ -36,31 +37,31 @@ public class MeasurementToolDialog extends JDialog {
     private EntityListSelectorComponent studentList;
 
     /**
-     * Parkour selector.
+     * Date field.
      */
-    private EntityPropertyField parkourSelector;
+    private DatePropertyField dateField;
 
     /**
-     * Stopwatch component.
+     * Length field.
      */
-    private StopwatchComponent stopwatchComponent;
+    private CentimeterPropertyField lengthField;
 
     /**
-     * Time field.
+     * Weight field.
      */
-    private MillisecondPropertyField timeField;
+    private GramPropertyField weightField;
 
     /**
-     * Student measurements list.
+     * Student body state list.
      */
-    private EntityViewComponent studentMeasurements;
+    private EntityViewComponent studentBodyStates;
 
     /**
      * Constructor.
      *
      * @param owner Owner window.
      */
-    public MeasurementToolDialog(Window owner) {
+    public BodyStateToolDialog(Window owner) {
         // Construct the super
         super(owner, DIALOG_TITLE);
 
@@ -81,13 +82,13 @@ public class MeasurementToolDialog extends JDialog {
     }
 
     /**
-     * Show the measurement tool dialog.
+     * Show the body state tool dialog.
      *
      * @param owner Owner window.
      */
     public static void showDialog(Window owner) {
         // Create a new dialog instance
-        MeasurementToolDialog dialog = new MeasurementToolDialog(owner);
+        BodyStateToolDialog dialog = new BodyStateToolDialog(owner);
 
         // Show the dialog
         dialog.setVisible(true);
@@ -119,7 +120,7 @@ public class MeasurementToolDialog extends JDialog {
         // Create a grid bag constraints configuration
         GridBagConstraints c = new GridBagConstraints();
 
-        // Create the container and measurement panel
+        // Create the container and body state panel
         final JPanel container = new JPanel(new GridBagLayout());
         container.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 
@@ -131,9 +132,9 @@ public class MeasurementToolDialog extends JDialog {
         c.weighty = 0;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0, 0, 0, 0);
-        container.add(new JLabel("Select a student and the current parkour, track the time of the student and save the measurement."), c);
+        container.add(new JLabel("Select a student and the current parkour, track the time of the student and save the body state."), c);
 
-        // Add the measurement panel to the container
+        // Add the body state panel to the container
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
@@ -141,7 +142,7 @@ public class MeasurementToolDialog extends JDialog {
         c.weighty = 1;
         c.anchor = GridBagConstraints.CENTER;
         c.insets = new Insets(16, 0, 0, 0);
-        container.add(buildUiMeasurementPanel(), c);
+        container.add(buildUiBodyStatePanel(), c);
 
         // Create the close button
         final JButton closeButton = new JButton("Close");
@@ -161,18 +162,18 @@ public class MeasurementToolDialog extends JDialog {
         add(container, BorderLayout.CENTER);
     }
 
-    private JPanel buildUiMeasurementPanel() {
+    private JPanel buildUiBodyStatePanel() {
         // Create a grid bag constraints configuration
         GridBagConstraints c = new GridBagConstraints();
 
-        // Measurement panel
-        final JPanel measurementPanel = new JPanel(new GridBagLayout());
-        measurementPanel.setBorder(new CompoundBorder(
-                BorderFactory.createTitledBorder("Measurement tool"),
+        // Body state panel
+        final JPanel bodyStatePanel = new JPanel(new GridBagLayout());
+        bodyStatePanel.setBorder(new CompoundBorder(
+                BorderFactory.createTitledBorder("Body state tool"),
                 BorderFactory.createEmptyBorder(8, 8, 8, 8)
         ));
 
-        // Add the student panel to the measurement panel
+        // Add the student panel to the body state panel
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
@@ -181,9 +182,9 @@ public class MeasurementToolDialog extends JDialog {
         c.gridheight = 3;
         c.insets = new Insets(0, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
-        measurementPanel.add(buildUiStudentPanel(), c);
+        bodyStatePanel.add(buildUiStudentPanel(), c);
 
-        // Add the input panel to the measurement panel
+        // Add the input panel to the body state panel
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
@@ -192,9 +193,9 @@ public class MeasurementToolDialog extends JDialog {
         c.gridheight = 1;
         c.insets = new Insets(0, 16, 0, 0);
         c.anchor = GridBagConstraints.NORTH;
-        measurementPanel.add(buildUiInputPanel(), c);
+        bodyStatePanel.add(buildUiInputPanel(), c);
 
-        // Add the input panel to the measurement panel
+        // Add the input panel to the body state panel
         c.fill = GridBagConstraints.NONE;
         c.gridx = 1;
         c.gridy = 1;
@@ -203,9 +204,9 @@ public class MeasurementToolDialog extends JDialog {
         c.gridheight = 1;
         c.insets = new Insets(16, 16, 0, 0);
         c.anchor = GridBagConstraints.EAST;
-        measurementPanel.add(buildUiCommitButtonsPanel(), c);
+        bodyStatePanel.add(buildUiCommitButtonsPanel(), c);
 
-        // Add the input panel to the measurement panel
+        // Add the input panel to the body state panel
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 2;
@@ -214,23 +215,23 @@ public class MeasurementToolDialog extends JDialog {
         c.gridheight = 1;
         c.insets = new Insets(32, 16, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
-        measurementPanel.add(buildUiStudentMeasurementsPanel(), c);
+        bodyStatePanel.add(buildUiStudentBodyStatesPanel(), c);
 
-        // Return the measurement panel
-        return measurementPanel;
+        // Return the body state panel
+        return bodyStatePanel;
     }
 
     /**
-     * Build the student measurements panel.
+     * Build the student body states panel.
      *
-     * @return Student measurements panel.
+     * @return Student body states panel.
      */
-    private JPanel buildUiStudentMeasurementsPanel() {
+    private JPanel buildUiStudentBodyStatesPanel() {
         // Create a new grid bag constraints configuration instance
         GridBagConstraints c = new GridBagConstraints();
 
         // Create the panel
-        final JPanel studentMeasurementsPanel = new JPanel(new GridBagLayout());
+        final JPanel studentBodyStatePanel = new JPanel(new GridBagLayout());
 
         // Add the label
         c.fill = GridBagConstraints.NONE;
@@ -240,10 +241,10 @@ public class MeasurementToolDialog extends JDialog {
         c.weighty = 0;
         c.insets = new Insets(8, 2, 2, 0);
         c.anchor = GridBagConstraints.SOUTHWEST;
-        studentMeasurementsPanel.add(new JLabel("Student's measurements:"), c);
+        studentBodyStatePanel.add(new JLabel("Student's body states:"), c);
 
-        // Create a list for the students measurements
-        this.studentMeasurements = new EntityViewComponent(Core.getInstance().getMeasurementManager());
+        // Create a list for the students body states
+        this.studentBodyStates = new EntityViewComponent(Core.getInstance().getBodyStateManager());
 
         // Add the list
         c.fill = GridBagConstraints.BOTH;
@@ -253,30 +254,30 @@ public class MeasurementToolDialog extends JDialog {
         c.weighty = 1;
         c.insets = new Insets(0, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
-        studentMeasurementsPanel.add(this.studentMeasurements, c);
+        studentBodyStatePanel.add(this.studentBodyStates, c);
 
-        // Update the student measurement list when the selected student is changed
-        this.studentList.addSelectionChangeListenerListener(this::updateStudentMeasurementsList);
+        // Update the student body state list when the selected student is changed
+        this.studentList.addSelectionChangeListenerListener(this::updateStudentBodyStateList);
 
-        // Set the minimum preferred size of the measurements list
-        this.studentMeasurements.setPreferredSize(new Dimension(200, 100));
+        // Set the minimum preferred size of the body states list
+        this.studentBodyStates.setPreferredSize(new Dimension(200, 100));
 
         // Return the panel
-        return studentMeasurementsPanel;
+        return studentBodyStatePanel;
     }
 
     /**
-     * Update the list of student measurements.
+     * Update the list of student body states.
      */
-    private void updateStudentMeasurementsList() {
+    private void updateStudentBodyStateList() {
         // Get the selected student
         Student selected = (Student) this.studentList.getSelectedItem();
 
         // Update the filter
-        this.studentMeasurements.setFilter(MeasurementFields.STUDENT_ID, selected);
+        this.studentBodyStates.setFilter(BodyStateFields.STUDENT_ID, selected);
 
         // Update the empty label
-        this.studentMeasurements.setEmptyLabel(selected != null ? "No measurements on record for " + selected + "..." : "No student selected...");
+        this.studentBodyStates.setEmptyLabel(selected != null ? "No body states on record for " + selected + "..." : "No student selected...");
     }
 
     /**
@@ -366,10 +367,16 @@ public class MeasurementToolDialog extends JDialog {
         // Create the panel
         final JPanel inputPanel = new JPanel(new GridBagLayout());
 
-        // Create a parkour selector
-        this.parkourSelector = new EntityPropertyField(Core.getInstance().getParkourManager(), true);
+        // Create the date field
+        this.dateField = new DatePropertyField(new Date(), true);
 
-        // Add the parkour label
+        // Create the length field
+        this.lengthField = new CentimeterPropertyField(0, true);
+
+        // Create the weight field
+        this.weightField = new GramPropertyField(0, true);
+
+        // Add the date label
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
         c.gridy = 0;
@@ -377,9 +384,9 @@ public class MeasurementToolDialog extends JDialog {
         c.weighty = 0;
         c.insets = new Insets(0, 2, 2, 0);
         c.anchor = GridBagConstraints.SOUTHWEST;
-        inputPanel.add(new JLabel("Parkour:"), c);
+        inputPanel.add(new JLabel("Date:"), c);
 
-        // Add the parkour selector
+        // Add the date field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 1;
@@ -387,41 +394,47 @@ public class MeasurementToolDialog extends JDialog {
         c.weighty = 0;
         c.insets = new Insets(0, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
-        inputPanel.add(this.parkourSelector, c);
+        inputPanel.add(this.dateField, c);
 
-        // Create a time field and attach a stopwatch component
-        this.timeField = new MillisecondPropertyField(0, true);
-        this.stopwatchComponent = new StopwatchComponent(this.timeField);
-
-        // Add the stopwatch
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 2;
-        c.weightx = 1;
-        c.weighty = 0;
-        c.insets = new Insets(24, 0, 0, 0);
-        c.anchor = GridBagConstraints.SOUTH;
-        inputPanel.add(this.stopwatchComponent, c);
-
-        // Add the parkour label
+        // Add the length label
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 2;
         c.weightx = 0;
         c.weighty = 0;
-        c.insets = new Insets(0, 2, 2, 0);
+        c.insets = new Insets(16, 2, 2, 0);
         c.anchor = GridBagConstraints.SOUTHWEST;
-        inputPanel.add(new JLabel("Parkour time:"), c);
+        inputPanel.add(new JLabel("Length:"), c);
 
-        // Add the time field
+        // Add the length field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
-        c.gridy = 4;
+        c.gridy = 3;
         c.weightx = 1;
         c.weighty = 0;
         c.insets = new Insets(0, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
-        inputPanel.add(this.timeField, c);
+        inputPanel.add(this.lengthField, c);
+
+        // Add the weight label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 4;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(16, 2, 2, 0);
+        c.anchor = GridBagConstraints.SOUTHWEST;
+        inputPanel.add(new JLabel("Weight:"), c);
+
+        // Add the weight field
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 5;
+        c.weightx = 1;
+        c.weighty = 0;
+        c.insets = new Insets(0, 0, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(this.weightField, c);
 
         // Set the minimum preferred size
         inputPanel.setPreferredSize(new Dimension(150, inputPanel.getPreferredSize().height));
@@ -454,62 +467,73 @@ public class MeasurementToolDialog extends JDialog {
                 return;
             }
 
-            // Make sure a parkour is selected
-            if(this.parkourSelector.getValue() == null) {
-                JOptionPane.showMessageDialog(this, "Please select the parkour.", "No parkour selected", JOptionPane.WARNING_MESSAGE);
+            // Make the selected date is valid
+            if(!this.dateField.isValidDate()) {
+                JOptionPane.showMessageDialog(this, "Please select a date.", "Invalid date", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Stop the stopwatch if it's running
-            if(this.stopwatchComponent.isStarted())
-                this.stopwatchComponent.startStop();
-
-            // Make sure a time is entered
-            if(this.timeField.isNull()) {
-                JOptionPane.showMessageDialog(this, "Please enter a time.", "Invalid time", JOptionPane.WARNING_MESSAGE);
+            // Make sure a length is entered
+            if(this.lengthField.isNull()) {
+                JOptionPane.showMessageDialog(this, "Please enter a body length.", "Invalid length", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Make sure the time is valid
-            if(this.timeField.getMilliseconds() == 0) {
-                JOptionPane.showMessageDialog(this, "The time you've entered is invalid.", "Invalid time", JOptionPane.WARNING_MESSAGE);
+            // Make sure the length is valid
+            if(this.lengthField.getCentimeter() == 0) {
+                JOptionPane.showMessageDialog(this, "The length you've entered is invalid.", "Invalid length", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Create the measurement object
-            Measurement newMeasurement = new Measurement();
-            newMeasurement.parseField(MeasurementFields.STUDENT_ID, this.studentList.getSelectedItem());
-            newMeasurement.parseField(MeasurementFields.PARKOUR_ID, this.parkourSelector.getSelected());
-            newMeasurement.parseField(MeasurementFields.TIME, this.timeField.getMilliseconds());
-            newMeasurement.parseField(MeasurementFields.DATE, new Date());
+            // Make sure a weight is entered
+            if(this.weightField.isNull()) {
+                JOptionPane.showMessageDialog(this, "Please enter a body weight.", "Invalid weight", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Make sure the weight is valid
+            if(this.weightField.getGrams() == 0) {
+                JOptionPane.showMessageDialog(this, "The weight you've entered is invalid.", "Invalid weight", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Create the body state object
+            BodyState newBodyState = new BodyState();
+            newBodyState.parseField(BodyStateFields.STUDENT_ID, this.studentList.getSelectedItem());
+            newBodyState.parseField(BodyStateFields.LENGTH, this.lengthField.getCentimeter());
+            newBodyState.parseField(BodyStateFields.WEIGHT, this.weightField.getGrams());
+            newBodyState.parseField(BodyStateFields.DATE, this.dateField.getDate());
 
             // Create a progress dialog
-            final ProgressDialog progressDialog = new ProgressDialog(this, "Saving measurement", false, "Saving measurement...", true);
+            final ProgressDialog progressDialog = new ProgressDialog(this, "Saving body state", false, "Saving body state...", true);
 
-            // Add the measurement object to the database
-            if(!newMeasurement.applyToDatabase()) {
+            // Add the body state object to the database
+            if(!newBodyState.applyToDatabase()) {
                 // Dispose the progress dialog
                 progressDialog.dispose();
 
                 // Show an error message
-                JOptionPane.showMessageDialog(this, "An error occurred while saving this measurement to the database.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "An error occurred while saving this body state to the database.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Refresh the measurements manager
-            progressDialog.setStatus("Refreshing measurements...");
-            Core.getInstance().getMeasurementManager().refresh();
+            // Refresh the body state manager
+            progressDialog.setStatus("Refreshing body state...");
+            Core.getInstance().getBodyStateManager().refresh();
 
             // Dispose the progress dialog
             progressDialog.dispose();
 
-            // Clear the time field and stopwatch
-            this.stopwatchComponent.clear();
-            this.timeField.setValue(0);
-            this.timeField.setNull(true);
-
             // Clear the student selection
             this.studentList.setSelectedItem(null);
+
+            // Clear the length field
+            this.lengthField.setCentimeter(0);
+            this.lengthField.setNull(true);
+
+            // Clear the weight field
+            this.weightField.setGrams(0);
+            this.weightField.setNull(true);
         });
 
         // Configure the reset button
@@ -533,19 +557,18 @@ public class MeasurementToolDialog extends JDialog {
         // Clear the student list selection
         this.studentList.setSelectedItem(null);
 
-        // Clear the parkour field
-        this.parkourSelector.setNull(true);
+        // Clear the date field
+        this.dateField.setDate(new Date());
 
-        // Stop and clear the stopwatch
-        if(this.stopwatchComponent.isStarted())
-            this.stopwatchComponent.startStop();
-        this.stopwatchComponent.clear();
+        // Clear the length field
+        this.lengthField.setCentimeter(0);
+        this.lengthField.setNull(true);
 
-        // Clear the time
-        this.timeField.setValue(0);
-        this.timeField.setNull(true);
+        // Clear the weight field
+        this.weightField.setGrams(0);
+        this.weightField.setNull(true);
 
-        // Update the student measurement list
-        updateStudentMeasurementsList();
+        // Update the student body state list
+        updateStudentBodyStateList();
     }
 }
