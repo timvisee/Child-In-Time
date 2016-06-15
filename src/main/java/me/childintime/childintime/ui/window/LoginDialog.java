@@ -46,7 +46,7 @@ public class LoginDialog extends JDialog {
     /**
      * Continue button.
      */
-    private JButton continueButton;
+    private JButton loginButton;
 
     /**
      * Quit button.
@@ -261,16 +261,16 @@ public class LoginDialog extends JDialog {
         buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
 
         // Create the continue and quit buttons
-        this.continueButton = new JButton("Continue");
+        this.loginButton = new JButton("Login");
         this.quitButton = new JButton("Quit");
 
         // Put the continue and quit buttons on the frame (in the proper order)
         if(!Platform.isMacOsX()) {
-            buttonPanel.add(continueButton);
+            buttonPanel.add(loginButton);
             buttonPanel.add(quitButton);
         } else {
             buttonPanel.add(quitButton);
-            buttonPanel.add(continueButton);
+            buttonPanel.add(loginButton);
         }
 
         // Add the commit buttons panel
@@ -291,7 +291,7 @@ public class LoginDialog extends JDialog {
 
         // Request focus on the continue button
         // TODO: Move this somewhere else!
-        continueButton.requestFocus();
+        loginButton.requestFocus();
     }
 
     /**
@@ -326,7 +326,7 @@ public class LoginDialog extends JDialog {
         });
 
         // Add an action to the continue button
-        continueButton.addActionListener(e -> {
+        loginButton.addActionListener(e -> {
             // Validate the user input and set the success status flag
             instance.success = authenticate();
 
