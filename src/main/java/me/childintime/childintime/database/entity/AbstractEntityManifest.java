@@ -58,7 +58,7 @@ public abstract class AbstractEntityManifest {
      */
     public EntityFieldsInterface[] getFieldValues() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         // Get the field values from the fields class instance
-        return (EntityFieldsInterface[]) getFields().getMethod("values").invoke(getFields());
+        return (EntityFieldsInterface[]) getFields().getMethod("valuesAllowed").invoke(getFields());
     }
 
     /**
