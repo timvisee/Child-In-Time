@@ -1,7 +1,9 @@
 package me.childintime.childintime.database.entity.ui.component;
 
 import me.childintime.childintime.App;
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
+import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.util.swing.SwingUtils;
 
 import javax.swing.*;
@@ -183,11 +185,17 @@ public class EntityManagerComponent extends JComponent {
         // Get the number of selected entities
         int selected = this.entityView.getSelectedCount();
 
+        // Determine whether the user has edit rights
+        final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
+
+        // Enable the create button
+        this.createButton.setEnabled(canEdit);
+
         // Enable the modify button if one entity is selected
-        this.modifyButton.setEnabled(selected == 1);
+        this.modifyButton.setEnabled(selected == 1 && canEdit);
 
         // Enable the delete button if at least one entity is selected
-        this.deleteButton.setEnabled(selected > 0);
+        this.deleteButton.setEnabled(selected > 0 && canEdit);
     }
 
     /**

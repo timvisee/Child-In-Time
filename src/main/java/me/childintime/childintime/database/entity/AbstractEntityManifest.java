@@ -1,8 +1,11 @@
 package me.childintime.childintime.database.entity;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
 import me.childintime.childintime.database.entity.ui.dialog.EntityModifyDialog;
+import me.childintime.childintime.permission.PermissionLevel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
@@ -97,6 +100,18 @@ public abstract class AbstractEntityManifest {
      * @return Created entity, or null when cancelled.
      */
     public AbstractEntity showCreateDialog(Window owner) {
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    owner,
+                    "You don't have permission to create a new " + this.getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return null;
+        }
+
         // Show the modification dialog to create a new entity
         final AbstractEntity entity = EntityModifyDialog.showCreate(owner, this);
 

@@ -7,6 +7,7 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
+import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
 import me.childintime.childintime.ui.window.tool.BodyStateToolDialog;
 import me.childintime.childintime.ui.window.tool.MeasurementToolDialog;
@@ -263,11 +264,13 @@ public class DashboardFrame extends JFrame {
         // Create the measurement tool menu item
         MenuItem measurementToolAction = new MenuItem("Measurement tool");
         measurementToolAction.addActionListener(e -> MeasurementToolDialog.showDialog(this));
+        measurementToolAction.setEnabled(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()));
         toolsMenu.add(measurementToolAction);
 
         // Create the body state tool menu item
         MenuItem bodyStateToolAction = new MenuItem("Body state tool");
         bodyStateToolAction.addActionListener(e -> BodyStateToolDialog.showDialog(this));
+        bodyStateToolAction.setEnabled(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()));
         toolsMenu.add(bodyStateToolAction);
 
         // Add the tools menu to the menu bar
@@ -310,6 +313,7 @@ public class DashboardFrame extends JFrame {
         // Add a create action
         MenuItem createAction = new MenuItem("Create " + manager.getManifest().getTypeName(false, false) + "...");
         createAction.addActionListener(e -> manifest.showCreateDialog(this));
+        createAction.setEnabled(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()));
         menu.add(createAction);
         menu.addSeparator();
 
