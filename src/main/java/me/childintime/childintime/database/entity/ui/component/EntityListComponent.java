@@ -602,4 +602,20 @@ public class EntityListComponent extends JComponent {
     public void setEmptyLabel(String emptyLabel) {
         this.emptyLabel = emptyLabel;
     }
+
+    /**
+     * Scroll to the given row.
+     *
+     * @param row Row.
+     */
+    public void scrollToRow(int row) {
+        TableUtils.scrollToVisible(this.uiTable, row, 0);
+    }
+
+    /**
+     * Scroll to the selected row.
+     */
+    public void scrollToSelected() {
+        scrollToRow(getSelectedIndex());
+    }
 }

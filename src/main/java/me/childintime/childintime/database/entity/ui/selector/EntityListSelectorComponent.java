@@ -133,6 +133,9 @@ public class EntityListSelectorComponent extends EntityViewComponent {
 
         // Set the last selected item
         this.lastSelectedIndex = i;
+
+        // Scroll to the selected value
+        scrollToRow(i);
     }
 
     /**
