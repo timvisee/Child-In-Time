@@ -69,6 +69,28 @@ public enum PermissionLevel {
         return VIEW_ANONYMOUS;
     }
 
+    /**
+     * Check whether the given permission is equal or better than the current permission.
+     *
+     * @param test Permission to test.
+     *
+     * @return True if better, false if not.
+     */
+    public boolean orBetter(PermissionLevel test) {
+        return test.getLevel() <= getLevel();
+    }
+
+    /**
+     * Check whether the given permission is equal or worse than the current permission.
+     *
+     * @param test Permission to test.
+     *
+     * @return True if worse, false if not.
+     */
+    public boolean orWorse(PermissionLevel test) {
+        return test.getLevel() >= getLevel();
+    }
+
     @Override
     public String toString() {
         return this.title;
