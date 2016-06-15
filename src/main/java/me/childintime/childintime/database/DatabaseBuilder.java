@@ -264,7 +264,8 @@ public class DatabaseBuilder {
                         "  `is_gym` TINYINT NOT NULL," +
                         "  `school_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
-                        "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
+                        "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
+                                " ON DELETE RESTRICT," +
                         "  CHECK(`gender` = 0 OR `gender` = 1)," +
                         "  CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
                         ");"
@@ -280,7 +281,8 @@ public class DatabaseBuilder {
                         "  `gender` TINYINT NOT NULL," +
                         "  `is_gym` TINYINT NOT NULL," +
                         "  `school_id` INT NOT NULL," +
-                        "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)," +
+                        "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
+                                " ON DELETE RESTRICT," +
                         "  CHECK(`gender` = 0 OR `gender` = 1)," +
                         "  CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
                         ");"
@@ -308,6 +310,7 @@ public class DatabaseBuilder {
                         "  `school_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -319,6 +322,7 @@ public class DatabaseBuilder {
                         "  `name` TEXT NOT NULL," +
                         "  `school_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -346,7 +350,8 @@ public class DatabaseBuilder {
                         "  `birthdate` DATE NOT NULL," +
                         "  `group_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
-                        "  FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
+                        "  FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)" +
+                                " ON DELETE RESTRICT," +
                         "  CHECK (`gender` = 0 or `gender` = 1)" +
                         ");"
                 );
@@ -361,7 +366,8 @@ public class DatabaseBuilder {
                         "  `gender` INTEGER NOT NULL," +
                         "  `birthdate` DATE NOT NULL," +
                         "  `group_id` INTEGER NOT NULL," +
-                        "  FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)," +
+                        "  FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)" +
+                                " ON DELETE RESTRICT," +
                         "  CHECK(`gender` = 0 OR `gender` = 1)" +
                         ");"
                 );
@@ -390,6 +396,7 @@ public class DatabaseBuilder {
                         "  `student_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -403,6 +410,7 @@ public class DatabaseBuilder {
                         "  `weight` INTEGER NOT NULL," +
                         "  `student_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -461,8 +469,10 @@ public class DatabaseBuilder {
                         "  `parkour_id` INT  NOT NULL," +
                         "  `student_id` INT  NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
-                        "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)" +
+                                " ON DELETE RESTRICT," +
                         "  FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -475,8 +485,10 @@ public class DatabaseBuilder {
                         "  `time`       INTEGER NOT NULL," +
                         "  `parkour_id` INTEGER NOT NULL," +
                         "  `student_id` INTEGER NOT NULL," +
-                        "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)" +
+                                " ON DELETE RESTRICT," +
                         "  FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -500,8 +512,10 @@ public class DatabaseBuilder {
                         "  `group_id`   INT NOT NULL," +
                         "  `teacher_id` INT NOT NULL," +
                         "  PRIMARY KEY (`group_id`, `teacher_id`)," +
-                        "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)," +
+                        "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
+                                " ON DELETE RESTRICT," +
                         "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -512,8 +526,10 @@ public class DatabaseBuilder {
                         "  `group_id`   INTEGER NOT NULL," +
                         "  `teacher_id` INTEGER NOT NULL," +
                         "  PRIMARY KEY (`group_id`, `teacher_id`)," +
-                        "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)," +
+                        "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
+                                " ON DELETE RESTRICT," +
                         "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -544,6 +560,7 @@ public class DatabaseBuilder {
                         "  `" + tableName + "_id` INT      NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`" + tableName + "_id`) REFERENCES `" + tableName + "` (`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 this.progressDialog.increaseProgressValue();
@@ -569,6 +586,7 @@ public class DatabaseBuilder {
                         "  `field_id` INT  NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`field_id`) REFERENCES `" + tableName + "_meta_field` (`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 this.progressDialog.increaseProgressValue();
@@ -584,6 +602,7 @@ public class DatabaseBuilder {
                         "  `value`   TEXT," +
                         "  `" + tableName + "_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`" + tableName + "_id`) REFERENCES `" + tableName + "` (`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 this.progressDialog.increaseProgressValue();
@@ -607,6 +626,7 @@ public class DatabaseBuilder {
                         "  `value`    TEXT    NOT NULL," +
                         "  `field_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`field_id`) REFERENCES `" + tableName + "_meta_field` (`id`)" +
+                                " ON DELETE RESTRICT" +
                         ");"
                 );
                 this.progressDialog.increaseProgressValue();
