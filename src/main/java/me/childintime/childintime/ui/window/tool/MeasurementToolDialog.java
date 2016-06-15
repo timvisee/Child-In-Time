@@ -9,6 +9,7 @@ import me.childintime.childintime.database.entity.ui.selector.EntityListSelector
 import me.childintime.childintime.ui.component.StopwatchComponent;
 import me.childintime.childintime.ui.component.property.EntityPropertyField;
 import me.childintime.childintime.ui.component.property.MillisecondPropertyField;
+import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -399,15 +400,25 @@ public class MeasurementToolDialog extends JDialog {
             newMeasurement.parseField(MeasurementFields.TIME, this.timeField.getMilliseconds());
             newMeasurement.parseField(MeasurementFields.DATE, new Date());
 
+            // Create a progress dialog
+            final ProgressDialog progressDialog = new ProgressDialog(this, "Saving measurement", false, "Saving measurement...", true);
+
             // Add the measurement object to the database
             if(!newMeasurement.applyToDatabase()) {
+                // Dispose the progress dialog
+                progressDialog.dispose();
+
                 // Show an error message
                 JOptionPane.showMessageDialog(this, "An error occurred while saving this measurement to the database.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             // Refresh the measurements manager
+            progressDialog.setStatus("Refreshing measurements...");
             Core.getInstance().getMeasurementManager().refresh();
+
+            // Dispose the progress dialog
+            progressDialog.dispose();
 
             // Clear the time field and stopwatch
             this.stopwatchComponent.clear();
