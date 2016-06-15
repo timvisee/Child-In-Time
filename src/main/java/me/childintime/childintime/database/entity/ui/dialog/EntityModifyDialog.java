@@ -675,6 +675,10 @@ public class EntityModifyDialog extends JDialog {
             EntityFieldsInterface fieldSpec = entry.getKey();
             AbstractPropertyField field = entry.getValue();
 
+            // Skip password fields
+            if(fieldSpec.getExtendedDataType().equals(DataTypeExtended.PASSWORD_HASH))
+                continue;
+
             // Check whether null is allowed if the field is null
             if(!fieldSpec.isNullAllowed() && field.isNull()) {
                 // Show a message
