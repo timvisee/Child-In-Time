@@ -1,13 +1,4 @@
-# TODO: Create user table (username, mail, `permission_level`, ...)
-# TODO: Insert default user (admin, admin) ?
-# TODO: Insert default parkours
-# TODO: Don't drop the database, only create it (and it's tables) if they don't exist (... IF NOT EXISTS ...)
-# TODO: Compare script with MySQLs script files (what useful stuff are they using)
-
-
-
 # Create the Child-In-Time table, and select it
-# TODO: Remove this in production
 CREATE DATABASE IF NOT EXISTS `childintime` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE childintime;
 
@@ -20,7 +11,7 @@ CREATE TABLE `childintime`.`user` (
     `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `username` TEXT NOT NULL,
     `password_hash` TEXT NOT NULL,
-    3
+    `permission_level` SMALLINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `school` (

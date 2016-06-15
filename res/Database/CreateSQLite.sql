@@ -1,14 +1,4 @@
-/* TODO: Create user table (username, mail, password_hash, ...) */
-/* TODO: Insert default user (admin, admin) ? */
-/* TODO: Insert default parkours */
-/* TODO: Don't drop the database, only create it (and it's tables) if they don't exist (... IF NOT EXISTS ...) */
-/* TODO: Compare script with MySQLs script files (what useful stuff are they using) */
-
-
-
 /* Create the Child-In-Time table, and select it */
-/* TODO: Remove this in production */
-
 CREATE TABLE IF NOT EXISTS `user` (
   `id`               INTEGER PRIMARY KEY AUTOINCREMENT,
   `username`         TEXT    NOT NULL,
