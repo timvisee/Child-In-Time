@@ -95,6 +95,10 @@ public class GramPropertyField extends IntegerPropertyField {
         // Convert the time into a double
         double seconds = milliseconds / 1000;
 
+        // Disable the null state of the field
+        if(isNull())
+            setNull(false);
+
         // Set the value
         this.spinner.setValue(seconds);
     }
