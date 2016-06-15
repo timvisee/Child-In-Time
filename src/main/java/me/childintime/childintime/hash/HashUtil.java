@@ -19,7 +19,7 @@ public class HashUtil {
      *
      * @throws NoSuchAlgorithmException Throws if an error occurred.
      */
-    public String hash(String secret) throws NoSuchAlgorithmException {
+    public static String hash(String secret) throws NoSuchAlgorithmException {
         // Get the message digest
         MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 
@@ -46,7 +46,7 @@ public class HashUtil {
      *
      * @return True if valid, false if not.
      */
-    public boolean validate(String hash, String secret) {
+    public static boolean validate(String hash, String secret) {
         try {
             // Validate the hash
             return hash(secret).toUpperCase().equals(secret.toUpperCase())
