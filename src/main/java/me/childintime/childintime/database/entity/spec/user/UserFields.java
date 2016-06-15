@@ -29,8 +29,7 @@ public enum UserFields implements EntityFieldsInterface {
      * Permission level.
      * The permission level of the user.
      */
-    // TODO: Update this to use the proper column, which should still be added to the database!
-    PERMISSION_LEVEL("Permission level", "password_hash", true, true, false, false, DataTypeExtended.STRING, null);
+    PERMISSION_LEVEL("Permission level", "permission_level", true, true, false, false, DataTypeExtended.INTEGER, null);
 
     /**
      * The display name for this field.
