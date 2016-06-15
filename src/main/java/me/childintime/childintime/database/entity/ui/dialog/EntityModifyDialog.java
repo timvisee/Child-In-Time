@@ -425,8 +425,15 @@ public class EntityModifyDialog extends JDialog {
 
                 case STRING:
                 default:
-                    field = new TextPropertyField(value != null ? value.toString() : null, true);
-                    break;
+                    switch(fieldType.getExtendedDataType()) {
+                        case PASSWORD_HASH:
+                            field = new PasswordPropertyField(null, true);
+                            break;
+
+                        default:
+                            field = new TextPropertyField(value != null ? value.toString() : null, true);
+                            break;
+                    }
             }
 
             // Put the field in the fields hash map
