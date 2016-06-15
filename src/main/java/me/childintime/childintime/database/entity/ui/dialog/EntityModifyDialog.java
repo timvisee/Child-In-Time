@@ -5,6 +5,7 @@ import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.hash.HashUtil;
 import me.childintime.childintime.ui.component.property.*;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
@@ -14,6 +15,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -727,6 +729,34 @@ public class EntityModifyDialog extends JDialog {
             // Get the field specification and property field
             EntityFieldsInterface fieldSpec = entry.getKey();
             AbstractPropertyField field = entry.getValue();
+
+            // Handle password fields
+            if(fieldSpec.getExtendedDataType().equals(DataTypeExtended.PASSWORD_HASH)) {
+                // Get the password field
+                PasswordPropertyField passwordField = (PasswordPropertyField) field;
+
+                // Skip null or empty fields
+                if(passwordField.isNull() || passwordField.getText().length() == 0)
+                    continue;
+
+                try {
+                    // Hash the password
+                    String hash = HashUtil.hash(passwordField.getText());
+
+                    // Put the hash in the list
+                    this.result.getCachedFields().put(fieldSpec, hash);
+
+                } catch(NoSuchAlgorithmException e) {
+                    // Print the stack trace
+                    e.printStackTrace();
+
+                    // Show an error message
+                    JOptionPane.showMessageDialog(this, "Failed to securely store the entered password. The password won't be changed.", "Password failure", JOptionPane.WARNING_MESSAGE);
+                }
+
+                // Continue
+                continue;
+            }
 
             // Put the field value into the entity cache
             this.result.getCachedFields().put(fieldSpec, field.getValue());
