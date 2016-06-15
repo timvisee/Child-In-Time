@@ -444,7 +444,17 @@ public abstract class AbstractEntity implements Cloneable {
                                     break;
 
                                 case INTEGER:
-                                    insertStatement.setInt(i + 1, (Integer) value);
+                                    // Define a variable for the integer value
+                                    int intValue;
+
+                                    // Convert permission level values into an integer
+                                    if(value instanceof PermissionLevel)
+                                        intValue = ((PermissionLevel) value).getLevel();
+                                    else
+                                        intValue = (int) value;
+
+                                    // Set the integer value
+                                    insertStatement.setInt(i + 1, intValue);
                                     break;
 
                                 case REFERENCE:
