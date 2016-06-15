@@ -304,6 +304,20 @@ public abstract class AbstractEntity implements Cloneable {
                 // Create a kilogram formatter and format the value
                 return new DecimalFormat("#00.00' kg'").format(kilogram);
 
+            case BIRTHDAY:
+            case DATE:
+                // Create a date formatter
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                // Format the date
+                return dateFormat.format(raw);
+
+            case GENDER:
+                return (Boolean) raw ? "Male" : "Female";
+
+            case BOOLEAN:
+                return (Boolean) raw ? "True" : "False";
+
             default:
                 return String.valueOf(raw);
         }
