@@ -2,9 +2,11 @@ package me.childintime.childintime.ui.window;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.DatabaseBuilder;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseModifyDialog;
+import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -13,6 +15,11 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class LoginDialog extends JDialog {
 
@@ -403,22 +410,10 @@ public class LoginDialog extends JDialog {
         // Validate user credentials, show status message
         progress.setStatus("Connecting to the database...");
 
-        // Create the database connection
-        Connection connection;
-        try {
-            connection = getSelectedDatabase().createConnection(progress).createConnection();
-
-        } catch(Exception e) {
-            // Print the stack trace
-            e.printStackTrace();
-
-            // Show an error message
-            JOptionPane.showMessageDialog(this, "Failed to connect to the database.", "Connection failure", JOptionPane.WARNING_MESSAGE);
-
-            // Dispose the progress dialog and return
-            progress.dispose();
+        // Prepare the database
+        Connection connection = prepareDatabase(progress);
+        if(connection == null)
             return false;
-        }
 
         // Authenticate the user
         progress.setStatus("Authenticating...");
@@ -479,5 +474,116 @@ public class LoginDialog extends JDialog {
      */
     public AbstractDatabase getSelectedDatabase() {
         return (AbstractDatabase) this.comboBox.getSelectedItem();
+    }
+
+    /**
+     * Prepare the selected database.
+     *
+     * @param progressDialog Progress dialog.
+     *
+     * @return Database connection after preparation, or null if it failed.
+     */
+    public Connection prepareDatabase(ProgressDialog progressDialog) {
+        // Create the database connector
+        DatabaseConnector databaseConnector;
+        try {
+            databaseConnector = getSelectedDatabase().createConnection(progressDialog);
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Show an error message
+            JOptionPane.showMessageDialog(this, "Failed to connect to the database.", "Connection failure", JOptionPane.WARNING_MESSAGE);
+
+            // Dispose the progress dialog and return
+            progressDialog.dispose();
+            return null;
+        }
+
+        // Create the database connection
+        Connection connection;
+        try {
+            connection = databaseConnector.createConnection();
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Show an error message
+            JOptionPane.showMessageDialog(this, "Failed to connect to the database.", "Connection failure", JOptionPane.WARNING_MESSAGE);
+
+            // Dispose the progress dialog and return
+            progressDialog.dispose();
+            return null;
+        }
+
+        // Check whether the database contains all required tables
+        try {
+            // Show a status message
+            progressDialog.setStatus("Checking database...");
+
+            // Fetch the database meta data
+            DatabaseMetaData dbm = connection.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, "user", null);
+
+            // Check whether the required table exists
+            if(!tables.next()) {
+                // Create a list with the buttons to show in the option dialog
+                java.util.List<String> buttons = new ArrayList<>();
+                buttons.add("Setup Database");
+                buttons.add("Quit");
+
+                // Reverse the button list if we're on a Mac OS X system
+                if(Platform.isMacOsX())
+                    Collections.reverse(buttons);
+
+                // Show the option dialog
+                final int option = JOptionPane.showOptionDialog(
+                        progressDialog,
+                        "The current database is empty and is not ready to be used.\n" +
+                                "Would you like to set up the database using the default configuration?",
+                        "Empty database",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        buttons.toArray(),
+                        buttons.get(!Platform.isMacOsX() ? 0 : 1)
+                );
+
+                // Make sure the setup option is pressed
+                if(option != (!Platform.isMacOsX() ? 0 : 1)) {
+                    // TODO: Return to the login dialog, the database setup process is cancelled!
+                    JOptionPane.showMessageDialog(progressDialog, "Should show login dialog again, not working yet!");
+                    System.exit(0);
+                }
+
+                // Build the database
+                try {
+                    // Build the database
+                    new DatabaseBuilder(databaseConnector, progressDialog).build();
+
+                } catch(Exception e) {
+                    // Show the stack trace
+                    e.printStackTrace();
+
+                    // Show an error message
+                    JOptionPane.showMessageDialog(progressDialog, "An error occurred while building the database.", "Database building error", JOptionPane.ERROR_MESSAGE);
+
+                    // Return null
+                    return null;
+                }
+            }
+
+        } catch(SQLException e) {
+            // Show the stack trace
+            e.printStackTrace();
+
+            // Return null
+            return null;
+        }
+
+        // Everything seems all right, return the connection
+        return connection;
     }
 }
