@@ -139,7 +139,7 @@ public class Profiler {
 
         // Return the time if it's less than one millisecond
         if(time <= 0)
-            return "<1 ms";
+            return isActive() ? "<1 ms" : "0 s";
 
         // Return the time in milliseconds
         if(time < 1000)
