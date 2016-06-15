@@ -49,7 +49,7 @@ public class HashUtil {
     public static boolean validate(String hash, String secret) {
         try {
             // Validate the hash
-            return hash(secret).toUpperCase().equals(secret.toUpperCase())
+            return hash(secret).toUpperCase().equals(secret.toUpperCase());
 
         } catch(NoSuchAlgorithmException e) {
             // Print the stack trace
