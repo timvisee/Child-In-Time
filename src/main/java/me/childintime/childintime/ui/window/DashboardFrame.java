@@ -245,6 +245,7 @@ public class DashboardFrame extends JFrame {
         Menu entityMenu = new Menu("Entity");
 
         // Create a menu for each entity
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getUserManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getStudentManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getTeacherManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getSchoolManager()));
@@ -404,6 +405,7 @@ public class DashboardFrame extends JFrame {
         Core.getInstance().getMeasurementManager().refresh();
         Core.getInstance().getBodyStateManager().refresh();
         Core.getInstance().getParkourManager().refresh();
+        Core.getInstance().getUserManager().refresh();
 
         // Revert the visibility state of the progress dialog
         Core.getInstance().getProgressDialog().setVisible(progressDialogVisible);

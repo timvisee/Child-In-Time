@@ -1,12 +1,11 @@
-package me.childintime.childintime.database.entity.spec.student;
+package me.childintime.childintime.database.entity.spec.user;
 
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
-import me.childintime.childintime.database.entity.spec.group.GroupManifest;
 
-public enum StudentFields implements EntityFieldsInterface {
+public enum UserFields implements EntityFieldsInterface {
 
     /**
      * ID.
@@ -15,35 +14,16 @@ public enum StudentFields implements EntityFieldsInterface {
     ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
 
     /**
-     * Student first name.
-     * The first name of a student.
+     * Username.
+     * The username of the user.
      */
-    FIRST_NAME("First name", "first_name", true, true, false, false, DataTypeExtended.STRING, null),
+    USERNAME("Username", "username", true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
-     * Student last name.
-     * The last name of a student.
+     * Password hash.
+     * The password hash of the user.
      */
-    LAST_NAME("Last name", "last_name", true, true, false, false, DataTypeExtended.STRING, null),
-
-    /**
-     * Student gender.
-     * The gender of a student.
-     * True defines a man, false defines a woman.
-     */
-    GENDER("Gender", "gender", true, true, false, false, DataTypeExtended.GENDER, null),
-
-    /**
-     * Student birthdate.
-     * The birthdate of a student.
-     */
-    BIRTHDAY("Birthdate", "birthdate", true, true, false, false, DataTypeExtended.BIRTHDAY, null),
-
-    /**
-     * Group ID.
-     * The group instance a student is part of.
-     */
-    GROUP_ID("Group", "group_id", true, true, false, false, DataTypeExtended.REFERENCE, GroupManifest.getInstance());
+    PASSWORD_HASH("Password", "password_hash", true, true, false, false, DataTypeExtended.PASSWORD_HASH, null);
 
     /**
      * The display name for this field.
@@ -98,7 +78,7 @@ public enum StudentFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    StudentFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    UserFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.creatable = creatable;
@@ -160,6 +140,6 @@ public enum StudentFields implements EntityFieldsInterface {
 
     @Override
     public AbstractEntityManifest getManifest() {
-        return StudentManifest.getInstance();
+        return UserManifest.getInstance();
     }
 }

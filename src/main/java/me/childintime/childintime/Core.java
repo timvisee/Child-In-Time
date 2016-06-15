@@ -14,6 +14,7 @@ import me.childintime.childintime.database.entity.spec.parkour.ParkourManager;
 import me.childintime.childintime.database.entity.spec.school.SchoolManager;
 import me.childintime.childintime.database.entity.spec.student.StudentManager;
 import me.childintime.childintime.database.entity.spec.teacher.TeacherManager;
+import me.childintime.childintime.database.entity.spec.user.UserManager;
 import me.childintime.childintime.ui.window.AboutDialog;
 import me.childintime.childintime.ui.window.DashboardFrame;
 import me.childintime.childintime.ui.window.LoginDialog;
@@ -84,7 +85,7 @@ public class Core {
     private SchoolManager schoolManager;
 
     /**
-     * Student manager instance.
+     * User manager instance.
      */
     private StudentManager studentManager;
 
@@ -92,6 +93,11 @@ public class Core {
      * Teacher manager instance.
      */
     private TeacherManager teacherManager;
+
+    /**
+     * User manager instance.
+     */
+    private UserManager userManager;
 
     /**
      * Progress dialog instance.
@@ -177,6 +183,7 @@ public class Core {
         this.schoolManager = new SchoolManager();
         this.studentManager = new StudentManager();
         this.teacherManager = new TeacherManager();
+        this.userManager = new UserManager();
 
         // Prepare the application data
         try {
@@ -456,10 +463,19 @@ public class Core {
     /**
      * Get the student manager instance.
      *
-     * @return Student manager instance.
+     * @return User manager instance.
      */
     public StudentManager getStudentManager() {
         return this.studentManager;
+    }
+
+    /**
+     * Get the user manager instance.
+     *
+     * @return User manager instance.
+     */
+    public UserManager getUserManager() {
+        return this.userManager;
     }
 
     /**
