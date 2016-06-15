@@ -93,7 +93,7 @@ public class MillisecondPropertyField extends IntegerPropertyField {
         int milliseconds = (int) time;
 
         // Convert the time into a double
-        double seconds = milliseconds / 1000;
+        double seconds = milliseconds / 1000.0;
 
         // Set the value
         this.spinner.setValue(seconds);
