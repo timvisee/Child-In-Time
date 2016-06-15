@@ -5,22 +5,22 @@ public enum PermissionLevel {
     /**
      * Permission to do anything.
      */
-    ALL(0),
+    ALL(0, "All permissions"),
 
     /**
      * Edit permissions.
      */
-    EDIT(1),
+    EDIT(1, "Edit permissions"),
 
     /**
      * View permissions.
      */
-    VIEW(2),
+    VIEW(2, "Viewing permissions"),
 
     /**
      * View permissions for anonymous data.
      */
-    VIEW_ANONYMOUS(3);
+    VIEW_ANONYMOUS(3, "Anonymous viewing permissions");
 
     /**
      * Level number.
@@ -28,12 +28,19 @@ public enum PermissionLevel {
     private int level;
 
     /**
+     * Permission level name.
+     */
+    private String title;
+
+    /**
      * Constructor.
      *
      * @param level Level number.
+     * @param title Title.
      */
-    PermissionLevel(int level) {
+    PermissionLevel(int level, String title) {
         this.level = level;
+        this.title = title;
     }
 
     /**
@@ -60,5 +67,10 @@ public enum PermissionLevel {
 
         // Return the base level
         return VIEW_ANONYMOUS;
+    }
+
+    @Override
+    public String toString() {
+        return this.title;
     }
 }
