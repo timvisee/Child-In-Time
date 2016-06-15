@@ -4,7 +4,9 @@ import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.spec.measurement.Measurement;
 import me.childintime.childintime.database.entity.spec.measurement.MeasurementFields;
+import me.childintime.childintime.database.entity.spec.student.Student;
 import me.childintime.childintime.database.entity.spec.student.StudentFields;
+import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.selector.EntityListSelectorComponent;
 import me.childintime.childintime.ui.component.StopwatchComponent;
 import me.childintime.childintime.ui.component.property.EntityPropertyField;
@@ -47,6 +49,11 @@ public class MeasurementToolDialog extends JDialog {
      * Time field.
      */
     private MillisecondPropertyField timeField;
+
+    /**
+     * Student measurements list.
+     */
+    private EntityViewComponent studentsMeasurements;
 
     /**
      * Constructor.
@@ -198,8 +205,57 @@ public class MeasurementToolDialog extends JDialog {
         c.anchor = GridBagConstraints.EAST;
         measurementPanel.add(buildUiCommitButtonsPanel(), c);
 
+        // Add the input panel to the measurement panel
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 2;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.gridheight = 1;
+        c.insets = new Insets(32, 16, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
+        measurementPanel.add(buildUiStudentMeasurementsPanel(), c);
+
         // Return the measurement panel
         return measurementPanel;
+    }
+
+    /**
+     * Build the student measurements panel.
+     *
+     * @return Student measurements panel.
+     */
+    private JPanel buildUiStudentMeasurementsPanel() {
+        // Create the panel
+        final JPanel studentMeasurementsPanel = new JPanel(new BorderLayout());
+        studentMeasurementsPanel.setBorder(new CompoundBorder(
+                BorderFactory.createTitledBorder("Student's measurements"),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)
+        ));
+
+        // Create a list for the students measurements
+        this.studentsMeasurements = new EntityViewComponent(Core.getInstance().getMeasurementManager());
+        studentMeasurementsPanel.add(this.studentsMeasurements);
+
+        // Update the student measurement list when the selected student is changed
+        this.studentList.addSelectionChangeListenerListener(this::updateStudentMeasurementsList);
+
+        // Return the panel
+        return studentMeasurementsPanel;
+    }
+
+    /**
+     * Update the list of student measurements.
+     */
+    private void updateStudentMeasurementsList() {
+        // Get the selected student
+        Student selected = (Student) this.studentList.getSelectedItem();
+
+        // Update the filter
+        this.studentsMeasurements.setFilter(MeasurementFields.STUDENT_ID, selected);
+
+        // Update the empty label
+        this.studentsMeasurements.setEmptyLabel(selected != null ? "No measurements on record for " + selected + "..." : "No student selected...");
     }
 
     /**
@@ -467,5 +523,8 @@ public class MeasurementToolDialog extends JDialog {
         // Clear the time
         this.timeField.setValue(0);
         this.timeField.setNull(true);
+
+        // Update the student measurement list
+        updateStudentMeasurementsList();
     }
 }
