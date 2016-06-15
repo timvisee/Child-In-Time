@@ -6,6 +6,7 @@ import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.hash.HashUtil;
+import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.property.*;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
@@ -410,6 +411,10 @@ public class EntityModifyDialog extends JDialog {
 
                         case GRAM:
                             field = new GramPropertyField((Integer) value, true);
+                            break;
+
+                        case PERMISSION_LEVEL:
+                            field = new PermissionLevelPropertyField((PermissionLevel) value, true);
                             break;
 
                         default:

@@ -570,7 +570,16 @@ public abstract class AbstractEntity implements Cloneable {
                                 break;
 
                             case INTEGER:
-                                updateStatement.setInt(1, (Integer) value);
+                                // Define a variable for the integer value
+                                int intValue;
+
+                                // Convert permission level values into an integer
+                                if(value instanceof PermissionLevel)
+                                    intValue = ((PermissionLevel) value).getLevel();
+                                else
+                                    intValue = (int) value;
+
+                                updateStatement.setInt(1, intValue);
                                 break;
 
                             case REFERENCE:
@@ -720,6 +729,7 @@ public abstract class AbstractEntity implements Cloneable {
                         this.cachedFields.put(field, Integer.parseInt(String.valueOf(rawField)));
                         break;
                 }
+                break;
 
             case DATE:
                 // If the raw field is a date object already, put it in the cached fields list

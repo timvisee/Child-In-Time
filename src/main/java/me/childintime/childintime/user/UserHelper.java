@@ -75,9 +75,8 @@ public class UserHelper {
                 return null;
 
             // Get the ID and permission level
-            // TODO: Fetch permission level here!
             int userId = result.getInt(1);
-            int userLevel = result.getInt(1); // TODO: This should be 2!
+            int userLevel = result.getInt(2);
 
             // Create a new user object with these properties
             User authenticatedUser = new User(userId);
