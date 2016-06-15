@@ -1,11 +1,16 @@
 package me.childintime.childintime.database.entity.spec.measurement;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.spec.parkour.ParkourManifest;
 import me.childintime.childintime.database.entity.spec.student.StudentManifest;
+import me.childintime.childintime.permission.PermissionLevel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum MeasurementFields implements EntityFieldsInterface {
 
@@ -13,31 +18,31 @@ public enum MeasurementFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a measurement object.
      */
-    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", PermissionLevel.VIEW_ANONYMOUS, false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Student ID.
      * The student instance a measurement is for.
      */
-    STUDENT_ID("Student", "student_id", true, false, false, false, DataTypeExtended.REFERENCE, StudentManifest.getInstance()),
+    STUDENT_ID("Student", "student_id", PermissionLevel.VIEW_ANONYMOUS, true, false, false, false, DataTypeExtended.REFERENCE, StudentManifest.getInstance()),
 
     /**
      * Measurement date.return MeasurementManifest.getInstance();
      * The date a measurement was tracked on.
      */
-    DATE("Measurement date", "date", true, true, false, false, DataTypeExtended.DATE, null),
+    DATE("Measurement date", "date", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.DATE, null),
 
     /**
      * Measurement time.return MeasurementManifest.getInstance();
      * The time in milliseconds of a measurement.
      */
-    TIME("Time", "time", true, true, false, false, DataTypeExtended.MILLISECONDS, null),
+    TIME("Time", "time", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.MILLISECONDS, null),
 
     /**
      * Parkour ID.return MeasurementManifest.getInstance();
      * The parkour instance a measurement is tracked on.
      */
-    PARKOUR_ID("Parkour", "parkour_id", true, false, false, false, DataTypeExtended.REFERENCE, ParkourManifest.getInstance());
+    PARKOUR_ID("Parkour", "parkour_id", PermissionLevel.VIEW_ANONYMOUS, true, false, false, false, DataTypeExtended.REFERENCE, ParkourManifest.getInstance());
 
     /**
      * The display name for this field.
@@ -48,6 +53,11 @@ public enum MeasurementFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Minimum required permission level.
+     */
+    private PermissionLevel minimumPermission;
 
     /**
      * Defines whether this field is creatable by the user.
@@ -85,6 +95,7 @@ public enum MeasurementFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param minimumPermission Minimum required permission level.
      * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
@@ -92,9 +103,10 @@ public enum MeasurementFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    MeasurementFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    MeasurementFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.minimumPermission = minimumPermission;
         this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
@@ -111,6 +123,11 @@ public enum MeasurementFields implements EntityFieldsInterface {
     @Override
     public String getDatabaseField() {
         return databaseField;
+    }
+
+    @Override
+    public PermissionLevel getMinimumPermission() {
+        return this.minimumPermission;
     }
 
     @Override
@@ -155,5 +172,22 @@ public enum MeasurementFields implements EntityFieldsInterface {
     @Override
     public AbstractEntityManifest getManifest() {
         return MeasurementManifest.getInstance();
+    }
+
+    @Override
+    public MeasurementFields[] valuesAllowed() {
+        // Create a list of allowed values
+        List<MeasurementFields> list = new ArrayList<>();
+
+        // Get the users permission level
+        final PermissionLevel permissionLevel = Core.getInstance().getAuthenticator().getPermissionLevel();
+
+        // Loop through the values and put all values in the list the user has permission for
+        for(MeasurementFields value : values())
+            if(value.getMinimumPermission().orBetter(permissionLevel))
+                list.add(value);
+
+        // Return the values array
+        return list.toArray(new MeasurementFields[]{});
     }
 }

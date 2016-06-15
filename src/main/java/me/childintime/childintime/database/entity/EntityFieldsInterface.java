@@ -2,6 +2,7 @@ package me.childintime.childintime.database.entity;
 
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.permission.PermissionLevel;
 
 public interface EntityFieldsInterface {
 
@@ -18,6 +19,13 @@ public interface EntityFieldsInterface {
      * @return The database field name in a String.
      */
     String getDatabaseField();
+
+    /**
+     * Get the minimum permission for this field.
+     *
+     * @return Minimum field permission.
+     */
+    PermissionLevel getMinimumPermission();
 
     /**
      * Check whether this field is creatable by the user.
@@ -83,4 +91,11 @@ public interface EntityFieldsInterface {
      * @return Object's manifest instance.
      */
     AbstractEntityManifest getManifest();
+
+    /**
+     * Get all values that the current user has permission for.
+     *
+     * @return Allowed values.
+     */
+    EntityFieldsInterface[] valuesAllowed();
 }

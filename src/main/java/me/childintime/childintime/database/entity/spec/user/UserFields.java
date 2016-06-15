@@ -1,9 +1,14 @@
 package me.childintime.childintime.database.entity.spec.user;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.permission.PermissionLevel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum UserFields implements EntityFieldsInterface {
 
@@ -11,25 +16,25 @@ public enum UserFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a student object.
      */
-    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", PermissionLevel.VIEW_ANONYMOUS, false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Username.
      * The username of the user.
      */
-    USERNAME("Username", "username", true, true, false, false, DataTypeExtended.STRING, null),
+    USERNAME("Username", "username", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * Password hash.
      * The password hash of the user.
      */
-    PASSWORD_HASH("Password", "password_hash", true, true, false, false, DataTypeExtended.PASSWORD_HASH, null),
+    PASSWORD_HASH("Password", "password_hash", PermissionLevel.EDIT, true, true, false, false, DataTypeExtended.PASSWORD_HASH, null),
 
     /**
      * Permission level.
      * The permission level of the user.
      */
-    PERMISSION_LEVEL("Permission level", "permission_level", true, true, false, false, DataTypeExtended.PERMISSION_LEVEL, null);
+    PERMISSION_LEVEL("Permission level", "permission_level", PermissionLevel.EDIT, true, true, false, false, DataTypeExtended.PERMISSION_LEVEL, null);
 
     /**
      * The display name for this field.
@@ -40,6 +45,11 @@ public enum UserFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Minimum required permission level.
+     */
+    private PermissionLevel minimumPermission;
 
     /**
      * Defines whether this field is creatable by the user.
@@ -77,6 +87,7 @@ public enum UserFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param minimumPermission Minimum required permission level.
      * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
@@ -84,9 +95,10 @@ public enum UserFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    UserFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    UserFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.minimumPermission = minimumPermission;
         this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
@@ -103,6 +115,11 @@ public enum UserFields implements EntityFieldsInterface {
     @Override
     public String getDatabaseField() {
         return databaseField;
+    }
+
+    @Override
+    public PermissionLevel getMinimumPermission() {
+        return this.minimumPermission;
     }
 
     @Override
@@ -147,5 +164,22 @@ public enum UserFields implements EntityFieldsInterface {
     @Override
     public AbstractEntityManifest getManifest() {
         return UserManifest.getInstance();
+    }
+
+    @Override
+    public UserFields[] valuesAllowed() {
+        // Create a list of allowed values
+        List<UserFields> list = new ArrayList<>();
+
+        // Get the users permission level
+        final PermissionLevel permissionLevel = Core.getInstance().getAuthenticator().getPermissionLevel();
+
+        // Loop through the values and put all values in the list the user has permission for
+        for(UserFields value : values())
+            if(value.getMinimumPermission().orBetter(permissionLevel))
+                list.add(value);
+
+        // Return the values array
+        return list.toArray(new UserFields[]{});
     }
 }
