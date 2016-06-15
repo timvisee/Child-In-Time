@@ -10,9 +10,10 @@
 /* TODO: Remove this in production */
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `id`            INTEGER PRIMARY KEY AUTOINCREMENT,
-  `username`      TEXT NOT NULL,
-  `password_hash` TEXT NOT NULL
+  `id`               INTEGER PRIMARY KEY AUTOINCREMENT,
+  `username`         TEXT    NOT NULL,
+  `password_hash`    TEXT    NOT NULL,
+  `permission_level` INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `school` (
@@ -327,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `measurement_meta_value` (
 );
 
 INSERT INTO `user` VALUES
-  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');
+  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 0);
 
 INSERT INTO `school` VALUES
   (NULL, 'De Wegwijzer', 'Alphen aan den Rijn'),

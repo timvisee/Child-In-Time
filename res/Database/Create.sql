@@ -1,4 +1,4 @@
-# TODO: Create user table (username, mail, password_hash, ...)
+# TODO: Create user table (username, mail, `permission_level`, ...)
 # TODO: Insert default user (admin, admin) ?
 # TODO: Insert default parkours
 # TODO: Don't drop the database, only create it (and it's tables) if they don't exist (... IF NOT EXISTS ...)
@@ -16,11 +16,11 @@ USE childintime;
 /*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
-CREATE TABLE IF NOT EXISTS `user` (
-  `id`            INT  NOT NULL AUTO_INCREMENT,
-  `username`      TEXT NOT NULL,
-  `password_hash` TEXT NOT NULL,
-  PRIMARY KEY (`id`)
+CREATE TABLE `childintime`.`user` (
+    `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `username` TEXT NOT NULL,
+    `password_hash` TEXT NOT NULL,
+    3
 );
 
 CREATE TABLE IF NOT EXISTS `school` (
@@ -212,7 +212,7 @@ DROP PROCEDURE createMetaTable;
 
 LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES
-  (NULL, 'admin', MD5('admin'));
+  (NULL, 'admin', MD5('admin'), 0);
 UNLOCK TABLES;
 
 LOCK TABLES `school` WRITE;
