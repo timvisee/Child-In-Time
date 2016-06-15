@@ -228,6 +228,10 @@ public class EntityPropertyField extends AbstractPropertyField {
         if(selected == null)
             setNull(true);
         else {
+            // Disable the null state if the component is currently null
+            if(isNull())
+                setNull(false);
+
             // Set the selected value
             this.selected = selected;
 
