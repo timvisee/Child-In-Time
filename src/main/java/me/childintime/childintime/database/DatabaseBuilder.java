@@ -4,8 +4,10 @@ import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 import me.childintime.childintime.App;
 import me.childintime.childintime.database.connector.DatabaseConnector;
+import me.childintime.childintime.hash.HashUtil;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -649,8 +651,14 @@ public class DatabaseBuilder {
 
         // Fill the prepared statement
         prepared.setString(1, "admin");
-        prepared.setString(2, "21232f297a57a5a743894a0e4a801fc3"); // MD5('admin')
         prepared.setInt(3, 0);
+
+        // Set the password hash
+        try {
+            prepared.setString(2, HashUtil.hash("admin"));
+        } catch(NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         // Execute the prepared statement
         prepared.execute();
