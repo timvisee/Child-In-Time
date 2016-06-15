@@ -392,11 +392,28 @@ public class EntityModifyDialog extends JDialog {
 
                         default:
                             field = new BooleanPropertyField((Boolean) value, "Is " + fieldType.getDisplayName().toLowerCase(), true);
+                            break;
                     }
                     break;
 
                 case INTEGER:
-                    field = new IntegerPropertyField((Integer) value, true);
+                    switch(fieldType.getExtendedDataType()) {
+                        case MILLISECONDS:
+                            field = new MillisecondPropertyField((Integer) value, true);
+                            break;
+
+                        case CENTIMETER:
+                            field = new CentimeterPropertyField((Integer) value, true);
+                            break;
+
+                        case GRAM:
+                            field = new GramPropertyField((Integer) value, true);
+                            break;
+
+                        default:
+                            field = new IntegerPropertyField((Integer) value, true);
+                            break;
+                    }
                     break;
 
                 case REFERENCE:

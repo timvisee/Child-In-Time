@@ -42,7 +42,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
         buildUi();
 
         // Set the state value
-        setNumber(number);
+        setInteger(number);
     }
 
     @Override
@@ -119,14 +119,14 @@ public class IntegerPropertyField extends AbstractPropertyField {
     }
 
     @Override
-    public Integer getValue() {
-        return getNumber();
+    public Object getValue() {
+        return getInteger();
     }
 
     @Override
     public void setValue(Object number) {
         // Set the text, or null
-        setNumber((Integer) number);
+        setInteger((Integer) number);
     }
 
     /**
@@ -136,7 +136,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
      *
      * @return Number value, or null.
      */
-    public Integer getNumber() {
+    public Integer getInteger() {
         // Return null, if the value is null
         if(isNull())
             return null;
@@ -150,7 +150,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
      *
      * @param number Number value.
      */
-    public void setNumber(Integer number) {
+    public void setInteger(Integer number) {
         // Make sure null is allowed
         if(number == null && !isNullAllowed())
             throw new IllegalArgumentException("Null value not allowed");
@@ -182,7 +182,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
             if(isNullAllowed())
                 setNull(true);
             else
-                setNumber(0);
+                setInteger(0);
         });
     }
 

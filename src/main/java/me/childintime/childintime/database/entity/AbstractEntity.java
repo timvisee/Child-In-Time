@@ -5,6 +5,7 @@ import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -261,6 +262,50 @@ public abstract class AbstractEntity implements Cloneable {
     @SuppressWarnings("WeakerAccess")
     public Object getField(EntityFieldsInterface field) throws Exception {
         return getFields(new EntityFieldsInterface[]{field}).get(0);
+    }
+
+    /**
+     * Get the given field as a formatted String. The field will be returned from cache when possible. If the field
+     * isn't available in cache, it will be fetched from the database automatically.
+     *
+     * @param field The field to get.
+     *
+     * @return The formatted field value.
+     *
+     * @throws Exception Throws if an error occurred.
+     */
+    public String getFieldFormatted(EntityFieldsInterface field) throws Exception {
+        // Get the raw value
+        Object raw = getField(field);
+
+        // TODO: Move these formatter to a global class!
+
+        // Format the value
+        switch(field.getExtendedDataType()) {
+            case MILLISECONDS:
+                // Convert the milliseconds into seconds
+                double milliseconds = ((Integer) raw) / 1000.0;
+
+                // Create a seconds formatter and format the value
+                return new DecimalFormat("#00.00' s'").format(milliseconds);
+
+            case CENTIMETER:
+                // Convert the centimeters into meters
+                double meters = ((Integer) raw) / 100.0;
+
+                // Create a centimeter formatter and format the value
+                return new DecimalFormat("#0.00' m'").format(meters);
+
+            case GRAM:
+                // Convert the grams into kilogram
+                double kilogram = ((Integer) raw) / 1000.0;
+
+                // Create a kilogram formatter and format the value
+                return new DecimalFormat("#00.00' kg'").format(kilogram);
+
+            default:
+                return String.valueOf(raw);
+        }
     }
 
     /**
