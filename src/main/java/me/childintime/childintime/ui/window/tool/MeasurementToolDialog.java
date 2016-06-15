@@ -68,6 +68,9 @@ public class MeasurementToolDialog extends JDialog {
 
         // Set the window position
         setLocationRelativeTo(owner);
+
+        // Reset
+        reset();
     }
 
     /**
@@ -433,25 +436,7 @@ public class MeasurementToolDialog extends JDialog {
         });
 
         // Configure the reset button
-        resetButton.addActionListener(e -> {
-            // Reset the group filter
-            this.groupFilterField.setNull(true);
-
-            // Clear the student list selection
-            this.studentList.setSelectedItem(null);
-
-            // Clear the parkour field
-            this.parkourSelector.setNull(true);
-
-            // Stop and clear the stopwatch
-            if(this.stopwatchComponent.isStarted())
-                this.stopwatchComponent.startStop();
-            this.stopwatchComponent.clear();
-
-            // Clear the time
-            this.timeField.setValue(0);
-            this.timeField.setNull(true);
-        });
+        resetButton.addActionListener(e -> reset());
 
         // Add the buttons to the button panel
         buttonPanel.add(saveButton);
@@ -459,5 +444,28 @@ public class MeasurementToolDialog extends JDialog {
 
         // Return the button panel
         return buttonPanel;
+    }
+
+    /**
+     * Reset the input fields.
+     */
+    private void reset() {
+        // Reset the group filter
+        this.groupFilterField.setNull(true);
+
+        // Clear the student list selection
+        this.studentList.setSelectedItem(null);
+
+        // Clear the parkour field
+        this.parkourSelector.setNull(true);
+
+        // Stop and clear the stopwatch
+        if(this.stopwatchComponent.isStarted())
+            this.stopwatchComponent.startStop();
+        this.stopwatchComponent.clear();
+
+        // Clear the time
+        this.timeField.setValue(0);
+        this.timeField.setNull(true);
     }
 }
