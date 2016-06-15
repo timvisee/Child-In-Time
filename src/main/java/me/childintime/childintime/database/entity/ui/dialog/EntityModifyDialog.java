@@ -8,6 +8,7 @@ import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.hash.HashUtil;
 import me.childintime.childintime.permission.PermissionLevel;
+import me.childintime.childintime.ui.component.LinkLabel;
 import me.childintime.childintime.ui.component.property.*;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
@@ -331,16 +332,18 @@ public class EntityModifyDialog extends JDialog {
             EntityFieldsInterface fieldType = fieldTypes[i];
 
             // Get the field value
-            Object value = null;
+            Object valueRaw = null;
+            String valueFormatted = null;
             if(this.source != null)
                 try {
-                    value = this.source.getField(fieldType);
+                    valueRaw = this.source.getField(fieldType);
+                    valueFormatted = this.source.getFieldFormatted(fieldType);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
 
             // Hide empty fields that aren't editable/creatable
-            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && value == null) {
+            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && valueRaw == null) {
                 // Change the offset
                 fieldOffset--;
 
@@ -369,7 +372,21 @@ public class EntityModifyDialog extends JDialog {
 
             // Show a label if the field is not editable
             if(!canEdit || (this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable())) {
-                container.add(new JLabel(value != null ? value.toString() : "?"), c);
+                if(!(valueRaw instanceof AbstractEntity))
+                    container.add(new JLabel(valueRaw != null ? valueRaw.toString() : "?"), c);
+
+                else {
+                    // Create a new link label
+                    LinkLabel linkLabel = new LinkLabel(valueFormatted);
+
+                    // Open the view dialog when the links is clicked
+                    final AbstractEntity otherEntity = (AbstractEntity) valueRaw;
+                    linkLabel.addActionListener(e -> EntityViewDialog.showDialog(this, otherEntity));
+
+                    // Add the label
+                    container.add(linkLabel, c);
+                }
+
                 continue;
             }
 
@@ -380,7 +397,7 @@ public class EntityModifyDialog extends JDialog {
             switch(fieldType.getBaseDataType()) {
                 case DATE:
                     // Create the date field
-                    DatePropertyField dateField =  new DatePropertyField(value, true);
+                    DatePropertyField dateField =  new DatePropertyField(valueRaw, true);
 
                     // Set the maximum selectable date if we're working with birthday fields
                     if(fieldType.getExtendedDataType().equals(DataTypeExtended.BIRTHDAY))
@@ -393,11 +410,11 @@ public class EntityModifyDialog extends JDialog {
                 case BOOLEAN:
                     switch(fieldType.getExtendedDataType()) {
                         case GENDER:
-                            field = new GenderPropertyField((Boolean) value, true);
+                            field = new GenderPropertyField((Boolean) valueRaw, true);
                             break;
 
                         default:
-                            field = new BooleanPropertyField((Boolean) value, "Is " + fieldType.getDisplayName().toLowerCase(), true);
+                            field = new BooleanPropertyField((Boolean) valueRaw, "Is " + fieldType.getDisplayName().toLowerCase(), true);
                             break;
                     }
                     break;
@@ -405,30 +422,30 @@ public class EntityModifyDialog extends JDialog {
                 case INTEGER:
                     switch(fieldType.getExtendedDataType()) {
                         case MILLISECONDS:
-                            field = new MillisecondPropertyField((Integer) value, true);
+                            field = new MillisecondPropertyField((Integer) valueRaw, true);
                             break;
 
                         case CENTIMETER:
-                            field = new CentimeterPropertyField((Integer) value, true);
+                            field = new CentimeterPropertyField((Integer) valueRaw, true);
                             break;
 
                         case GRAM:
-                            field = new GramPropertyField((Integer) value, true);
+                            field = new GramPropertyField((Integer) valueRaw, true);
                             break;
 
                         case PERMISSION_LEVEL:
-                            field = new PermissionLevelPropertyField((PermissionLevel) value, true);
+                            field = new PermissionLevelPropertyField((PermissionLevel) valueRaw, true);
                             break;
 
                         default:
-                            field = new IntegerPropertyField((Integer) value, true);
+                            field = new IntegerPropertyField((Integer) valueRaw, true);
                             break;
                     }
                     break;
 
                 case REFERENCE:
-                    if(value != null)
-                        field = new EntityPropertyField((AbstractEntity) value, true);
+                    if(valueRaw != null)
+                        field = new EntityPropertyField((AbstractEntity) valueRaw, true);
                     else
                         field = new EntityPropertyField(fieldType.getFieldManifest().getManagerInstance(), true);
                     break;
@@ -441,7 +458,7 @@ public class EntityModifyDialog extends JDialog {
                             break;
 
                         default:
-                            field = new TextPropertyField(value != null ? value.toString() : null, true);
+                            field = new TextPropertyField(valueRaw != null ? valueRaw.toString() : null, true);
                             break;
                     }
             }

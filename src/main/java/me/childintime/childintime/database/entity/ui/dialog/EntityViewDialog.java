@@ -6,6 +6,7 @@ import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.permission.PermissionLevel;
+import me.childintime.childintime.ui.component.LinkLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -240,22 +241,16 @@ public class EntityViewDialog extends JDialog {
             EntityFieldsInterface fieldType = fieldTypes[i];
 
             // Get the field value
-            String value = null;
+            String valueFormatted = null;
+            Object valueRaw = null;
             if(this.source != null)
                 try {
-                    value = this.source.getFieldFormatted(fieldType);
+                    valueFormatted = this.source.getFieldFormatted(fieldType);
+                    valueRaw = this.source.getField(fieldType);
+
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
-
-//            // Hide empty fields that aren't editable/creatable
-//            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && value == null) {
-//                // Change the offset
-//                fieldOffset--;
-//
-//                // The field should be skipped, continue
-//                continue;
-//            }
 
             // Create and add the name label
             c.fill = GridBagConstraints.NONE;
@@ -277,7 +272,20 @@ public class EntityViewDialog extends JDialog {
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label
-            container.add(new JLabel(value), c);
+            if(!(valueRaw instanceof AbstractEntity))
+                container.add(new JLabel(valueFormatted), c);
+
+            else {
+                // Create a new link label
+                LinkLabel linkLabel = new LinkLabel(valueFormatted);
+
+                // Open the view dialog when the links is clicked
+                final AbstractEntity otherEntity = (AbstractEntity) valueRaw;
+                linkLabel.addActionListener(e -> EntityViewDialog.showDialog(this, otherEntity));
+
+                // Add the label
+                container.add(linkLabel, c);
+            }
         }
 
         // Create the control button panel and add it to the main panel
