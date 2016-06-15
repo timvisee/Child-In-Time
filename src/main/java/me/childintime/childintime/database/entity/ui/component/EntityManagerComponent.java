@@ -131,9 +131,12 @@ public class EntityManagerComponent extends JComponent {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
 
+        // Check whether the user can modify data
+        final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
+
         // Create the buttons
         this.createButton = new JButton("Create");
-        this.modifyButton = new JButton("Modify");
+        this.modifyButton = new JButton(canEdit ? "Modify" : "View");
         this.deleteButton = new JButton("Delete");
 
         // Add the buttons to the panel
@@ -192,7 +195,7 @@ public class EntityManagerComponent extends JComponent {
         this.createButton.setEnabled(canEdit);
 
         // Enable the modify button if one entity is selected
-        this.modifyButton.setEnabled(selected == 1 && canEdit);
+        this.modifyButton.setEnabled(selected == 1);
 
         // Enable the delete button if at least one entity is selected
         this.deleteButton.setEnabled(selected > 0 && canEdit);
