@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   `gender`     INTEGER NOT NULL,
   `is_gym`     INTEGER NOT NULL,
   `school_id`  INTEGER NOT NULL,
-  FOREIGN KEY (`school_id`) REFERENCES `school` (`id`),
+  FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
+    ON DELETE RESTRICT,
   CHECK (`gender` = 0 OR `gender` = 1),
   CHECK (`is_gym` = 0 OR `is_gym` = 1)
 );
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `group` (
   `name`      TEXT    NOT NULL,
   `school_id` INTEGER NOT NULL,
   FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `student` (
@@ -47,7 +49,8 @@ CREATE TABLE IF NOT EXISTS `student` (
   `gender`     INTEGER NOT NULL,
   `birthdate`  DATE    NOT NULL,
   `group_id`   INTEGER NOT NULL,
-  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`),
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+    ON DELETE RESTRICT,
   CHECK (`gender` = 0 OR `gender` = 1)
 );
 
@@ -58,6 +61,7 @@ CREATE TABLE IF NOT EXISTS `bodystate` (
   `weight`     INTEGER NOT NULL,
   `student_id` INTEGER NOT NULL,
   FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `parkour` (
@@ -71,16 +75,20 @@ CREATE TABLE IF NOT EXISTS `measurement` (
   `time`       INTEGER NOT NULL,
   `parkour_id` INTEGER NOT NULL,
   `student_id` INTEGER NOT NULL,
-  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
+  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+    ON DELETE RESTRICT,
   FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `group_teacher` (
   `group_id`   INTEGER NOT NULL,
   `teacher_id` INTEGER NOT NULL,
   PRIMARY KEY (`group_id`, `teacher_id`),
-  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`),
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+    ON DELETE RESTRICT,
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `user_meta_data` (
@@ -90,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `user_meta_data` (
   `value`   TEXT,
   `user_id` INTEGER NOT NULL,
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `user_meta_field` (
@@ -105,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `user_meta_value` (
   `value`    TEXT    NOT NULL,
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `user_meta_field` (`id`)
+    ON DELETE RESTRICT
 );
 
 -- _meta_data table prototype
@@ -141,6 +151,7 @@ CREATE TABLE IF NOT EXISTS `student_meta_data` (
   `value`   TEXT,
   `student_id` INTEGER NOT NULL,
   FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `student_meta_field` (
@@ -156,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `student_meta_value` (
   `value`    TEXT    NOT NULL,
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `student_meta_field` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `teacher_meta_data` (
@@ -165,6 +177,7 @@ CREATE TABLE IF NOT EXISTS `teacher_meta_data` (
   `value`   TEXT,
   `teacher_id` INTEGER NOT NULL,
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `teacher_meta_field` (
@@ -180,6 +193,7 @@ CREATE TABLE IF NOT EXISTS `teacher_meta_value` (
   `value`    TEXT    NOT NULL,
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `teacher_meta_field` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `group_meta_data` (
@@ -189,6 +203,7 @@ CREATE TABLE IF NOT EXISTS `group_meta_data` (
   `value`   TEXT,
   `group_id` INTEGER NOT NULL,
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `group_meta_field` (
@@ -204,6 +219,7 @@ CREATE TABLE IF NOT EXISTS `group_meta_value` (
   `value`    TEXT    NOT NULL,
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `group_meta_field` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `school_meta_data` (
@@ -213,6 +229,7 @@ CREATE TABLE IF NOT EXISTS `school_meta_data` (
   `value`   TEXT,
   `school_id` INTEGER NOT NULL,
   FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `school_meta_field` (
@@ -228,6 +245,7 @@ CREATE TABLE IF NOT EXISTS `school_meta_value` (
   `value`    TEXT    NOT NULL,
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `school_meta_field` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `bodystate_meta_data` (
@@ -237,6 +255,7 @@ CREATE TABLE IF NOT EXISTS `bodystate_meta_data` (
   `value`   TEXT,
   `bodystate_id` INTEGER NOT NULL,
   FOREIGN KEY (`bodystate_id`) REFERENCES `bodystate` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `bodystate_meta_field` (
@@ -252,6 +271,7 @@ CREATE TABLE IF NOT EXISTS `bodystate_meta_value` (
   `value`    TEXT    NOT NULL,
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `bodystate_meta_field` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `parkour_meta_data` (
@@ -261,6 +281,7 @@ CREATE TABLE IF NOT EXISTS `parkour_meta_data` (
   `value`   TEXT,
   `parkour_id` INTEGER NOT NULL,
   FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `parkour_meta_field` (
@@ -276,6 +297,7 @@ CREATE TABLE IF NOT EXISTS `parkour_meta_value` (
   `value`    TEXT    NOT NULL,
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `parkour_meta_field` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `measurement_meta_data` (
@@ -285,6 +307,7 @@ CREATE TABLE IF NOT EXISTS `measurement_meta_data` (
   `value`   TEXT,
   `measurement_id` INTEGER NOT NULL,
   FOREIGN KEY (`measurement_id`) REFERENCES `measurement` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `measurement_meta_field` (
@@ -300,6 +323,7 @@ CREATE TABLE IF NOT EXISTS `measurement_meta_value` (
   `value`    TEXT    NOT NULL,
   `field_id` INTEGER NOT NULL,
   FOREIGN KEY (`field_id`) REFERENCES `measurement_meta_field` (`id`)
+    ON DELETE RESTRICT
 );
 
 INSERT INTO `user` VALUES
