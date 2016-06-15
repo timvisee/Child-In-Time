@@ -680,7 +680,7 @@ public abstract class AbstractEntity implements Cloneable {
      * @param field Database field type.
      * @param rawField Raw field data.
      */
-    void parseField(EntityFieldsInterface field, Object rawField) {
+    public void parseField(EntityFieldsInterface field, Object rawField) {
         switch(field.getExtendedDataType().getDataTypeBase()) {
             case STRING:
                 this.cachedFields.put(field, rawField);
@@ -695,6 +695,15 @@ public abstract class AbstractEntity implements Cloneable {
                 break;
 
             case DATE:
+                // If the raw field is a date object already, put it in the cached fields list
+                if(rawField instanceof Date) {
+                    // Put the reference into the cached fields
+                    this.cachedFields.put(field, rawField);
+
+                    // We're done, return
+                    return;
+                }
+
                 // Create a date formatter to parse the date
                 final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -707,6 +716,15 @@ public abstract class AbstractEntity implements Cloneable {
                 break;
 
             case REFERENCE:
+                // If the raw field is an object already, put it in the cached fields list
+                if(rawField instanceof AbstractEntity) {
+                    // Put the reference into the cached fields
+                    this.cachedFields.put(field, rawField);
+
+                    // We're done, return
+                    return;
+                }
+
                 // Get the object ID
                 final int objectId = Integer.parseInt(String.valueOf(rawField));
 

@@ -217,7 +217,14 @@ public class EntityViewComponent extends EntityListComponent {
             return;
 
         // Generate the question dialog string
-        final String question = "Are you sure you'd like to delete " + (getSelectedCount() == 1 ? "this" : "these") +
+        final String question = "<html>" +
+                "You're about to delete the selected " +
+                " " + getManager().getManifest().getTypeName(false, getSelectedCount() != 1) + ".<br>" +
+                "Other entities that are linked to " + (getSelectedCount() == 1 ? "this" : "these") +
+                " " + getManager().getManifest().getTypeName(false, getSelectedCount() != 1) + " will be deleted along with it.<br>" +
+                "This action can not be reverted.<br>" +
+                "<br>" +
+                "Are you sure you'd like to delete " + (getSelectedCount() == 1 ? "this" : "these") +
                 " " + getManager().getManifest().getTypeName(false, getSelectedCount() != 1) + "?";
 
         // Confirm the deletion, return if the use cancelled

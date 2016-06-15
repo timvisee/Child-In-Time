@@ -166,7 +166,7 @@ public class EntityManagerComponent extends JComponent {
         buttonPanel.add(this.filtersButton);
         buttonPanel.add(this.columnsButton);
         // TODO: Use a helper function, to show a proper progress dialog
-        this.refreshButton.addActionListener(e -> getManager().refresh());
+        this.refreshButton.addActionListener(e -> this.entityView.refresh());
         // TODO: Implement this feature!
         this.filtersButton.addActionListener(e -> featureNotImplemented());
         // TODO: Implement this feature!

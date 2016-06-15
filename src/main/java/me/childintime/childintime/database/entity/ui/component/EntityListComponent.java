@@ -5,6 +5,8 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.listener.EntityActionListener;
 import me.childintime.childintime.database.entity.listener.SelectionChangeListener;
+import me.childintime.childintime.util.swing.ProgressDialog;
+import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.swing.TableUtils;
 
 import javax.swing.*;
@@ -18,6 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityListComponent extends JComponent {
+
+    /**
+     * Default empty label.
+     */
+    public static final String DEFAULT_EMPTY_LABEL = "Nothing to display...";
 
     /**
      * Entity manager this list is for.
@@ -47,6 +54,11 @@ public class EntityListComponent extends JComponent {
     private AbstractTableModel uiTableModel;
 
     /**
+     * List sorter.
+     */
+    private EntityListSorter sorter;
+
+    /**
      * List of entity action listeners.
      */
     private List<EntityActionListener> entityActionListeners = new ArrayList<>();
@@ -55,6 +67,11 @@ public class EntityListComponent extends JComponent {
      * List of selection change listeners.
      */
     private List<SelectionChangeListener> selectionChangeListeners = new ArrayList<>();
+
+    /**
+     * Label shown when the table is empty.
+     */
+    private String emptyLabel = DEFAULT_EMPTY_LABEL;
 
     /**
      * Constructor.
@@ -225,11 +242,43 @@ public class EntityListComponent extends JComponent {
         };
 
         // Create the table
-        this.uiTable = new JTable(this.uiTableModel);
+        this.uiTable = new JTable(this.uiTableModel) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                // Paint the component
+                super.paintComponent(g);
+
+                // Show a 'nothing to display' label
+                if(getRowCount() == 0) {
+                    // Create a graphics 2D object
+                    Graphics2D g2d = (Graphics2D) g;
+
+                    // Set the graphics hints to use anti-aliasing for font rendering
+                    g2d.setRenderingHints(new RenderingHints(
+                            RenderingHints.KEY_TEXT_ANTIALIASING,
+                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+                    ));
+
+                    // Get the font metrics
+                    final FontMetrics fontMetrics = g2d.getFontMetrics();
+
+                    // Calculate the font position
+                    final int x = getWidth() / 2 - fontMetrics.stringWidth(emptyLabel) / 2;
+                    final int y = (fontMetrics.getAscent() + (getHeight() - (fontMetrics.getAscent() + fontMetrics.getDescent())) / 2);
+
+                    // Set the font color
+                    g2d.setColor(Color.DARK_GRAY);
+
+                    // Draw the font
+                    g2d.drawString(emptyLabel, x, y);
+                }
+            }
+        };
         this.uiTable.setFillsViewportHeight(true);
 
-        // Create the entity list row sorter
-        this.uiTable.setRowSorter(new EntityListSorter(this.uiTableModel));
+        // Build the sorter
+        this.sorter = new EntityListSorter(this.uiTableModel, this.manager);
+        this.uiTable.setRowSorter(sorter);
 
         // Create a scroll pane container for the table, and add it to the base component
         final JScrollPane container = new JScrollPane(this.uiTable);
@@ -374,6 +423,51 @@ public class EntityListComponent extends JComponent {
     }
 
     /**
+     * Set the filter.
+     *
+     * @param field Filter field.
+     * @param value Filter value.
+     */
+    public void setFilter(EntityFieldsInterface field, Object value) {
+        // Set the filter
+        this.sorter.setFilter(field, value);
+
+        // Update the data
+        updateViewData();
+    }
+
+    /**
+     * Clear the filter.
+     */
+    public void clearFilter() {
+        // Clear the filter
+        this.sorter.clearFilter();
+
+        // Update the data
+        updateViewData();
+    }
+
+    /**
+     * Refresh the entities.
+     */
+    public void refresh() {
+        // Create a progress dialog
+        final ProgressDialog progressDialog = new ProgressDialog(
+                getWindow(),
+                "Refreshing... ",
+                false,
+                "Refreshing " + getManager().getManifest().getTypeName(false, true) + "...",
+                true
+        );
+
+        // Refresh the entities
+        getManager().refresh();
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
+    }
+
+    /**
      * Add an entity action listener.
      *
      * @param listener Listener.
@@ -480,5 +574,32 @@ public class EntityListComponent extends JComponent {
     public void fireSelectionChangeListenerEvent() {
         // Fire each registered listener
         this.selectionChangeListeners.forEach(SelectionChangeListener::onSelectionChange);
+    }
+
+    /**
+     * Get the window this component is placed in.
+     *
+     * @return Component window.
+     */
+    private Window getWindow() {
+        return SwingUtils.getComponentWindow(this);
+    }
+
+    /**
+     * Get the label shown when the list is empty.
+     *
+     * @return Label shown when the list is empty.
+     */
+    public String getEmptyLabel() {
+        return this.emptyLabel;
+    }
+
+    /**
+     * Set the label shown when the list is empty.
+     *
+     * @param emptyLabel Label shown when the list is empty.
+     */
+    public void setEmptyLabel(String emptyLabel) {
+        this.emptyLabel = emptyLabel;
     }
 }
