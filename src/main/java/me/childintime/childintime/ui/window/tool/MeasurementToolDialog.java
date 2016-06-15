@@ -226,19 +226,40 @@ public class MeasurementToolDialog extends JDialog {
      * @return Student measurements panel.
      */
     private JPanel buildUiStudentMeasurementsPanel() {
+        // Create a new grid bag constraints configuration instance
+        GridBagConstraints c = new GridBagConstraints();
+
         // Create the panel
-        final JPanel studentMeasurementsPanel = new JPanel(new BorderLayout());
-        studentMeasurementsPanel.setBorder(new CompoundBorder(
-                BorderFactory.createTitledBorder("Student's measurements"),
-                BorderFactory.createEmptyBorder(4, 4, 4, 4)
-        ));
+        final JPanel studentMeasurementsPanel = new JPanel(new GridBagLayout());
+
+        // Add the label
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(8, 2, 2, 0);
+        c.anchor = GridBagConstraints.SOUTHWEST;
+        studentMeasurementsPanel.add(new JLabel("Student's measurements:"), c);
 
         // Create a list for the students measurements
         this.studentsMeasurements = new EntityViewComponent(Core.getInstance().getMeasurementManager());
-        studentMeasurementsPanel.add(this.studentsMeasurements);
+
+        // Add the list
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.insets = new Insets(0, 0, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
+        studentMeasurementsPanel.add(this.studentsMeasurements, c);
 
         // Update the student measurement list when the selected student is changed
         this.studentList.addSelectionChangeListenerListener(this::updateStudentMeasurementsList);
+
+        // Set the minimum preferred size of the measurements list
+        this.studentsMeasurements.setPreferredSize(new Dimension(200, 100));
 
         // Return the panel
         return studentMeasurementsPanel;
