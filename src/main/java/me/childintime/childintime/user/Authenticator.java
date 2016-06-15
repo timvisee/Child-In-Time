@@ -2,6 +2,7 @@ package me.childintime.childintime.user;
 
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.spec.user.User;
+import me.childintime.childintime.database.entity.spec.user.UserFields;
 import me.childintime.childintime.permission.PermissionLevel;
 
 import java.sql.Connection;
@@ -48,8 +49,13 @@ public class Authenticator {
         if(this.authUser == null)
             return false;
 
-        // FIXME: Fetch the permission level from the authenticated user and store it
-        this.permissionLevel = PermissionLevel.ALL;
+        // Set the permission level
+        try {
+            this.permissionLevel = (PermissionLevel) this.authUser.getField(UserFields.PERMISSION_LEVEL);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
         // Return the result
         return true;
