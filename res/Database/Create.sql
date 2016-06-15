@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   `is_gym`     TINYINT NOT NULL,
   `school_id`  INT     NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`school_id`) REFERENCES `school` (`id`),
+  FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
+    ON DELETE RESTRICT,
   CHECK (`gender` = 0 OR `gender` = 1),
   CHECK (`is_gym` = 0 OR `is_gym` = 1)
 );
@@ -49,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `group` (
   `school_id` INT  NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `student` (
@@ -59,7 +61,8 @@ CREATE TABLE IF NOT EXISTS `student` (
   `birthdate`  DATE    NOT NULL,
   `group_id`   INT     NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`),
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+    ON DELETE RESTRICT,
   CHECK (`gender` = 0 OR `gender` = 1)
 );
 
@@ -71,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `bodystate` (
   `student_id` INT      NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `parkour` (
@@ -86,16 +90,20 @@ CREATE TABLE IF NOT EXISTS `measurement` (
   `parkour_id` INT  NOT NULL,
   `student_id` INT  NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
+  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+    ON DELETE RESTRICT,
   FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `group_teacher` (
   `group_id`   INT NOT NULL,
   `teacher_id` INT NOT NULL,
   PRIMARY KEY (`group_id`, `teacher_id`),
-  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`),
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+    ON DELETE RESTRICT,
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
+    ON DELETE RESTRICT
 );
 
 # Drop the create meta table statement if it already exists
@@ -126,6 +134,7 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 			`', tableName, '_id` INT NOT NULL,
 			PRIMARY KEY (`id`),
 			FOREIGN KEY (`', tableName, '_id`) REFERENCES `', tableName, '`(`id`)
+			  ON DELETE RESTRICT
 		);');
 
     -- _meta_field table prototype
@@ -164,6 +173,7 @@ CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
 			`field_id` INT NOT NULL,
 			PRIMARY KEY (`id`),
 			FOREIGN KEY (`field_id`) REFERENCES `', tableName, '_meta_field`(`id`)
+			  ON DELETE RESTRICT
 		);');
 
     # Prepare the statements
