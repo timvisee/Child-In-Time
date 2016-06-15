@@ -22,6 +22,11 @@ import java.util.List;
 public class EntityListComponent extends JComponent {
 
     /**
+     * Default empty label.
+     */
+    public static final String DEFAULT_EMPTY_LABEL = "Nothing to display...";
+
+    /**
      * Entity manager this list is for.
      */
     private AbstractEntityManager manager;
@@ -62,6 +67,11 @@ public class EntityListComponent extends JComponent {
      * List of selection change listeners.
      */
     private List<SelectionChangeListener> selectionChangeListeners = new ArrayList<>();
+
+    /**
+     * Label shown when the table is empty.
+     */
+    private String emptyLabel = DEFAULT_EMPTY_LABEL;
 
     /**
      * Constructor.
@@ -232,7 +242,38 @@ public class EntityListComponent extends JComponent {
         };
 
         // Create the table
-        this.uiTable = new JTable(this.uiTableModel);
+        this.uiTable = new JTable(this.uiTableModel) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                // Paint the component
+                super.paintComponent(g);
+
+                // Show a 'nothing to display' label
+                if(getRowCount() == 0) {
+                    // Create a graphics 2D object
+                    Graphics2D g2d = (Graphics2D) g;
+
+                    // Set the graphics hints to use anti-aliasing for font rendering
+                    g2d.setRenderingHints(new RenderingHints(
+                            RenderingHints.KEY_TEXT_ANTIALIASING,
+                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+                    ));
+
+                    // Get the font metrics
+                    final FontMetrics fontMetrics = g2d.getFontMetrics();
+
+                    // Calculate the font position
+                    final int x = getWidth() / 2 - fontMetrics.stringWidth(emptyLabel) / 2;
+                    final int y = (fontMetrics.getAscent() + (getHeight() - (fontMetrics.getAscent() + fontMetrics.getDescent())) / 2);
+
+                    // Set the font color
+                    g2d.setColor(Color.DARK_GRAY);
+
+                    // Draw the font
+                    g2d.drawString(emptyLabel, x, y);
+                }
+            }
+        };
         this.uiTable.setFillsViewportHeight(true);
 
         // Build the sorter
@@ -542,5 +583,23 @@ public class EntityListComponent extends JComponent {
      */
     private Window getWindow() {
         return SwingUtils.getComponentWindow(this);
+    }
+
+    /**
+     * Get the label shown when the list is empty.
+     *
+     * @return Label shown when the list is empty.
+     */
+    public String getEmptyLabel() {
+        return this.emptyLabel;
+    }
+
+    /**
+     * Set the label shown when the list is empty.
+     *
+     * @param emptyLabel Label shown when the list is empty.
+     */
+    public void setEmptyLabel(String emptyLabel) {
+        this.emptyLabel = emptyLabel;
     }
 }
