@@ -117,6 +117,27 @@ public class Profiler {
     }
 
     /**
+     * Clear the profiler time.
+     * If this method is called while the profiler is active, it's time is reset back to zero.
+     */
+    public void clear() {
+        // Remember whether the profiler was active
+        final boolean wasActive = isActive();
+
+        // Pause the profiler if it was active
+        if(wasActive)
+            stop();
+
+        // Clear the times
+        this.time = 0;
+        this.start = -1;
+
+        // Resume the profiler if it was active
+        if(wasActive)
+            start();
+    }
+
+    /**
      * Get the passed time in milliseconds.
      *
      * @return The passed time in milliseconds.
