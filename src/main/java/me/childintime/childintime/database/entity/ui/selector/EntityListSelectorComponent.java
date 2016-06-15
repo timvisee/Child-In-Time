@@ -124,6 +124,10 @@ public class EntityListSelectorComponent extends EntityViewComponent {
         // Make sure the item is in-bound
         i = Math.max(Math.min(i, getManager().getEntityCount() - 1), 0);
 
+        // Make sure the selected value is in bound
+        if(i < 0 || i > table.getRowCount())
+            return;
+
         // Select the item
         table.setRowSelectionInterval(i, i);
 
