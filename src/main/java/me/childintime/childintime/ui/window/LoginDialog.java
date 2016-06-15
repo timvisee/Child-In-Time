@@ -226,6 +226,14 @@ public class LoginDialog extends JDialog {
 
         // Create the user field
         this.userField = new JTextField();
+        this.userField.addActionListener(e -> {
+            // Validate the user input and set the success status flag
+            this.success = authenticate();
+
+            // Dispose the dialog if the user input is valid
+            if(this.success)
+                this.dispose();
+        });
 
         // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -249,6 +257,14 @@ public class LoginDialog extends JDialog {
 
         // Create the password field
         this.passField = new JPasswordField();
+        this.passField.addActionListener(e -> {
+            // Validate the user input and set the success status flag
+            this.success = authenticate();
+
+            // Dispose the dialog if the user input is valid
+            if(this.success)
+                this.dispose();
+        });
 
         // Add the password field
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -292,10 +308,6 @@ public class LoginDialog extends JDialog {
 
         // Pack everything
         pack();
-
-        // Request focus on the continue button
-        // TODO: Move this somewhere else!
-        loginButton.requestFocus();
     }
 
     /**
