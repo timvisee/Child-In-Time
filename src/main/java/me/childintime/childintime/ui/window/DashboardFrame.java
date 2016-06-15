@@ -15,6 +15,8 @@ import me.childintime.childintime.ui.window.tool.MeasurementToolDialog;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class DashboardFrame extends JFrame {
 
@@ -39,7 +41,37 @@ public class DashboardFrame extends JFrame {
         buildUI();
 
         // Configure the close button behaviour
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        // Add a window listener
+        addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) { }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Dispose the frame
+                dispose();
+
+                // Destroy the core
+                Core.getInstance().destroy();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) { }
+
+            @Override
+            public void windowIconified(WindowEvent e) { }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) { }
+
+            @Override
+            public void windowActivated(WindowEvent e) { }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) { }
+        });
 
         // Configure the window sizes
         configureSize();
