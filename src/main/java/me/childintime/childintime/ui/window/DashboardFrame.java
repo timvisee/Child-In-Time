@@ -9,6 +9,7 @@ import me.childintime.childintime.database.entity.ui.component.EntityViewCompone
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
+import me.childintime.childintime.ui.window.tool.BmiToolDialog;
 import me.childintime.childintime.ui.window.tool.BodyStateToolDialog;
 import me.childintime.childintime.ui.window.tool.MeasurementToolDialog;
 
@@ -201,23 +202,43 @@ public class DashboardFrame extends JFrame {
 
         // Add the main label
         mainActions.add(new JLabel("<html>" +
-                "Welcome to the " + App.APP_NAME + " dashboard.<br>" +
-                "<br>" +
-                "Use the measurement tool to create new measurements for a student:<br>"));
+                "Welcome to the " + App.APP_NAME + " dashboard.<br>"));
 
-        // Create and add the measurement tool link
-        final LinkLabel measurementToolLink = new LinkLabel("Open measurement tool");
-        measurementToolLink.addActionListener(e -> MeasurementToolDialog.showDialog(this));
-        mainActions.add(measurementToolLink);
+        // Show the BMI tool if the user has permission
+        if(PermissionLevel.VIEW_ANONYMOUS.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Add the measurement label
+            mainActions.add(new JLabel("<html><br>" +
+                    "Use the BMI tool to view detailed body status of a student:<br>"));
 
-        // Add the main label
-        mainActions.add(new JLabel("<html><br>" +
-                "Use the body state tool to store new body states for a student:<br>"));
+            // Create and add the measurement tool link
+            final LinkLabel bmiToolLink = new LinkLabel("Open BMI tool");
+            bmiToolLink.addActionListener(e -> BmiToolDialog.showDialog(this));
+            mainActions.add(bmiToolLink);
+        }
 
-        // Create and add the body state tool link
-        final LinkLabel bodyStateToolLink = new LinkLabel("Open body state tool");
-        bodyStateToolLink.addActionListener(e -> BodyStateToolDialog.showDialog(this));
-        mainActions.add(bodyStateToolLink);
+        // Show the measurement tool if the user has permission
+        if(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Add the measurement label
+            mainActions.add(new JLabel("<html><br>" +
+                    "Use the measurement tool to create new measurements for a student:<br>"));
+
+            // Create and add the measurement tool link
+            final LinkLabel measurementToolLink = new LinkLabel("Open measurement tool");
+            measurementToolLink.addActionListener(e -> MeasurementToolDialog.showDialog(this));
+            mainActions.add(measurementToolLink);
+        }
+
+        // Show the body state tool if the user has permission
+        if(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Add the body state label
+            mainActions.add(new JLabel("<html><br>" +
+                    "Use the body state tool to store new body states for a student:<br>"));
+
+            // Create and add the body state tool link
+            final LinkLabel bodyStateToolLink = new LinkLabel("Open body state tool");
+            bodyStateToolLink.addActionListener(e -> BodyStateToolDialog.showDialog(this));
+            mainActions.add(bodyStateToolLink);
+        }
 
         // Set the preferred size
         mainActions.setPreferredSize(new Dimension(300, 200));
@@ -292,6 +313,13 @@ public class DashboardFrame extends JFrame {
 
         // Create the tools menu
         Menu toolsMenu = new Menu("Tools");
+
+        // Create the BMI tool menu item
+        MenuItem bmiToolAction = new MenuItem("BMI view tool");
+        bmiToolAction.addActionListener(e -> BmiToolDialog.showDialog(this));
+        bmiToolAction.setEnabled(PermissionLevel.VIEW_ANONYMOUS.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()));
+        toolsMenu.add(bmiToolAction);
+        toolsMenu.addSeparator();
 
         // Create the measurement tool menu item
         MenuItem measurementToolAction = new MenuItem("Measurement tool");
