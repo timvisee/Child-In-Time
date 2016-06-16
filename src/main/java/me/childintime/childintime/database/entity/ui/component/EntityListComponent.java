@@ -432,6 +432,10 @@ public class EntityListComponent extends JComponent {
             public void keyReleased(KeyEvent e) { }
         });
 
+        // Refresh the manager if any referenced manager is changed
+        for(AbstractEntityManifest abstractEntityManifest : this.manager.getManifest().getReferencedManifests())
+            abstractEntityManifest.getManagerInstance().addChangeListener(() -> this.manager.refresh());
+
         // Attach the selection change event to the selection change event loop of the table
         final ListSelectionModel selectionModel = this.uiTable.getSelectionModel();
         selectionModel.addListSelectionListener(e -> fireSelectionChangeListenerEvent());
