@@ -77,9 +77,24 @@ CREATE TABLE IF NOT EXISTS `group_teacher` (
   `group_id`   INTEGER NOT NULL,
   `teacher_id` INTEGER NOT NULL,
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
-    ON DELETE RESTRICT,
+  ON DELETE RESTRICT,
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
-    ON DELETE RESTRICT
+  ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS `sport` (
+  `id`         INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name`       TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `student_sport` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `student_id`   INTEGER NOT NULL,
+  `sport_id` INTEGER NOT NULL,
+  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+  ON DELETE RESTRICT,
+  FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)
+  ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS `user_meta_data` (
@@ -421,12 +436,28 @@ INSERT INTO `measurement` VALUES
   (20, '2015-06-07', 47, 3, 19);
 
 INSERT INTO `group_teacher` VALUES
-  (1, 1),
-  (2, 2),
-  (3, 3),
-  (4, 1),
-  (5, 2),
-  (6, 3),
-  (7, 1),
-  (8, 2),
-  (9, 3);
+  (NULL, 1, 1),
+  (NULL, 2, 2),
+  (NULL, 3, 3),
+  (NULL, 4, 1),
+  (NULL, 5, 2),
+  (NULL, 6, 3),
+  (NULL, 7, 1),
+  (NULL, 8, 2),
+  (NULL, 9, 3);
+
+INSERT INTO `sport` VALUES
+  (NULL, 'Football'),
+  (NULL, 'Hockey'),
+  (NULL, 'Baseball');
+
+INSERT INTO `student_sport` VALUES
+  (NULL, 1, 1),
+  (NULL, 2, 2),
+  (NULL, 3, 3),
+  (NULL, 4, 1),
+  (NULL, 5, 2),
+  (NULL, 6, 3),
+  (NULL, 7, 1),
+  (NULL, 8, 2),
+  (NULL, 9, 3);
