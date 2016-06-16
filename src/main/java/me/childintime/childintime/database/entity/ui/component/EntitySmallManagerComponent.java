@@ -92,7 +92,7 @@ public class EntitySmallManagerComponent extends JComponent {
         c.gridy = 0;
         c.weightx = 0;
         c.weighty = 0;
-        c.insets = new Insets(0, 4, 0, 10);
+        c.insets = new Insets(0, 4, 4, 10);
         c.anchor = GridBagConstraints.NORTH;
         add(buildUiManageButtons(), c);
 
@@ -102,7 +102,7 @@ public class EntitySmallManagerComponent extends JComponent {
         c.gridy = 0;
         c.weightx = 1;
         c.weighty = 1;
-        c.insets = new Insets(0, 0, 0, 4);
+        c.insets = new Insets(0, 0, 4, 4);
         add(this.entityView, c);
 
         // Update the UI buttons
