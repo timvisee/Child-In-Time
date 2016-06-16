@@ -351,8 +351,6 @@ public class DashboardFrame extends JFrame {
 
         // Create the entity menu
         Menu entityMenu = new Menu("Entity");
-
-        // Create a menu for each entity
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getUserManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getStudentManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getTeacherManager()));
@@ -361,6 +359,14 @@ public class DashboardFrame extends JFrame {
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getMeasurementManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getBodyStateManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getParkourManager()));
+
+        // Create the advanced menu
+        Menu advancedMenu = new Menu("Advanced");
+        advancedMenu.add(buildUiMenuEntity(Core.getInstance().getGroupTeacherCoupleManager()));
+
+        // Add the advanced menu
+        entityMenu.addSeparator();
+        entityMenu.add(advancedMenu);
 
         // Add the entity menu to the menu bar
         menu.add(entityMenu);
