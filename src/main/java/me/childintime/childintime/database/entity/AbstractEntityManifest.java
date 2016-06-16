@@ -1,6 +1,7 @@
 package me.childintime.childintime.database.entity;
 
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
 import me.childintime.childintime.database.entity.ui.dialog.EntityModifyDialog;
 import me.childintime.childintime.permission.PermissionLevel;
@@ -8,6 +9,7 @@ import me.childintime.childintime.permission.PermissionLevel;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractEntityManifest {
@@ -106,6 +108,38 @@ public abstract class AbstractEntityManifest {
      * @return List of couples.
      */
     public abstract List<AbstractEntityManifest> getCouples();
+
+    /**
+     * Get a list of referenced manifests.
+     *
+     * @return Referenced manifests.
+     */
+    public List<AbstractEntityManifest> getReferencedManifests() {
+        // Create a list of available manifests
+        List<AbstractEntityManifest> manifests = new ArrayList<>();
+
+        try {
+            // Fill the list of manifests
+            for(EntityFieldsInterface entityFieldsInterface : getFieldValues()) {
+                // Only process reference fields
+                if(!entityFieldsInterface.getExtendedDataType().equals(DataTypeExtended.REFERENCE))
+                    continue;
+
+                // Add the manifest
+                manifests.add(entityFieldsInterface.getReferenceManifest());
+            }
+
+            // Return the list of manifests
+            return manifests;
+
+        } catch(Exception ex) {
+            // Print the stack trace
+            ex.printStackTrace();
+
+            // Return null
+            return null;
+        }
+    }
 
     /**
      * Show the manager dialog.
