@@ -185,7 +185,7 @@ public class TextPropertyField extends AbstractPropertyField {
     }
 
     @Override
-    public String getValue() {
+    public Object getValue() {
         return getText();
     }
 
