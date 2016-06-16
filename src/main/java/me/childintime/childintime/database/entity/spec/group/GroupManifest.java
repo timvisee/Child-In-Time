@@ -5,6 +5,10 @@ import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.database.entity.spec.couple.groupteacher.GroupTeacherManifest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupManifest extends AbstractEntityManifest {
 
@@ -23,6 +27,13 @@ public class GroupManifest extends AbstractEntityManifest {
      * Singleton.
      */
     private static GroupManifest instance = null;
+
+    /**
+     * Couples specification for this entity.
+     */
+    private List<AbstractEntityManifest> couples = new ArrayList<AbstractEntityManifest>() {{
+        add(GroupTeacherManifest.getInstance());
+    }};
 
     /**
      * Get the singleton instance of this class.
@@ -76,5 +87,15 @@ public class GroupManifest extends AbstractEntityManifest {
     @Override
     public GroupManager getManagerInstance() {
         return Core.getInstance().getGroupManager();
+    }
+
+    @Override
+    public boolean isCouple() {
+        return false;
+    }
+
+    @Override
+    public List<AbstractEntityManifest> getCouples() {
+        return this.couples;
     }
 }

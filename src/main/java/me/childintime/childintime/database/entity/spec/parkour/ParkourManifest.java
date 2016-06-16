@@ -6,6 +6,9 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParkourManifest extends AbstractEntityManifest {
 
     /**
@@ -23,6 +26,11 @@ public class ParkourManifest extends AbstractEntityManifest {
      * Singleton.
      */
     private static ParkourManifest instance = null;
+
+    /**
+     * Couples specification for this entity.
+     */
+    private List<AbstractEntityManifest> couples = new ArrayList<>();
 
     /**
      * Get the singleton instance of this class.
@@ -75,5 +83,15 @@ public class ParkourManifest extends AbstractEntityManifest {
     @Override
     public ParkourManager getManagerInstance() {
         return Core.getInstance().getParkourManager();
+    }
+
+    @Override
+    public boolean isCouple() {
+        return false;
+    }
+
+    @Override
+    public List<AbstractEntityManifest> getCouples() {
+        return this.couples;
     }
 }

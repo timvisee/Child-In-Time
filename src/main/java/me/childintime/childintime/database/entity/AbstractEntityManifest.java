@@ -8,6 +8,7 @@ import me.childintime.childintime.permission.PermissionLevel;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public abstract class AbstractEntityManifest {
 
@@ -81,6 +82,30 @@ public abstract class AbstractEntityManifest {
      * @return Manager instance.
      */
     public abstract AbstractEntityManager getManagerInstance();
+
+    /**
+     * Check whether this entity is a couple specification.
+     *
+     * @return True if this entity is a couple specification, false if it's a normal entity.
+     */
+    public abstract boolean isCouple();
+
+    /**
+     * Check whether this entity has any couple.
+     *
+     * @return True if this entity has any couple.
+     */
+    public boolean hasCouples() {
+        return getCouples().size() > 0;
+    }
+
+    /**
+     * Get the couples this entity has.
+     * The returned list will be empty if this entity doesn't have any couple.
+     *
+     * @return List of couples.
+     */
+    public abstract List<AbstractEntityManifest> getCouples();
 
     /**
      * Show the manager dialog.

@@ -6,6 +6,9 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MeasurementManifest extends AbstractEntityManifest {
 
     /**
@@ -23,6 +26,11 @@ public class MeasurementManifest extends AbstractEntityManifest {
      * Singleton.
      */
     private static MeasurementManifest instance = null;
+
+    /**
+     * Couples specification for this entity.
+     */
+    private List<AbstractEntityManifest> couples = new ArrayList<>();
 
     /**
      * Get the singleton instance of this class.
@@ -77,5 +85,15 @@ public class MeasurementManifest extends AbstractEntityManifest {
     @Override
     public MeasurementManager getManagerInstance() {
         return Core.getInstance().getMeasurementManager();
+    }
+
+    @Override
+    public boolean isCouple() {
+        return false;
+    }
+
+    @Override
+    public List<AbstractEntityManifest> getCouples() {
+        return this.couples;
     }
 }

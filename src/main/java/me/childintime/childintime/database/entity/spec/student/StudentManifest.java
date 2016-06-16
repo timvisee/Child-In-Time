@@ -7,6 +7,9 @@ import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.permission.PermissionLevel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StudentManifest extends AbstractEntityManifest {
 
     /**
@@ -24,6 +27,11 @@ public class StudentManifest extends AbstractEntityManifest {
      * Singleton.
      */
     private static StudentManifest instance = null;
+
+    /**
+     * Couples specification for this entity.
+     */
+    private List<AbstractEntityManifest> couples = new ArrayList<>();
 
     /**
      * Get the singleton instance of this class.
@@ -84,5 +92,15 @@ public class StudentManifest extends AbstractEntityManifest {
     @Override
     public StudentManager getManagerInstance() {
         return Core.getInstance().getStudentManager();
+    }
+
+    @Override
+    public boolean isCouple() {
+        return false;
+    }
+
+    @Override
+    public List<AbstractEntityManifest> getCouples() {
+        return this.couples;
     }
 }
