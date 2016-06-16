@@ -331,17 +331,14 @@ public class EntityModifyDialog extends JDialog {
         // Get the list of fields
         EntityFieldsInterface[] fieldTypes = getFields();
 
-        // Create a field offset variable, which is the positional offset for fields
-        int fieldOffset = 0;
+        // Create the field index variable
+        int fieldIndex = 0;
 
         // Check whether the user has rights to edit values
         final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
 
         // Loop through all the fields
-        for(int i = 0; i < fieldTypes.length; i++) {
-            // Get the field type
-            EntityFieldsInterface fieldType = fieldTypes[i];
-
+        for(EntityFieldsInterface fieldType : fieldTypes) {
             // Get the field value
             Object valueRaw = null;
             String valueFormatted = null;
@@ -354,31 +351,26 @@ public class EntityModifyDialog extends JDialog {
                 }
 
             // Hide empty fields that aren't editable/creatable
-            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && valueRaw == null) {
-                // Change the offset
-                fieldOffset--;
-
-                // The field should be skipped, continue
+            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && valueRaw == null)
                 continue;
-            }
 
             // Create and add the name label
             c.fill = GridBagConstraints.NONE;
             c.gridx = 0;
-            c.gridy = i + fieldOffset;
+            c.gridy = fieldIndex;
             c.gridwidth = 1;
             c.weightx = 0;
-            c.insets = new Insets(i == 0 ? 0 : 8, 0, 0, 8);
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 8, 0, 0, 8);
             c.anchor = GridBagConstraints.WEST;
             fieldsPanel.add(new JLabel(fieldType.getDisplayName() + ":"), c);
 
             // Create and add the name label
             c.fill = GridBagConstraints.HORIZONTAL;
             c.gridx = 1;
-            c.gridy = i + fieldOffset;
+            c.gridy = fieldIndex;
             c.gridwidth = 1;
             c.weightx = 1;
-            c.insets = new Insets(i == 0 ? 0 : 8, 8, 0, 0);
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 8, 8, 0, 0);
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label if the field is not editable
@@ -398,6 +390,10 @@ public class EntityModifyDialog extends JDialog {
                     fieldsPanel.add(linkLabel, c);
                 }
 
+                // Increase the field index
+                fieldIndex++;
+
+                // Continue
                 continue;
             }
 
@@ -479,6 +475,9 @@ public class EntityModifyDialog extends JDialog {
 
             // Add the field
             fieldsPanel.add(field, c);
+
+            // Increase the field index
+            fieldIndex++;
         }
 
         // Add the fields panel the container
