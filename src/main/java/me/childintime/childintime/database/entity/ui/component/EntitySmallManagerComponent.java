@@ -58,7 +58,7 @@ public class EntitySmallManagerComponent extends JComponent {
         buildUi(manager, showCoupleFor);
 
         // Set the preferred size
-        setPreferredSize(new Dimension(100, 120));
+        setPreferredSize(new Dimension(200, 120));
     }
 
     /**
