@@ -1,8 +1,7 @@
 package me.childintime.childintime.database.entity.ui.component;
 
-import me.childintime.childintime.database.entity.AbstractEntity;
-import me.childintime.childintime.database.entity.AbstractEntityManager;
-import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.database.entity.*;
+import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.listener.EntityActionListener;
 import me.childintime.childintime.database.entity.listener.SelectionChangeListener;
 import me.childintime.childintime.util.swing.ProgressDialog;
@@ -35,6 +34,11 @@ public class EntityListComponent extends JComponent {
      * The columns to show in the list view.
      */
     private EntityFieldsInterface[] columns;
+
+    /**
+     * The entity instance the couples are shown for.
+     */
+    private AbstractEntity showCoupleFor;
 
     /**
      * Flag with defines whether multi selection mode is enabled.
@@ -79,11 +83,38 @@ public class EntityListComponent extends JComponent {
      * @param manager Entity manager.
      */
     public EntityListComponent(AbstractEntityManager manager) {
+        this(manager, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param manager Entity manager.
+     * @param showCoupleFor The entity instance to show the couples for, or null.
+     */
+    public EntityListComponent(AbstractEntityManager manager, AbstractEntity showCoupleFor) {
         // Set the attributes
         this.manager = manager;
+        this.showCoupleFor = showCoupleFor;
 
         // Set the columns
-        this.columns = manager.getManifest().getDefaultFields();
+        if(!isCoupleView())
+            this.columns = manager.getManifest().getDefaultFields();
+
+        else {
+            // Get the entity couple manifest
+            AbstractEntityCoupleManifest entityCoupleManifest = (AbstractEntityCoupleManifest) manager.getManifest();
+
+            // Get the manifest of the other object
+            AbstractEntityManifest otherManifest = entityCoupleManifest.getOtherManifest(this.showCoupleFor);
+
+            // Make sure the other manifest is valid
+            if(otherManifest == null)
+                throw new RuntimeException("Failed to determine manifest of other entity in entity couple.");
+
+            // Set the columns
+            this.columns = otherManifest.getDefaultFields();
+        }
 
         // Set the component name
         super.setName(getClass().getSimpleName());
@@ -102,6 +133,24 @@ public class EntityListComponent extends JComponent {
      */
     public AbstractEntityManager getManager() {
         return this.manager;
+    }
+
+    /**
+     * Get the entity instance the couples are shown for.
+     *
+     * @return Entity instance the couples are shown for, or null if this isn't an entity couple view.
+     */
+    public AbstractEntity getShowCoupleFor() {
+        return this.showCoupleFor;
+    }
+
+    /**
+     * Check whether this view is used to show entity couples.
+     *
+     * @return True if entity couples are shown, false if not.
+     */
+    public boolean isCoupleView() {
+        return this.showCoupleFor != null;
     }
 
     /**
@@ -228,12 +277,51 @@ public class EntityListComponent extends JComponent {
                 // Get the object
                 final AbstractEntity entity = instance.getManager().getEntities().get(rowIndex);
 
-                // Return the value
-                try {
-                    return entity.getFieldFormatted(manager.getManifest().getDefaultFields()[columnIndex]);
+                // Return the formatted value if we aren't using a couple view
+                if(!isCoupleView())
+                    try {
+                        return entity.getFieldFormatted(instance.getColumns()[columnIndex]);
 
-                } catch (Exception e) {
+                    } catch (Exception e) {
+                        // Print the stack trace
+                        e.printStackTrace();
+
+                        // Return null
+                        return null;
+                    }
+
+                // Get the entity couple manifest
+                AbstractEntityCoupleManifest entityCoupleManifest = (AbstractEntityCoupleManifest) manager.getManifest();
+
+                // Get the manifest of the other object
+                AbstractEntityManifest otherManifest = entityCoupleManifest.getOtherManifest(showCoupleFor);
+
+                // Determine the entity to fetch the columns from
+                try {
+                    for(EntityFieldsInterface entityFieldsInterface : manager.getManifest().getFieldValues()) {
+                        // Only look at reference fields
+                        if(!entityFieldsInterface.getExtendedDataType().equals(DataTypeExtended.REFERENCE))
+                            continue;
+
+                        // Get the other entity
+                        AbstractEntity otherEntity = (AbstractEntity) manager.getEntities().get(rowIndex).getField(entityFieldsInterface);
+
+                        // Make sure this entity is the correct one
+                        if(!otherEntity.getManifest().equals(otherManifest))
+                            continue;
+
+                        // Get the formatted field
+                        return otherEntity.getFieldFormatted(instance.getColumns()[columnIndex]);
+                    }
+
+                    // Nothing found, return null
+                    return null;
+
+                } catch(Exception e) {
+                    // Print the stack trace
                     e.printStackTrace();
+
+                    // Return null
                     return null;
                 }
             }
