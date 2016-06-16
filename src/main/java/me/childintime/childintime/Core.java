@@ -8,6 +8,7 @@ import me.childintime.childintime.database.configuration.DatabaseManager;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.database.entity.spec.bodystate.BodyStateManager;
 import me.childintime.childintime.database.entity.spec.couple.groupteacher.GroupTeacherManager;
+import me.childintime.childintime.database.entity.spec.couple.studentsport.StudentSportManager;
 import me.childintime.childintime.database.entity.spec.group.GroupManager;
 import me.childintime.childintime.database.entity.spec.measurement.MeasurementManager;
 import me.childintime.childintime.database.entity.spec.parkour.ParkourManager;
@@ -100,6 +101,11 @@ public class Core {
      * Sport manager.
      */
     private SportManager sportManager;
+
+    /**
+     * Student sport couple manager.
+     */
+    private StudentSportManager studentSportManager;
 
     /**
      * User manager instance.
@@ -198,6 +204,7 @@ public class Core {
         this.userManager = new UserManager();
         this.groupTeacherManager = new GroupTeacherManager();
         this.sportManager = new SportManager();
+        this.studentSportManager = new StudentSportManager();
 
         // Prepare the application data
         try {
@@ -474,6 +481,15 @@ public class Core {
      */
     public SportManager getSportManager() {
         return this.sportManager;
+    }
+
+    /**
+     * Get the student sport couple manager.
+     *
+     * @return Student sport couple manager.
+     */
+    public StudentSportManager getStudentSportCoupleManager() {
+        return this.studentSportManager;
     }
 
     /**
