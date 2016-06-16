@@ -88,6 +88,10 @@ public class EntityListSorter extends TableRowSorter<AbstractTableModel> {
 
     @Override
     public void toggleSortOrder(int column) {
+        // Make sure the list component is enabled
+        if(!listComponent.isEnabled())
+            return;
+
         // Get the sorting keys
         List<? extends SortKey> sortKeys = getSortKeys();
 

@@ -713,4 +713,13 @@ public class EntityListComponent extends JComponent {
     public void scrollToSelected() {
         scrollToRow(getSelectedIndex());
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        // Call the super
+        super.setEnabled(enabled);
+
+        // Disable the table
+        this.uiTable.setEnabled(enabled);
+    }
 }

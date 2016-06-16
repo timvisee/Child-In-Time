@@ -220,16 +220,16 @@ public class EntityManagerComponent extends JComponent {
         final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
 
         // Enable the create button
-        this.createButton.setEnabled(canEdit);
+        this.createButton.setEnabled(canEdit && isEnabled());
 
         // Enable the view button if one entity is selected
-        this.viewButton.setEnabled(selected == 1);
+        this.viewButton.setEnabled(selected == 1 && isEnabled());
 
         // Enable the modify button if one entity is selected
-        this.modifyButton.setEnabled(selected == 1 && canEdit);
+        this.modifyButton.setEnabled(selected == 1 && canEdit && isEnabled());
 
         // Enable the delete button if at least one entity is selected
-        this.deleteButton.setEnabled(selected > 0 && canEdit);
+        this.deleteButton.setEnabled(selected > 0 && canEdit && isEnabled());
     }
 
     /**
@@ -254,5 +254,17 @@ public class EntityManagerComponent extends JComponent {
     @Deprecated
     public void featureNotImplemented() {
         JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        // Call the super
+        super.setEnabled(enabled);
+
+        // Enable the entity view
+        this.entityView.setEnabled(enabled);
+
+        // Update the UI buttons
+        updateUiButtons();
     }
 }

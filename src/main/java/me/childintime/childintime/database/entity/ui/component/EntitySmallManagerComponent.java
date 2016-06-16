@@ -1,11 +1,9 @@
 package me.childintime.childintime.database.entity.ui.component;
 
-import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.permission.PermissionLevel;
-import me.childintime.childintime.util.swing.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -155,13 +153,13 @@ public class EntitySmallManagerComponent extends JComponent {
         final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
 
         // Enable the create button
-        this.createButton.setEnabled(canEdit);
+        this.createButton.setEnabled(canEdit && isEnabled());
 
         // Enable the modify button if one entity is selected
-        this.modifyButton.setEnabled(selected == 1 && canEdit);
+        this.modifyButton.setEnabled(selected == 1 && canEdit && isEnabled());
 
         // Enable the delete button if at least one entity is selected
-        this.deleteButton.setEnabled(selected > 0 && canEdit);
+        this.deleteButton.setEnabled(selected > 0 && canEdit && isEnabled());
     }
 
     /**
@@ -173,18 +171,15 @@ public class EntitySmallManagerComponent extends JComponent {
         return this.entityView;
     }
 
-    /**
-     * Get the window this component is placed in.
-     *
-     * @return Component window.
-     */
-    private Window getWindow() {
-        return SwingUtils.getComponentWindow(this);
-    }
+    @Override
+    public void setEnabled(boolean enabled) {
+        // Call the super
+        super.setEnabled(enabled);
 
-    // TODO: This should be removed!
-    @Deprecated
-    public void featureNotImplemented() {
-        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+        // Disable the entity view
+        this.entityView.setEnabled(enabled);
+
+        // Update the UI buttons
+        updateUiButtons();
     }
 }

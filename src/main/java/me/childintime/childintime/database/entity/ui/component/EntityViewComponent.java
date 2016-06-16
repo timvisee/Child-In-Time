@@ -120,6 +120,10 @@ public class EntityViewComponent extends EntityListComponent {
         getSwingTable().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                // Make sure the table is enabled
+                if(!getSwingTable().isEnabled())
+                    return;
+
                 // Make sure the right mouse button was released
                 if(!SwingUtilities.isRightMouseButton(e))
                     return;
