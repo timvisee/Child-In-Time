@@ -404,8 +404,6 @@ public class LoginDialog extends JDialog {
         if(!validateConfiguration())
             return false;
 
-        // TODO: Check database connection (already done in the database configurator?)
-
         // Make sure a username is entered
         if(this.userField.getText().length() == 0) {
             // Show a warning
@@ -579,9 +577,15 @@ public class LoginDialog extends JDialog {
 
                 // Make sure the setup option is pressed
                 if(option != (!Platform.isMacOsX() ? 0 : 1)) {
-                    // TODO: Return to the login dialog, the database setup process is cancelled!
-                    JOptionPane.showMessageDialog(progressDialog, "Should show login dialog again, not working yet!");
-                    System.exit(0);
+                    // Dispose the frame
+                    dispose();
+
+                    // Destroy the core
+                    Core.getInstance().destroy();
+
+                    // Re initialize the core
+                    Core.getInstance().init();
+                    return null;
                 }
 
                 // Build the database
