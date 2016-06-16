@@ -32,6 +32,11 @@ public class DashboardFrame extends JFrame {
     public static final String FRAME_TITLE = App.APP_NAME + " - Dashboard";
 
     /**
+     * Status label.
+     */
+    private JLabel statusLabel;
+
+    /**
      * Constructor.
      */
     public DashboardFrame() {
@@ -117,11 +122,6 @@ public class DashboardFrame extends JFrame {
         // Create a grid bag constraints instance
         GridBagConstraints c = new GridBagConstraints();
 
-        // Create a main actions panel
-        JPanel statistics = new JPanel();
-        statistics.setBorder(BorderFactory.createTitledBorder("Statistics"));
-        statistics.add(new JLabel("Some statistics should be shown here!"));
-
         // Add the main actions panel
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
@@ -138,7 +138,7 @@ public class DashboardFrame extends JFrame {
         c.weightx = 0;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 16, 16);
-        container.add(statistics, c);
+        container.add(buildUiStatisticsPanel(), c);
 
         // Add the student panel
         c.fill = GridBagConstraints.BOTH;
@@ -241,10 +241,64 @@ public class DashboardFrame extends JFrame {
         }
 
         // Set the preferred size
-        mainActions.setPreferredSize(new Dimension(300, 200));
+        mainActions.setMinimumSize(new Dimension(200, 200));
+        mainActions.setPreferredSize(new Dimension(200, 200));
 
         // Return the main actions panel
         return mainActions;
+    }
+
+    /**
+     * Build the main actions panel.
+     *
+     * @return Main actions panel.
+     */
+    private JPanel buildUiStatisticsPanel() {
+        // Create a main actions panel
+        final JPanel statistics = new JPanel();
+        statistics.setLayout(new BoxLayout(statistics, BoxLayout.Y_AXIS));
+        statistics.setBorder(new CompoundBorder(
+                BorderFactory.createTitledBorder("Statistics"),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)
+        ));
+
+        // Initialize the label
+        this.statusLabel = new JLabel("Initializing status...");
+
+        // Add the status label
+        statistics.add(this.statusLabel);
+
+        // Create an update status label callable
+        final Runnable updateStatusLabel = () -> statusLabel.setText("<html>" +
+                "Users: " + Core.getInstance().getUserManager().getEntityCount() + "<br>" +
+                "Students: " + Core.getInstance().getStudentManager().getEntityCount() + "<br>" +
+                "Teachers: " + Core.getInstance().getTeacherManager().getEntityCount() + "<br>" +
+                "Schools: " + Core.getInstance().getSchoolManager().getEntityCount() + "<br>" +
+                "Groups: " + Core.getInstance().getGroupManager().getEntityCount() + "<br>" +
+                "Measurements: " + Core.getInstance().getMeasurementManager().getEntityCount() + "<br>" +
+                "BodyStates: " + Core.getInstance().getBodyStateManager().getEntityCount() + "<br>" +
+                "Parkours: " + Core.getInstance().getParkourManager().getEntityCount() + "<br>"
+        );
+
+        // Update the status label when the managers change
+        Core.getInstance().getUserManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getStudentManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getTeacherManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getSchoolManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getGroupManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getMeasurementManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getBodyStateManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getParkourManager().addChangeListener(updateStatusLabel::run);
+
+        // Update the label for the first time
+        updateStatusLabel.run();
+
+        // Set the preferred size
+        statistics.setMinimumSize(new Dimension(200, 200));
+        statistics.setPreferredSize(new Dimension(200, 200));
+
+        // Return the main actions panel
+        return statistics;
     }
 
     /**
