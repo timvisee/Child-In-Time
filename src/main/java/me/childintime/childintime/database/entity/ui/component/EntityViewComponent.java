@@ -15,9 +15,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class EntityViewComponent extends EntityListComponent {
+
+    /**
+     * Define whether a user can create an entity.
+     */
+    private boolean canCreate = true;
+
+    /**
+     * Define whether a user can view an entity.
+     */
+    private boolean canView = true;
 
     /**
      * Define whether a user can modify an entity.
@@ -72,6 +84,124 @@ public class EntityViewComponent extends EntityListComponent {
             @Override
             public void keyReleased(KeyEvent e) { }
         });
+
+        // Add a proper right click menu
+        // TODO: Move part of this to the base class
+        getSwingTable().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // Make sure the right mouse button was released
+                if(!SwingUtilities.isRightMouseButton(e))
+                    return;
+
+                // Make sure the source is the table, and that this is an popup trigger
+                if(!e.isPopupTrigger() || !(e.getComponent() instanceof JTable))
+                    return;
+
+                // Get the selected row
+                final int rawMouseRowIndex = getSwingTable().rowAtPoint(e.getPoint());
+                if(rawMouseRowIndex > 0) {
+                    // Convert the row to the model index
+                    final int mouseRowIndex = getSwingTable().convertRowIndexToModel(rawMouseRowIndex);
+
+                    // Check whether this row was selected
+                    boolean isSelected = false;
+                    for(int rowIndex : getSelectedIndices()) {
+                        if(mouseRowIndex == rowIndex) {
+                            isSelected = true;
+                            break;
+                        }
+                    }
+
+                    // Select this row if it wasn't selected
+                    if(!isSelected)
+                        getSwingTable().setRowSelectionInterval(rawMouseRowIndex, rawMouseRowIndex);
+                }
+
+                // Get the selected entities
+                final List<AbstractEntity> selectedEntities = getSelectedEntities();
+
+                // Create a popup menu
+                JPopupMenu popup = new JPopupMenu();
+
+                // Create the create menu
+                JMenuItem createAction = new JMenuItem("Create...");
+                createAction.addActionListener(e1 -> createEntity());
+                createAction.setEnabled(canCreate);
+                popup.add(createAction);
+
+                // Create the view menu
+                if(selectedEntities.size() >= 1) {
+                    JMenuItem viewAction = new JMenuItem("View");
+                    viewAction.addActionListener(e1 -> viewSelectedEntity());
+                    viewAction.setEnabled(canView);
+                    popup.add(viewAction);
+                }
+
+                // Create the modify menu
+                if(selectedEntities.size() >= 1) {
+                    JMenuItem modifyAction = new JMenuItem("Modify");
+                    modifyAction.addActionListener(e1 -> modifySelectedEntity());
+                    modifyAction.setEnabled(canModify);
+                    popup.add(modifyAction);
+                }
+
+                // Create the delete menu
+                if(selectedEntities.size() >= 1) {
+                    JMenuItem deleteAction = new JMenuItem("Delete");
+                    deleteAction.addActionListener(e1 -> deleteSelectedEntities());
+                    deleteAction.setEnabled(canDelete);
+                    popup.add(deleteAction);
+                }
+
+                // Create the refresh menu
+                JMenuItem refreshAction = new JMenuItem("Refresh");
+                refreshAction.addActionListener(e1 -> refresh());
+                popup.addSeparator();
+                popup.add(refreshAction);
+
+                // Show the popup menu
+                popup.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+    }
+
+    /**
+     * Check whether a user can create an entity.
+     *
+     * @return True if a user can create, false if not.
+     */
+    public boolean isCanCreate() {
+        return this.canCreate;
+    }
+
+    /**
+     * Set whether a user can create an entity.
+     *
+     * @param canCreate True if a user can create, false if not.
+     */
+    public void setCanCreate(boolean canCreate) {
+        // Set the editable flag
+        this.canCreate = canCreate;
+    }
+
+    /**
+     * Check whether a user can view an entity.
+     *
+     * @return True if a user can view, false if not.
+     */
+    public boolean isCanView() {
+        return this.canView;
+    }
+
+    /**
+     * Set whether a user can view an entity.
+     *
+     * @param canView True if a user can view, false if not.
+     */
+    public void setCanView(boolean canView) {
+        // Set the editable flag
+        this.canView = canView;
     }
 
     /**
@@ -142,6 +272,59 @@ public class EntityViewComponent extends EntityListComponent {
 
         // Return the created entity
         return entity;
+    }
+
+    /**
+     * View the selected entities.
+     */
+    public void viewSelectedEntity() {
+        // Get the objects manifest
+        final AbstractEntityManifest manifest = getManager().getManifest();
+
+        // Make sure an entity is selected
+        if(getSelectedCount() == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a " + manifest.getTypeName(false, false) + " to view.",
+                    App.APP_NAME,
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // View the selected entity
+        viewEntity(getSelectedEntities());
+    }
+
+    /**
+     * View the given entity.
+     * This method allows a list to be supplied, even though only one entity can be viewed.
+     */
+    public void viewEntity(List<AbstractEntity> entities) {
+        // Only one entity can be modified
+        if(getSelectedCount() > 1) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Only one " + getManager().getManifest().getTypeName(false, false) + " can be viewed at a time.",
+                    App.APP_NAME,
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // View the entity
+        viewEntity(entities.get(0));
+    }
+
+    /**
+     * View the given entity.
+     */
+    public void viewEntity(AbstractEntity entity) {
+        // Show the entity modification dialog
+        EntityViewDialog.showDialog(getWindow(), entity);
+
+        // Refresh the manager
+        getManager().refresh();
     }
 
     /**
