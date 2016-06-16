@@ -871,10 +871,6 @@ public abstract class AbstractEntity implements Cloneable {
         if(other == null || getClass() != other.getClass())
             return false;
 
-        // If the ID is negative, use Java's default equals method
-        if(this.id < 0)
-            return super.equals(other);
-
         // Compare the ID's
         return this.id == ((AbstractEntity) other).id;
     }

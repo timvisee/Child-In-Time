@@ -492,7 +492,7 @@ public class EntityModifyDialog extends JDialog {
             ));
 
             // Create a small manager component to show the couples
-            EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source);
+            EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source != null ? this.source : this.result);
             couplePanel.add(coupleView, BorderLayout.CENTER);
 
             // Add the panel
@@ -848,6 +848,9 @@ public class EntityModifyDialog extends JDialog {
         // Update the source object by cloning the result
         try {
             this.source = this.result.clone();
+
+            // Revert the input fields
+            revert();
 
         } catch(CloneNotSupportedException e) {
             // Print the stack trace
