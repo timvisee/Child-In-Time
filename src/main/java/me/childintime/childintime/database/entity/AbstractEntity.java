@@ -646,6 +646,11 @@ public abstract class AbstractEntity implements Cloneable {
             }
         }
 
+        // Refresh the managers
+        getManifest().getManagerInstance().refresh();
+        for(AbstractEntityManifest abstractEntityManifest : getManifest().getReferencedManifests())
+            abstractEntityManifest.getManagerInstance().refresh();
+
         // Successfully updated entity, return the result
         return true;
     }
@@ -870,10 +875,6 @@ public abstract class AbstractEntity implements Cloneable {
         // Return false if the other object is null
         if(other == null || getClass() != other.getClass())
             return false;
-
-        // If the ID is negative, use Java's default equals method
-        if(this.id < 0)
-            return super.equals(other);
 
         // Compare the ID's
         return this.id == ((AbstractEntity) other).id;

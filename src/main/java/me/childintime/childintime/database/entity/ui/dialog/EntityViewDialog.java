@@ -3,9 +3,11 @@ package me.childintime.childintime.database.entity.ui.dialog;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
+import me.childintime.childintime.database.entity.AbstractEntityCoupleManifest;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.database.entity.ui.component.EntitySmallManagerComponent;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
 
@@ -241,19 +243,14 @@ public class EntityViewDialog extends JDialog {
         // Get the list of fields
         EntityFieldsInterface[] fieldTypes = getFields();
 
-        // Create a field offset variable, which is the positional offset for fields
-        int fieldOffset = 0;
+        // Create the field index variable
+        int fieldIndex = 0;
 
         // Loop through all the fields
-        for(int i = 0; i < fieldTypes.length; i++) {
-            // Get the field type
-            EntityFieldsInterface fieldType = fieldTypes[i];
-
+        for(EntityFieldsInterface fieldType : fieldTypes) {
             // Skip password fields
-            if(fieldType.getExtendedDataType().equals(DataTypeExtended.PASSWORD_HASH)) {
-                fieldOffset--;
+            if(fieldType.getExtendedDataType().equals(DataTypeExtended.PASSWORD_HASH))
                 continue;
-            }
 
             // Get the field value
             String valueFormatted = null;
@@ -270,20 +267,20 @@ public class EntityViewDialog extends JDialog {
             // Create and add the name label
             c.fill = GridBagConstraints.NONE;
             c.gridx = 0;
-            c.gridy = i + fieldOffset;
+            c.gridy = fieldIndex;
             c.gridwidth = 1;
             c.weightx = 0;
-            c.insets = new Insets(i == 0 ? 0 : 8, 0, 0, 8);
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 8, 0, 0, 8);
             c.anchor = GridBagConstraints.WEST;
             fieldsPanel.add(new JLabel(fieldType.getDisplayName() + ":"), c);
 
             // Create and add the name label
             c.fill = GridBagConstraints.HORIZONTAL;
             c.gridx = 1;
-            c.gridy = i + fieldOffset;
+            c.gridy = fieldIndex;
             c.gridwidth = 1;
             c.weightx = 1;
-            c.insets = new Insets(i == 0 ? 0 : 8, 8, 0, 0);
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 8, 8, 0, 0);
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label
@@ -301,6 +298,37 @@ public class EntityViewDialog extends JDialog {
                 // Add the label
                 fieldsPanel.add(linkLabel, c);
             }
+
+            // Increase the field index
+            fieldIndex++;
+        }
+
+        // Loop through the couples
+        for(AbstractEntityCoupleManifest abstractEntityManifest : this.sourceManifest.getCouples()) {
+            // Create a couple panel
+            final JPanel couplePanel = new JPanel(new BorderLayout());
+            couplePanel.setBorder(new CompoundBorder(
+                    BorderFactory.createTitledBorder(abstractEntityManifest.getReferenceTypeName(this.sourceManifest, true, true, true)),
+                    BorderFactory.createEmptyBorder(2, 2, 2, 2)
+            ));
+
+            // Create a small manager component to show the couples
+            EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source);
+            couplePanel.add(coupleView, BorderLayout.CENTER);
+
+            // Add the panel
+            c.fill = GridBagConstraints.BOTH;
+            c.gridx = 0;
+            c.gridy = fieldIndex;
+            c.gridwidth = 2;
+            c.weightx = 1;
+            c.weighty = 1;
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 16, 0, 0, 0);
+            c.anchor = GridBagConstraints.CENTER;
+            fieldsPanel.add(couplePanel, c);
+
+            // Increase the field index
+            fieldIndex++;
         }
 
         // Add the fields panel the container
@@ -308,7 +336,7 @@ public class EntityViewDialog extends JDialog {
         c.gridx = 0;
         c.gridy = 1;
         c.weightx = 1;
-        c.weighty = 0;
+        c.weighty = 1;
         c.insets = new Insets(16, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
         container.add(fieldsPanel, c);

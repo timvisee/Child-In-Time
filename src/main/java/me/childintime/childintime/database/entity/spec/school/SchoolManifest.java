@@ -1,10 +1,10 @@
 package me.childintime.childintime.database.entity.spec.school;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.entity.AbstractEntity;
-import me.childintime.childintime.database.entity.AbstractEntityManager;
-import me.childintime.childintime.database.entity.AbstractEntityManifest;
-import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.database.entity.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SchoolManifest extends AbstractEntityManifest {
 
@@ -23,6 +23,11 @@ public class SchoolManifest extends AbstractEntityManifest {
      * Singleton.
      */
     private static SchoolManifest instance = null;
+
+    /**
+     * Couples specification for this entity.
+     */
+    private List<AbstractEntityCoupleManifest> couples = new ArrayList<>();
 
     /**
      * Get the singleton instance of this class.
@@ -76,5 +81,15 @@ public class SchoolManifest extends AbstractEntityManifest {
     @Override
     public SchoolManager getManagerInstance() {
         return Core.getInstance().getSchoolManager();
+    }
+
+    @Override
+    public boolean isCouple() {
+        return false;
+    }
+
+    @Override
+    public List<AbstractEntityCoupleManifest> getCouples() {
+        return this.couples;
     }
 }

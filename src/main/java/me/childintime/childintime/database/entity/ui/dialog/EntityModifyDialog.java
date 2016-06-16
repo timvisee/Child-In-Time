@@ -3,9 +3,11 @@ package me.childintime.childintime.database.entity.ui.dialog;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
+import me.childintime.childintime.database.entity.AbstractEntityCoupleManifest;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.database.entity.ui.component.EntitySmallManagerComponent;
 import me.childintime.childintime.hash.HashUtil;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
@@ -20,9 +22,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class EntityModifyDialog extends JDialog {
 
@@ -61,6 +62,16 @@ public class EntityModifyDialog extends JDialog {
      * Hashmap containing all the fields.
      */
     private HashMap<EntityFieldsInterface, AbstractPropertyField> fields = new HashMap<>();
+
+    /**
+     * Couple panels.
+     */
+    private List<JPanel> couplePanels = new ArrayList<>();
+
+    /**
+     * Couple views.
+     */
+    private List<EntitySmallManagerComponent> coupleManagerComponents = new ArrayList<>();
 
     /**
      * Constructor, to modify an existing entity.
@@ -158,7 +169,6 @@ public class EntityModifyDialog extends JDialog {
         });
 
         // Configure the window size
-        // FIXME: Already done?
         configureSize();
 
         // Set the window location to the system's default
@@ -331,17 +341,14 @@ public class EntityModifyDialog extends JDialog {
         // Get the list of fields
         EntityFieldsInterface[] fieldTypes = getFields();
 
-        // Create a field offset variable, which is the positional offset for fields
-        int fieldOffset = 0;
+        // Create the field index variable
+        int fieldIndex = 0;
 
         // Check whether the user has rights to edit values
         final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
 
         // Loop through all the fields
-        for(int i = 0; i < fieldTypes.length; i++) {
-            // Get the field type
-            EntityFieldsInterface fieldType = fieldTypes[i];
-
+        for(EntityFieldsInterface fieldType : fieldTypes) {
             // Get the field value
             Object valueRaw = null;
             String valueFormatted = null;
@@ -354,31 +361,26 @@ public class EntityModifyDialog extends JDialog {
                 }
 
             // Hide empty fields that aren't editable/creatable
-            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && valueRaw == null) {
-                // Change the offset
-                fieldOffset--;
-
-                // The field should be skipped, continue
+            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && valueRaw == null)
                 continue;
-            }
 
             // Create and add the name label
             c.fill = GridBagConstraints.NONE;
             c.gridx = 0;
-            c.gridy = i + fieldOffset;
+            c.gridy = fieldIndex;
             c.gridwidth = 1;
             c.weightx = 0;
-            c.insets = new Insets(i == 0 ? 0 : 8, 0, 0, 8);
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 8, 0, 0, 8);
             c.anchor = GridBagConstraints.WEST;
             fieldsPanel.add(new JLabel(fieldType.getDisplayName() + ":"), c);
 
             // Create and add the name label
             c.fill = GridBagConstraints.HORIZONTAL;
             c.gridx = 1;
-            c.gridy = i + fieldOffset;
+            c.gridy = fieldIndex;
             c.gridwidth = 1;
             c.weightx = 1;
-            c.insets = new Insets(i == 0 ? 0 : 8, 8, 0, 0);
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 8, 8, 0, 0);
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label if the field is not editable
@@ -398,6 +400,10 @@ public class EntityModifyDialog extends JDialog {
                     fieldsPanel.add(linkLabel, c);
                 }
 
+                // Increase the field index
+                fieldIndex++;
+
+                // Continue
                 continue;
             }
 
@@ -479,6 +485,41 @@ public class EntityModifyDialog extends JDialog {
 
             // Add the field
             fieldsPanel.add(field, c);
+
+            // Increase the field index
+            fieldIndex++;
+        }
+
+        // Loop through the couples
+        for(AbstractEntityCoupleManifest abstractEntityManifest : this.sourceManifest.getCouples()) {
+            // Create a couple panel
+            final JPanel couplePanel = new JPanel(new BorderLayout());
+            couplePanel.setBorder(new CompoundBorder(
+                    BorderFactory.createTitledBorder(abstractEntityManifest.getReferenceTypeName(this.sourceManifest, true, true, true)),
+                    BorderFactory.createEmptyBorder(2, 2, 2, 2)
+            ));
+
+            // Create a small manager component to show the couples
+            EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source != null ? this.source : this.result);
+            couplePanel.add(coupleView, BorderLayout.CENTER);
+
+            // Add the couple panel and manager component
+            this.couplePanels.add(couplePanel);
+            this.coupleManagerComponents.add(coupleView);
+
+            // Add the panel
+            c.fill = GridBagConstraints.BOTH;
+            c.gridx = 0;
+            c.gridy = fieldIndex;
+            c.gridwidth = 2;
+            c.weightx = 1;
+            c.weighty = 1;
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 16, 0, 0, 0);
+            c.anchor = GridBagConstraints.CENTER;
+            fieldsPanel.add(couplePanel, c);
+
+            // Increase the field index
+            fieldIndex++;
         }
 
         // Add the fields panel the container
@@ -486,7 +527,7 @@ public class EntityModifyDialog extends JDialog {
         c.gridx = 0;
         c.gridy = 1;
         c.weightx = 1;
-        c.weighty = 0;
+        c.weighty = 1;
         c.insets = new Insets(16, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
         container.add(fieldsPanel, c);
@@ -501,6 +542,9 @@ public class EntityModifyDialog extends JDialog {
         c.insets = new Insets(8, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
         container.add(controlsPanel, c);
+
+        // Revert to give all UI it's initial state
+        revert();
 
         // Add the container to the frame
         this.add(container);
@@ -684,6 +728,25 @@ public class EntityModifyDialog extends JDialog {
                 ex.printStackTrace();
             }
         }
+
+        //  Determine whether to enable the couple panels
+        final boolean enableCouplePanels = this.source != null;
+
+        // Set the enabled state of the couple panels
+        for(JPanel couplePanel : this.couplePanels)
+            couplePanel.setEnabled(enableCouplePanels);
+
+        // Update the couple manager components
+        for(EntitySmallManagerComponent coupleManagerComponent : this.coupleManagerComponents) {
+            // Set the enabled state
+            coupleManagerComponent.setEnabled(enableCouplePanels);
+
+            // Set the empty label
+            if(enableCouplePanels)
+                coupleManagerComponent.getEntityView().resetEmptyLabel();
+            else
+                coupleManagerComponent.getEntityView().setEmptyLabel("Apply the " + this.sourceManifest.getTypeName(false, false) + " first to add a couple...");
+        }
     }
 
     /**
@@ -819,6 +882,9 @@ public class EntityModifyDialog extends JDialog {
         // Update the source object by cloning the result
         try {
             this.source = this.result.clone();
+
+            // Revert the input fields
+            revert();
 
         } catch(CloneNotSupportedException e) {
             // Print the stack trace

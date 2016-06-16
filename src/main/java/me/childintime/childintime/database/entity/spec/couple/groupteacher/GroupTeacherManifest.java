@@ -1,37 +1,36 @@
-package me.childintime.childintime.database.entity.spec.teacher;
+package me.childintime.childintime.database.entity.spec.couple.groupteacher;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.entity.*;
-import me.childintime.childintime.database.entity.spec.couple.groupteacher.GroupTeacherManifest;
-import me.childintime.childintime.permission.PermissionLevel;
+import me.childintime.childintime.database.entity.AbstractEntity;
+import me.childintime.childintime.database.entity.AbstractEntityCoupleManifest;
+import me.childintime.childintime.database.entity.AbstractEntityManager;
+import me.childintime.childintime.database.entity.EntityFieldsInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeacherManifest extends AbstractEntityManifest {
+public class GroupTeacherManifest extends AbstractEntityCoupleManifest {
 
     /**
      * Entity type name.
      */
-    public static final String TYPE_NAME = "Teacher";
+    public static final String TYPE_NAME = "Group & teacher couple";
 
     /**
      * Database table name for this object type.
      */
-    public static final String DATABASE_TABLE_NAME = "teacher";
+    public static final String DATABASE_TABLE_NAME = "group_teacher";
 
     /**
      * This instance.
      * Singleton.
      */
-    private static TeacherManifest instance = null;
+    private static GroupTeacherManifest instance = null;
 
     /**
      * Couples specification for this entity.
      */
-    private List<AbstractEntityCoupleManifest> couples = new ArrayList<AbstractEntityCoupleManifest>() {{
-        add(GroupTeacherManifest.getInstance());
-    }};
+    private List<AbstractEntityCoupleManifest> couples = new ArrayList<>();
 
     /**
      * Get the singleton instance of this class.
@@ -39,10 +38,10 @@ public class TeacherManifest extends AbstractEntityManifest {
      *
      * @return Class instance.
      */
-    public static TeacherManifest getInstance() {
+    public static GroupTeacherManifest getInstance() {
         // Create a singleton instance if it isn't instantiated yet
         if(instance == null)
-            instance = new TeacherManifest();
+            instance = new GroupTeacherManifest();
 
         // Return the instance
         return instance;
@@ -61,42 +60,35 @@ public class TeacherManifest extends AbstractEntityManifest {
 
     @Override
     public EntityFieldsInterface[] getDefaultFields() {
-        if(PermissionLevel.VIEW.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()))
-            return new TeacherFields[]{
-                    TeacherFields.FIRST_NAME,
-                    TeacherFields.LAST_NAME,
-                    TeacherFields.SCHOOL_ID
-            };
-        else
-            return new TeacherFields[]{
-                    TeacherFields.ID,
-                    TeacherFields.SCHOOL_ID
-            };
+        return new GroupTeacherFields[]{
+                GroupTeacherFields.GROUP_ID,
+                GroupTeacherFields.TEACHER_ID
+        };
     }
 
     @Override
     public Class<? extends EntityFieldsInterface> getFields() {
-        return TeacherFields.class;
+        return GroupTeacherFields.class;
     }
 
     @Override
     public Class<? extends AbstractEntity> getEntity() {
-        return Teacher.class;
+        return GroupTeacher.class;
     }
 
     @Override
     public Class<? extends AbstractEntityManager> getManager() {
-        return TeacherManager.class;
+        return GroupTeacherManager.class;
     }
 
     @Override
-    public TeacherManager getManagerInstance() {
-        return Core.getInstance().getTeacherManager();
+    public GroupTeacherManager getManagerInstance() {
+        return Core.getInstance().getGroupTeacherCoupleManager();
     }
 
     @Override
     public boolean isCouple() {
-        return false;
+        return true;
     }
 
     @Override

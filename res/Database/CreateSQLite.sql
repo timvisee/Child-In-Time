@@ -73,9 +73,9 @@ CREATE TABLE IF NOT EXISTS `measurement` (
 );
 
 CREATE TABLE IF NOT EXISTS `group_teacher` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `group_id`   INTEGER NOT NULL,
   `teacher_id` INTEGER NOT NULL,
-  PRIMARY KEY (`group_id`, `teacher_id`),
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
     ON DELETE RESTRICT,
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)

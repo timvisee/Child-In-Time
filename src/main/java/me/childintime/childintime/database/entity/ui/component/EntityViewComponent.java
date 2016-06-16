@@ -3,11 +3,13 @@ package me.childintime.childintime.database.entity.ui.component;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
+import me.childintime.childintime.database.entity.AbstractEntityCoupleManifest;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.ui.dialog.EntityModifyDialog;
 import me.childintime.childintime.database.entity.ui.dialog.EntityViewDialog;
 import me.childintime.childintime.database.entity.ui.selector.EntityListSelectorComponent;
+import me.childintime.childintime.database.entity.ui.selector.EntityListSelectorDialog;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
@@ -18,6 +20,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntityViewComponent extends EntityListComponent {
@@ -53,8 +56,18 @@ public class EntityViewComponent extends EntityListComponent {
      * @param manager Entity manager.
      */
     public EntityViewComponent(AbstractEntityManager manager) {
+        this(manager, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param manager Entity manager.
+     * @param showCoupleFor The entity instance to show the couples for, or null.
+     */
+    public EntityViewComponent(AbstractEntityManager manager, AbstractEntity showCoupleFor) {
         // Construct the super
-        super(manager);
+        super(manager, showCoupleFor);
 
         // Attach the entity action listener, to execute entity modifications
         addEntityActionListener(entities -> {
@@ -107,6 +120,10 @@ public class EntityViewComponent extends EntityListComponent {
         getSwingTable().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                // Make sure the table is enabled
+                if(!getSwingTable().isEnabled())
+                    return;
+
                 // Make sure the right mouse button was released
                 if(!SwingUtilities.isRightMouseButton(e))
                     return;
@@ -142,14 +159,19 @@ public class EntityViewComponent extends EntityListComponent {
                 JPopupMenu popup = new JPopupMenu();
 
                 // Create the create menu
-                JMenuItem createAction = new JMenuItem("Create...");
-                createAction.addActionListener(e1 -> createEntity());
+                JMenuItem createAction = new JMenuItem(!isCoupleView() ? "Create..." : "Add couple...");
+                createAction.addActionListener(e1 -> {
+                    if(!isCoupleView())
+                        createEntity();
+                    else
+                        createEntityCouple();
+                });
                 createAction.setEnabled(canCreate);
                 popup.add(createAction);
 
                 // Create the view menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem viewAction = new JMenuItem("View...");
+                    JMenuItem viewAction = new JMenuItem("View" + (isCoupleView() ? " couple" : "") + "...");
                     viewAction.addActionListener(e1 -> viewSelectedEntity());
                     viewAction.setEnabled(canView);
                     popup.add(viewAction);
@@ -157,7 +179,7 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the modify menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem modifyAction = new JMenuItem("Modify...");
+                    JMenuItem modifyAction = new JMenuItem(!isCoupleView() ? "Modify..." : "Edit couple...");
                     modifyAction.addActionListener(e1 -> modifySelectedEntity());
                     modifyAction.setEnabled(canModify);
                     popup.add(modifyAction);
@@ -165,10 +187,28 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the delete menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem deleteAction = new JMenuItem("Delete");
+                    JMenuItem deleteAction = new JMenuItem(!isCoupleView() ? "Delete..." : "Remove couple...");
                     deleteAction.addActionListener(e1 -> deleteSelectedEntities());
                     deleteAction.setEnabled(canDelete);
                     popup.add(deleteAction);
+                }
+
+                // Show some couple view reference actions
+                if(isCoupleView() && selectedEntities.size() >= 1) {
+                    // Add a separator
+                    popup.addSeparator();
+
+                    // Create the view menu
+                    JMenuItem viewAction = new JMenuItem("View reference...");
+                    viewAction.addActionListener(e1 -> viewSelectedEntityCoupleReference());
+                    viewAction.setEnabled(canView);
+                    popup.add(viewAction);
+
+                    // Create the modify menu
+                    JMenuItem modifyAction = new JMenuItem("Modify reference...");
+                    modifyAction.addActionListener(e1 -> modifySelectedEntityCoupleReference());
+                    modifyAction.setEnabled(canModify);
+                    popup.add(modifyAction);
                 }
 
                 // Create the manager action
@@ -318,6 +358,140 @@ public class EntityViewComponent extends EntityListComponent {
     }
 
     /**
+     * Create a new entity couple.
+     *
+     * @return Created entity couple, or null when cancelled.
+     */
+    public AbstractEntity createEntityCouple() {
+        // Make sure we're working with a couple view
+        if(!isCoupleView())
+            return null;
+
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to create a new " + getManager().getManifest().getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return null;
+        }
+
+        // Get the couple manifest
+        AbstractEntityCoupleManifest coupleManifest = (AbstractEntityCoupleManifest) getManager().getManifest();
+
+        // Get the manifest of the other manifest
+        AbstractEntityManifest otherManifest = coupleManifest.getOtherManifest(getShowCoupleFor());
+
+        // Show a selection dialog for this manifest
+        AbstractEntity selected = EntityListSelectorDialog.showDialog(getWindow(), otherManifest.getManagerInstance());
+
+        // Make sure an entity is selected
+        if(selected == null)
+            return null;
+
+        try {
+            // Create a new entity instance
+            AbstractEntity newEntity = getManager().getManifest().getEntity().newInstance();
+
+            // Put the base reference and the selected reference in the object
+            newEntity.parseField(
+                    ((AbstractEntityCoupleManifest) getManager().getManifest()).getFieldByReferenceManifest(getShowCoupleFor().getManifest()),
+                    getShowCoupleFor()
+            );
+            newEntity.parseField(
+                    ((AbstractEntityCoupleManifest) getManager().getManifest()).getFieldByReferenceManifest(selected.getManifest()),
+                    selected
+            );
+
+            // Apply the new entity to the database
+            if(!newEntity.applyToDatabase()) {
+                // Show a warning
+                JOptionPane.showMessageDialog(
+                        getWindow(),
+                        "Failed to store couple.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return null;
+            }
+
+            // Return the couple
+            return newEntity;
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Return null
+            return null;
+        }
+    }
+
+    /**
+     * View the reference of an entity couple.
+     */
+    public void viewSelectedEntityCoupleReference() {
+        // Make sure we're working with a couple view
+        if(!isCoupleView())
+            return;
+
+        // Get the objects manifest
+        final AbstractEntityManifest manifest = getManager().getManifest();
+
+        // Make sure an entity is selected
+        if(getSelectedCount() == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a " + manifest.getTypeName(false, false) + " to view.",
+                    App.APP_NAME,
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // View the selected entity
+        viewEntityCoupleReference(getSelectedEntities());
+    }
+
+    /**
+     * View the references of the given couples.
+     * This method allows a list to be supplied, even though only one entity can be viewed.
+     */
+    public void viewEntityCoupleReference(List<AbstractEntity> couples) {
+        // Only one entity can be modified
+        if(getSelectedCount() > 1) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Only one " + getManager().getManifest().getTypeName(false, false) + " can be viewed at a time.",
+                    App.APP_NAME,
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // View the entity
+        viewEntityCoupleReference(couples.get(0));
+    }
+
+    /**
+     * View the given entity couple reference..
+     */
+    public void viewEntityCoupleReference(AbstractEntity couple) {
+        // Get the reference
+        final AbstractEntity reference = convertCoupleToReference(couple);
+
+        // Show the entity modification dialog
+        EntityViewDialog.showDialog(getWindow(), reference);
+
+        // Refresh both managers
+        reference.getManifest().getManagerInstance().refresh();
+        getManager().refresh();
+    }
+
+    /**
      * View the selected entities.
      */
     public void viewSelectedEntity() {
@@ -365,8 +539,101 @@ public class EntityViewComponent extends EntityListComponent {
     public void viewEntity(AbstractEntity entity) {
         // Show the entity modification dialog
         EntityViewDialog.showDialog(getWindow(), entity);
+    }
 
-        // Refresh the manager
+    /**
+     * Modify the selected couple reference.
+     */
+    public void modifySelectedEntityCoupleReference() {
+        // Get the objects manifest
+        final AbstractEntityManifest manifest = getManager().getManifest();
+
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to modify a " + manifest.getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        // Make sure an entity is selected
+        if(getSelectedCount() == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a " + manifest.getTypeName(false, false) + " to modify.",
+                    App.APP_NAME,
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // Modify the selected entity couple reference
+        modifyEntityCoupleReference(getSelectedEntities());
+    }
+
+    /**
+     * Modify the given entity couple reference.
+     * This method allows a list to be supplied, even though only one entity can be modified.
+     * This method is for ease of use, and thus can't be used to execute multiple modifications.
+     */
+    public void modifyEntityCoupleReference(List<AbstractEntity> couples) {
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to modify a " + getManager().getManifest().getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        // Only one entity can be modified
+        if(getSelectedCount() > 1) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Only one " + getManager().getManifest().getTypeName(false, false) + " can be modified at a time.",
+                    App.APP_NAME,
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // Modify the entity couple reference
+        modifyEntityCoupleReference(couples.get(0));
+    }
+
+    /**
+     * Modify the given entity couple reference.
+     */
+    public void modifyEntityCoupleReference(AbstractEntity couple) {
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to modify a " + getManager().getManifest().getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        // Convert the couple to it's reference
+        final AbstractEntity reference = convertCoupleToReference(couple);
+
+        // Show the entity modification dialog
+        EntityModifyDialog.showModify(getWindow(), reference);
+
+        // TODO: Only edit the given entity, instead of refreshing everything?
+
+        // Refresh both managers
+        reference.getManifest().getManagerInstance().refresh();
         getManager().refresh();
     }
 
@@ -455,11 +722,6 @@ public class EntityViewComponent extends EntityListComponent {
 
         // Show the entity modification dialog
         EntityModifyDialog.showModify(getWindow(), entity);
-
-        // TODO: Only edit the given entity, instead of refreshing everything?
-
-        // Refresh the manager
-        getManager().refresh();
     }
 
     /**
@@ -579,10 +841,10 @@ public class EntityViewComponent extends EntityListComponent {
         // Dispose the progress dialog
         progressDialog.dispose();
 
-        // TODO: Only remove the above entities instead of refreshing everything?
-
-        // Refresh the manager
-        getManager().refresh();
+        // Refresh the managers
+        for(AbstractEntityManifest abstractEntityManifest : entities.get(0).getManifest().getReferencedManifests())
+            abstractEntityManifest.getManagerInstance().refresh();
+        entities.get(0).getManifest().getManagerInstance().refresh();
     }
 
     /**
@@ -592,5 +854,57 @@ public class EntityViewComponent extends EntityListComponent {
      */
     private Window getWindow() {
         return SwingUtils.getComponentWindow(this);
+    }
+
+    /**
+     * Convert the given couple to it's reference.
+     *
+     * @param couple Couple to convert.
+     *
+     * @return Reference.
+     */
+    private AbstractEntity convertCoupleToReference(AbstractEntity couple) {
+        // Create a list with couples
+        List<AbstractEntity> couples = new ArrayList<>();
+        couples.add(couple);
+
+        // Convert and return
+        //noinspection ConstantConditions
+        return convertCouplesToReferences(couples).get(0);
+    }
+
+    /**
+     * Convert the given couples to their references.
+     *
+     * @param couples Couples to convert.
+     *
+     * @return References.
+     */
+    private List<AbstractEntity> convertCouplesToReferences(List<AbstractEntity> couples) {
+        // Get the couple manifest
+        final AbstractEntityCoupleManifest coupleManifest = (AbstractEntityCoupleManifest) getManager().getManifest();
+
+        // Create a list of referenced entities
+        List<AbstractEntity> references = new ArrayList<>();
+
+        // Get the references of the selected entities
+        for(AbstractEntity selectedEntity : couples) {
+            try {
+                references.add((AbstractEntity) selectedEntity.getField(
+                        coupleManifest.getFieldByReferenceManifest(
+                                coupleManifest.getOtherManifest(getShowCoupleFor()))
+                ));
+
+            } catch(Exception e) {
+                // Print the stack trace
+                e.printStackTrace();
+
+                // Return return
+                return null;
+            }
+        }
+
+        // Return the list of references
+        return references;
     }
 }

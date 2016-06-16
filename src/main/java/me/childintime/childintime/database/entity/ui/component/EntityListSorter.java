@@ -1,8 +1,6 @@
 package me.childintime.childintime.database.entity.ui.component;
 
-import me.childintime.childintime.database.entity.AbstractEntity;
-import me.childintime.childintime.database.entity.AbstractEntityManager;
-import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.database.entity.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -17,6 +15,11 @@ public class EntityListSorter extends TableRowSorter<AbstractTableModel> {
     private EntityFieldsInterface filterField = null;
 
     /**
+     * List component instance.
+     */
+    private EntityListComponent listComponent;
+
+    /**
      * Filter value.
      */
     private Object filterValue = null;
@@ -24,37 +27,60 @@ public class EntityListSorter extends TableRowSorter<AbstractTableModel> {
     /**
      * Constructor.
      *
-     * @param model Constructor.
-     * @param manager Entity manager.
+     * @param listComponent The entity list component
      */
-    public EntityListSorter(AbstractTableModel model, AbstractEntityManager manager) {
-        super(model);
+    public EntityListSorter(EntityListComponent listComponent) {
+        // Call the super
+        super(listComponent.getSwingTableModel());
 
+        // Set the list component
+        this.listComponent = listComponent;
+
+        // Set the filter
         setRowFilter(
                 new RowFilter<Object, Integer>() {
                     public boolean include(Entry entry) {
-                        // Include if the filter is disabled
-                        if(filterField == null)
-                            return true;
-
                         // Get the row identifier
                         int i = (int) entry.getIdentifier();
 
                         // Get the corresponding entity
                         // TODO: Are these indexes still correct when the table is sorted?
-                        AbstractEntity entity = manager.getEntities().get(i);
+                        AbstractEntity entity = getManager().getEntities().get(i);
+
+                        // Check whether couple references should be filtered
+                        if(listComponent.isCoupleView()) {
+                            // Get the couple manifest
+                            AbstractEntityCoupleManifest coupleManifest = ((AbstractEntityCoupleManifest) getManager().getManifest());
+
+                            // Get the other reference field
+                            EntityCoupleFieldsInterface referenceField = coupleManifest.getFieldByReferenceManifest(listComponent.getShowCoupleFor().getManifest());
+
+                            // Make sure the entity reference field equals the couple object
+                            try {
+                                if(!entity.getField(referenceField).equals(listComponent.getShowCoupleFor()))
+                                    return false;
+
+                            } catch(Exception e) {
+                                // Print the stack trace
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // Include if the filter is disabled
+                        if(filterField == null)
+                            return true;
 
                         // Get the filter field, and compare it to the value
                         try {
                             return entity.getField(filterField).equals(filterValue);
 
                         } catch(Exception e) {
-                            // Show the stack trace
+                            // Print the stack trace
                             e.printStackTrace();
-
-                            // Return true for now
-                            return true;
                         }
+
+                        // Return true for now
+                        return true;
                     }
                 }
         );
@@ -62,6 +88,10 @@ public class EntityListSorter extends TableRowSorter<AbstractTableModel> {
 
     @Override
     public void toggleSortOrder(int column) {
+        // Make sure the list component is enabled
+        if(!listComponent.isEnabled())
+            return;
+
         // Get the sorting keys
         List<? extends SortKey> sortKeys = getSortKeys();
 
@@ -96,5 +126,14 @@ public class EntityListSorter extends TableRowSorter<AbstractTableModel> {
     public void clearFilter() {
         this.filterField = null;
         this.filterValue = null;
+    }
+
+    /**
+     * Get the manager for the list.
+     *
+     * @return List manager.
+     */
+    public AbstractEntityManager getManager() {
+        return this.listComponent.getManager();
     }
 }
