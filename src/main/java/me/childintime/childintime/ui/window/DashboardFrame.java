@@ -315,7 +315,7 @@ public class DashboardFrame extends JFrame {
         Menu toolsMenu = new Menu("Tools");
 
         // Create the BMI tool menu item
-        MenuItem bmiToolAction = new MenuItem("BMI view tool");
+        MenuItem bmiToolAction = new MenuItem("BMI analysis tool");
         bmiToolAction.addActionListener(e -> BmiToolDialog.showDialog(this));
         bmiToolAction.setEnabled(PermissionLevel.VIEW_ANONYMOUS.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()));
         toolsMenu.add(bmiToolAction);
