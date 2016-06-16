@@ -3,9 +3,11 @@ package me.childintime.childintime.database.entity.ui.dialog;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
+import me.childintime.childintime.database.entity.AbstractEntityCoupleManifest;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.database.entity.ui.component.EntitySmallManagerComponent;
 import me.childintime.childintime.hash.HashUtil;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
@@ -475,6 +477,32 @@ public class EntityModifyDialog extends JDialog {
 
             // Add the field
             fieldsPanel.add(field, c);
+
+            // Increase the field index
+            fieldIndex++;
+        }
+
+        // Loop through the couples
+        for(AbstractEntityCoupleManifest abstractEntityManifest : this.sourceManifest.getCouples()) {
+            // Create a couple panel
+            final JPanel couplePanel = new JPanel(new BorderLayout());
+            couplePanel.setBorder(BorderFactory.createTitledBorder(abstractEntityManifest.getReferenceTypeName(this.sourceManifest, true, true, true)));
+
+            // Create a small manager component to show the couples
+            EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source);
+            couplePanel.add(coupleView, BorderLayout.CENTER);
+
+            //coupleView.setPreferredSize(null);
+
+            // Add the panel
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 0;
+            c.gridy = fieldIndex;
+            c.gridwidth = 2;
+            c.weightx = 0;
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 16, 0, 0, 0);
+            c.anchor = GridBagConstraints.CENTER;
+            fieldsPanel.add(couplePanel, c);
 
             // Increase the field index
             fieldIndex++;

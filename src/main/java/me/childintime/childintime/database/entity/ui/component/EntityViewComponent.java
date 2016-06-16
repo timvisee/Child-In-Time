@@ -155,7 +155,7 @@ public class EntityViewComponent extends EntityListComponent {
                 JPopupMenu popup = new JPopupMenu();
 
                 // Create the create menu
-                JMenuItem createAction = new JMenuItem("Create" + (isCoupleView() ? " couple" : "") + "...");
+                JMenuItem createAction = new JMenuItem(!isCoupleView() ? "Create..." : "Add couple...");
                 createAction.addActionListener(e1 -> {
                     if(!isCoupleView())
                         createEntity();
@@ -175,7 +175,7 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the modify menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem modifyAction = new JMenuItem("Modify" + (isCoupleView() ? " couple" : "") + "...");
+                    JMenuItem modifyAction = new JMenuItem(!isCoupleView() ? "Modify..." : "Edit couple...");
                     modifyAction.addActionListener(e1 -> modifySelectedEntity());
                     modifyAction.setEnabled(canModify);
                     popup.add(modifyAction);
@@ -183,7 +183,7 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the delete menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem deleteAction = new JMenuItem("Delete" + (isCoupleView() ? " couple" : ""));
+                    JMenuItem deleteAction = new JMenuItem(!isCoupleView() ? "Delete..." : "Remove couple...");
                     deleteAction.addActionListener(e1 -> deleteSelectedEntities());
                     deleteAction.setEnabled(canDelete);
                     popup.add(deleteAction);
