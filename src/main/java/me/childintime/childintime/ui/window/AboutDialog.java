@@ -55,10 +55,10 @@ public class AboutDialog extends JDialog {
                 "<br>" +
                 "Developed by:<br>" +
                 "<ul>" +
-                "<li>Tim Visee, http://timvisee.com/</li>" +
+                "<li>Tim Vis&eacute;e, http://timvisee.com/</li>" +
                 "<li>Nathan Bakhuijzen</li>" +
                 "<li>Timo van den Boom</li>" +
-                "<li>Jost van Gent</li>" +
+                "<li>Jos van Gent</li>" +
                 "</ul>" +
                 "<br>" +
                 "Copyright &copy; Child-In-Time 2016. All rights reserved."
