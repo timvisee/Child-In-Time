@@ -242,7 +242,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
             this.setNull(false);
 
         // Focus the field and select all
-        this.spinner.grabFocus();
+        //this.spinner.grabFocus();
     }
 
     /**
