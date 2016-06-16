@@ -553,48 +553,31 @@ public class EntityModifyDialog extends JDialog {
             commitPanel.add(okButton);
         }
 
-        // Create and add the test button
-        JButton defaultsButton = new JButton("Defaults");
-        defaultsButton.addActionListener(e -> {
-            // Feature not yet implemented, show a dialog box
-            featureNotImplemented();
+        // Create and add the revert button
+        JButton revertButton = new JButton("Revert");
+        revertButton.addActionListener(e -> {
+            // Loop through the fields
+            for(Map.Entry<EntityFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
+                // Get the field and it's property field
+                final EntityFieldsInterface fieldType = entry.getKey();
+                final AbstractPropertyField field = entry.getValue();
 
-//            // Create a progress dialog
-//            ProgressDialog progressDialog = new ProgressDialog(this, "Testing database...", false, "Applying changes...", true);
-//
-//            // Apply the changes
-//            applyChanges();
-//
-//            // TODO: Fix this!
-//            // Get the database
-//            AbstractDatabase database = getDatabase();
-//
-//            // Make sure the configuration is valid
-//            progressDialog.setStatus("Validating configuration...");
-//            if(!database.isConfigured()) {
-//                // Show the option pane
-//                JOptionPane.showMessageDialog(progressDialog, "The database configuration is missing some required properties.", "Database configuration incomplete", JOptionPane.ERROR_MESSAGE);
-//
-//                // Dispose the progress dialog and return
-//                progressDialog.dispose();
-//                return;
-//            }
-//
-//            // Dispose the progress dialog
-//            progressDialog.dispose();
-//
-//            // Test the database connection
-//            if(database.test(this, progressDialog)) {
-//                // Show a success message
-//                JOptionPane.showMessageDialog(
-//                        this,
-//                        "Successfully connected to the database..",
-//                        "Success",
-//                        JOptionPane.INFORMATION_MESSAGE
-//                );
-//            }
+                // Update the field
+                try {
+                    if(this.source != null)
+                        // Fetch the field from the source if the entity is modified
+                        field.setValue(this.source.getField(fieldType));
+                    else
+
+                        // Clear the field if the entity is newly created
+                        field.clear();
+
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         });
-        actionPanel.add(defaultsButton);
+        actionPanel.add(revertButton);
 
         // Add the button panels
         c.gridx = 0;
