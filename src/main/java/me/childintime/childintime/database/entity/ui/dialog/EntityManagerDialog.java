@@ -134,6 +134,9 @@ public class EntityManagerDialog extends JDialog {
         // Create the entity manager
         final EntityManagerComponent entityManager = new EntityManagerComponent(this.manager);
 
+        // Hide the 'open in manager' action
+        entityManager.getEntityView().setShowManagerAction(false);
+
         // Add the entity manager
         container.add(entityManager, BorderLayout.CENTER);
 
