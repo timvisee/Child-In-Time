@@ -163,8 +163,10 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
         }
 
         // Set the date
-        if(value instanceof Date)
+        if(value instanceof Date) {
             setDate((Date) value);
+            return;
+        }
 
         // Try to parse the date
         try {
