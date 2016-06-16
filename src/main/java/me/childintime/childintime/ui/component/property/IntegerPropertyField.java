@@ -1,7 +1,6 @@
 package me.childintime.childintime.ui.component.property;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 public class IntegerPropertyField extends AbstractPropertyField {
@@ -17,6 +16,28 @@ public class IntegerPropertyField extends AbstractPropertyField {
      * Integer field.
      */
     protected JSpinner spinner;
+
+    /**
+     * Spinner mouse listener.
+     */
+    protected final MouseListener spinnerMouseListener = new MouseListener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            enableField();
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) { }
+
+        @Override
+        public void mouseReleased(MouseEvent e) { }
+
+        @Override
+        public void mouseEntered(MouseEvent e) { }
+
+        @Override
+        public void mouseExited(MouseEvent e) { }
+    };
 
     /**
      * Constructor.
@@ -56,26 +77,7 @@ public class IntegerPropertyField extends AbstractPropertyField {
             ((JSpinner.DefaultEditor) spinnerEditor).getTextField().setHorizontalAlignment(SwingConstants.LEFT);
 
         // Link the text field listeners
-        final MouseListener spinnerMouseListener = new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                enableField();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) { }
-
-            @Override
-            public void mouseReleased(MouseEvent e) { }
-
-            @Override
-            public void mouseEntered(MouseEvent e) { }
-
-            @Override
-            public void mouseExited(MouseEvent e) { }
-        };
-        for(Component spinnerPart : this.spinner.getComponents())
-            spinnerPart.addMouseListener(spinnerMouseListener);
+        ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().addMouseListener(spinnerMouseListener);
         this.spinner.addMouseListener(spinnerMouseListener);
         this.spinner.addFocusListener(new FocusListener() {
             @Override
