@@ -1076,7 +1076,7 @@ public class DatabaseBuilder {
 
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
-                "INSERT INTO `sport` VALUES (NULL, ?, ?);"
+                "INSERT INTO `sport` VALUES (NULL, ?);"
         );
 
         // Determine the number of sports to generate
@@ -1089,8 +1089,7 @@ public class DatabaseBuilder {
         // Loop for the determined count
         for(int i = 0; i < sportCount; i++) {
             // Fill the prepared statement
-            prepared.setInt(1, this.faker.number().numberBetween(1, 51));
-            prepared.setString(2, this.faker.team().sport());
+            prepared.setString(1, this.faker.team().sport());
 
             // Execute the prepared statement
             prepared.execute();
