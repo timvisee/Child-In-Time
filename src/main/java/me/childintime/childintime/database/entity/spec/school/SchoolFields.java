@@ -22,7 +22,7 @@ public enum SchoolFields implements EntityFieldsInterface {
      * School name.
      * The name of a school.
      */
-    NAME("School", "name", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null),
+    NAME("School name", "name", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * School commune.return SchoolManifest.getInstance();

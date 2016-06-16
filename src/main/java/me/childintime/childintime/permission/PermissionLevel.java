@@ -15,12 +15,12 @@ public enum PermissionLevel {
     /**
      * View permissions.
      */
-    VIEW(2, "Viewing permissions"),
+    VIEW(2, "View permissions"),
 
     /**
      * View permissions for anonymous data.
      */
-    VIEW_ANONYMOUS(3, "Anonymous viewing permissions");
+    VIEW_ANONYMOUS(3, "Anonymous view permissions");
 
     /**
      * Level number.

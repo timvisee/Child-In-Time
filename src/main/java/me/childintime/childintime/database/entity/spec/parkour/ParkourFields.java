@@ -22,7 +22,7 @@ public enum ParkourFields implements EntityFieldsInterface {
      * Description.
      * The description of a parkour.
      */
-    DESCRIPTION("Parkour", "description", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null);
+    DESCRIPTION("Parkour name", "description", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null);
 
     /**
      * The display name for this field.
