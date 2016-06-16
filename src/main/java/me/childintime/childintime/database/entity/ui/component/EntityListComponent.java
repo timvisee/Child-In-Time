@@ -88,6 +88,9 @@ public class EntityListComponent extends JComponent {
         // Set the component name
         super.setName(getClass().getSimpleName());
 
+        // Define the empty label
+        this.emptyLabel = "No " + manager.getManifest().getTypeName(false, true) + " to display...";
+
         // Build the component UI
         buildUi();
     }
