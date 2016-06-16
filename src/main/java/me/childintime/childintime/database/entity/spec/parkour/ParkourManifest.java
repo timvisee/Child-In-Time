@@ -1,10 +1,7 @@
 package me.childintime.childintime.database.entity.spec.parkour;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.entity.AbstractEntity;
-import me.childintime.childintime.database.entity.AbstractEntityManager;
-import me.childintime.childintime.database.entity.AbstractEntityManifest;
-import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.database.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +27,7 @@ public class ParkourManifest extends AbstractEntityManifest {
     /**
      * Couples specification for this entity.
      */
-    private List<AbstractEntityManifest> couples = new ArrayList<>();
+    private List<AbstractEntityCoupleManifest> couples = new ArrayList<>();
 
     /**
      * Get the singleton instance of this class.
@@ -91,7 +88,7 @@ public class ParkourManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public List<AbstractEntityManifest> getCouples() {
+    public List<AbstractEntityCoupleManifest> getCouples() {
         return this.couples;
     }
 }

@@ -1,10 +1,7 @@
 package me.childintime.childintime.database.entity.spec.group;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.entity.AbstractEntity;
-import me.childintime.childintime.database.entity.AbstractEntityManager;
-import me.childintime.childintime.database.entity.AbstractEntityManifest;
-import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.database.entity.*;
 import me.childintime.childintime.database.entity.spec.couple.groupteacher.GroupTeacherManifest;
 
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ public class GroupManifest extends AbstractEntityManifest {
     /**
      * Couples specification for this entity.
      */
-    private List<AbstractEntityManifest> couples = new ArrayList<AbstractEntityManifest>() {{
+    private List<AbstractEntityCoupleManifest> couples = new ArrayList<AbstractEntityCoupleManifest>() {{
         add(GroupTeacherManifest.getInstance());
     }};
 
@@ -95,7 +92,7 @@ public class GroupManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public List<AbstractEntityManifest> getCouples() {
+    public List<AbstractEntityCoupleManifest> getCouples() {
         return this.couples;
     }
 }

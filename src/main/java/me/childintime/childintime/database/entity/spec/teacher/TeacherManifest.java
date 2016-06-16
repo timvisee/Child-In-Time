@@ -1,10 +1,7 @@
 package me.childintime.childintime.database.entity.spec.teacher;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.entity.AbstractEntity;
-import me.childintime.childintime.database.entity.AbstractEntityManager;
-import me.childintime.childintime.database.entity.AbstractEntityManifest;
-import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.database.entity.*;
 import me.childintime.childintime.database.entity.spec.couple.groupteacher.GroupTeacherManifest;
 import me.childintime.childintime.permission.PermissionLevel;
 
@@ -32,7 +29,7 @@ public class TeacherManifest extends AbstractEntityManifest {
     /**
      * Couples specification for this entity.
      */
-    private List<AbstractEntityManifest> couples = new ArrayList<AbstractEntityManifest>() {{
+    private List<AbstractEntityCoupleManifest> couples = new ArrayList<AbstractEntityCoupleManifest>() {{
         add(GroupTeacherManifest.getInstance());
     }};
 
@@ -103,7 +100,7 @@ public class TeacherManifest extends AbstractEntityManifest {
     }
 
     @Override
-    public List<AbstractEntityManifest> getCouples() {
+    public List<AbstractEntityCoupleManifest> getCouples() {
         return this.couples;
     }
 }

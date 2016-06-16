@@ -107,7 +107,7 @@ public abstract class AbstractEntityManifest {
      *
      * @return List of couples.
      */
-    public abstract List<AbstractEntityManifest> getCouples();
+    public abstract List<AbstractEntityCoupleManifest> getCouples();
 
     /**
      * Get a list of referenced manifests.
