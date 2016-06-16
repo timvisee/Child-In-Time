@@ -2,6 +2,7 @@ package me.childintime.childintime.database.entity.spec.student;
 
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.*;
+import me.childintime.childintime.database.entity.spec.couple.studentsport.StudentSportManifest;
 import me.childintime.childintime.permission.PermissionLevel;
 
 import java.util.ArrayList;
@@ -28,7 +29,9 @@ public class StudentManifest extends AbstractEntityManifest {
     /**
      * Couples specification for this entity.
      */
-    private List<AbstractEntityCoupleManifest> couples = new ArrayList<>();
+    private List<AbstractEntityCoupleManifest> couples = new ArrayList<AbstractEntityCoupleManifest>(){{
+        add(StudentSportManifest.getInstance());
+    }};
 
     /**
      * Get the singleton instance of this class.
