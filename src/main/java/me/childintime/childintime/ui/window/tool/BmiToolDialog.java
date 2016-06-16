@@ -109,7 +109,7 @@ public class BmiToolDialog extends JDialog {
         pack();
 
         // Determine the preferred dimensions
-        final Dimension preferredSize = new Dimension(getMinimumSize().width + 400, getMinimumSize().height + 400);
+        final Dimension preferredSize = new Dimension(getMinimumSize().width + 500, getMinimumSize().height + 400);
 
         // Configure the sizes
         setMinimumSize(new Dimension(getMinimumSize()));
@@ -372,6 +372,9 @@ public class BmiToolDialog extends JDialog {
         // Set the minimum preferred size
         chartPanel.setPreferredSize(new Dimension(150, 150));
 
+        // Update the chart when the measurements are changed
+        Core.getInstance().getBodyStateManager().addChangeListener(this::updateChartDataset);
+
         // Return the input panel
         return chartPanel;
     }
@@ -495,8 +498,11 @@ public class BmiToolDialog extends JDialog {
         plot.setRangeGridlinePaint(Color.lightGray);
 
         final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, false);
-        renderer.setSeriesShapesVisible(1, false);
+        for(int i = 0; i < 3; i++) {
+            renderer.setSeriesLinesVisible(i, true);
+            renderer.setSeriesShapesVisible(i, true);
+            renderer.setSeriesFillPaint(i, Color.RED);
+        }
         plot.setRenderer(renderer);
 
         plot.getDomainAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
