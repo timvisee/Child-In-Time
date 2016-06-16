@@ -874,11 +874,6 @@ public class EntityModifyDialog extends JDialog {
             return false;
         }
 
-        // Refresh the managers
-        for(AbstractEntityManifest abstractEntityManifest : this.result.getManifest().getReferencedManifests())
-            abstractEntityManifest.getManagerInstance().refresh();
-        this.result.getManifest().getManagerInstance().refresh();
-
         // Update the source object by cloning the result
         try {
             this.source = this.result.clone();
