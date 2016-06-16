@@ -524,6 +524,7 @@ public class DashboardFrame extends JFrame {
         Core.getInstance().getBodyStateManager().refresh();
         Core.getInstance().getParkourManager().refresh();
         Core.getInstance().getUserManager().refresh();
+        Core.getInstance().getGroupTeacherCoupleManager().refresh();
 
         // Revert the visibility state of the progress dialog
         Core.getInstance().getProgressDialog().setVisible(progressDialogVisible);
