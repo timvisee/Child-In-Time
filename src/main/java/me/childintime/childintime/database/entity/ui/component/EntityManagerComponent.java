@@ -214,6 +214,15 @@ public class EntityManagerComponent extends JComponent {
     }
 
     /**
+     * Get the entity view component.
+     *
+     * @return Entity view component.
+     */
+    public EntityViewComponent getEntityView() {
+        return this.entityView;
+    }
+
+    /**
      * Get the window this component is placed in.
      *
      * @return Component window.

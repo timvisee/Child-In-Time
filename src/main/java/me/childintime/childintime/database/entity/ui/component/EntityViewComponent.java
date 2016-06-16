@@ -43,6 +43,11 @@ public class EntityViewComponent extends EntityListComponent {
     private boolean canDelete = true;
 
     /**
+     * Define whether to show the 'open manager' action on right click.
+     */
+    private boolean showManagerAction = true;
+
+    /**
      * Constructor.
      *
      * @param manager Entity manager.
@@ -103,7 +108,7 @@ public class EntityViewComponent extends EntityListComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 // Make sure the right mouse button was released
-                if(!SwingUtilities.isRightMouseButton(e) && e.getButton() != 2)
+                if(!SwingUtilities.isRightMouseButton(e))
                     return;
 
                 // Make sure the source is the table, and that this is an popup trigger
@@ -144,7 +149,7 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the view menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem viewAction = new JMenuItem("View");
+                    JMenuItem viewAction = new JMenuItem("View...");
                     viewAction.addActionListener(e1 -> viewSelectedEntity());
                     viewAction.setEnabled(canView);
                     popup.add(viewAction);
@@ -152,7 +157,7 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the modify menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem modifyAction = new JMenuItem("Modify");
+                    JMenuItem modifyAction = new JMenuItem("Modify...");
                     modifyAction.addActionListener(e1 -> modifySelectedEntity());
                     modifyAction.setEnabled(canModify);
                     popup.add(modifyAction);
@@ -164,6 +169,14 @@ public class EntityViewComponent extends EntityListComponent {
                     deleteAction.addActionListener(e1 -> deleteSelectedEntities());
                     deleteAction.setEnabled(canDelete);
                     popup.add(deleteAction);
+                }
+
+                // Create the manager action
+                if(isShowManagerAction()) {
+                    JMenuItem managerAction = new JMenuItem("Open manager...");
+                    managerAction.addActionListener(e1 -> getManager().getManifest().showManagerDialog(getWindow()));
+                    popup.addSeparator();
+                    popup.add(managerAction);
                 }
 
                 // Create the refresh menu
@@ -252,6 +265,24 @@ public class EntityViewComponent extends EntityListComponent {
     public void setCanDelete(boolean canDelete) {
         // Set the editable flag
         this.canDelete = canDelete;
+    }
+
+    /**
+     * Check whether to show the 'open in manager' action.
+     *
+     * @return True to show, false to hide.
+     */
+    public boolean isShowManagerAction() {
+        return this.showManagerAction;
+    }
+
+    /**
+     * Set whether to show the 'open in manager' action.
+     *
+     * @param showManagerAction True to show, false to hide.
+     */
+    public void setShowManagerAction(boolean showManagerAction) {
+        this.showManagerAction = showManagerAction;
     }
 
     /**
