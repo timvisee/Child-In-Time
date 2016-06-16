@@ -80,6 +80,7 @@ public class GramPropertyField extends IntegerPropertyField {
             @Override
             public void focusLost(FocusEvent e) { }
         });
+        editor.getTextField().addMouseListener(this.spinnerMouseListener);
     }
 
     @Override

@@ -35,10 +35,6 @@ public class EntityListSelectorComponent extends EntityViewComponent {
         // Construct the super
         super(manager);
 
-        // Set the default modify and delete flags
-        setCanModify(false);
-        setCanDelete(false);
-
         // Disable multi select
         setMultiSelect(false);
 

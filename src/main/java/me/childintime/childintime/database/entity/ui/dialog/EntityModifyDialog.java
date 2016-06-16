@@ -555,28 +555,7 @@ public class EntityModifyDialog extends JDialog {
 
         // Create and add the revert button
         JButton revertButton = new JButton("Revert");
-        revertButton.addActionListener(e -> {
-            // Loop through the fields
-            for(Map.Entry<EntityFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
-                // Get the field and it's property field
-                final EntityFieldsInterface fieldType = entry.getKey();
-                final AbstractPropertyField field = entry.getValue();
-
-                // Update the field
-                try {
-                    if(this.source != null)
-                        // Fetch the field from the source if the entity is modified
-                        field.setValue(this.source.getField(fieldType));
-                    else
-
-                        // Clear the field if the entity is newly created
-                        field.clear();
-
-                } catch(Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
+        revertButton.addActionListener(e -> revert());
         actionPanel.add(revertButton);
 
         // Add the button panels
@@ -681,10 +660,30 @@ public class EntityModifyDialog extends JDialog {
         return this.discarded;
     }
 
-    // TODO: This should be removed!
-    @Deprecated
-    public void featureNotImplemented() {
-        JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
+    /**
+     * Revert the input fields to their original state.
+     */
+    private void revert() {
+        // Loop through the fields
+        for(Map.Entry<EntityFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
+            // Get the field and it's property field
+            final EntityFieldsInterface fieldType = entry.getKey();
+            final AbstractPropertyField field = entry.getValue();
+
+            // Update the field
+            try {
+                if(this.source != null)
+                    // Fetch the field from the source if the entity is modified
+                    field.setValue(this.source.getField(fieldType));
+                else
+
+                    // Clear the field if the entity is newly created
+                    field.clear();
+
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     /**

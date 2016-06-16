@@ -840,7 +840,7 @@ public class DatabaseBuilder {
         );
 
         // Determine the number of students to generate
-        final int bodyStateCount = this.faker.number().numberBetween(50, 100);
+        final int bodyStateCount = this.faker.number().numberBetween(100, 200);
 
         // Configure the progress dialog
         progressDialog.setShowProgress(true);
@@ -849,10 +849,10 @@ public class DatabaseBuilder {
         // Loop for the determined count
         for(int i = 0; i < bodyStateCount; i++) {
             // Fill the prepared statement
-            prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
-            prepared.setInt(2, this.faker.number().numberBetween(110, 160));
-            prepared.setInt(3, this.faker.number().numberBetween(30000, 55000));
-            prepared.setInt(4, this.faker.number().numberBetween(1, 51));
+            prepared.setString(1, dateFormat.format(this.faker.date().past(6 * 356, TimeUnit.DAYS)));
+            prepared.setInt(2, this.faker.number().numberBetween(175, 180));
+            prepared.setInt(3, this.faker.number().numberBetween(65000, 75000));
+            prepared.setInt(4, this.faker.number().numberBetween(1, 20));
 
             // Execute the prepared statement
             prepared.execute();

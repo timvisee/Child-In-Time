@@ -335,7 +335,7 @@ public class LoginDialog extends JDialog {
             AbstractDatabase selected = getSelectedDatabase();
 
             // Reset the combo box data model
-            comboBox.setModel(new DefaultComboBoxModel<>(Core.getInstance().getDatabaseManager().getDatabases().toArray(new AbstractDatabase[] {})));
+            comboBox.setModel(new DefaultComboBoxModel<>(Core.getInstance().getDatabaseManager().getDatabases().toArray(new AbstractDatabase[]{})));
 
             // Set the selected value to it's original
             comboBox.setSelectedItem(selected);
@@ -403,8 +403,6 @@ public class LoginDialog extends JDialog {
         // Validate the configuration of the selected database
         if(!validateConfiguration())
             return false;
-
-        // TODO: Check database connection (already done in the database configurator?)
 
         // Make sure a username is entered
         if(this.userField.getText().length() == 0) {
@@ -483,8 +481,23 @@ public class LoginDialog extends JDialog {
         // Show the database edit form for the current database
         AbstractDatabase updated = DatabaseModifyDialog.showModify(this, database);
 
+        // Update the selected database
+        if(updated != null) {
+            // Update the database
+            Core.getInstance().getDatabaseManager().getDatabases().set(this.comboBox.getSelectedIndex(), updated);
+
+            // Update the combo box model
+            this.comboBox.setModel(new DefaultComboBoxModel<>(Core.getInstance().getDatabaseManager().getDatabases().toArray(new AbstractDatabase[]{})));
+
+            // Set the selected value
+            this.comboBox.setSelectedItem(updated);
+
+            // Update the database
+            database = updated;
+        }
+
         // Check whether the database has been configured properly now
-        if(!updated.isConfigured()) {
+        if(!database.isConfigured()) {
             JOptionPane.showMessageDialog(this, "The selected database is missing some required properties.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -579,9 +592,15 @@ public class LoginDialog extends JDialog {
 
                 // Make sure the setup option is pressed
                 if(option != (!Platform.isMacOsX() ? 0 : 1)) {
-                    // TODO: Return to the login dialog, the database setup process is cancelled!
-                    JOptionPane.showMessageDialog(progressDialog, "Should show login dialog again, not working yet!");
-                    System.exit(0);
+                    // Dispose the frame
+                    dispose();
+
+                    // Destroy the core
+                    Core.getInstance().destroy();
+
+                    // Re initialize the core
+                    Core.getInstance().init();
+                    return null;
                 }
 
                 // Build the database

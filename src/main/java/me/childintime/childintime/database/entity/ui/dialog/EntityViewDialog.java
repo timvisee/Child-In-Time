@@ -5,6 +5,7 @@ import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
+import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
 
@@ -247,6 +248,12 @@ public class EntityViewDialog extends JDialog {
         for(int i = 0; i < fieldTypes.length; i++) {
             // Get the field type
             EntityFieldsInterface fieldType = fieldTypes[i];
+
+            // Skip password fields
+            if(fieldType.getExtendedDataType().equals(DataTypeExtended.PASSWORD_HASH)) {
+                fieldOffset--;
+                continue;
+            }
 
             // Get the field value
             String valueFormatted = null;
