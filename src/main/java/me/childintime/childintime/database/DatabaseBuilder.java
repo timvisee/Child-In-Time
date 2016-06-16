@@ -77,7 +77,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(42);
+        this.progressDialog.setProgressMax(46);
         this.progressDialog.setShowProgress(true);
 
         // Create the user table
@@ -115,6 +115,14 @@ public class DatabaseBuilder {
 
         // Create the group/teacher table
         createTableGroupTeacher();
+        this.progressDialog.increaseProgressValue();
+
+        // Create the sport table
+        createTableSport();
+        this.progressDialog.increaseProgressValue();
+
+        // Create the student/sport table
+        createTableStudentSport();
         this.progressDialog.increaseProgressValue();
 
         // Create all required meta data tables
@@ -162,6 +170,14 @@ public class DatabaseBuilder {
 
         // Fill the group/teacher table
         fillTableGroupTeacher();
+        this.progressDialog.increaseProgressValue();
+
+        // Fill the sports table
+        fillTableSport();
+        this.progressDialog.increaseProgressValue();
+
+        // Fill the student/sport table
+        fillTableStudentSport();
         this.progressDialog.increaseProgressValue();
 
         // Revert the progress dialog state
@@ -513,28 +529,102 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `group_teacher` (" +
-                        "  `id`         INT NOT NULL AUTO_INCREMENT," +
-                        "  `group_id`   INT NOT NULL," +
-                        "  `teacher_id` INT NOT NULL," +
-                        "  PRIMARY KEY (`id`)," +
-                        "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
+                                "  `id`         INT NOT NULL AUTO_INCREMENT," +
+                                "  `group_id`   INT NOT NULL," +
+                                "  `teacher_id` INT NOT NULL," +
+                                "  PRIMARY KEY (`id`)," +
+                                "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
                                 " ON DELETE RESTRICT," +
-                        "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
+                                "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
                                 " ON DELETE RESTRICT" +
-                        ");"
+                                ");"
                 );
                 break;
 
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `group_teacher` (" +
-                        "  `id`         INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "  `group_id`   INTEGER NOT NULL," +
-                        "  `teacher_id` INTEGER NOT NULL," +
-                        "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
+                                "  `id`         INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "  `group_id`   INTEGER NOT NULL," +
+                                "  `teacher_id` INTEGER NOT NULL," +
+                                "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
                                 " ON DELETE RESTRICT," +
-                        "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
+                                "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
                                 " ON DELETE RESTRICT" +
+                                ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the student/sport table.
+     *
+     * @throws SQLException
+     */
+    public void createTableSport() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `sport` (" +
+                        "  `id`         INT  NOT NULL AUTO_INCREMENT," +
+                        "  `name`       TEXT NOT NULL," +
+                        "  PRIMARY KEY (`id`)" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `sport` (" +
+                        "  `id`         INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `name`       TEXT NOT NULL" +
+                        ");"
+                );
+                break;
+        }
+    }
+
+    /**
+     * Create the student/sport table.
+     *
+     * @throws SQLException
+     */
+    public void createTableStudentSport() throws SQLException {
+        // Create a statement
+        Statement statement = this.databaseConnector.getConnection().createStatement();
+
+        // Execute the table create query
+        switch(this.databaseConnector.getDialect()) {
+            case MYSQL:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `student_sport` (" +
+                        "  `id` INT NOT NULL AUTO_INCREMENT," +
+                        "  `student_id`   INT NOT NULL," +
+                        "  `sport_id` INT NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)" +
+                        "    ON DELETE RESTRICT," +
+                        "  FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)" +
+                        "    ON DELETE RESTRICT" +
+                        ");"
+                );
+                break;
+
+            case SQLITE:
+                statement.execute(
+                        "CREATE TABLE IF NOT EXISTS `student_sport` (" +
+                        "  `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  `student_id`   INTEGER NOT NULL," +
+                        "  `sport_id` INTEGER NOT NULL," +
+                        "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)" +
+                        "  ON DELETE RESTRICT," +
+                        "  FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)" +
+                        "  ON DELETE RESTRICT" +
                         ");"
                 );
                 break;
@@ -947,11 +1037,83 @@ public class DatabaseBuilder {
      */
     public void fillTableGroupTeacher() throws SQLException {
         // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Coupling group teachers...", true);
+        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Coupling groups/teachers...", true);
 
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `group_teacher` VALUES (NULL, ?, ?);"
+        );
+
+        // Configure the progress dialog
+        progressDialog.setShowProgress(true);
+        progressDialog.setProgressMax(9);
+
+        // Insert default group teachers
+        for(int i = 0; i < 9; i++) {
+            // Fill the prepared statement
+            prepared.setInt(1, i + 1);
+            prepared.setInt(2, (i % 3) + 1);
+
+            // Execute the prepared statement
+            prepared.execute();
+
+            // Increase the progress status
+            progressDialog.increaseProgressValue();
+        }
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
+    }
+
+    /**
+     * Fill the sport table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableSport() throws SQLException {
+        // Create a new progress dialog specifically for generating the current data
+        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake sports...", true);
+
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
+                "INSERT INTO `sport` VALUES (NULL, ?);"
+        );
+
+        // Determine the number of sports to generate
+        final int sportCount = this.faker.number().numberBetween(3, 5);
+
+        // Configure the progress dialog
+        progressDialog.setShowProgress(true);
+        progressDialog.setProgressMax(sportCount);
+
+        // Loop for the determined count
+        for(int i = 0; i < sportCount; i++) {
+            // Fill the prepared statement
+            prepared.setString(1, this.faker.team().sport());
+
+            // Execute the prepared statement
+            prepared.execute();
+
+            // Increase the progress status
+            progressDialog.increaseProgressValue();
+        }
+
+        // Dispose the progress dialog
+        progressDialog.dispose();
+    }
+
+    /**
+     * Fill the student/sport table.
+     *
+     * @throws SQLException
+     */
+    public void fillTableStudentSport() throws SQLException {
+        // Create a new progress dialog specifically for generating the current data
+        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Coupling students/sports...", true);
+
+        // Create a prepared statement
+        PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
+                "INSERT INTO `student_sport` VALUES (NULL, ?, ?);"
         );
 
         // Configure the progress dialog

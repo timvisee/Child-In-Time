@@ -1,37 +1,36 @@
-package me.childintime.childintime.database.entity.spec.student;
+package me.childintime.childintime.database.entity.spec.couple.studentsport;
 
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.entity.*;
-import me.childintime.childintime.database.entity.spec.couple.studentsport.StudentSportManifest;
-import me.childintime.childintime.permission.PermissionLevel;
+import me.childintime.childintime.database.entity.AbstractEntity;
+import me.childintime.childintime.database.entity.AbstractEntityCoupleManifest;
+import me.childintime.childintime.database.entity.AbstractEntityManager;
+import me.childintime.childintime.database.entity.EntityFieldsInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentManifest extends AbstractEntityManifest {
+public class StudentSportManifest extends AbstractEntityCoupleManifest {
 
     /**
      * Entity type name.
      */
-    public static final String TYPE_NAME = "Student";
+    public static final String TYPE_NAME = "Student & sport couple";
 
     /**
      * Database table name for this object type.
      */
-    public static final String DATABASE_TABLE_NAME = "student";
+    public static final String DATABASE_TABLE_NAME = "student_sport";
 
     /**
      * This instance.
      * Singleton.
      */
-    private static StudentManifest instance = null;
+    private static StudentSportManifest instance = null;
 
     /**
      * Couples specification for this entity.
      */
-    private List<AbstractEntityCoupleManifest> couples = new ArrayList<AbstractEntityCoupleManifest>(){{
-        add(StudentSportManifest.getInstance());
-    }};
+    private List<AbstractEntityCoupleManifest> couples = new ArrayList<>();
 
     /**
      * Get the singleton instance of this class.
@@ -39,10 +38,10 @@ public class StudentManifest extends AbstractEntityManifest {
      *
      * @return Class instance.
      */
-    public static StudentManifest getInstance() {
+    public static StudentSportManifest getInstance() {
         // Create a singleton instance if it isn't instantiated yet
         if(instance == null)
-            instance = new StudentManifest();
+            instance = new StudentSportManifest();
 
         // Return the instance
         return instance;
@@ -61,42 +60,35 @@ public class StudentManifest extends AbstractEntityManifest {
 
     @Override
     public EntityFieldsInterface[] getDefaultFields() {
-        if(PermissionLevel.VIEW.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()))
-            return new StudentFields[]{
-                    StudentFields.FIRST_NAME,
-                    StudentFields.LAST_NAME,
-                    StudentFields.GROUP_ID
-            };
-        else
-            return new StudentFields[]{
-                    StudentFields.ID,
-                    StudentFields.GROUP_ID
-            };
+        return new StudentSportFields[]{
+                StudentSportFields.STUDENT_ID,
+                StudentSportFields.SPORT_ID
+        };
     }
 
     @Override
     public Class<? extends EntityFieldsInterface> getFields() {
-        return StudentFields.class;
+        return StudentSportFields.class;
     }
 
     @Override
     public Class<? extends AbstractEntity> getEntity() {
-        return Student.class;
+        return StudentSport.class;
     }
 
     @Override
     public Class<? extends AbstractEntityManager> getManager() {
-        return StudentManager.class;
+        return StudentSportManager.class;
     }
 
     @Override
-    public StudentManager getManagerInstance() {
-        return Core.getInstance().getStudentManager();
+    public StudentSportManager getManagerInstance() {
+        return Core.getInstance().getStudentSportCoupleManager();
     }
 
     @Override
     public boolean isCouple() {
-        return false;
+        return true;
     }
 
     @Override

@@ -98,6 +98,23 @@ CREATE TABLE IF NOT EXISTS `group_teacher` (
     ON DELETE RESTRICT
 );
 
+CREATE TABLE IF NOT EXISTS `sport` (
+  `id`         INT  NOT NULL AUTO_INCREMENT,
+  `name`       TEXT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `student_sport` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `student_id`   INT NOT NULL,
+  `sport_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+    ON DELETE RESTRICT,
+  FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)
+    ON DELETE RESTRICT
+);
+
 # Drop the create meta table statement if it already exists
 DROP PROCEDURE IF EXISTS createMetaTable;
 
@@ -323,15 +340,35 @@ UNLOCK TABLES;
 
 LOCK TABLES `group_teacher` WRITE;
 INSERT INTO `group_teacher` VALUES
-  (1, 1),
-  (2, 2),
-  (3, 3),
-  (4, 1),
-  (5, 2),
-  (6, 3),
-  (7, 1),
-  (8, 2),
-  (9, 3);
+  (NULL, 1, 1),
+  (NULL, 2, 2),
+  (NULL, 3, 3),
+  (NULL, 4, 1),
+  (NULL, 5, 2),
+  (NULL, 6, 3),
+  (NULL, 7, 1),
+  (NULL, 8, 2),
+  (NULL, 9, 3);
+UNLOCK TABLES;
+
+LOCK TABLES `sport` WRITE;
+INSERT INTO `sport` VALUES
+  (NULL, 'Football'),
+  (NULL, 'Hockey'),
+  (NULL, 'Baseball');
+UNLOCK TABLES;
+
+LOCK TABLES `student_sport` WRITE;
+INSERT INTO `student_sport` VALUES
+  (NULL, 1, 1),
+  (NULL, 2, 2),
+  (NULL, 3, 3),
+  (NULL, 4, 1),
+  (NULL, 5, 2),
+  (NULL, 6, 3),
+  (NULL, 7, 1),
+  (NULL, 8, 2),
+  (NULL, 9, 3);
 UNLOCK TABLES;
 
 /*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;

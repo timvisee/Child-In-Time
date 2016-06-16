@@ -8,10 +8,12 @@ import me.childintime.childintime.database.configuration.DatabaseManager;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.database.entity.spec.bodystate.BodyStateManager;
 import me.childintime.childintime.database.entity.spec.couple.groupteacher.GroupTeacherManager;
+import me.childintime.childintime.database.entity.spec.couple.studentsport.StudentSportManager;
 import me.childintime.childintime.database.entity.spec.group.GroupManager;
 import me.childintime.childintime.database.entity.spec.measurement.MeasurementManager;
 import me.childintime.childintime.database.entity.spec.parkour.ParkourManager;
 import me.childintime.childintime.database.entity.spec.school.SchoolManager;
+import me.childintime.childintime.database.entity.spec.sport.SportManager;
 import me.childintime.childintime.database.entity.spec.student.StudentManager;
 import me.childintime.childintime.database.entity.spec.teacher.TeacherManager;
 import me.childintime.childintime.database.entity.spec.user.UserManager;
@@ -94,6 +96,16 @@ public class Core {
      * Group teacher couple manager instance.
      */
     private GroupTeacherManager groupTeacherManager;
+
+    /**
+     * Sport manager.
+     */
+    private SportManager sportManager;
+
+    /**
+     * Student sport couple manager.
+     */
+    private StudentSportManager studentSportManager;
 
     /**
      * User manager instance.
@@ -191,6 +203,8 @@ public class Core {
         this.teacherManager = new TeacherManager();
         this.userManager = new UserManager();
         this.groupTeacherManager = new GroupTeacherManager();
+        this.sportManager = new SportManager();
+        this.studentSportManager = new StudentSportManager();
 
         // Prepare the application data
         try {
@@ -458,6 +472,24 @@ public class Core {
      */
     public GroupTeacherManager getGroupTeacherCoupleManager() {
         return this.groupTeacherManager;
+    }
+
+    /**
+     * Get the sport manager.
+     *
+     * @return Sport manager.
+     */
+    public SportManager getSportManager() {
+        return this.sportManager;
+    }
+
+    /**
+     * Get the student sport couple manager.
+     *
+     * @return Student sport couple manager.
+     */
+    public StudentSportManager getStudentSportCoupleManager() {
+        return this.studentSportManager;
     }
 
     /**
