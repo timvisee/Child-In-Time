@@ -1,10 +1,15 @@
 package me.childintime.childintime.database.entity.spec.bodystate;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.spec.student.StudentManifest;
+import me.childintime.childintime.permission.PermissionLevel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum BodyStateFields implements EntityFieldsInterface {
 
@@ -12,31 +17,31 @@ public enum BodyStateFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a body state object.
      */
-    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", PermissionLevel.VIEW_ANONYMOUS, false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Student ID.
      * The student of a body state instance.
      */
-    STUDENT_ID("Student", "student_id", true, false, false, false, DataTypeExtended.REFERENCE, StudentManifest.getInstance()),
+    STUDENT_ID("Student", "student_id", PermissionLevel.VIEW_ANONYMOUS, true, false, false, false, DataTypeExtended.REFERENCE, StudentManifest.getInstance()),
 
     /**
      * Measurement date.
      * The date a body state has been measured on.
      */
-    DATE("Measurement date", "date", true, true, false, false, DataTypeExtended.DATE, null),
+    DATE("Measurement date", "date", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.DATE, null),
 
     /**
      * Body state length.
      * The body length in centimeters.
      */
-    LENGTH("Length", "length", true, true, false, false, DataTypeExtended.CENTIMETER, null),
+    LENGTH("Length", "length", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.CENTIMETER, null),
 
     /**
      * Body state weight.
      * The body weight in grams.
      */
-    WEIGHT("Weight", "weight", true, true, false, false, DataTypeExtended.GRAM, null);
+    WEIGHT("Weight", "weight", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.GRAM, null);
 
     /**
      * The display name for this field.
@@ -47,6 +52,11 @@ public enum BodyStateFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Minimum required permission level.
+     */
+    private PermissionLevel minimumPermission;
 
     /**
      * Defines whether this field is creatable by the user.
@@ -84,6 +94,7 @@ public enum BodyStateFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param minimumPermission Minimum required permission level.
      * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a null value is allowed for this property.
@@ -91,9 +102,10 @@ public enum BodyStateFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeBase#REFERENCE} type.
      */
-    BodyStateFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    BodyStateFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.minimumPermission = minimumPermission;
         this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
@@ -110,6 +122,11 @@ public enum BodyStateFields implements EntityFieldsInterface {
     @Override
     public String getDatabaseField() {
         return databaseField;
+    }
+
+    @Override
+    public PermissionLevel getMinimumPermission() {
+        return this.minimumPermission;
     }
 
     @Override
@@ -154,5 +171,21 @@ public enum BodyStateFields implements EntityFieldsInterface {
     @Override
     public AbstractEntityManifest getManifest() {
         return BodyStateManifest.getInstance();
+    }
+
+    public static BodyStateFields[] valuesAllowed() {
+        // Create a list of allowed values
+        List<BodyStateFields> list = new ArrayList<>();
+
+        // Get the users permission level
+        final PermissionLevel permissionLevel = Core.getInstance().getAuthenticator().getPermissionLevel();
+
+        // Loop through the values and put all values in the list the user has permission for
+        for(BodyStateFields value : values())
+            if(value.getMinimumPermission().orBetter(permissionLevel))
+                list.add(value);
+
+        // Return the values array
+        return list.toArray(new BodyStateFields[]{});
     }
 }

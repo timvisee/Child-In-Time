@@ -2,9 +2,12 @@ package me.childintime.childintime.ui.window;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
+import me.childintime.childintime.database.DatabaseBuilder;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseModifyDialog;
+import me.childintime.childintime.database.connector.DatabaseConnector;
+import me.childintime.childintime.store.LoginStore;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -12,6 +15,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class LoginDialog extends JDialog {
 
@@ -38,7 +47,7 @@ public class LoginDialog extends JDialog {
     /**
      * Continue button.
      */
-    private JButton continueButton;
+    private JButton loginButton;
 
     /**
      * Quit button.
@@ -49,6 +58,16 @@ public class LoginDialog extends JDialog {
      * Configure button. (...)
      */
     private JButton configureButton;
+
+    /**
+     * The username field.
+     */
+    private JTextField userField;
+
+    /**
+     * The password field.
+     */
+    private JPasswordField passField;
 
     /**
      * Constructor.
@@ -91,6 +110,9 @@ public class LoginDialog extends JDialog {
 
         // Bring the window to the front
         toFront();
+
+        // Load the credentials from store
+        loadStore();
     }
 
     /**
@@ -202,7 +224,18 @@ public class LoginDialog extends JDialog {
         c.insets = new Insets(16, 0, 0, 8);
         container.add(new JLabel("User:"), c);
 
-        // Add and create user textbox
+        // Create the user field
+        this.userField = new JTextField();
+        this.userField.addActionListener(e -> {
+            // Validate the user input and set the success status flag
+            this.success = authenticate();
+
+            // Dispose the dialog if the user input is valid
+            if(this.success)
+                this.dispose();
+        });
+
+        // Add the user field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 2;
@@ -210,7 +243,7 @@ public class LoginDialog extends JDialog {
         c.weightx = 1;
         c.anchor = GridBagConstraints.CENTER;
         c.insets = new Insets(16, 0, 0, 0);
-        container.add(new JTextField(), c);
+        container.add(this.userField, c);
 
         // Add and create password label
         c.fill = GridBagConstraints.NONE;
@@ -222,7 +255,18 @@ public class LoginDialog extends JDialog {
         c.insets = new Insets(8, 0, 0, 8);
         container.add(new JLabel("Password:"), c);
 
-        // Add and create password textbox
+        // Create the password field
+        this.passField = new JPasswordField();
+        this.passField.addActionListener(e -> {
+            // Validate the user input and set the success status flag
+            this.success = authenticate();
+
+            // Dispose the dialog if the user input is valid
+            if(this.success)
+                this.dispose();
+        });
+
+        // Add the password field
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 3;
@@ -230,23 +274,23 @@ public class LoginDialog extends JDialog {
         c.weightx = 1;
         c.anchor = GridBagConstraints.CENTER;
         c.insets = new Insets(8, 0, 0, 0);
-        container.add(new JPasswordField(), c);
+        container.add(this.passField, c);
 
         // Create the commit buttons panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 2, 8, 8));
 
         // Create the continue and quit buttons
-        this.continueButton = new JButton("Continue");
+        this.loginButton = new JButton("Login");
         this.quitButton = new JButton("Quit");
 
         // Put the continue and quit buttons on the frame (in the proper order)
         if(!Platform.isMacOsX()) {
-            buttonPanel.add(continueButton);
+            buttonPanel.add(loginButton);
             buttonPanel.add(quitButton);
         } else {
             buttonPanel.add(quitButton);
-            buttonPanel.add(continueButton);
+            buttonPanel.add(loginButton);
         }
 
         // Add the commit buttons panel
@@ -264,10 +308,6 @@ public class LoginDialog extends JDialog {
 
         // Pack everything
         pack();
-
-        // Request focus on the continue button
-        // TODO: Move this somewhere else!
-        continueButton.requestFocus();
     }
 
     /**
@@ -302,9 +342,9 @@ public class LoginDialog extends JDialog {
         });
 
         // Add an action to the continue button
-        continueButton.addActionListener(e -> {
+        loginButton.addActionListener(e -> {
             // Validate the user input and set the success status flag
-            instance.success = check();
+            instance.success = authenticate();
 
             // Dispose the dialog if the user input is valid
             if(instance.success)
@@ -355,28 +395,69 @@ public class LoginDialog extends JDialog {
     }
 
     /**
-     * Test the database connection and check the user credentials.
+     * Test the database connection and authenticate the user credentials.
      *
      * @return True if valid, false if not.
      */
-    public boolean check() {
+    public boolean authenticate() {
         // Validate the configuration of the selected database
         if(!validateConfiguration())
             return false;
 
-        // Create a progress dialog window
-        ProgressDialog progress = new ProgressDialog(this, App.APP_NAME, true, "Connecting to database...", true);
-
         // TODO: Check database connection (already done in the database configurator?)
 
-        // Validate user credentials, show status message
-        progress.setStatus("Logging in...");
+        // Make sure a username is entered
+        if(this.userField.getText().length() == 0) {
+            // Show a warning
+            JOptionPane.showMessageDialog(this, "Please enter a username.", "Missing username", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
 
-        // Validate user credentials
-        // TODO: Validate the login credentials
+        // Make sure a password is entered
+        if(this.passField.getPassword().length == 0) {
+            // Show a warning
+            JOptionPane.showMessageDialog(this, "Please enter a password.", "Missing password", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Create a progress dialog window
+        ProgressDialog progress = new ProgressDialog(this, App.APP_NAME, false, "Connecting to database...", true);
+
+        // Validate user credentials, show status message
+        progress.setStatus("Connecting to the database...");
+
+        // Prepare the database
+        Connection connection = prepareDatabase(progress);
+        if(connection == null)
+            return false;
+
+        // Authenticate the user
+        progress.setStatus("Authenticating...");
+        boolean authenticated = Core.getInstance().getAuthenticator().authenticate(
+                connection,
+                this.userField.getText(),
+                String.valueOf(this.passField.getPassword())
+        );
+
+        // Close the connection
+        try {
+            connection.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
 
         // Dispose the progress dialog since we're done
         progress.dispose();
+
+        // Show an error if the authentication progress failed
+        if(!authenticated) {
+            // Show an error message
+            JOptionPane.showMessageDialog(this, "Failed to login. The combination of this username and password is incorrect.", "Login failure", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Save the credentials to store
+        saveStore();
 
         // TODO: Return the proper result
         return true;
@@ -419,5 +500,150 @@ public class LoginDialog extends JDialog {
      */
     public AbstractDatabase getSelectedDatabase() {
         return (AbstractDatabase) this.comboBox.getSelectedItem();
+    }
+
+    /**
+     * Prepare the selected database.
+     *
+     * @param progressDialog Progress dialog.
+     *
+     * @return Database connection after preparation, or null if it failed.
+     */
+    public Connection prepareDatabase(ProgressDialog progressDialog) {
+        // Create the database connector
+        DatabaseConnector databaseConnector;
+        try {
+            databaseConnector = getSelectedDatabase().createConnection(progressDialog);
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Show an error message
+            JOptionPane.showMessageDialog(this, "Failed to connect to the database.", "Connection failure", JOptionPane.WARNING_MESSAGE);
+
+            // Dispose the progress dialog and return
+            progressDialog.dispose();
+            return null;
+        }
+
+        // Create the database connection
+        Connection connection;
+        try {
+            connection = databaseConnector.createConnection();
+
+        } catch(Exception e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Show an error message
+            JOptionPane.showMessageDialog(this, "Failed to connect to the database.", "Connection failure", JOptionPane.WARNING_MESSAGE);
+
+            // Dispose the progress dialog and return
+            progressDialog.dispose();
+            return null;
+        }
+
+        // Check whether the database contains all required tables
+        try {
+            // Show a status message
+            progressDialog.setStatus("Checking database...");
+
+            // Fetch the database meta data
+            DatabaseMetaData dbm = connection.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, "user", null);
+
+            // Check whether the required table exists
+            if(!tables.next()) {
+                // Create a list with the buttons to show in the option dialog
+                java.util.List<String> buttons = new ArrayList<>();
+                buttons.add("Setup Database");
+                buttons.add("Quit");
+
+                // Reverse the button list if we're on a Mac OS X system
+                if(Platform.isMacOsX())
+                    Collections.reverse(buttons);
+
+                // Show the option dialog
+                final int option = JOptionPane.showOptionDialog(
+                        progressDialog,
+                        "The current database is empty and is not ready to be used.\n" +
+                                "Would you like to set up the database using the default configuration?",
+                        "Empty database",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        buttons.toArray(),
+                        buttons.get(!Platform.isMacOsX() ? 0 : 1)
+                );
+
+                // Make sure the setup option is pressed
+                if(option != (!Platform.isMacOsX() ? 0 : 1)) {
+                    // TODO: Return to the login dialog, the database setup process is cancelled!
+                    JOptionPane.showMessageDialog(progressDialog, "Should show login dialog again, not working yet!");
+                    System.exit(0);
+                }
+
+                // Build the database
+                try {
+                    // Build the database
+                    new DatabaseBuilder(databaseConnector, progressDialog).build();
+
+                } catch(Exception e) {
+                    // Show the stack trace
+                    e.printStackTrace();
+
+                    // Show an error message
+                    JOptionPane.showMessageDialog(progressDialog, "An error occurred while building the database.", "Database building error", JOptionPane.ERROR_MESSAGE);
+
+                    // Return null
+                    return null;
+                }
+            }
+
+        } catch(SQLException e) {
+            // Show the stack trace
+            e.printStackTrace();
+
+            // Return null
+            return null;
+        }
+
+        // Everything seems all right, return the connection
+        return connection;
+    }
+
+    /**
+     * Load the credentials from store.
+     */
+    public void loadStore() {
+        // Fill in the username from store
+        if(LoginStore.hasUsername())
+            this.userField.setText(LoginStore.getUsername(""));
+
+        // Fill in the password from store
+        if(LoginStore.hasPassword())
+            this.passField.setText(LoginStore.getPassword(""));
+
+        // Select the proper component
+        if(this.userField.getText().length() == 0)
+            this.userField.grabFocus();
+        else if(this.passField.getPassword().length == 0)
+            this.passField.grabFocus();
+        else
+            this.loginButton.grabFocus();
+    }
+
+    /**
+     * Save the credentials to store.
+     */
+    public void saveStore() {
+        // Save the username to store
+        if(userField.getText().length() != 0)
+            LoginStore.setUsername(userField.getText());
+
+        // Save the password to store
+        if(passField.getPassword().length != 0)
+            LoginStore.setPassword(String.valueOf(passField.getPassword()));
     }
 }

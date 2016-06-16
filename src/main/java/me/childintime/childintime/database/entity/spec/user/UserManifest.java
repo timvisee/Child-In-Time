@@ -1,29 +1,28 @@
-package me.childintime.childintime.database.entity.spec.student;
+package me.childintime.childintime.database.entity.spec.user;
 
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
-import me.childintime.childintime.permission.PermissionLevel;
 
-public class StudentManifest extends AbstractEntityManifest {
+public class UserManifest extends AbstractEntityManifest {
 
     /**
      * Entity type name.
      */
-    public static final String TYPE_NAME = "Student";
+    public static final String TYPE_NAME = "User";
 
     /**
      * Database table name for this object type.
      */
-    public static final String DATABASE_TABLE_NAME = "student";
+    public static final String DATABASE_TABLE_NAME = "user";
 
     /**
      * This instance.
      * Singleton.
      */
-    private static StudentManifest instance = null;
+    private static UserManifest instance = null;
 
     /**
      * Get the singleton instance of this class.
@@ -31,10 +30,10 @@ public class StudentManifest extends AbstractEntityManifest {
      *
      * @return Class instance.
      */
-    public static StudentManifest getInstance() {
+    public static UserManifest getInstance() {
         // Create a singleton instance if it isn't instantiated yet
         if(instance == null)
-            instance = new StudentManifest();
+            instance = new UserManifest();
 
         // Return the instance
         return instance;
@@ -53,36 +52,28 @@ public class StudentManifest extends AbstractEntityManifest {
 
     @Override
     public EntityFieldsInterface[] getDefaultFields() {
-        if(PermissionLevel.VIEW.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()))
-            return new StudentFields[]{
-                    StudentFields.FIRST_NAME,
-                    StudentFields.LAST_NAME,
-                    StudentFields.GROUP_ID
-            };
-        else
-            return new StudentFields[]{
-                    StudentFields.ID,
-                    StudentFields.GROUP_ID
-            };
+        return new UserFields[]{
+                UserFields.USERNAME
+        };
     }
 
     @Override
     public Class<? extends EntityFieldsInterface> getFields() {
-        return StudentFields.class;
+        return UserFields.class;
     }
 
     @Override
     public Class<? extends AbstractEntity> getEntity() {
-        return Student.class;
+        return User.class;
     }
 
     @Override
     public Class<? extends AbstractEntityManager> getManager() {
-        return StudentManager.class;
+        return UserManager.class;
     }
 
     @Override
-    public StudentManager getManagerInstance() {
-        return Core.getInstance().getStudentManager();
+    public UserManager getManagerInstance() {
+        return Core.getInstance().getUserManager();
     }
 }

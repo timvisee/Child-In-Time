@@ -7,6 +7,7 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.database.entity.ui.dialog.EntityManagerDialog;
+import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
 import me.childintime.childintime.ui.window.tool.BodyStateToolDialog;
 import me.childintime.childintime.ui.window.tool.MeasurementToolDialog;
@@ -14,6 +15,8 @@ import me.childintime.childintime.ui.window.tool.MeasurementToolDialog;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class DashboardFrame extends JFrame {
 
@@ -38,7 +41,37 @@ public class DashboardFrame extends JFrame {
         buildUI();
 
         // Configure the close button behaviour
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        // Add a window listener
+        addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) { }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Dispose the frame
+                dispose();
+
+                // Destroy the core
+                Core.getInstance().destroy();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) { }
+
+            @Override
+            public void windowIconified(WindowEvent e) { }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) { }
+
+            @Override
+            public void windowActivated(WindowEvent e) { }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) { }
+        });
 
         // Configure the window sizes
         configureSize();
@@ -92,7 +125,7 @@ public class DashboardFrame extends JFrame {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 1;
+        c.weightx = 0;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 16, 16);
         container.add(buildUiMainActionsPanel(), c);
@@ -101,7 +134,7 @@ public class DashboardFrame extends JFrame {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
-        c.weightx = 1;
+        c.weightx = 0;
         c.weighty = 1;
         c.insets = new Insets(0, 0, 16, 16);
         container.add(statistics, c);
@@ -186,6 +219,9 @@ public class DashboardFrame extends JFrame {
         bodyStateToolLink.addActionListener(e -> BodyStateToolDialog.showDialog(this));
         mainActions.add(bodyStateToolLink);
 
+        // Set the preferred size
+        mainActions.setPreferredSize(new Dimension(300, 200));
+
         // Return the main actions panel
         return mainActions;
     }
@@ -242,6 +278,7 @@ public class DashboardFrame extends JFrame {
         Menu entityMenu = new Menu("Entity");
 
         // Create a menu for each entity
+        entityMenu.add(buildUiMenuEntity(Core.getInstance().getUserManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getStudentManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getTeacherManager()));
         entityMenu.add(buildUiMenuEntity(Core.getInstance().getSchoolManager()));
@@ -259,11 +296,13 @@ public class DashboardFrame extends JFrame {
         // Create the measurement tool menu item
         MenuItem measurementToolAction = new MenuItem("Measurement tool");
         measurementToolAction.addActionListener(e -> MeasurementToolDialog.showDialog(this));
+        measurementToolAction.setEnabled(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()));
         toolsMenu.add(measurementToolAction);
 
         // Create the body state tool menu item
         MenuItem bodyStateToolAction = new MenuItem("Body state tool");
         bodyStateToolAction.addActionListener(e -> BodyStateToolDialog.showDialog(this));
+        bodyStateToolAction.setEnabled(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()));
         toolsMenu.add(bodyStateToolAction);
 
         // Add the tools menu to the menu bar
@@ -306,6 +345,7 @@ public class DashboardFrame extends JFrame {
         // Add a create action
         MenuItem createAction = new MenuItem("Create " + manager.getManifest().getTypeName(false, false) + "...");
         createAction.addActionListener(e -> manifest.showCreateDialog(this));
+        createAction.setEnabled(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()));
         menu.add(createAction);
         menu.addSeparator();
 
@@ -401,6 +441,7 @@ public class DashboardFrame extends JFrame {
         Core.getInstance().getMeasurementManager().refresh();
         Core.getInstance().getBodyStateManager().refresh();
         Core.getInstance().getParkourManager().refresh();
+        Core.getInstance().getUserManager().refresh();
 
         // Revert the visibility state of the progress dialog
         Core.getInstance().getProgressDialog().setVisible(progressDialogVisible);

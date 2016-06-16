@@ -1,9 +1,14 @@
 package me.childintime.childintime.database.entity.spec.school;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.permission.PermissionLevel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum SchoolFields implements EntityFieldsInterface {
 
@@ -11,19 +16,19 @@ public enum SchoolFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a school object.
      */
-    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", PermissionLevel.VIEW_ANONYMOUS, false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * School name.
      * The name of a school.
      */
-    NAME("School", "name", true, true, false, false, DataTypeExtended.STRING, null),
+    NAME("School name", "name", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * School commune.return SchoolManifest.getInstance();
      * The commune a school is located in.
      */
-    COMMUNE("Commune", "commune", true, true, false, false, DataTypeExtended.STRING, null);
+    COMMUNE("Commune", "commune", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null);
 
     /**
      * The display name for this field.
@@ -34,6 +39,11 @@ public enum SchoolFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Minimum required permission level.
+     */
+    private PermissionLevel minimumPermission;
 
     /**
      * Defines whether this field is creatable by the user.
@@ -71,6 +81,7 @@ public enum SchoolFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param minimumPermission Minimum required permission level.
      * @param creatable True if this field is editable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
@@ -78,9 +89,10 @@ public enum SchoolFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    SchoolFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    SchoolFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.minimumPermission = minimumPermission;
         this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
@@ -97,6 +109,11 @@ public enum SchoolFields implements EntityFieldsInterface {
     @Override
     public String getDatabaseField() {
         return databaseField;
+    }
+
+    @Override
+    public PermissionLevel getMinimumPermission() {
+        return this.minimumPermission;
     }
 
     @Override
@@ -141,5 +158,21 @@ public enum SchoolFields implements EntityFieldsInterface {
     @Override
     public AbstractEntityManifest getManifest() {
         return SchoolManifest.getInstance();
+    }
+
+    public static SchoolFields[] valuesAllowed() {
+        // Create a list of allowed values
+        List<SchoolFields> list = new ArrayList<>();
+
+        // Get the users permission level
+        final PermissionLevel permissionLevel = Core.getInstance().getAuthenticator().getPermissionLevel();
+
+        // Loop through the values and put all values in the list the user has permission for
+        for(SchoolFields value : values())
+            if(value.getMinimumPermission().orBetter(permissionLevel))
+                list.add(value);
+
+        // Return the values array
+        return list.toArray(new SchoolFields[]{});
     }
 }

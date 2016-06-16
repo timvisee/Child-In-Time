@@ -9,6 +9,12 @@ public enum DataTypeExtended {
     STRING(DataTypeBase.STRING),
 
     /**
+     * Password hash type.
+     * Used for password hashes.
+     */
+    PASSWORD_HASH(DataTypeBase.STRING),
+
+    /**
      * Integer type.
      * Used to store integral numbers.
      */
@@ -37,6 +43,12 @@ public enum DataTypeExtended {
      * Used to store time in milliseconds.
      */
     MILLISECONDS(DataTypeBase.INTEGER),
+
+    /**
+     * Permission level type.
+     * Used to store the permission level.
+     */
+    PERMISSION_LEVEL(DataTypeBase.INTEGER),
 
     /**
      * Boolean type.

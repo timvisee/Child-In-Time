@@ -38,4 +38,36 @@ public class TableUtils {
             columnModel.getColumn(column).setPreferredWidth(width);
         }
     }
+
+    /**
+     * Scroll to the given row in a table.
+     *
+     * @param table Table.
+     * @param rowIndex Row to scroll to.
+     * @param vColIndex Column.
+     */
+    public static void scrollToVisible(JTable table, int rowIndex, int vColIndex) {
+        // Make sure the table is valid
+        if (!(table.getParent() instanceof JViewport))
+            return;
+
+        // Get the viewport
+        JViewport viewport = (JViewport)table.getParent();
+
+        // This rectangle is relative to the table where the
+        // northwest corner of cell (0,0) is always (0,0).
+        Rectangle rect = table.getCellRect(rowIndex, vColIndex, true);
+
+        // The location of the viewport relative to the table
+        Point pt = viewport.getViewPosition();
+
+        // Translate the cell location so that it is relative
+        // to the view, assuming the northwest corner of the
+        // view is (0,0)
+        rect.setLocation(rect.x - pt.x, rect.y - pt.y);
+
+        // Scroll to the rectangle
+        table.scrollRectToVisible(rect);
+        viewport.scrollRectToVisible(rect);
+    }
 }

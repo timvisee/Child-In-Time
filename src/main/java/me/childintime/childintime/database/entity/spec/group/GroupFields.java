@@ -1,10 +1,15 @@
 package me.childintime.childintime.database.entity.spec.group;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.spec.school.SchoolManifest;
+import me.childintime.childintime.permission.PermissionLevel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum GroupFields implements EntityFieldsInterface {
 
@@ -12,19 +17,19 @@ public enum GroupFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a group object.
      */
-    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", PermissionLevel.VIEW_ANONYMOUS, false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Group name.
      * Display name of a group.
      */
-    NAME("Group", "name", true, true, false, false, DataTypeExtended.STRING, null),
+    NAME("Group", "name", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
      * School ID.
      * The school instance a group is in.
      */
-    SCHOOL_ID("School", "school_id", true, true, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
+    SCHOOL_ID("School", "school_id", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
 
     /**
      * The display name for this field.
@@ -35,6 +40,11 @@ public enum GroupFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Minimum required permission level.
+     */
+    private PermissionLevel minimumPermission;
 
     /**
      * Defines whether this field is creatable by the user.
@@ -72,6 +82,7 @@ public enum GroupFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param minimumPermission Minimum required permission level.
      * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
@@ -79,9 +90,10 @@ public enum GroupFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    GroupFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    GroupFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.minimumPermission = minimumPermission;
         this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
@@ -98,6 +110,11 @@ public enum GroupFields implements EntityFieldsInterface {
     @Override
     public String getDatabaseField() {
         return databaseField;
+    }
+
+    @Override
+    public PermissionLevel getMinimumPermission() {
+        return this.minimumPermission;
     }
 
     @Override
@@ -142,5 +159,21 @@ public enum GroupFields implements EntityFieldsInterface {
     @Override
     public AbstractEntityManifest getManifest() {
         return GroupManifest.getInstance();
+    }
+
+    public static GroupFields[] valuesAllowed() {
+        // Create a list of allowed values
+        List<GroupFields> list = new ArrayList<>();
+
+        // Get the users permission level
+        final PermissionLevel permissionLevel = Core.getInstance().getAuthenticator().getPermissionLevel();
+
+        // Loop through the values and put all values in the list the user has permission for
+        for(GroupFields value : values())
+            if(value.getMinimumPermission().orBetter(permissionLevel))
+                list.add(value);
+
+        // Return the values array
+        return list.toArray(new GroupFields[]{});
     }
 }

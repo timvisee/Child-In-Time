@@ -1,10 +1,15 @@
 package me.childintime.childintime.database.entity.spec.student;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.spec.group.GroupManifest;
+import me.childintime.childintime.permission.PermissionLevel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum StudentFields implements EntityFieldsInterface {
 
@@ -12,38 +17,38 @@ public enum StudentFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a student object.
      */
-    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", PermissionLevel.VIEW_ANONYMOUS, false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Student first name.
      * The first name of a student.
      */
-    FIRST_NAME("First name", "first_name", true, true, false, false, DataTypeExtended.STRING, null),
+    FIRST_NAME("First name", "first_name", PermissionLevel.VIEW, true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
-     * Student last name.return StudentManifest.getInstance();
+     * Student last name.
      * The last name of a student.
      */
-    LAST_NAME("Last name", "last_name", true, true, false, false, DataTypeExtended.STRING, null),
+    LAST_NAME("Last name", "last_name", PermissionLevel.VIEW, true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
-     * Student gender.return StudentManifest.getInstance();
+     * Student gender.
      * The gender of a student.
      * True defines a man, false defines a woman.
      */
-    GENDER("Gender", "gender", true, true, false, false, DataTypeExtended.GENDER, null),
+    GENDER("Gender", "gender", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.GENDER, null),
 
     /**
-     * Student birthdate.return StudentManifest.getInstance();
+     * Student birthdate.
      * The birthdate of a student.
      */
-    BIRTHDAY("Birthdate", "birthdate", true, true, false, false, DataTypeExtended.BIRTHDAY, null),
+    BIRTHDAY("Birthdate", "birthdate", PermissionLevel.VIEW, true, true, false, false, DataTypeExtended.BIRTHDAY, null),
 
     /**
-     * Group ID.return StudentManifest.getInstance();
+     * Group ID.
      * The group instance a student is part of.
      */
-    GROUP_ID("Group", "group_id", true, true, false, false, DataTypeExtended.REFERENCE, GroupManifest.getInstance());
+    GROUP_ID("Group", "group_id", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.REFERENCE, GroupManifest.getInstance());
 
     /**
      * The display name for this field.
@@ -54,6 +59,11 @@ public enum StudentFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Minimum required permission level.
+     */
+    private PermissionLevel minimumPermission;
 
     /**
      * Defines whether this field is creatable by the user.
@@ -91,6 +101,7 @@ public enum StudentFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param minimumPermission Minimum required permission level.
      * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
@@ -98,9 +109,10 @@ public enum StudentFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    StudentFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    StudentFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.minimumPermission = minimumPermission;
         this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
@@ -117,6 +129,11 @@ public enum StudentFields implements EntityFieldsInterface {
     @Override
     public String getDatabaseField() {
         return databaseField;
+    }
+
+    @Override
+    public PermissionLevel getMinimumPermission() {
+        return this.minimumPermission;
     }
 
     @Override
@@ -161,5 +178,21 @@ public enum StudentFields implements EntityFieldsInterface {
     @Override
     public AbstractEntityManifest getManifest() {
         return StudentManifest.getInstance();
+    }
+
+    public static StudentFields[] valuesAllowed() {
+        // Create a list of allowed values
+        List<StudentFields> list = new ArrayList<>();
+
+        // Get the users permission level
+        final PermissionLevel permissionLevel = Core.getInstance().getAuthenticator().getPermissionLevel();
+
+        // Loop through the values and put all values in the list the user has permission for
+        for(StudentFields value : values())
+            if(value.getMinimumPermission().orBetter(permissionLevel))
+                list.add(value);
+
+        // Return the values array
+        return list.toArray(new StudentFields[]{});
     }
 }

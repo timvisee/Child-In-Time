@@ -1,9 +1,14 @@
 package me.childintime.childintime.database.entity.spec.parkour;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.permission.PermissionLevel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum ParkourFields implements EntityFieldsInterface {
 
@@ -11,13 +16,13 @@ public enum ParkourFields implements EntityFieldsInterface {
      * ID.
      * Identifier of a parkour object.
      */
-    ID("ID", "id", false, false, false, false, DataTypeExtended.ID, null),
+    ID("ID", "id", PermissionLevel.VIEW_ANONYMOUS, false, false, false, false, DataTypeExtended.ID, null),
 
     /**
      * Description.
      * The description of a parkour.
      */
-    DESCRIPTION("Parkour", "description", true, true, false, false, DataTypeExtended.STRING, null);
+    DESCRIPTION("Parkour name", "description", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null);
 
     /**
      * The display name for this field.
@@ -28,6 +33,11 @@ public enum ParkourFields implements EntityFieldsInterface {
      * The name of the field in the database.
      */
     private String databaseField;
+
+    /**
+     * Minimum required permission level.
+     */
+    private PermissionLevel minimumPermission;
 
     /**
      * Defines whether this field is creatable by the user.
@@ -65,6 +75,7 @@ public enum ParkourFields implements EntityFieldsInterface {
      *
      * @param displayName Display name.
      * @param databaseField Database field name.
+     * @param minimumPermission Minimum required permission level.
      * @param creatable True if this field is creatable by the user, false if not.
      * @param editable True if this field is editable by the user, false if not.
      * @param nullAllowed True if a NULL value is allowed for this property field.
@@ -72,9 +83,10 @@ public enum ParkourFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    ParkourFields(String displayName, String databaseField, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    ParkourFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
+        this.minimumPermission = minimumPermission;
         this.creatable = creatable;
         this.editable = editable;
         this.nullAllowed = nullAllowed;
@@ -91,6 +103,11 @@ public enum ParkourFields implements EntityFieldsInterface {
     @Override
     public String getDatabaseField() {
         return databaseField;
+    }
+
+    @Override
+    public PermissionLevel getMinimumPermission() {
+        return this.minimumPermission;
     }
 
     @Override
@@ -135,5 +152,21 @@ public enum ParkourFields implements EntityFieldsInterface {
     @Override
     public AbstractEntityManifest getManifest() {
         return ParkourManifest.getInstance();
+    }
+
+    public static ParkourFields[] valuesAllowed() {
+        // Create a list of allowed values
+        List<ParkourFields> list = new ArrayList<>();
+
+        // Get the users permission level
+        final PermissionLevel permissionLevel = Core.getInstance().getAuthenticator().getPermissionLevel();
+
+        // Loop through the values and put all values in the list the user has permission for
+        for(ParkourFields value : values())
+            if(value.getMinimumPermission().orBetter(permissionLevel))
+                list.add(value);
+
+        // Return the values array
+        return list.toArray(new ParkourFields[]{});
     }
 }

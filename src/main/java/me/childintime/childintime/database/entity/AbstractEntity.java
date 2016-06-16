@@ -2,6 +2,7 @@ package me.childintime.childintime.database.entity;
 
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.permission.PermissionLevel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -303,6 +304,20 @@ public abstract class AbstractEntity implements Cloneable {
                 // Create a kilogram formatter and format the value
                 return new DecimalFormat("#00.00' kg'").format(kilogram);
 
+            case BIRTHDAY:
+            case DATE:
+                // Create a date formatter
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                // Format the date
+                return dateFormat.format(raw);
+
+            case GENDER:
+                return (Boolean) raw ? "Male" : "Female";
+
+            case BOOLEAN:
+                return (Boolean) raw ? "True" : "False";
+
             default:
                 return String.valueOf(raw);
         }
@@ -443,7 +458,17 @@ public abstract class AbstractEntity implements Cloneable {
                                     break;
 
                                 case INTEGER:
-                                    insertStatement.setInt(i + 1, (Integer) value);
+                                    // Define a variable for the integer value
+                                    int intValue;
+
+                                    // Convert permission level values into an integer
+                                    if(value instanceof PermissionLevel)
+                                        intValue = ((PermissionLevel) value).getLevel();
+                                    else
+                                        intValue = (int) value;
+
+                                    // Set the integer value
+                                    insertStatement.setInt(i + 1, intValue);
                                     break;
 
                                 case REFERENCE:
@@ -559,7 +584,16 @@ public abstract class AbstractEntity implements Cloneable {
                                 break;
 
                             case INTEGER:
-                                updateStatement.setInt(1, (Integer) value);
+                                // Define a variable for the integer value
+                                int intValue;
+
+                                // Convert permission level values into an integer
+                                if(value instanceof PermissionLevel)
+                                    intValue = ((PermissionLevel) value).getLevel();
+                                else
+                                    intValue = (int) value;
+
+                                updateStatement.setInt(1, intValue);
                                 break;
 
                             case REFERENCE:
@@ -691,7 +725,24 @@ public abstract class AbstractEntity implements Cloneable {
                 break;
 
             case INTEGER:
-                this.cachedFields.put(field, Integer.parseInt(String.valueOf(rawField)));
+                // Extended integer types
+                switch(field.getExtendedDataType()) {
+                    case PERMISSION_LEVEL:
+                        // Convert the value in a permission level instance
+                        PermissionLevel permissionLevel;
+                        if(rawField instanceof PermissionLevel)
+                            permissionLevel = (PermissionLevel) rawField;
+                        else
+                            permissionLevel = PermissionLevel.getByLevel((Integer) rawField);
+
+                        // Put the permission level in the list
+                        this.cachedFields.put(field, permissionLevel);
+                        break;
+
+                    default:
+                        this.cachedFields.put(field, Integer.parseInt(String.valueOf(rawField)));
+                        break;
+                }
                 break;
 
             case DATE:

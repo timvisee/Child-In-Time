@@ -144,6 +144,39 @@ public class DatePropertyField extends TextPropertyField implements PropertyChan
         super.buildActionList();
     }
 
+    @Override
+    public Object getValue() {
+        // Return if the field is null or if the date is invalid
+        if(isNull() || !isValidDate())
+            return null;
+
+        // Return the formatted date
+        return dateFormat.format(getDate());
+    }
+
+    @Override
+    public void setValue(Object value) {
+        // Set the null state
+        if(value == null) {
+            setNull(true);
+            return;
+        }
+
+        // Set the date
+        if(value instanceof Date) {
+            setDate((Date) value);
+            return;
+        }
+
+        // Try to parse the date
+        try {
+            //noinspection ConstantConditions
+            setText(dateFormat.format(dateFormat.parse((String) value)));
+        } catch(ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Get the parsed date from the property field.
      * Null is returned if the date was invalid and/or couldn't be parsed.

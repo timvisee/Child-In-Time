@@ -3,7 +3,6 @@ package me.childintime.childintime;
 import com.apple.osx.adapter.OSXAdapter;
 import me.childintime.childintime.config.AppConfig;
 import me.childintime.childintime.config.Config;
-import me.childintime.childintime.database.DatabaseBuilder;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.DatabaseManager;
 import me.childintime.childintime.database.connector.DatabaseConnector;
@@ -14,9 +13,11 @@ import me.childintime.childintime.database.entity.spec.parkour.ParkourManager;
 import me.childintime.childintime.database.entity.spec.school.SchoolManager;
 import me.childintime.childintime.database.entity.spec.student.StudentManager;
 import me.childintime.childintime.database.entity.spec.teacher.TeacherManager;
+import me.childintime.childintime.database.entity.spec.user.UserManager;
 import me.childintime.childintime.ui.window.AboutDialog;
 import me.childintime.childintime.ui.window.DashboardFrame;
 import me.childintime.childintime.ui.window.LoginDialog;
+import me.childintime.childintime.user.Authenticator;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
@@ -24,12 +25,7 @@ import me.childintime.childintime.util.time.Profiler;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class Core {
 
@@ -84,7 +80,7 @@ public class Core {
     private SchoolManager schoolManager;
 
     /**
-     * Student manager instance.
+     * User manager instance.
      */
     private StudentManager studentManager;
 
@@ -94,9 +90,19 @@ public class Core {
     private TeacherManager teacherManager;
 
     /**
+     * User manager instance.
+     */
+    private UserManager userManager;
+
+    /**
      * Progress dialog instance.
      */
     private ProgressDialog progressDialog;
+
+    /**
+     * Authenticator.
+     */
+    private Authenticator authenticator = new Authenticator();
 
     /**
      * Get the instance.
@@ -177,6 +183,7 @@ public class Core {
         this.schoolManager = new SchoolManager();
         this.studentManager = new StudentManager();
         this.teacherManager = new TeacherManager();
+        this.userManager = new UserManager();
 
         // Prepare the application data
         try {
@@ -264,59 +271,6 @@ public class Core {
             return;
         }
 
-        // Check whether the database contains all required tables
-        try {
-            // Show a status message
-            this.progressDialog.setStatus("Checking database...");
-
-            // Fetch the database meta data
-            DatabaseMetaData dbm = this.databaseConnector.getConnection().getMetaData();
-            ResultSet tables = dbm.getTables(null, null, "user", null);
-
-            // Check whether the required table exists
-            if(!tables.next()) {
-                // Create a list with the buttons to show in the option dialog
-                List<String> buttons = new ArrayList<>();
-                buttons.add("Setup Database");
-                buttons.add("Quit");
-
-                // Reverse the button list if we're on a Mac OS X system
-                if(Platform.isMacOsX())
-                    Collections.reverse(buttons);
-
-                // Show the option dialog
-                final int option = JOptionPane.showOptionDialog(
-                        this.progressDialog,
-                        "The current database is empty and is not ready to be used.\n" +
-                                "Would you like to set up the database using the default configuration?",
-                        "Empty database",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        buttons.toArray(),
-                        buttons.get(!Platform.isMacOsX() ? 0 : 1)
-                );
-
-                // Make sure the setup option is pressed
-                if(option != (!Platform.isMacOsX() ? 0 : 1)) {
-                    // TODO: Return to the login dialog, the database setup process is cancelled!
-                    JOptionPane.showMessageDialog(this.progressDialog, "Should show login dialog again, not working yet!");
-                    System.exit(0);
-                }
-
-                // Build the database
-                // TODO: Handle this properly!
-                try {
-                    new DatabaseBuilder(this.databaseConnector, this.progressDialog).build();
-                } catch(SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-
         // Show a status message
         System.out.println("The application core has been started, took " + p.getTimeFormatted() + "!");
 
@@ -354,6 +308,16 @@ public class Core {
         // Destroy the database connection
         if(databaseConnector != null)
             this.databaseConnector.destroy();
+
+        // Save the configuration
+        if(this.config != null) {
+            // Show a status message
+            this.progressDialog.setStatus("Saving configuration...");
+
+            // Save the configuration
+            // TODO: Handle errors!
+            getConfig().save();
+        }
 
         // Destroy the progress dialog if it hasn't been disposed yet
         if(this.progressDialog != null)
@@ -456,10 +420,19 @@ public class Core {
     /**
      * Get the student manager instance.
      *
-     * @return Student manager instance.
+     * @return User manager instance.
      */
     public StudentManager getStudentManager() {
         return this.studentManager;
+    }
+
+    /**
+     * Get the user manager instance.
+     *
+     * @return User manager instance.
+     */
+    public UserManager getUserManager() {
+        return this.userManager;
     }
 
     /**
@@ -469,6 +442,15 @@ public class Core {
      */
     public TeacherManager getTeacherManager() {
         return this.teacherManager;
+    }
+
+    /**
+     * Get the authenticator.
+     *
+     * @return Authenticator.
+     */
+    public Authenticator getAuthenticator() {
+        return this.authenticator;
     }
 
     /**

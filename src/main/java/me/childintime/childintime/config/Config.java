@@ -4,6 +4,7 @@ import com.timvisee.yamlwrapper.configuration.YamlConfiguration;
 import me.childintime.childintime.util.time.Profiler;
 
 import java.io.File;
+import java.io.IOException;
 
 public class Config {
 
@@ -99,6 +100,9 @@ public class Config {
                 return false;
             }
 
+            // Set the configuration object
+            this.config = new YamlConfiguration();
+
             // Return the result
             return true;
         }
@@ -132,6 +136,39 @@ public class Config {
 
         // Load the configuration file and return the result
         return load(true);
+    }
+
+    /**
+     * Save the configuration.
+     *
+     * @return True on success, false on failure.
+     */
+    public boolean save() {
+        return save(getConfigFile());
+    }
+
+    /**
+     * Save the configuration.
+     *
+     * @param configFile Configuration file.
+     *
+     * @return True on success, false on failure.
+     */
+    public boolean save(File configFile) {
+        try {
+            // Save
+            this.config.save(configFile);
+
+            // Return the result
+            return true;
+
+        } catch(IOException e) {
+            // Print the stack trace
+            e.printStackTrace();
+
+            // Return the result
+            return false;
+        }
     }
 
     /**

@@ -1,54 +1,40 @@
-package me.childintime.childintime.database.entity.spec.teacher;
+package me.childintime.childintime.database.entity.spec.user;
 
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeBase;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
-import me.childintime.childintime.database.entity.spec.school.SchoolManifest;
 import me.childintime.childintime.permission.PermissionLevel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public enum TeacherFields implements EntityFieldsInterface {
+public enum UserFields implements EntityFieldsInterface {
 
     /**
      * ID.
-     * Identifier of a teacher object.
+     * Identifier of a student object.
      */
     ID("ID", "id", PermissionLevel.VIEW_ANONYMOUS, false, false, false, false, DataTypeExtended.ID, null),
 
     /**
-     * Teacher first name.
-     * The first name of a teacher.
+     * Username.
+     * The username of the user.
      */
-    FIRST_NAME("First name", "first_name", PermissionLevel.VIEW, true, true, false, false, DataTypeExtended.STRING, null),
+    USERNAME("Username", "username", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.STRING, null),
 
     /**
-     * Teacher last name.
-     * The last name of a teacher.
+     * Password hash.
+     * The password hash of the user.
      */
-    LAST_NAME("Last name", "last_name", PermissionLevel.VIEW, true, true, false, false, DataTypeExtended.STRING, null),
+    PASSWORD_HASH("Password", "password_hash", PermissionLevel.EDIT, true, true, false, false, DataTypeExtended.PASSWORD_HASH, null),
 
     /**
-     * Teacher gym.
-     * Defines whether this teacher is a gymnastics teacher.
-     * True if the teacher is a gymnastics teacher, false if not.
+     * Permission level.
+     * The permission level of the user.
      */
-    GENDER("Gender", "gender", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.GENDER, null),
-
-    /**
-     * Teacher gender.
-     * Defines the gender of the teacher. True is a male, false if female.
-     */
-    IS_GYM("Gymnastic teacher", "is_gym", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.BOOLEAN, null),
-
-    /**
-     * School ID.
-     * The school instance a teacher works at.
-     */
-    SCHOOL_ID("School", "school_id", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.REFERENCE, SchoolManifest.getInstance());
+    PERMISSION_LEVEL("Permission level", "permission_level", PermissionLevel.EDIT, true, true, false, false, DataTypeExtended.PERMISSION_LEVEL, null);
 
     /**
      * The display name for this field.
@@ -109,7 +95,7 @@ public enum TeacherFields implements EntityFieldsInterface {
      * @param dataType Data type of the field.
      * @param referenceManifest Referenced class manifest if this field has the {@link DataTypeExtended#REFERENCE} type.
      */
-    TeacherFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
+    UserFields(String displayName, String databaseField, PermissionLevel minimumPermission, boolean creatable, boolean editable, boolean nullAllowed, boolean emptyAllowed, DataTypeExtended dataType, AbstractEntityManifest referenceManifest) {
         this.displayName = displayName;
         this.databaseField = databaseField;
         this.minimumPermission = minimumPermission;
@@ -177,22 +163,22 @@ public enum TeacherFields implements EntityFieldsInterface {
 
     @Override
     public AbstractEntityManifest getManifest() {
-        return TeacherManifest.getInstance();
+        return UserManifest.getInstance();
     }
 
-    public static TeacherFields[] valuesAllowed() {
+    public static UserFields[] valuesAllowed() {
         // Create a list of allowed values
-        List<TeacherFields> list = new ArrayList<>();
+        List<UserFields> list = new ArrayList<>();
 
         // Get the users permission level
         final PermissionLevel permissionLevel = Core.getInstance().getAuthenticator().getPermissionLevel();
 
         // Loop through the values and put all values in the list the user has permission for
-        for(TeacherFields value : values())
+        for(UserFields value : values())
             if(value.getMinimumPermission().orBetter(permissionLevel))
                 list.add(value);
 
         // Return the values array
-        return list.toArray(new TeacherFields[]{});
+        return list.toArray(new UserFields[]{});
     }
 }

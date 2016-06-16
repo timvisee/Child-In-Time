@@ -1,19 +1,25 @@
 package me.childintime.childintime.database.entity.ui.dialog;
 
 import me.childintime.childintime.App;
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.hash.HashUtil;
+import me.childintime.childintime.permission.PermissionLevel;
+import me.childintime.childintime.ui.component.LinkLabel;
 import me.childintime.childintime.ui.component.property.*;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +29,6 @@ public class EntityModifyDialog extends JDialog {
     /**
      * Frame title.
      */
-    // TODO: Put object type name in here?
     private static final String FORM_TITLE = App.APP_NAME;
 
     /**
@@ -294,30 +299,43 @@ public class EntityModifyDialog extends JDialog {
      * Create all UI components for the frame.
      */
     private void buildUi() {
+        // Construct a grid bag constraints object to specify the placement of all components
+        GridBagConstraints c = new GridBagConstraints();
+
         // Set the frame layout
         this.setLayout(new BorderLayout());
 
         // Create the main panel, to put the question and answers in
-        JPanel container = new JPanel();
-        container.setLayout(new GridBagLayout());
+        final JPanel container = new JPanel(new GridBagLayout());
         container.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 
-        // Construct a grid bag constraints object to specify the placement of all components
-        GridBagConstraints c = new GridBagConstraints();
+        // Create a fields panel
+        final JPanel fieldsPanel = new JPanel(new GridBagLayout());
+        fieldsPanel.setBorder(new CompoundBorder(
+                BorderFactory.createTitledBorder(this.sourceManifest.getTypeName(true, false)),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)
+        ));
 
         // Configure the placement of the questions label, and add it to the questions panel
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 2;
-        c.insets = new Insets(0, 0, 16, 8);
-        container.add(new JLabel((this.source != null ? "Modify" : "Create") + " " + this.sourceManifest.getTypeName(false, false) + ":"), c);
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(0, 0, 0, 0);
+        if(this.source != null)
+            container.add(new JLabel("Modify a " + this.sourceManifest.getTypeName(false, false) + "."), c);
+        else
+            container.add(new JLabel("Create a new " + this.sourceManifest.getTypeName(false, false) + "."), c);
 
         // Get the list of fields
         EntityFieldsInterface[] fieldTypes = getFields();
 
         // Create a field offset variable, which is the positional offset for fields
-        int fieldOffset = 1;
+        int fieldOffset = 0;
+
+        // Check whether the user has rights to edit values
+        final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
 
         // Loop through all the fields
         for(int i = 0; i < fieldTypes.length; i++) {
@@ -325,16 +343,18 @@ public class EntityModifyDialog extends JDialog {
             EntityFieldsInterface fieldType = fieldTypes[i];
 
             // Get the field value
-            Object value = null;
+            Object valueRaw = null;
+            String valueFormatted = null;
             if(this.source != null)
                 try {
-                    value = this.source.getField(fieldType);
+                    valueRaw = this.source.getField(fieldType);
+                    valueFormatted = this.source.getFieldFormatted(fieldType);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
 
             // Hide empty fields that aren't editable/creatable
-            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && value == null) {
+            if((this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) && valueRaw == null) {
                 // Change the offset
                 fieldOffset--;
 
@@ -348,9 +368,9 @@ public class EntityModifyDialog extends JDialog {
             c.gridy = i + fieldOffset;
             c.gridwidth = 1;
             c.weightx = 0;
-            c.insets = new Insets(0, 0, 8, 8);
+            c.insets = new Insets(i == 0 ? 0 : 8, 0, 0, 8);
             c.anchor = GridBagConstraints.WEST;
-            container.add(new JLabel(fieldType.getDisplayName() + ":"), c);
+            fieldsPanel.add(new JLabel(fieldType.getDisplayName() + ":"), c);
 
             // Create and add the name label
             c.fill = GridBagConstraints.HORIZONTAL;
@@ -358,12 +378,26 @@ public class EntityModifyDialog extends JDialog {
             c.gridy = i + fieldOffset;
             c.gridwidth = 1;
             c.weightx = 1;
-            c.insets = new Insets(0, 8, 8, 0);
+            c.insets = new Insets(i == 0 ? 0 : 8, 8, 0, 0);
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label if the field is not editable
-            if(this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable()) {
-                container.add(new JLabel(value != null ? value.toString() : "?"), c);
+            if(!canEdit || (this.source != null ? !fieldType.isEditable() : !fieldType.isCreatable())) {
+                if(!(valueRaw instanceof AbstractEntity))
+                    fieldsPanel.add(new JLabel(valueRaw != null ? valueRaw.toString() : "?"), c);
+
+                else {
+                    // Create a new link label
+                    LinkLabel linkLabel = new LinkLabel(valueFormatted);
+
+                    // Open the view dialog when the links is clicked
+                    final AbstractEntity otherEntity = (AbstractEntity) valueRaw;
+                    linkLabel.addActionListener(e -> EntityViewDialog.showDialog(this, otherEntity));
+
+                    // Add the label
+                    fieldsPanel.add(linkLabel, c);
+                }
+
                 continue;
             }
 
@@ -374,7 +408,7 @@ public class EntityModifyDialog extends JDialog {
             switch(fieldType.getBaseDataType()) {
                 case DATE:
                     // Create the date field
-                    DatePropertyField dateField =  new DatePropertyField(value, true);
+                    DatePropertyField dateField =  new DatePropertyField(valueRaw, true);
 
                     // Set the maximum selectable date if we're working with birthday fields
                     if(fieldType.getExtendedDataType().equals(DataTypeExtended.BIRTHDAY))
@@ -387,11 +421,11 @@ public class EntityModifyDialog extends JDialog {
                 case BOOLEAN:
                     switch(fieldType.getExtendedDataType()) {
                         case GENDER:
-                            field = new GenderPropertyField((Boolean) value, true);
+                            field = new GenderPropertyField((Boolean) valueRaw, true);
                             break;
 
                         default:
-                            field = new BooleanPropertyField((Boolean) value, "Is " + fieldType.getDisplayName().toLowerCase(), true);
+                            field = new BooleanPropertyField((Boolean) valueRaw, "Is " + fieldType.getDisplayName().toLowerCase(), true);
                             break;
                     }
                     break;
@@ -399,49 +433,69 @@ public class EntityModifyDialog extends JDialog {
                 case INTEGER:
                     switch(fieldType.getExtendedDataType()) {
                         case MILLISECONDS:
-                            field = new MillisecondPropertyField((Integer) value, true);
+                            field = new MillisecondPropertyField((Integer) valueRaw, true);
                             break;
 
                         case CENTIMETER:
-                            field = new CentimeterPropertyField((Integer) value, true);
+                            field = new CentimeterPropertyField((Integer) valueRaw, true);
                             break;
 
                         case GRAM:
-                            field = new GramPropertyField((Integer) value, true);
+                            field = new GramPropertyField((Integer) valueRaw, true);
+                            break;
+
+                        case PERMISSION_LEVEL:
+                            field = new PermissionLevelPropertyField((PermissionLevel) valueRaw, true);
                             break;
 
                         default:
-                            field = new IntegerPropertyField((Integer) value, true);
+                            field = new IntegerPropertyField((Integer) valueRaw, true);
                             break;
                     }
                     break;
 
                 case REFERENCE:
-                    if(value != null)
-                        field = new EntityPropertyField((AbstractEntity) value, true);
+                    if(valueRaw != null)
+                        field = new EntityPropertyField((AbstractEntity) valueRaw, true);
                     else
                         field = new EntityPropertyField(fieldType.getFieldManifest().getManagerInstance(), true);
                     break;
 
                 case STRING:
                 default:
-                    field = new TextPropertyField(value != null ? value.toString() : null, true);
-                    break;
+                    switch(fieldType.getExtendedDataType()) {
+                        case PASSWORD_HASH:
+                            field = new PasswordPropertyField(null, true);
+                            break;
+
+                        default:
+                            field = new TextPropertyField(valueRaw != null ? valueRaw.toString() : null, true);
+                            break;
+                    }
             }
 
             // Put the field in the fields hash map
             this.fields.put(fieldType, field);
 
             // Add the field
-            container.add(field, c);
+            fieldsPanel.add(field, c);
         }
+
+        // Add the fields panel the container
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 1;
+        c.weighty = 0;
+        c.insets = new Insets(16, 0, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
+        container.add(fieldsPanel, c);
 
         // Create the control button panel and add it to the main panel
         JPanel controlsPanel = createControlButtonPanel();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
-        c.gridy = fieldTypes.length + 1;
-        c.gridwidth = 2;
+        c.gridy = 2;
         c.weightx = 1;
         c.weighty = 0;
         c.insets = new Insets(8, 0, 0, 0);
@@ -499,48 +553,31 @@ public class EntityModifyDialog extends JDialog {
             commitPanel.add(okButton);
         }
 
-        // Create and add the test button
-        JButton defaultsButton = new JButton("Defaults");
-        defaultsButton.addActionListener(e -> {
-            // Feature not yet implemented, show a dialog box
-            featureNotImplemented();
+        // Create and add the revert button
+        JButton revertButton = new JButton("Revert");
+        revertButton.addActionListener(e -> {
+            // Loop through the fields
+            for(Map.Entry<EntityFieldsInterface, AbstractPropertyField> entry : this.fields.entrySet()) {
+                // Get the field and it's property field
+                final EntityFieldsInterface fieldType = entry.getKey();
+                final AbstractPropertyField field = entry.getValue();
 
-//            // Create a progress dialog
-//            ProgressDialog progressDialog = new ProgressDialog(this, "Testing database...", false, "Applying changes...", true);
-//
-//            // Apply the changes
-//            applyChanges();
-//
-//            // TODO: Fix this!
-//            // Get the database
-//            AbstractDatabase database = getDatabase();
-//
-//            // Make sure the configuration is valid
-//            progressDialog.setStatus("Validating configuration...");
-//            if(!database.isConfigured()) {
-//                // Show the option pane
-//                JOptionPane.showMessageDialog(progressDialog, "The database configuration is missing some required properties.", "Database configuration incomplete", JOptionPane.ERROR_MESSAGE);
-//
-//                // Dispose the progress dialog and return
-//                progressDialog.dispose();
-//                return;
-//            }
-//
-//            // Dispose the progress dialog
-//            progressDialog.dispose();
-//
-//            // Test the database connection
-//            if(database.test(this, progressDialog)) {
-//                // Show a success message
-//                JOptionPane.showMessageDialog(
-//                        this,
-//                        "Successfully connected to the database..",
-//                        "Success",
-//                        JOptionPane.INFORMATION_MESSAGE
-//                );
-//            }
+                // Update the field
+                try {
+                    if(this.source != null)
+                        // Fetch the field from the source if the entity is modified
+                        field.setValue(this.source.getField(fieldType));
+                    else
+
+                        // Clear the field if the entity is newly created
+                        field.clear();
+
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         });
-        actionPanel.add(defaultsButton);
+        actionPanel.add(revertButton);
 
         // Add the button panels
         c.gridx = 0;
@@ -668,6 +705,10 @@ public class EntityModifyDialog extends JDialog {
             EntityFieldsInterface fieldSpec = entry.getKey();
             AbstractPropertyField field = entry.getValue();
 
+            // Skip password fields
+            if(fieldSpec.getExtendedDataType().equals(DataTypeExtended.PASSWORD_HASH))
+                continue;
+
             // Check whether null is allowed if the field is null
             if(!fieldSpec.isNullAllowed() && field.isNull()) {
                 // Show a message
@@ -716,6 +757,34 @@ public class EntityModifyDialog extends JDialog {
             // Get the field specification and property field
             EntityFieldsInterface fieldSpec = entry.getKey();
             AbstractPropertyField field = entry.getValue();
+
+            // Handle password fields
+            if(fieldSpec.getExtendedDataType().equals(DataTypeExtended.PASSWORD_HASH)) {
+                // Get the password field
+                PasswordPropertyField passwordField = (PasswordPropertyField) field;
+
+                // Skip null or empty fields
+                if(passwordField.isNull() || passwordField.getText().length() == 0)
+                    continue;
+
+                try {
+                    // Hash the password
+                    String hash = HashUtil.hash(passwordField.getText());
+
+                    // Put the hash in the list
+                    this.result.getCachedFields().put(fieldSpec, hash);
+
+                } catch(NoSuchAlgorithmException e) {
+                    // Print the stack trace
+                    e.printStackTrace();
+
+                    // Show an error message
+                    JOptionPane.showMessageDialog(this, "Failed to securely store the entered password. The password won't be changed.", "Password failure", JOptionPane.WARNING_MESSAGE);
+                }
+
+                // Continue
+                continue;
+            }
 
             // Put the field value into the entity cache
             this.result.getCachedFields().put(fieldSpec, field.getValue());

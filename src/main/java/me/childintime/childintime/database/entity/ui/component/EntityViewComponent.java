@@ -1,10 +1,13 @@
 package me.childintime.childintime.database.entity.ui.component;
 
 import me.childintime.childintime.App;
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
 import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.ui.dialog.EntityModifyDialog;
+import me.childintime.childintime.database.entity.ui.dialog.EntityViewDialog;
+import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 
@@ -115,6 +118,18 @@ public class EntityViewComponent extends EntityListComponent {
      * @return Created entity, or null when cancelled.
      */
     public AbstractEntity createEntity() {
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to create a new " + getManager().getManifest().getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return null;
+        }
+
         // Show the modification dialog to create a new entity
         final AbstractEntity entity = EntityModifyDialog.showCreate(getWindow(), getManager().getManifest());
 
@@ -176,6 +191,12 @@ public class EntityViewComponent extends EntityListComponent {
      * Modify the given entity.
      */
     public void modifyEntity(AbstractEntity entity) {
+        // Show the view dialog if the user doesn't have edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            EntityViewDialog.showDialog(getWindow(), entity);
+            return;
+        }
+
         // Show the entity modification dialog
         EntityModifyDialog.showModify(getWindow(), entity);
 
@@ -191,6 +212,18 @@ public class EntityViewComponent extends EntityListComponent {
     public void deleteSelectedEntities() {
         // Get the objects manifest
         final AbstractEntityManifest manifest = getManager().getManifest();
+
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to delete a " + getManager().getManifest().getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
 
         // Make sure an entity is selected
         if(getSelectedCount() == 0) {
@@ -215,6 +248,18 @@ public class EntityViewComponent extends EntityListComponent {
         // Return if no entity was given
         if(entities.size() == 0)
             return;
+
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to delete a " + getManager().getManifest().getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
 
         // Generate the question dialog string
         final String question = "<html>" +

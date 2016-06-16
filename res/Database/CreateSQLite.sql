@@ -1,18 +1,9 @@
-/* TODO: Create user table (username, mail, password_hash, ...) */
-/* TODO: Insert default user (admin, admin) ? */
-/* TODO: Insert default parkours */
-/* TODO: Don't drop the database, only create it (and it's tables) if they don't exist (... IF NOT EXISTS ...) */
-/* TODO: Compare script with MySQLs script files (what useful stuff are they using) */
-
-
-
 /* Create the Child-In-Time table, and select it */
-/* TODO: Remove this in production */
-
 CREATE TABLE IF NOT EXISTS `user` (
-  `id`            INTEGER PRIMARY KEY AUTOINCREMENT,
-  `username`      TEXT NOT NULL,
-  `password_hash` TEXT NOT NULL
+  `id`               INTEGER PRIMARY KEY AUTOINCREMENT,
+  `username`         TEXT    NOT NULL,
+  `password_hash`    TEXT    NOT NULL,
+  `permission_level` INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `school` (
@@ -327,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `measurement_meta_value` (
 );
 
 INSERT INTO `user` VALUES
-  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3');
+  (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 0);
 
 INSERT INTO `school` VALUES
   (NULL, 'De Wegwijzer', 'Alphen aan den Rijn'),
