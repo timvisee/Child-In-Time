@@ -12,6 +12,7 @@ import me.childintime.childintime.database.entity.spec.group.GroupManager;
 import me.childintime.childintime.database.entity.spec.measurement.MeasurementManager;
 import me.childintime.childintime.database.entity.spec.parkour.ParkourManager;
 import me.childintime.childintime.database.entity.spec.school.SchoolManager;
+import me.childintime.childintime.database.entity.spec.sport.SportManager;
 import me.childintime.childintime.database.entity.spec.student.StudentManager;
 import me.childintime.childintime.database.entity.spec.teacher.TeacherManager;
 import me.childintime.childintime.database.entity.spec.user.UserManager;
@@ -94,6 +95,11 @@ public class Core {
      * Group teacher couple manager instance.
      */
     private GroupTeacherManager groupTeacherManager;
+
+    /**
+     * Sport manager.
+     */
+    private SportManager sportManager;
 
     /**
      * User manager instance.
@@ -191,6 +197,7 @@ public class Core {
         this.teacherManager = new TeacherManager();
         this.userManager = new UserManager();
         this.groupTeacherManager = new GroupTeacherManager();
+        this.sportManager = new SportManager();
 
         // Prepare the application data
         try {
@@ -458,6 +465,15 @@ public class Core {
      */
     public GroupTeacherManager getGroupTeacherCoupleManager() {
         return this.groupTeacherManager;
+    }
+
+    /**
+     * Get the sport manager.
+     *
+     * @return Sport manager.
+     */
+    public SportManager getSportManager() {
+        return this.sportManager;
     }
 
     /**
