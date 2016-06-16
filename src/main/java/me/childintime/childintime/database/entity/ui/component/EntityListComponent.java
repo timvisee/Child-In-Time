@@ -368,7 +368,7 @@ public class EntityListComponent extends JComponent {
         this.uiTable.setFillsViewportHeight(true);
 
         // Build the sorter
-        this.sorter = new EntityListSorter(this.uiTableModel, this.manager);
+        this.sorter = new EntityListSorter(this);
         this.uiTable.setRowSorter(sorter);
 
         // Create a scroll pane container for the table, and add it to the base component
