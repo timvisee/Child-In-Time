@@ -99,4 +99,34 @@ public abstract class AbstractEntityCoupleManifest extends AbstractEntityManifes
     public AbstractEntityManifest getOtherManifest(AbstractEntity entity) {
         return getOtherManifest(entity.getManifest());
     }
+
+    /**
+     * Get the field that references the given manifest.
+     *
+     * @return Reference field.
+     */
+    public EntityCoupleFieldsInterface getFieldByReferenceManifest(AbstractEntityManifest referenceManifest) {
+        try {
+            // Loop through the fields
+            for(EntityFieldsInterface entityFieldsInterface : getFieldValues()) {
+                // Only process reference fields
+                if(!entityFieldsInterface.getExtendedDataType().equals(DataTypeExtended.REFERENCE))
+                    continue;
+
+                // Return the field if the manifests are equal
+                if(entityFieldsInterface.getReferenceManifest().equals(referenceManifest))
+                    return (EntityCoupleFieldsInterface) entityFieldsInterface;
+            }
+
+            // Failed to get field, return null
+            return null;
+
+        } catch(Exception ex) {
+            // Print the stack trace
+            ex.printStackTrace();
+
+            // Return null
+            return null;
+        }
+    }
 }
