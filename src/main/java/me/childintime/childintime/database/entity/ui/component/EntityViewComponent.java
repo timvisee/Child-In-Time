@@ -414,9 +414,6 @@ public class EntityViewComponent extends EntityListComponent {
                 return null;
             }
 
-            // Refresh the couples list
-            getManager().refresh();
-
             // Return the couple
             return newEntity;
 
@@ -538,9 +535,6 @@ public class EntityViewComponent extends EntityListComponent {
     public void viewEntity(AbstractEntity entity) {
         // Show the entity modification dialog
         EntityViewDialog.showDialog(getWindow(), entity);
-
-        // Refresh the manager
-        getManager().refresh();
     }
 
     /**
@@ -724,11 +718,6 @@ public class EntityViewComponent extends EntityListComponent {
 
         // Show the entity modification dialog
         EntityModifyDialog.showModify(getWindow(), entity);
-
-        // TODO: Only edit the given entity, instead of refreshing everything?
-
-        // Refresh the manager
-        getManager().refresh();
     }
 
     /**
@@ -848,10 +837,10 @@ public class EntityViewComponent extends EntityListComponent {
         // Dispose the progress dialog
         progressDialog.dispose();
 
-        // TODO: Only remove the above entities instead of refreshing everything?
-
-        // Refresh the manager
-        getManager().refresh();
+        // Refresh the managers
+        for(AbstractEntityManifest abstractEntityManifest : entities.get(0).getManifest().getReferencedManifests())
+            abstractEntityManifest.getManagerInstance().refresh();
+        entities.get(0).getManifest().getManagerInstance().refresh();
     }
 
     /**
