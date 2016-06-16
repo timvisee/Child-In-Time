@@ -22,6 +22,11 @@ public class EntityManagerComponent extends JComponent {
     private JButton createButton;
 
     /**
+     * View button instance.
+     */
+    private JButton viewButton;
+
+    /**
      * Modify button instance.
      */
     private JButton modifyButton;
@@ -129,21 +134,24 @@ public class EntityManagerComponent extends JComponent {
     private JPanel buildUiManageButtons() {
         // Create a panel to put the buttons in and set it's layout
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        buttonPanel.setLayout(new GridLayout(4, 1, 10, 10));
 
         // Check whether the user can modify data
         final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
 
         // Create the buttons
         this.createButton = new JButton("Create");
-        this.modifyButton = new JButton(canEdit ? "Modify" : "View");
+        this.viewButton = new JButton("View");
+        this.modifyButton = new JButton("Modify");
         this.deleteButton = new JButton("Delete");
 
         // Add the buttons to the panel
         buttonPanel.add(this.createButton);
+        buttonPanel.add(this.viewButton);
         buttonPanel.add(this.modifyButton);
         buttonPanel.add(this.deleteButton);
         this.createButton.addActionListener(e -> this.entityView.createEntity());
+        this.viewButton.addActionListener(e -> this.entityView.viewSelectedEntity());
         this.modifyButton.addActionListener(e -> this.entityView.modifySelectedEntity());
         this.deleteButton.addActionListener(e -> this.entityView.deleteSelectedEntities());
 
@@ -194,8 +202,11 @@ public class EntityManagerComponent extends JComponent {
         // Enable the create button
         this.createButton.setEnabled(canEdit);
 
+        // Enable the view button if one entity is selected
+        this.viewButton.setEnabled(selected == 1);
+
         // Enable the modify button if one entity is selected
-        this.modifyButton.setEnabled(selected == 1);
+        this.modifyButton.setEnabled(selected == 1 && canEdit);
 
         // Enable the delete button if at least one entity is selected
         this.deleteButton.setEnabled(selected > 0 && canEdit);

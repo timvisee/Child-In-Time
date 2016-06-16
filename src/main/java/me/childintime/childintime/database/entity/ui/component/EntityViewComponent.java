@@ -56,8 +56,14 @@ public class EntityViewComponent extends EntityListComponent {
             if(!canModify)
                 return;
 
-            // Modify the entity
-            modifyEntity(entities);
+            // Check whether the user had edit permissions
+            if(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()))
+                // Modify the entity
+                modifyEntity(entities);
+
+            else
+                // View the entity
+                viewEntity(entities);
         });
 
         // Create a key listener to catch delete key presses
@@ -334,6 +340,18 @@ public class EntityViewComponent extends EntityListComponent {
         // Get the objects manifest
         final AbstractEntityManifest manifest = getManager().getManifest();
 
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to modify a " + manifest.getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
         // Make sure an entity is selected
         if(getSelectedCount() == 0) {
             JOptionPane.showMessageDialog(
@@ -355,6 +373,18 @@ public class EntityViewComponent extends EntityListComponent {
      * This method is for ease of use, and thus can't be used to execute multiple modifications.
      */
     public void modifyEntity(List<AbstractEntity> entities) {
+        // Make sure the user has edit rights
+        if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to modify a " + getManager().getManifest().getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
         // Only one entity can be modified
         if(getSelectedCount() > 1) {
             JOptionPane.showMessageDialog(
@@ -374,9 +404,15 @@ public class EntityViewComponent extends EntityListComponent {
      * Modify the given entity.
      */
     public void modifyEntity(AbstractEntity entity) {
-        // Show the view dialog if the user doesn't have edit rights
+        // Make sure the user has edit rights
         if(!PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
-            EntityViewDialog.showDialog(getWindow(), entity);
+            // Show a warning
+            JOptionPane.showMessageDialog(
+                    getWindow(),
+                    "You don't have permission to modify a " + getManager().getManifest().getTypeName(false, false) + ".",
+                    "No permission",
+                    JOptionPane.ERROR_MESSAGE
+            );
             return;
         }
 
