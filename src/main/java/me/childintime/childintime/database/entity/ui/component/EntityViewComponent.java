@@ -7,6 +7,7 @@ import me.childintime.childintime.database.entity.AbstractEntityManager;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.ui.dialog.EntityModifyDialog;
 import me.childintime.childintime.database.entity.ui.dialog.EntityViewDialog;
+import me.childintime.childintime.database.entity.ui.selector.EntityListSelectorComponent;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
@@ -54,6 +55,11 @@ public class EntityViewComponent extends EntityListComponent {
         addEntityActionListener(entities -> {
             // The modify flag must be enabled
             if(!canModify)
+                return;
+
+            // Do not execute the edit action if this component is a list selector
+            // TODO: Move this somewhere else!
+            if(this instanceof EntityListSelectorComponent)
                 return;
 
             // Check whether the user had edit permissions
