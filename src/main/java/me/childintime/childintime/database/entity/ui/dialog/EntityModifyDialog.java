@@ -22,9 +22,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class EntityModifyDialog extends JDialog {
 
@@ -63,6 +62,11 @@ public class EntityModifyDialog extends JDialog {
      * Hashmap containing all the fields.
      */
     private HashMap<EntityFieldsInterface, AbstractPropertyField> fields = new HashMap<>();
+
+    /**
+     * Couple panels.
+     */
+    private List<JPanel> couplePanels = new ArrayList<>();
 
     /**
      * Constructor, to modify an existing entity.
@@ -495,6 +499,12 @@ public class EntityModifyDialog extends JDialog {
             EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source != null ? this.source : this.result);
             couplePanel.add(coupleView, BorderLayout.CENTER);
 
+            // Hide the couple panel if the source is unknown
+            couplePanel.setVisible(this.source != null);
+
+            // Add the couple panel
+            this.couplePanels.add(couplePanel);
+
             // Add the panel
             c.fill = GridBagConstraints.BOTH;
             c.gridx = 0;
@@ -713,6 +723,25 @@ public class EntityModifyDialog extends JDialog {
                 ex.printStackTrace();
             }
         }
+
+        // Check whether the frame size has changed
+        boolean sizeChanged = false;
+
+        //  Determine whether to show the couple panels
+        final boolean showCouplePanels = this.source != null;
+
+        // Set the visibility state of the couple panels
+        for(JPanel couplePanel : this.couplePanels) {
+            // Determine whether to show the panel now
+            if(couplePanel.isVisible() != showCouplePanels) {
+                couplePanel.setVisible(showCouplePanels);
+                sizeChanged = true;
+            }
+        }
+
+        // Reconfigure the frame size
+        if(sizeChanged)
+            configureSize();
     }
 
     /**
