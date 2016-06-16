@@ -84,7 +84,7 @@ public class ProgressDialog extends JDialog {
         setModal(false);
 
         // Build the dialog
-        buildUI();
+        buildUi();
 
         // Configure the close button behaviour
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -128,7 +128,7 @@ public class ProgressDialog extends JDialog {
         setModal(false);
 
         // Build the dialog
-        buildUI();
+        buildUi();
 
         // Configure the close button behaviour
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -194,7 +194,7 @@ public class ProgressDialog extends JDialog {
     /**
      * Build the progress dialog UI.
      */
-    private void buildUI() {
+    private void buildUi() {
         // Create the base panel
         JPanel container = new JPanel();
         container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

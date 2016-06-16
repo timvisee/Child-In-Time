@@ -275,7 +275,14 @@ public class EntityListComponent extends JComponent {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 // Get the object
-                final AbstractEntity entity = instance.getManager().getEntities().get(rowIndex);
+                final AbstractEntity entity;
+                try {
+                    entity = instance.getManager().getEntities().get(rowIndex);
+
+                } catch(IndexOutOfBoundsException ex) {
+                    // Failed to get the given field, return null
+                    return null;
+                }
 
                 // Return the formatted value if we aren't using a couple view
                 if(!isCoupleView())
