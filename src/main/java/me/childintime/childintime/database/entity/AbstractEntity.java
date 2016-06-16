@@ -646,10 +646,16 @@ public abstract class AbstractEntity implements Cloneable {
             }
         }
 
-        // Refresh the managers
-        getManifest().getManagerInstance().refresh();
-        for(AbstractEntityManifest abstractEntityManifest : getManifest().getReferencedManifests())
-            abstractEntityManifest.getManagerInstance().refresh();
+        // Asynchronously refresh the managers
+        Thread refreshThread = new Thread(() -> {
+            // Refresh the managers
+            for(AbstractEntityManifest abstractEntityManifest : getManifest().getReferencedManifests())
+                abstractEntityManifest.getManagerInstance().refresh();
+            getManifest().getManagerInstance().refresh();
+        });
+
+        // Start the thread
+        refreshThread.start();
 
         // Successfully updated entity, return the result
         return true;
