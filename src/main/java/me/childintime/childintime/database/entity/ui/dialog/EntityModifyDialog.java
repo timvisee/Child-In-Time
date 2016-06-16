@@ -69,6 +69,11 @@ public class EntityModifyDialog extends JDialog {
     private List<JPanel> couplePanels = new ArrayList<>();
 
     /**
+     * Couple views.
+     */
+    private List<EntitySmallManagerComponent> coupleManagerComponents = new ArrayList<>();
+
+    /**
      * Constructor, to modify an existing entity.
      *
      * @param owner The parent window.
@@ -164,7 +169,6 @@ public class EntityModifyDialog extends JDialog {
         });
 
         // Configure the window size
-        // FIXME: Already done?
         configureSize();
 
         // Set the window location to the system's default
@@ -499,11 +503,9 @@ public class EntityModifyDialog extends JDialog {
             EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source != null ? this.source : this.result);
             couplePanel.add(coupleView, BorderLayout.CENTER);
 
-            // Hide the couple panel if the source is unknown
-            couplePanel.setVisible(this.source != null);
-
-            // Add the couple panel
+            // Add the couple panel and manager component
             this.couplePanels.add(couplePanel);
+            this.coupleManagerComponents.add(coupleView);
 
             // Add the panel
             c.fill = GridBagConstraints.BOTH;
@@ -540,6 +542,9 @@ public class EntityModifyDialog extends JDialog {
         c.insets = new Insets(8, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
         container.add(controlsPanel, c);
+
+        // Revert to give all UI it's initial state
+        revert();
 
         // Add the container to the frame
         this.add(container);
@@ -724,24 +729,24 @@ public class EntityModifyDialog extends JDialog {
             }
         }
 
-        // Check whether the frame size has changed
-        boolean sizeChanged = false;
+        //  Determine whether to enable the couple panels
+        final boolean enableCouplePanels = this.source != null;
 
-        //  Determine whether to show the couple panels
-        final boolean showCouplePanels = this.source != null;
+        // Set the enabled state of the couple panels
+        for(JPanel couplePanel : this.couplePanels)
+            couplePanel.setEnabled(enableCouplePanels);
 
-        // Set the visibility state of the couple panels
-        for(JPanel couplePanel : this.couplePanels) {
-            // Determine whether to show the panel now
-            if(couplePanel.isVisible() != showCouplePanels) {
-                couplePanel.setVisible(showCouplePanels);
-                sizeChanged = true;
-            }
+        // Update the couple manager components
+        for(EntitySmallManagerComponent coupleManagerComponent : this.coupleManagerComponents) {
+            // Set the enabled state
+            coupleManagerComponent.setEnabled(enableCouplePanels);
+
+            // Set the empty label
+            if(enableCouplePanels)
+                coupleManagerComponent.getEntityView().resetEmptyLabel();
+            else
+                coupleManagerComponent.getEntityView().setEmptyLabel("Apply the " + this.sourceManifest.getTypeName(false, false) + " first to add a couple...");
         }
-
-        // Reconfigure the frame size
-        if(sizeChanged)
-            configureSize();
     }
 
     /**

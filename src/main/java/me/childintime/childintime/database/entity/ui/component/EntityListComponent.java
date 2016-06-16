@@ -119,8 +119,8 @@ public class EntityListComponent extends JComponent {
         // Set the component name
         super.setName(getClass().getSimpleName());
 
-        // Define the empty label
-        this.emptyLabel = "No " + manager.getManifest().getTypeName(false, true) + " to display...";
+        // Reset the empty label
+        resetEmptyLabel();
 
         // Build the component UI
         buildUi();
@@ -696,6 +696,13 @@ public class EntityListComponent extends JComponent {
      */
     public void setEmptyLabel(String emptyLabel) {
         this.emptyLabel = emptyLabel;
+    }
+
+    /**
+     * Reset the label that is shown when the list is empty to it's original.
+     */
+    public void resetEmptyLabel() {
+        this.emptyLabel = "No " + manager.getManifest().getTypeName(false, true) + " to display...";
     }
 
     /**
