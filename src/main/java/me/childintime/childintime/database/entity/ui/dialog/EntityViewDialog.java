@@ -9,6 +9,7 @@ import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -210,30 +211,37 @@ public class EntityViewDialog extends JDialog {
      * Create all UI components for the frame.
      */
     private void buildUi() {
+        // Construct a grid bag constraints object to specify the placement of all components
+        GridBagConstraints c = new GridBagConstraints();
+
         // Set the frame layout
         this.setLayout(new BorderLayout());
 
         // Create the main panel, to put the question and answers in
-        JPanel container = new JPanel();
-        container.setLayout(new GridBagLayout());
+        final JPanel container = new JPanel(new GridBagLayout());
         container.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 
-        // Construct a grid bag constraints object to specify the placement of all components
-        GridBagConstraints c = new GridBagConstraints();
+        // Create a fields panel
+        final JPanel fieldsPanel = new JPanel(new GridBagLayout());
+        fieldsPanel.setBorder(new CompoundBorder(
+                BorderFactory.createTitledBorder(this.sourceManifest.getTypeName(true, false)),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)
+        ));
 
         // Configure the placement of the questions label, and add it to the questions panel
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 2;
-        c.insets = new Insets(0, 0, 16, 8);
-        container.add(new JLabel("View " + this.sourceManifest.getTypeName(false, false) + ":"), c);
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(0, 0, 0, 0);
+        container.add(new JLabel("View a " + this.sourceManifest.getTypeName(false, false) + "."), c);
 
         // Get the list of fields
         EntityFieldsInterface[] fieldTypes = getFields();
 
         // Create a field offset variable, which is the positional offset for fields
-        int fieldOffset = 1;
+        int fieldOffset = 0;
 
         // Loop through all the fields
         for(int i = 0; i < fieldTypes.length; i++) {
@@ -258,9 +266,9 @@ public class EntityViewDialog extends JDialog {
             c.gridy = i + fieldOffset;
             c.gridwidth = 1;
             c.weightx = 0;
-            c.insets = new Insets(0, 0, 8, 8);
+            c.insets = new Insets(i == 0 ? 0 : 8, 0, 0, 8);
             c.anchor = GridBagConstraints.WEST;
-            container.add(new JLabel(fieldType.getDisplayName() + ":"), c);
+            fieldsPanel.add(new JLabel(fieldType.getDisplayName() + ":"), c);
 
             // Create and add the name label
             c.fill = GridBagConstraints.HORIZONTAL;
@@ -268,12 +276,12 @@ public class EntityViewDialog extends JDialog {
             c.gridy = i + fieldOffset;
             c.gridwidth = 1;
             c.weightx = 1;
-            c.insets = new Insets(0, 8, 8, 0);
+            c.insets = new Insets(i == 0 ? 0 : 8, 8, 0, 0);
             c.anchor = GridBagConstraints.CENTER;
 
             // Show a label
             if(!(valueRaw instanceof AbstractEntity))
-                container.add(new JLabel(valueFormatted), c);
+                fieldsPanel.add(new JLabel(valueFormatted), c);
 
             else {
                 // Create a new link label
@@ -284,16 +292,25 @@ public class EntityViewDialog extends JDialog {
                 linkLabel.addActionListener(e -> EntityViewDialog.showDialog(this, otherEntity));
 
                 // Add the label
-                container.add(linkLabel, c);
+                fieldsPanel.add(linkLabel, c);
             }
         }
+
+        // Add the fields panel the container
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 1;
+        c.weighty = 0;
+        c.insets = new Insets(16, 0, 0, 0);
+        c.anchor = GridBagConstraints.CENTER;
+        container.add(fieldsPanel, c);
 
         // Create the control button panel and add it to the main panel
         JPanel controlsPanel = createControlButtonPanel();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
-        c.gridy = fieldTypes.length + 1;
-        c.gridwidth = 2;
+        c.gridy = 2;
         c.weightx = 1;
         c.weighty = 0;
         c.insets = new Insets(8, 0, 0, 0);
