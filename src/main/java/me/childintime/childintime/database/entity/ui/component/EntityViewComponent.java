@@ -103,7 +103,7 @@ public class EntityViewComponent extends EntityListComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 // Make sure the right mouse button was released
-                if(!SwingUtilities.isRightMouseButton(e))
+                if(!SwingUtilities.isRightMouseButton(e) && e.getButton() != 2)
                     return;
 
                 // Make sure the source is the table, and that this is an popup trigger
