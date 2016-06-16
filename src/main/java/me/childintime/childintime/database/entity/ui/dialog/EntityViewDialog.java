@@ -3,9 +3,11 @@ package me.childintime.childintime.database.entity.ui.dialog;
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.AbstractEntity;
+import me.childintime.childintime.database.entity.AbstractEntityCoupleManifest;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
+import me.childintime.childintime.database.entity.ui.component.EntitySmallManagerComponent;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
 
@@ -301,12 +303,40 @@ public class EntityViewDialog extends JDialog {
             fieldIndex++;
         }
 
+        // Loop through the couples
+        for(AbstractEntityCoupleManifest abstractEntityManifest : this.sourceManifest.getCouples()) {
+            // Create a couple panel
+            final JPanel couplePanel = new JPanel(new BorderLayout());
+            couplePanel.setBorder(new CompoundBorder(
+                    BorderFactory.createTitledBorder(abstractEntityManifest.getReferenceTypeName(this.sourceManifest, true, true, true)),
+                    BorderFactory.createEmptyBorder(2, 2, 2, 2)
+            ));
+
+            // Create a small manager component to show the couples
+            EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source);
+            couplePanel.add(coupleView, BorderLayout.CENTER);
+
+            // Add the panel
+            c.fill = GridBagConstraints.BOTH;
+            c.gridx = 0;
+            c.gridy = fieldIndex;
+            c.gridwidth = 2;
+            c.weightx = 1;
+            c.weighty = 1;
+            c.insets = new Insets(fieldIndex == 0 ? 0 : 16, 0, 0, 0);
+            c.anchor = GridBagConstraints.CENTER;
+            fieldsPanel.add(couplePanel, c);
+
+            // Increase the field index
+            fieldIndex++;
+        }
+
         // Add the fields panel the container
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
         c.weightx = 1;
-        c.weighty = 0;
+        c.weighty = 1;
         c.insets = new Insets(16, 0, 0, 0);
         c.anchor = GridBagConstraints.CENTER;
         container.add(fieldsPanel, c);
