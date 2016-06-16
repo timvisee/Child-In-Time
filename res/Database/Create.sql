@@ -88,9 +88,10 @@ CREATE TABLE IF NOT EXISTS `measurement` (
 );
 
 CREATE TABLE IF NOT EXISTS `group_teacher` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `group_id`   INT NOT NULL,
   `teacher_id` INT NOT NULL,
-  PRIMARY KEY (`group_id`, `teacher_id`),
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
     ON DELETE RESTRICT,
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)

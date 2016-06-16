@@ -513,9 +513,10 @@ public class DatabaseBuilder {
             case MYSQL:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `group_teacher` (" +
+                        "  `id`         INT NOT NULL AUTO_INCREMENT," +
                         "  `group_id`   INT NOT NULL," +
                         "  `teacher_id` INT NOT NULL," +
-                        "  PRIMARY KEY (`group_id`, `teacher_id`)," +
+                        "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
                                 " ON DELETE RESTRICT," +
                         "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
@@ -527,9 +528,9 @@ public class DatabaseBuilder {
             case SQLITE:
                 statement.execute(
                         "CREATE TABLE IF NOT EXISTS `group_teacher` (" +
+                        "  `id`         INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "  `group_id`   INTEGER NOT NULL," +
                         "  `teacher_id` INTEGER NOT NULL," +
-                        "  PRIMARY KEY (`group_id`, `teacher_id`)," +
                         "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
                                 " ON DELETE RESTRICT," +
                         "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
@@ -950,7 +951,7 @@ public class DatabaseBuilder {
 
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
-                "INSERT INTO `group_teacher` VALUES (?, ?);"
+                "INSERT INTO `group_teacher` VALUES (NULL, ?, ?);"
         );
 
         // Configure the progress dialog
