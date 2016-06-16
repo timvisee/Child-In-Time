@@ -30,7 +30,7 @@ public enum GroupTeacherFields implements EntityCoupleFieldsInterface {
      * Teacher.
      * The teacher of this couple.
      */
-    TEACHER_ID("Teahcer", "teacher_id", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.REFERENCE, TeacherManifest.getInstance());
+    TEACHER_ID("Teacher", "teacher_id", PermissionLevel.VIEW_ANONYMOUS, true, true, false, false, DataTypeExtended.REFERENCE, TeacherManifest.getInstance());
 
     /**
      * The display name for this field.
