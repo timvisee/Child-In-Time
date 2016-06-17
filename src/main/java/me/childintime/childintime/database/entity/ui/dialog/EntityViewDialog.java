@@ -7,7 +7,7 @@ import me.childintime.childintime.database.entity.AbstractEntityCoupleManifest;
 import me.childintime.childintime.database.entity.AbstractEntityManifest;
 import me.childintime.childintime.database.entity.EntityFieldsInterface;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
-import me.childintime.childintime.database.entity.ui.component.EntitySmallManagerComponent;
+import me.childintime.childintime.database.entity.ui.component.EntityViewComponent;
 import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.ui.component.LinkLabel;
 
@@ -313,8 +313,11 @@ public class EntityViewDialog extends JDialog {
             ));
 
             // Create a small manager component to show the couples
-            EntitySmallManagerComponent coupleView = new EntitySmallManagerComponent(abstractEntityManifest.getManagerInstance(), this.source);
+            EntityViewComponent coupleView = new EntityViewComponent(abstractEntityManifest.getManagerInstance(), this.source);
             couplePanel.add(coupleView, BorderLayout.CENTER);
+
+            // Set the preferred size
+            couplePanel.setPreferredSize(new Dimension(200, 120));
 
             // Add the panel
             c.fill = GridBagConstraints.BOTH;
