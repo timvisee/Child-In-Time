@@ -1,13 +1,15 @@
 /******************************************************************************
- * Copyright (c) Tim Visee 2016. All rights reserved.                         *
+ * Copyright (c) Child-In-Time 2016. All rights reserved.                     *
  *                                                                            *
  * @author Tim Visee                                                          *
- * @website http://timvisee.com/                                              *
+ * @author Nathan Bakhuijzen                                                  *
+ * @author Timo van den Boom                                                  *
+ * @author Jos van Gent                                                       *
  *                                                                            *
  * Open Source != No Copyright                                                *
  *                                                                            *
  * Permission is hereby granted, free of charge, to any person obtaining a    *
- * copy of this software and associated documentation files (the "Software"), *
+ * copy of this software and associated documentation files (the "Software")  *
  * to deal in the Software without restriction, including without limitation  *
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,   *
  * and/or sell copies of the Software, and to permit persons to whom the      *
