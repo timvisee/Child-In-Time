@@ -34,6 +34,71 @@ public class DatabaseBuilder {
     private boolean disposeProgressDialog = false;
 
     /**
+     * The username of the administrative user.
+     */
+    private String adminUser = "admin";
+
+    /**
+     * The password of the administrative user.
+     */
+    private String adminPassword = null;
+
+    /**
+     * Defines whether to generate any sample data.
+     */
+    public boolean generateSampleData = true;
+
+    /**
+     * The number of students to generate.
+     */
+    public int generateStudentCount;
+
+    /**
+     * The number of teachers to generate.
+     */
+    public int generateTeacherCount;
+
+    /**
+     * The number of schools to generate.
+     */
+    public int generateSchoolCount;
+
+    /**
+     * The number of groups to generate.
+     */
+    public int generateGroupCount;
+
+    /**
+     * The number of measurements to generate.
+     */
+    public int generateMeasurementCount;
+
+    /**
+     * The number of bodystates to generate.
+     */
+    public int generateBodyStateCount;
+
+    /**
+     * The number of parkours to generate.
+     */
+    public int generateParkourCount;
+
+    /**
+     * The number of sports to generate.
+     */
+    public int generateSportCount;
+
+    /**
+     * The number of group & teacher couples to generate.
+     */
+    public int generateGroupTeacherCount;
+
+    /**
+     * The number of student & sport couples to generate.
+     */
+    public int generateStudentSportCount;
+
+    /**
      * Date format to use for the database.
      */
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -62,6 +127,17 @@ public class DatabaseBuilder {
     }
 
     /**
+     * Set the administrative user credentials.
+     *
+     * @param user Administrative user username.
+     * @param password Administrative user password.
+     */
+    public void setAdminUser(String user, String password) {
+        this.adminUser = user;
+        this.adminPassword = password;
+    }
+
+    /**
      * Build the database.
      *
      * @return True on success, false on failure.
@@ -75,13 +151,106 @@ public class DatabaseBuilder {
         final int originalProgressValue = this.progressDialog.getProgressValue();
         final int originalProgressMax = this.progressDialog.getProgressMax();
 
+        // Create all tables
+        createTables();
+
+        // Create the default user
+        this.progressDialog.setShowProgress(false);
+        this.progressDialog.setStatus("Creating administrative user...");
+        addTableUser(this.adminUser, this.adminPassword);
+
+        // Generate the sample data
+        if(this.generateSampleData)
+            generateSampleData();
+
+        // Revert the progress dialog state
+        this.progressDialog.setProgressMax(originalProgressMax);
+        this.progressDialog.setProgressValue(originalProgressValue);
+        this.progressDialog.setShowProgress(originalShowProgress);
+
+        // Dispose the progress dialog
+        if(this.disposeProgressDialog)
+            this.progressDialog.dispose();
+
+        // Return the result
+        return true;
+    }
+
+    /**
+     * Generate sample data.
+     *
+     * @throws SQLException
+     */
+    public void generateSampleData() throws SQLException {
+        // Calculate the total number of entities to generate and set the progress dialog max
+        this.progressDialog.setProgressMax(generateSchoolCount +
+                generateTeacherCount +
+                generateGroupCount +
+                generateStudentCount +
+                generateBodyStateCount +
+                generateParkourCount +
+                generateMeasurementCount +
+                generateStudentSportCount +
+                generateGroupTeacherCount
+        );
+
+        // Show the progress
+        this.progressDialog.setProgressValue(0);
+        this.progressDialog.setShowProgress(true);
+
+        // Fill the school table
+        this.progressDialog.setStatus("Generating schools...");
+        fillTableSchool();
+
+        // Fill the teacher table
+        this.progressDialog.setStatus("Generating teachers...");
+        fillTableTeacher();
+
+        // Fill the group table
+        this.progressDialog.setStatus("Generating groups...");
+        fillTableGroup();
+
+        // Fill the student table
+        this.progressDialog.setStatus("Generating students...");
+        fillTableStudent();
+
+        // Fill the body state table
+        this.progressDialog.setStatus("Generating body states...");
+        fillTableBodyState();
+
+        // Fill the parkour table
+        this.progressDialog.setStatus("Generating parkours...");
+        fillTableParkour();
+
+        // Fill the measurement table
+        this.progressDialog.setStatus("Generating measurements...");
+        fillTableMeasurement();
+
+        // Fill the sports table
+        this.progressDialog.setStatus("Generating sports...");
+        fillTableSport();
+
+        // Fill the group/teacher table
+        this.progressDialog.setStatus("Generating group/teacher couples...");
+        fillTableGroupTeacher();
+
+        // Fill the student/sport table
+        this.progressDialog.setStatus("Generating student/sport couples...");
+        fillTableStudentSport();
+    }
+
+    /**
+     * Create the tables.
+     * @throws SQLException
+     */
+    public void createTables() throws SQLException {
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(22);
+        this.progressDialog.setProgressMax(11);
         this.progressDialog.setShowProgress(true);
 
         // Create the user table
-        this.progressDialog.setStatus("Configuring database...");
+        this.progressDialog.setStatus("Building database...");
         createTableUser();
         this.progressDialog.increaseProgressValue();
 
@@ -124,63 +293,6 @@ public class DatabaseBuilder {
         // Create the student/sport table
         createTableStudentSport();
         this.progressDialog.increaseProgressValue();
-
-        // Fill the user table
-        this.progressDialog.setStatus("Generating fake data...");
-        fillTableUser();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the school table
-        fillTableSchool();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the teacher table
-        fillTableTeacher();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the group table
-        fillTableGroup();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the student table
-        fillTableStudent();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the body state table
-        fillTableBodyState();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the parkour table
-        fillTableParkour();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the measurement table
-        fillTableMeasurement();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the group/teacher table
-        fillTableGroupTeacher();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the sports table
-        fillTableSport();
-        this.progressDialog.increaseProgressValue();
-
-        // Fill the student/sport table
-        fillTableStudentSport();
-        this.progressDialog.increaseProgressValue();
-
-        // Revert the progress dialog state
-        this.progressDialog.setProgressMax(originalProgressMax);
-        this.progressDialog.setProgressValue(originalProgressValue);
-        this.progressDialog.setShowProgress(originalShowProgress);
-
-        // Dispose the progress dialog
-        if(this.disposeProgressDialog)
-            this.progressDialog.dispose();
-
-        // Return the result
-        return true;
     }
 
     /**
@@ -622,23 +734,23 @@ public class DatabaseBuilder {
     }
 
     /**
-     * Fill the user table.
+     * Add an administrative user to the users table.
      *
      * @throws SQLException
      */
-    public void fillTableUser() throws SQLException {
+    public void addTableUser(String user, String password) throws SQLException {
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `user` VALUES (NULL, ?, ?, ?);"
         );
 
         // Fill the prepared statement
-        prepared.setString(1, "admin");
+        prepared.setString(1, user);
         prepared.setInt(3, 0);
 
         // Set the password hash
         try {
-            prepared.setString(2, HashUtil.hash("admin"));
+            prepared.setString(2, HashUtil.hash(password));
         } catch(NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -653,23 +765,13 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableSchool() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake schools...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `school` VALUES (NULL, ?, ?);"
         );
 
-        // Determine the number of schools to generate
-        final int schoolCount = this.faker.number().numberBetween(3, 6);
-
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(schoolCount);
-
         // Loop for the determined count
-        for(int i = 0; i < schoolCount; i++) {
+        for(int i = 0; i < this.generateSchoolCount; i++) {
             // Fill the prepared statement
             prepared.setString(1, this.faker.university().name());
             prepared.setString(2, this.faker.address().city());
@@ -678,11 +780,8 @@ public class DatabaseBuilder {
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -691,23 +790,13 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableTeacher() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake teachers...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `teacher` VALUES (NULL, ?, ?, ?, ?, ?);"
         );
 
-        // Determine the number of students to generate
-        final int teacherCount = this.faker.number().numberBetween(10, 15);
-
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(teacherCount);
-
         // Loop for the determined count
-        for(int i = 0; i < teacherCount; i++) {
+        for(int i = 0; i < this.generateTeacherCount; i++) {
             // Generate a name
             Name name = this.faker.name();
 
@@ -716,17 +805,14 @@ public class DatabaseBuilder {
             prepared.setString(2, name.lastName());
             prepared.setInt(3, this.faker.number().numberBetween(0, 2));
             prepared.setInt(4, this.faker.number().numberBetween(0, 2));
-            prepared.setInt(5, this.faker.number().numberBetween(1, 4));
+            prepared.setInt(5, this.faker.number().numberBetween(1, this.generateSchoolCount + 1));
 
             // Execute the prepared statement
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -735,33 +821,23 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableGroup() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake groups...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `group` VALUES (NULL, ?, ?);"
         );
 
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(9);
-
         // Insert default groups
-        for(int i = 0; i < 9; i++) {
+        for(int i = 0; i < this.generateGroupCount; i++) {
             // Fill the prepared statement
-            prepared.setString(1, "Group " + ((i % 3) + 1));
-            prepared.setInt(2, (i / 3) + 1);
+            prepared.setString(1, "Group " + (i + 1));
+            prepared.setInt(2, this.faker.number().numberBetween(1, this.generateSchoolCount + 1));
 
             // Execute the prepared statement
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -770,23 +846,13 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableStudent() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake students...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `student` VALUES (NULL, ?, ?, ?, ?, ?);"
         );
 
-        // Determine the number of students to generate
-        final int studentCount = this.faker.number().numberBetween(50, 100);
-
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(studentCount);
-
         // Loop for the determined count
-        for(int i = 0; i < studentCount; i++) {
+        for(int i = 0; i < this.generateStudentCount; i++) {
             // Generate a name
             Name name = this.faker.name();
 
@@ -795,17 +861,14 @@ public class DatabaseBuilder {
             prepared.setString(2, name.lastName());
             prepared.setInt(3, this.faker.number().numberBetween(0, 2));
             prepared.setString(4, dateFormat.format(this.faker.date().past(20 * 356, TimeUnit.DAYS)));
-            prepared.setInt(5, this.faker.number().numberBetween(1, 10));
+            prepared.setInt(5, this.faker.number().numberBetween(1, this.generateGroupCount + 1));
 
             // Execute the prepared statement
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -814,38 +877,25 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableBodyState() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake body states...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `bodystate` VALUES (NULL, ?, ?, ?, ?);"
         );
 
-        // Determine the number of students to generate
-        final int bodyStateCount = this.faker.number().numberBetween(100, 200);
-
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(bodyStateCount);
-
         // Loop for the determined count
-        for(int i = 0; i < bodyStateCount; i++) {
+        for(int i = 0; i < this.generateBodyStateCount; i++) {
             // Fill the prepared statement
             prepared.setString(1, dateFormat.format(this.faker.date().past(6 * 356, TimeUnit.DAYS)));
             prepared.setInt(2, this.faker.number().numberBetween(175, 180));
             prepared.setInt(3, this.faker.number().numberBetween(65000, 75000));
-            prepared.setInt(4, this.faker.number().numberBetween(1, 20));
+            prepared.setInt(4, this.faker.number().numberBetween(1, this.generateStudentCount + 1));
 
             // Execute the prepared statement
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -854,20 +904,13 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableParkour() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake parkours...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `parkour` VALUES (NULL, ?);"
         );
 
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(3);
-
         // Insert default parkours
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < this.generateParkourCount; i++) {
             // Fill the prepared statement
             prepared.setString(1, "Parkour " + (i + 1));
 
@@ -875,11 +918,8 @@ public class DatabaseBuilder {
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -888,38 +928,25 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableMeasurement() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake measurements...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `measurement` VALUES (NULL, ?, ?, ?, ?);"
         );
 
-        // Determine the number of students to generate
-        final int measurementCount = this.faker.number().numberBetween(50, 100);
-
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(measurementCount);
-
         // Loop for the determined count
-        for(int i = 0; i < measurementCount; i++) {
+        for(int i = 0; i < this.generateMeasurementCount; i++) {
             // Fill the prepared statement
             prepared.setString(1, dateFormat.format(this.faker.date().past(3 * 356, TimeUnit.DAYS)));
             prepared.setInt(2, this.faker.number().numberBetween(16000, 30000));
-            prepared.setInt(3, this.faker.number().numberBetween(1, 4));
-            prepared.setInt(4, this.faker.number().numberBetween(1, 51));
+            prepared.setInt(3, this.faker.number().numberBetween(1, this.generateParkourCount + 1));
+            prepared.setInt(4, this.faker.number().numberBetween(1, this.generateStudentCount + 1));
 
             // Execute the prepared statement
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -928,33 +955,23 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableGroupTeacher() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Coupling groups/teachers...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `group_teacher` VALUES (NULL, ?, ?);"
         );
 
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(9);
-
         // Insert default group teachers
-        for(int i = 0; i < 9; i++) {
+        for(int i = 0; i < this.generateGroupTeacherCount; i++) {
             // Fill the prepared statement
-            prepared.setInt(1, i + 1);
-            prepared.setInt(2, (i % 3) + 1);
+            prepared.setInt(1, this.faker.number().numberBetween(1, this.generateGroupCount + 1));
+            prepared.setInt(2, this.faker.number().numberBetween(1, this.generateTeacherCount + 1));
 
             // Execute the prepared statement
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -963,23 +980,13 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableSport() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Generating fake sports...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `sport` VALUES (NULL, ?);"
         );
 
-        // Determine the number of sports to generate
-        final int sportCount = this.faker.number().numberBetween(3, 5);
-
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(sportCount);
-
         // Loop for the determined count
-        for(int i = 0; i < sportCount; i++) {
+        for(int i = 0; i < this.generateSportCount; i++) {
             // Generate a sport
             final String sport = this.faker.team().sport();
 
@@ -990,11 +997,8 @@ public class DatabaseBuilder {
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 
     /**
@@ -1003,32 +1007,22 @@ public class DatabaseBuilder {
      * @throws SQLException
      */
     public void fillTableStudentSport() throws SQLException {
-        // Create a new progress dialog specifically for generating the current data
-        ProgressDialog progressDialog = new ProgressDialog(this.progressDialog, "Generating fake data...", false, "Coupling students/sports...", true);
-
         // Create a prepared statement
         PreparedStatement prepared = this.databaseConnector.getConnection().prepareStatement(
                 "INSERT INTO `student_sport` VALUES (NULL, ?, ?);"
         );
 
-        // Configure the progress dialog
-        progressDialog.setShowProgress(true);
-        progressDialog.setProgressMax(9);
-
         // Insert default group teachers
-        for(int i = 0; i < 9; i++) {
+        for(int i = 0; i < this.generateStudentSportCount; i++) {
             // Fill the prepared statement
-            prepared.setInt(1, i + 1);
-            prepared.setInt(2, (i % 3) + 1);
+            prepared.setInt(1, this.faker.number().numberBetween(1, this.generateStudentCount + 1));
+            prepared.setInt(2, this.faker.number().numberBetween(1, this.generateSportCount + 1));
 
             // Execute the prepared statement
             prepared.execute();
 
             // Increase the progress status
-            progressDialog.increaseProgressValue();
+            this.progressDialog.increaseProgressValue();
         }
-
-        // Dispose the progress dialog
-        progressDialog.dispose();
     }
 }

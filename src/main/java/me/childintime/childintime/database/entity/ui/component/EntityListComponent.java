@@ -1,9 +1,11 @@
 package me.childintime.childintime.database.entity.ui.component;
 
+import me.childintime.childintime.Core;
 import me.childintime.childintime.database.entity.*;
 import me.childintime.childintime.database.entity.datatype.DataTypeExtended;
 import me.childintime.childintime.database.entity.listener.EntityActionListener;
 import me.childintime.childintime.database.entity.listener.SelectionChangeListener;
+import me.childintime.childintime.permission.PermissionLevel;
 import me.childintime.childintime.util.swing.ProgressDialog;
 import me.childintime.childintime.util.swing.SwingUtils;
 import me.childintime.childintime.util.swing.TableUtils;
@@ -325,9 +327,6 @@ public class EntityListComponent extends JComponent {
                     return null;
 
                 } catch(Exception e) {
-                    // Print the stack trace
-                    e.printStackTrace();
-
                     // Return null
                     return null;
                 }
@@ -709,7 +708,11 @@ public class EntityListComponent extends JComponent {
      * Reset the label that is shown when the list is empty to it's original.
      */
     public void resetEmptyLabel() {
-        this.emptyLabel = "No " + manager.getManifest().getTypeName(false, true) + " to display...";
+        // Check whether the user has editing permissions
+        if(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()))
+            this.emptyLabel = "Right-click to add a " + manager.getManifest().getTypeName(false, false) + "...";
+        else
+            this.emptyLabel = "No " + manager.getManifest().getTypeName(false, true) + " to display...";
     }
 
     /**

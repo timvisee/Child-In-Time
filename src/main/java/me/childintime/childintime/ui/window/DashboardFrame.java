@@ -104,7 +104,7 @@ public class DashboardFrame extends JFrame {
         final int maxHeight = getSize().height;
 
         // Configure the sizes
-        setMinimumSize(new Dimension(getMinimumSize().width + 50, getMinimumSize().height + 50));
+        setMinimumSize(new Dimension(getSize().width, getSize().height));
         setPreferredSize(new Dimension(getSize().width + 100, maxHeight));
         setSize(new Dimension(getSize().width + 100, maxHeight));
     }

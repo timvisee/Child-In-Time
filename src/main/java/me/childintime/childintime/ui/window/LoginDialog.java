@@ -2,12 +2,12 @@ package me.childintime.childintime.ui.window;
 
 import me.childintime.childintime.App;
 import me.childintime.childintime.Core;
-import me.childintime.childintime.database.DatabaseBuilder;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseManagerDialog;
 import me.childintime.childintime.database.configuration.gui.window.DatabaseModifyDialog;
 import me.childintime.childintime.database.connector.DatabaseConnector;
 import me.childintime.childintime.store.LoginStore;
+import me.childintime.childintime.ui.window.helper.DatabaseSetupDialog;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -19,8 +19,6 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class LoginDialog extends JDialog {
 
@@ -426,8 +424,10 @@ public class LoginDialog extends JDialog {
 
         // Prepare the database
         Connection connection = prepareDatabase(progress);
-        if(connection == null)
+        if(connection == null) {
+            progress.dispose();
             return false;
+        }
 
         // Authenticate the user
         progress.setStatus("Authenticating...");
@@ -568,56 +568,15 @@ public class LoginDialog extends JDialog {
 
             // Check whether the required table exists
             if(!tables.next()) {
-                // Create a list with the buttons to show in the option dialog
-                java.util.List<String> buttons = new ArrayList<>();
-                buttons.add("Setup Database");
-                buttons.add("Quit");
+                // Show the database setup dialog
+                final boolean success = DatabaseSetupDialog.showDialog(progressDialog, databaseConnector);
 
-                // Reverse the button list if we're on a Mac OS X system
-                if(Platform.isMacOsX())
-                    Collections.reverse(buttons);
+                // Set the connection again
+                connection = databaseConnector.getConnection();
 
-                // Show the option dialog
-                final int option = JOptionPane.showOptionDialog(
-                        progressDialog,
-                        "The current database is empty and is not ready to be used.\n" +
-                                "Would you like to set up the database using the default configuration?",
-                        "Empty database",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        buttons.toArray(),
-                        buttons.get(!Platform.isMacOsX() ? 0 : 1)
-                );
-
-                // Make sure the setup option is pressed
-                if(option != (!Platform.isMacOsX() ? 0 : 1)) {
-                    // Dispose the frame
-                    dispose();
-
-                    // Destroy the core
-                    Core.getInstance().destroy();
-
-                    // Re initialize the core
-                    Core.getInstance().init();
+                // Go back to the login dialog if the cancel button is pressed
+                if(!success)
                     return null;
-                }
-
-                // Build the database
-                try {
-                    // Build the database
-                    new DatabaseBuilder(databaseConnector, progressDialog).build();
-
-                } catch(Exception e) {
-                    // Show the stack trace
-                    e.printStackTrace();
-
-                    // Show an error message
-                    JOptionPane.showMessageDialog(progressDialog, "An error occurred while building the database.", "Database building error", JOptionPane.ERROR_MESSAGE);
-
-                    // Return null
-                    return null;
-                }
             }
 
         } catch(SQLException e) {
