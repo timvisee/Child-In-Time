@@ -366,6 +366,9 @@ public class Core {
 
         // Show a status message
         System.out.println("The application core has been destroyed.");
+
+        // Force quit the application
+        System.exit(1);
     }
 
     /**
