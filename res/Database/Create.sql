@@ -124,14 +124,14 @@ UNLOCK TABLES;
 
 LOCK TABLES `school` WRITE;
 INSERT INTO `school` VALUES
-  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn'),
-  (NULL, 'De Hobbitburcht', 'Amsterdam'),
-  (NULL, 'De Stromen', 'Den Haag');
+  (NULL, 'West Hayes College', 'Lake Floy'),
+  (NULL, 'McKezie Academy', 'Alveratown'),
+  (NULL, 'Northern Collier', 'Lake Joanie');
 UNLOCK TABLES;
 
 LOCK TABLES `teacher` WRITE;
 INSERT INTO `teacher` VALUES
-  (NULL, 'Henk', 'Hoornald', 1, 1, 1),
+  (NULL, 'Carolanne', 'Yost', 1, 1, 1),
   (NULL, 'Henry', 'Hunter', 1, 1, 1),
   (NULL, 'Phillip', 'Ward', 1, 0, 1),
   (NULL, 'Carlos', 'Ryan', 1, 0, 1),
@@ -146,15 +146,15 @@ UNLOCK TABLES;
 
 LOCK TABLES `group` WRITE;
 INSERT INTO `group` VALUES
-  (NULL, 'Groep 1', 1),
-  (NULL, 'Groep 2', 1),
-  (NULL, 'Groep 3', 1),
-  (NULL, 'Groep 1', 2),
-  (NULL, 'Groep 2', 2),
-  (NULL, 'Groep 3', 2),
-  (NULL, 'Groep 1', 3),
-  (NULL, 'Groep 2', 3),
-  (NULL, 'Groep 3', 3);
+  (NULL, 'Group 1', 1),
+  (NULL, 'Group 2', 1),
+  (NULL, 'Group 3', 1),
+  (NULL, 'Group 1', 2),
+  (NULL, 'Group 2', 2),
+  (NULL, 'Group 3', 2),
+  (NULL, 'Group 1', 3),
+  (NULL, 'Group 2', 3),
+  (NULL, 'Group 3', 3);
 UNLOCK TABLES;
 
 LOCK TABLES `student` WRITE;

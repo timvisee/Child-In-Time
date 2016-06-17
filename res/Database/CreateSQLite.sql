@@ -101,12 +101,12 @@ INSERT INTO `user` VALUES
   (NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 0);
 
 INSERT INTO `school` VALUES
-  (NULL, 'De Wegwijzer', 'Alphen aan den Rijn'),
-  (NULL, 'De Hobbitburcht', 'Amsterdam'),
-  (NULL, 'De Stromen', 'Den Haag');
+  (NULL, 'West Hayes College', 'Lake Floy'),
+  (NULL, 'McKezie Academy', 'Alveratown'),
+  (NULL, 'Northern Collier', 'Lake Joanie');
 
 INSERT INTO `teacher` VALUES
-  (NULL, 'Henk', 'Hoornald', 1, 1, 1),
+  (NULL, 'Carolanne', 'Yost', 1, 1, 1),
   (NULL, 'Henry', 'Hunter', 1, 1, 1),
   (NULL, 'Phillip', 'Ward', 1, 0, 1),
   (NULL, 'Carlos', 'Ryan', 1, 0, 1),
@@ -119,15 +119,15 @@ INSERT INTO `teacher` VALUES
   (NULL, 'Linda', 'Jackson', 0, 0, 3);
 
 INSERT INTO `group` VALUES
-  (NULL, 'Groep 1', 1),
-  (NULL, 'Groep 2', 1),
-  (NULL, 'Groep 3', 1),
-  (NULL, 'Groep 1', 2),
-  (NULL, 'Groep 2', 2),
-  (NULL, 'Groep 3', 2),
-  (NULL, 'Groep 1', 3),
-  (NULL, 'Groep 2', 3),
-  (NULL, 'Groep 3', 3);
+  (NULL, 'Group 1', 1),
+  (NULL, 'Group 2', 1),
+  (NULL, 'Group 3', 1),
+  (NULL, 'Group 1', 2),
+  (NULL, 'Group 2', 2),
+  (NULL, 'Group 3', 2),
+  (NULL, 'Group 1', 3),
+  (NULL, 'Group 2', 3),
+  (NULL, 'Group 3', 3);
 
 INSERT INTO `student` VALUES
   (NULL, 'George', 'Barnes', 1, '2014-04-17', 1),
