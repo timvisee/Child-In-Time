@@ -7,7 +7,7 @@ USE childintime;
 /*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
-CREATE TABLE `childintime`.`user` (
+CREATE TABLE `user` (
     `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `username` TEXT NOT NULL,
     `password_hash` TEXT NOT NULL,
