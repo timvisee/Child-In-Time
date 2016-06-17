@@ -104,8 +104,7 @@ public class DashboardFrame extends JFrame {
         final int maxHeight = getSize().height;
 
         // Configure the sizes
-        setMinimumSize(new Dimension(getMinimumSize()));
-        setMaximumSize(new Dimension(9999, maxHeight));
+        setMinimumSize(new Dimension(getMinimumSize().width + 50, getMinimumSize().height + 50));
         setPreferredSize(new Dimension(getSize().width + 100, maxHeight));
         setSize(new Dimension(getSize().width + 100, maxHeight));
     }
@@ -194,55 +193,63 @@ public class DashboardFrame extends JFrame {
     private JPanel buildUiMainActionsPanel() {
         // Create a main actions panel
         final JPanel mainActions = new JPanel();
-        mainActions.setLayout(new BoxLayout(mainActions, BoxLayout.Y_AXIS));
+        mainActions.setLayout(new BorderLayout());
         mainActions.setBorder(new CompoundBorder(
                 BorderFactory.createTitledBorder("Actions"),
                 BorderFactory.createEmptyBorder(4, 4, 4, 4)
         ));
 
+        // Create the container
+        final JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
         // Add the main label
-        mainActions.add(new JLabel("<html>" +
+        container.add(new JLabel("<html>" +
                 "Welcome to the " + App.APP_NAME + " dashboard.<br>"));
 
         // Show the BMI tool if the user has permission
         if(PermissionLevel.VIEW_ANONYMOUS.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
             // Add the measurement label
-            mainActions.add(new JLabel("<html><br>" +
-                    "Use the BMI tool to view detailed body status of a student:<br>"));
+            container.add(new JLabel("<html><br>" +
+                    "Use the BMI tool to view detailed<br>body status of a student:<br>"));
 
             // Create and add the measurement tool link
             final LinkLabel bmiToolLink = new LinkLabel("Open BMI tool");
             bmiToolLink.addActionListener(e -> BmiToolDialog.showDialog(this));
-            mainActions.add(bmiToolLink);
+            container.add(bmiToolLink);
         }
 
         // Show the measurement tool if the user has permission
         if(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
             // Add the measurement label
-            mainActions.add(new JLabel("<html><br>" +
-                    "Use the measurement tool to create new measurements for a student:<br>"));
+            container.add(new JLabel("<html><br>" +
+                    "Use the measurement tool to create<br>new measurements for a student:<br>"));
 
             // Create and add the measurement tool link
             final LinkLabel measurementToolLink = new LinkLabel("Open measurement tool");
             measurementToolLink.addActionListener(e -> MeasurementToolDialog.showDialog(this));
-            mainActions.add(measurementToolLink);
+            container.add(measurementToolLink);
         }
 
         // Show the body state tool if the user has permission
         if(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
             // Add the body state label
-            mainActions.add(new JLabel("<html><br>" +
-                    "Use the body state tool to store new body states for a student:<br>"));
+            container.add(new JLabel("<html><br>" +
+                    "Use the body state tool to store<br>new body states for a student:<br>"));
 
             // Create and add the body state tool link
             final LinkLabel bodyStateToolLink = new LinkLabel("Open body state tool");
             bodyStateToolLink.addActionListener(e -> BodyStateToolDialog.showDialog(this));
-            mainActions.add(bodyStateToolLink);
+            container.add(bodyStateToolLink);
         }
 
+        // Create a scroll pane to fit larger content
+        final JScrollPane scrollPane = new JScrollPane(container);
+        scrollPane.setBorder(null);
+        mainActions.add(scrollPane);
+
         // Set the preferred size
-        mainActions.setMinimumSize(new Dimension(200, 200));
-        mainActions.setPreferredSize(new Dimension(200, 200));
+        mainActions.setPreferredSize(new Dimension(250, container.getPreferredSize().height));
 
         // Return the main actions panel
         return mainActions;
