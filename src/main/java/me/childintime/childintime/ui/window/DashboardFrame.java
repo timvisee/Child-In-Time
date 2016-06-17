@@ -249,6 +249,7 @@ public class DashboardFrame extends JFrame {
         mainActions.add(scrollPane);
 
         // Set the preferred size
+        mainActions.setMinimumSize(new Dimension(250, 0));
         mainActions.setPreferredSize(new Dimension(250, container.getPreferredSize().height));
 
         // Return the main actions panel
@@ -263,17 +264,21 @@ public class DashboardFrame extends JFrame {
     private JPanel buildUiStatisticsPanel() {
         // Create a main actions panel
         final JPanel statistics = new JPanel();
-        statistics.setLayout(new BoxLayout(statistics, BoxLayout.Y_AXIS));
+        statistics.setLayout(new BorderLayout());
         statistics.setBorder(new CompoundBorder(
                 BorderFactory.createTitledBorder("Statistics"),
                 BorderFactory.createEmptyBorder(4, 4, 4, 4)
         ));
 
+        // Create the container
+        final JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
         // Initialize the label
         this.statusLabel = new JLabel("Initializing status...");
 
         // Add the status label
-        statistics.add(this.statusLabel);
+        container.add(this.statusLabel);
 
         // Create an update status label callable
         final Runnable updateStatusLabel = () -> statusLabel.setText("<html>" +
@@ -300,9 +305,14 @@ public class DashboardFrame extends JFrame {
         // Update the label for the first time
         updateStatusLabel.run();
 
+        // Create a scroll pane to fit larger content
+        final JScrollPane scrollPane = new JScrollPane(container);
+        scrollPane.setBorder(null);
+        statistics.add(scrollPane);
+
         // Set the preferred size
-        statistics.setMinimumSize(new Dimension(200, 200));
-        statistics.setPreferredSize(new Dimension(200, 200));
+        statistics.setMinimumSize(new Dimension(250, 0));
+        statistics.setPreferredSize(new Dimension(250, container.getPreferredSize().height));
 
         // Return the main actions panel
         return statistics;
