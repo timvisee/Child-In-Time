@@ -158,8 +158,11 @@ public class EntityViewComponent extends EntityListComponent {
                 // Create a popup menu
                 JPopupMenu popup = new JPopupMenu();
 
+                // Determine whether a couple is shown
+                final boolean showingCouple = isCoupleView() || getManager().getManifest().isCouple();
+
                 // Create the create menu
-                JMenuItem createAction = new JMenuItem(!isCoupleView() ? "Create..." : "Add couple...");
+                JMenuItem createAction = new JMenuItem(!showingCouple ? "Create..." : "Add couple...");
                 createAction.addActionListener(e1 -> {
                     if(!isCoupleView())
                         createEntity();
@@ -171,7 +174,7 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the view menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem viewAction = new JMenuItem("View" + (isCoupleView() ? " couple" : "") + "...");
+                    JMenuItem viewAction = new JMenuItem("View" + (showingCouple ? " couple" : "") + "...");
                     viewAction.addActionListener(e1 -> viewSelectedEntity());
                     viewAction.setEnabled(canView);
                     popup.add(viewAction);
@@ -179,7 +182,7 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the modify menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem modifyAction = new JMenuItem(!isCoupleView() ? "Modify..." : "Edit couple...");
+                    JMenuItem modifyAction = new JMenuItem(!showingCouple ? "Modify..." : "Edit couple...");
                     modifyAction.addActionListener(e1 -> modifySelectedEntity());
                     modifyAction.setEnabled(canModify);
                     popup.add(modifyAction);
@@ -187,7 +190,7 @@ public class EntityViewComponent extends EntityListComponent {
 
                 // Create the delete menu
                 if(selectedEntities.size() >= 1) {
-                    JMenuItem deleteAction = new JMenuItem(!isCoupleView() ? "Delete..." : "Remove couple...");
+                    JMenuItem deleteAction = new JMenuItem(!showingCouple ? "Delete..." : "Remove couple...");
                     deleteAction.addActionListener(e1 -> deleteSelectedEntities());
                     deleteAction.setEnabled(canDelete);
                     popup.add(deleteAction);

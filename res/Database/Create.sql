@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   `school_id`  INT     NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
-    ON DELETE RESTRICT,
+    ON DELETE CASCADE,
   CHECK (`gender` = 0 OR `gender` = 1),
   CHECK (`is_gym` = 0 OR `is_gym` = 1)
 );
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `group` (
   `school_id` INT  NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `student` (
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `student` (
   `group_id`   INT     NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
-    ON DELETE RESTRICT,
+    ON DELETE CASCADE,
   CHECK (`gender` = 0 OR `gender` = 1)
 );
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `bodystate` (
   `student_id` INT      NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `parkour` (
@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS `measurement` (
   `student_id` INT  NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
-    ON DELETE RESTRICT,
+    ON DELETE CASCADE,
   FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `group_teacher` (
@@ -93,9 +93,9 @@ CREATE TABLE IF NOT EXISTS `group_teacher` (
   `teacher_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
-    ON DELETE RESTRICT,
+    ON DELETE CASCADE,
   FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `sport` (
@@ -110,112 +110,10 @@ CREATE TABLE IF NOT EXISTS `student_sport` (
   `sport_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
-    ON DELETE RESTRICT,
+    ON DELETE CASCADE,
   FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE CASCADE
 );
-
-# Drop the create meta table statement if it already exists
-DROP PROCEDURE IF EXISTS createMetaTable;
-
-# Create the create meta table statement, to easily create metadata tables
-DELIMITER //
-CREATE PROCEDURE createMetaTable(IN tableName VARCHAR(30))
-  BEGIN
-
-    -- _meta_data table prototype
-    /*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_data` (
-      `id`         INT      NOT NULL AUTO_INCREMENT,
-      `field`      TEXT     NOT NULL,
-      `type`       SMALLINT NOT NULL,
-      `value`      TEXT     NULL,
-      `MYTABLENAME_id` INT      NOT NULL,
-      PRIMARY KEY (`id`),
-      FOREIGN KEY (`MYTABLENAME_id`) REFERENCES `MYTABLENAME` (`id`)
-    );*/
-
-    # Build the _meta_data statement
-    SET @metaDataStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_data` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`field` TEXT NOT NULL,
-			`type` SMALLINT NOT NULL,
-			`value` TEXT NULL,
-			`', tableName, '_id` INT NOT NULL,
-			PRIMARY KEY (`id`),
-			FOREIGN KEY (`', tableName, '_id`) REFERENCES `', tableName, '`(`id`)
-			  ON DELETE RESTRICT
-		);');
-
-    -- _meta_field table prototype
-    /*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_field` (
-      `id`         INT               NOT NULL AUTO_INCREMENT,
-      `name`       TEXT              NOT NULL,
-      `type`       SMALLINT          NOT NULL,
-      `default`    TEXT              NULL,
-      `allow_null` TINYINT DEFAULT 1 NOT NULL,
-      PRIMARY KEY (`id`)
-    );*/
-
-    # Build the _meta_field statement
-    SET @metaFieldStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_field` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`name` TEXT NOT NULL,
-			`type` SMALLINT NOT NULL,
-			`default` TEXT NULL,
-			`allow_null` TINYINT DEFAULT 1 NOT NULL,
-			PRIMARY KEY (`id`)
-		);');
-
-    -- _meta_value table prototype
-    /*CREATE TABLE IF NOT EXISTS `MYTABLENAME_meta_value` (
-      `id`       INT  NOT NULL AUTO_INCREMENT,
-      `value`    TEXT NOT NULL,
-      `field_id` INT  NOT NULL,
-      PRIMARY KEY (`id`),
-      FOREIGN KEY (`field_id`) REFERENCES `MYTABLENAME_meta_field` (`id`)
-    );*/
-
-    # Build the _meta_value statement
-    SET @metaValueStatement = CONCAT('CREATE TABLE IF NOT EXISTS `', tableName, '_meta_value` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`value` TEXT NOT NULL,
-			`field_id` INT NOT NULL,
-			PRIMARY KEY (`id`),
-			FOREIGN KEY (`field_id`) REFERENCES `', tableName, '_meta_field`(`id`)
-			  ON DELETE RESTRICT
-		);');
-
-    # Prepare the statements
-    PREPARE metaDataPrepared FROM @metaDataStatement;
-    PREPARE metaFieldPrepared FROM @metaFieldStatement;
-    PREPARE metaValuePrepared FROM @metaValueStatement;
-
-    # Execute the statements
-    EXECUTE metaDataPrepared;
-    EXECUTE metaFieldPrepared;
-    EXECUTE metaValuePrepared;
-
-    # Deallocate the statements
-    DEALLOCATE PREPARE metaDataPrepared;
-    DEALLOCATE PREPARE metaFieldPrepared;
-    DEALLOCATE PREPARE metaValuePrepared;
-
-  END
-//
-DELIMITER ;
-
-# Create meta data tables for database objects
-CALL createMetaTable('user');
-CALL createMetaTable('student');
-CALL createMetaTable('teacher');
-CALL createMetaTable('group');
-CALL createMetaTable('school');
-CALL createMetaTable('bodystate');
-CALL createMetaTable('parkour');
-CALL createMetaTable('measurement');
-
-# Drop the create meta table procedure, we aren't using it anymore
-DROP PROCEDURE createMetaTable;
 
 # Insert data
 

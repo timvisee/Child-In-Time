@@ -31,7 +31,7 @@ public class StudentSport extends AbstractEntity {
         try {
             // Prefetch the fields
             getFields(new StudentSportFields[]{
-                    StudentSportFields.STUDENT_ID,
+                    StudentSportFields.SPORT_ID,
                     StudentSportFields.SPORT_ID
             });
 

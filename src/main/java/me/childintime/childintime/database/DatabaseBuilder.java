@@ -77,7 +77,7 @@ public class DatabaseBuilder {
 
         // Configure the progress
         this.progressDialog.setProgressValue(0);
-        this.progressDialog.setProgressMax(46);
+        this.progressDialog.setProgressMax(22);
         this.progressDialog.setShowProgress(true);
 
         // Create the user table
@@ -124,16 +124,6 @@ public class DatabaseBuilder {
         // Create the student/sport table
         createTableStudentSport();
         this.progressDialog.increaseProgressValue();
-
-        // Create all required meta data tables
-        createMetaDataTables("user");
-        createMetaDataTables("student");
-        createMetaDataTables("teacher");
-        createMetaDataTables("group");
-        createMetaDataTables("school");
-        createMetaDataTables("bodystate");
-        createMetaDataTables("parkour");
-        createMetaDataTables("measurement");
 
         // Fill the user table
         this.progressDialog.setStatus("Generating fake data...");
@@ -285,7 +275,7 @@ public class DatabaseBuilder {
                         "  `school_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
-                                " ON DELETE RESTRICT," +
+                                " ON DELETE CASCADE," +
                         "  CHECK(`gender` = 0 OR `gender` = 1)," +
                         "  CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
                         ");"
@@ -302,7 +292,7 @@ public class DatabaseBuilder {
                         "  `is_gym` TINYINT NOT NULL," +
                         "  `school_id` INT NOT NULL," +
                         "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
-                                " ON DELETE RESTRICT," +
+                                " ON DELETE CASCADE," +
                         "  CHECK(`gender` = 0 OR `gender` = 1)," +
                         "  CHECK(`is_gym` = 0 OR `is_gym` = 1)" +
                         ");"
@@ -330,7 +320,7 @@ public class DatabaseBuilder {
                         "  `school_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
-                                " ON DELETE RESTRICT" +
+                                " ON DELETE CASCADE" +
                         ");"
                 );
                 break;
@@ -342,7 +332,7 @@ public class DatabaseBuilder {
                         "  `name` TEXT NOT NULL," +
                         "  `school_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`school_id`) REFERENCES `school`(`id`)" +
-                                " ON DELETE RESTRICT" +
+                                " ON DELETE CASCADE" +
                         ");"
                 );
                 break;
@@ -371,7 +361,7 @@ public class DatabaseBuilder {
                         "  `group_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)" +
-                                " ON DELETE RESTRICT," +
+                                " ON DELETE CASCADE," +
                         "  CHECK (`gender` = 0 or `gender` = 1)" +
                         ");"
                 );
@@ -387,7 +377,7 @@ public class DatabaseBuilder {
                         "  `birthdate` DATE NOT NULL," +
                         "  `group_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`group_id`) REFERENCES `group`(`id`)" +
-                                " ON DELETE RESTRICT," +
+                                " ON DELETE CASCADE," +
                         "  CHECK(`gender` = 0 OR `gender` = 1)" +
                         ");"
                 );
@@ -416,7 +406,7 @@ public class DatabaseBuilder {
                         "  `student_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
-                                " ON DELETE RESTRICT" +
+                                " ON DELETE CASCADE" +
                         ");"
                 );
                 break;
@@ -430,7 +420,7 @@ public class DatabaseBuilder {
                         "  `weight` INTEGER NOT NULL," +
                         "  `student_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student`(`id`)" +
-                                " ON DELETE RESTRICT" +
+                                " ON DELETE CASCADE" +
                         ");"
                 );
                 break;
@@ -490,9 +480,9 @@ public class DatabaseBuilder {
                         "  `student_id` INT  NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)" +
-                                " ON DELETE RESTRICT," +
+                                " ON DELETE CASCADE," +
                         "  FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)" +
-                                " ON DELETE RESTRICT" +
+                                " ON DELETE CASCADE" +
                         ");"
                 );
                 break;
@@ -506,9 +496,9 @@ public class DatabaseBuilder {
                         "  `parkour_id` INTEGER NOT NULL," +
                         "  `student_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)" +
-                                " ON DELETE RESTRICT," +
+                                " ON DELETE CASCADE," +
                         "  FOREIGN KEY (`parkour_id`) REFERENCES `parkour` (`id`)" +
-                                " ON DELETE RESTRICT" +
+                                " ON DELETE CASCADE" +
                         ");"
                 );
                 break;
@@ -534,9 +524,9 @@ public class DatabaseBuilder {
                                 "  `teacher_id` INT NOT NULL," +
                                 "  PRIMARY KEY (`id`)," +
                                 "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
-                                " ON DELETE RESTRICT," +
+                                " ON DELETE CASCADE," +
                                 "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
-                                " ON DELETE RESTRICT" +
+                                " ON DELETE CASCADE" +
                                 ");"
                 );
                 break;
@@ -548,9 +538,9 @@ public class DatabaseBuilder {
                                 "  `group_id`   INTEGER NOT NULL," +
                                 "  `teacher_id` INTEGER NOT NULL," +
                                 "  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)" +
-                                " ON DELETE RESTRICT," +
+                                " ON DELETE CASCADE," +
                                 "  FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)" +
-                                " ON DELETE RESTRICT" +
+                                " ON DELETE CASCADE" +
                                 ");"
                 );
                 break;
@@ -608,9 +598,9 @@ public class DatabaseBuilder {
                         "  `sport_id` INT NOT NULL," +
                         "  PRIMARY KEY (`id`)," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)" +
-                        "    ON DELETE RESTRICT," +
+                        "    ON DELETE CASCADE," +
                         "  FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)" +
-                        "    ON DELETE RESTRICT" +
+                        "    ON DELETE CASCADE" +
                         ");"
                 );
                 break;
@@ -622,109 +612,11 @@ public class DatabaseBuilder {
                         "  `student_id`   INTEGER NOT NULL," +
                         "  `sport_id` INTEGER NOT NULL," +
                         "  FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)" +
-                        "  ON DELETE RESTRICT," +
+                        "  ON DELETE CASCADE," +
                         "  FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)" +
-                        "  ON DELETE RESTRICT" +
+                        "  ON DELETE CASCADE" +
                         ");"
                 );
-                break;
-        }
-    }
-
-    /**
-     * Create the meta data tables for the given table.
-     *
-     * @param tableName Name of the table to create the meta data tables for.
-     *
-     * @throws SQLException
-     */
-    public void createMetaDataTables(String tableName) throws SQLException {
-        // Create a statement
-        Statement statement = this.databaseConnector.getConnection().createStatement();
-
-        // Execute the table create query
-        switch(this.databaseConnector.getDialect()) {
-            case MYSQL:
-                // Create the meta data table
-                statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_data` (" +
-                        "  `id`         INT      NOT NULL AUTO_INCREMENT," +
-                        "  `field`      TEXT     NOT NULL," +
-                        "  `type`       SMALLINT NOT NULL," +
-                        "  `value`      TEXT     NULL," +
-                        "  `" + tableName + "_id` INT      NOT NULL," +
-                        "  PRIMARY KEY (`id`)," +
-                        "  FOREIGN KEY (`" + tableName + "_id`) REFERENCES `" + tableName + "` (`id`)" +
-                                " ON DELETE RESTRICT" +
-                        ");"
-                );
-                this.progressDialog.increaseProgressValue();
-
-                // Create the meta data fields table
-                statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_field` (" +
-                        "  `id`         INT               NOT NULL AUTO_INCREMENT," +
-                        "  `name`       TEXT              NOT NULL," +
-                        "  `type`       SMALLINT          NOT NULL," +
-                        "  `default`    TEXT              NULL," +
-                        "  `allow_null` TINYINT DEFAULT 1 NOT NULL," +
-                        "  PRIMARY KEY (`id`)" +
-                        ");"
-                );
-                this.progressDialog.increaseProgressValue();
-
-                // Create the meta data values table
-                statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_value` (" +
-                        "  `id`       INT  NOT NULL AUTO_INCREMENT," +
-                        "  `value`    TEXT NOT NULL," +
-                        "  `field_id` INT  NOT NULL," +
-                        "  PRIMARY KEY (`id`)," +
-                        "  FOREIGN KEY (`field_id`) REFERENCES `" + tableName + "_meta_field` (`id`)" +
-                                " ON DELETE RESTRICT" +
-                        ");"
-                );
-                this.progressDialog.increaseProgressValue();
-                break;
-
-            case SQLITE:
-                // Create the meta data table
-                statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_data` (" +
-                        "  `id`      INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "  `field`   TEXT    NOT NULL," +
-                        "  `type`    INTEGER NOT NULL," +
-                        "  `value`   TEXT," +
-                        "  `" + tableName + "_id` INTEGER NOT NULL," +
-                        "  FOREIGN KEY (`" + tableName + "_id`) REFERENCES `" + tableName + "` (`id`)" +
-                                " ON DELETE RESTRICT" +
-                        ");"
-                );
-                this.progressDialog.increaseProgressValue();
-
-                // Create the meta data fields table
-                statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_field` (" +
-                        "  `id`         INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "  `name`       TEXT    NOT NULL," +
-                        "  `type`       INTEGER NOT NULL," +
-                        "  `default`    TEXT," +
-                        "  `allow_null` INTEGER             DEFAULT 1 NOT NULL" +
-                        ");"
-                );
-                this.progressDialog.increaseProgressValue();
-
-                // Create the meta data values table
-                statement.execute(
-                        "CREATE TABLE IF NOT EXISTS `" + tableName + "_meta_value` (" +
-                        "  `id`       INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "  `value`    TEXT    NOT NULL," +
-                        "  `field_id` INTEGER NOT NULL," +
-                        "  FOREIGN KEY (`field_id`) REFERENCES `" + tableName + "_meta_field` (`id`)" +
-                                " ON DELETE RESTRICT" +
-                        ");"
-                );
-                this.progressDialog.increaseProgressValue();
                 break;
         }
     }
@@ -1088,8 +980,11 @@ public class DatabaseBuilder {
 
         // Loop for the determined count
         for(int i = 0; i < sportCount; i++) {
+            // Generate a sport
+            final String sport = this.faker.team().sport();
+
             // Fill the prepared statement
-            prepared.setString(1, this.faker.team().sport());
+            prepared.setString(1, sport.substring(0, 1).toUpperCase() + sport.substring(1));
 
             // Execute the prepared statement
             prepared.execute();
