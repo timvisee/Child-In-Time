@@ -153,11 +153,14 @@ public class EntityManagerComponent extends JComponent {
         // Check whether the user can modify data
         final boolean canEdit = PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel());
 
+        // Determine whether a couple is shown
+        final boolean showingCouple = getEntityView().isCoupleView()|| getManager().getManifest().isCouple();
+
         // Create the buttons
-        this.createButton = new JButton(!this.entityView.isCoupleView() ? "Create" : "Add");
+        this.createButton = new JButton(!showingCouple ? "Create" : "Add");
         this.viewButton = new JButton("View");
-        this.modifyButton = new JButton(!this.entityView.isCoupleView() ? "Modify" : "Edit");
-        this.deleteButton = new JButton(!this.entityView.isCoupleView() ? "Delete" : "Remove");
+        this.modifyButton = new JButton(!showingCouple ? "Modify" : "Edit");
+        this.deleteButton = new JButton(!showingCouple ? "Delete" : "Remove");
 
         // Add the buttons to the panel
         buttonPanel.add(this.createButton);
