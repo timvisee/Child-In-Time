@@ -368,7 +368,7 @@ public class Core {
         System.out.println("The application core has been destroyed.");
 
         // Force quit the application
-        System.exit(1);
+        System.exit(0);
     }
 
     /**
