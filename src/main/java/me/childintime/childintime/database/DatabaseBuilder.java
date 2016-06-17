@@ -980,8 +980,11 @@ public class DatabaseBuilder {
 
         // Loop for the determined count
         for(int i = 0; i < sportCount; i++) {
+            // Generate a sport
+            final String sport = this.faker.team().sport();
+
             // Fill the prepared statement
-            prepared.setString(1, this.faker.team().sport());
+            prepared.setString(1, sport.substring(0, 1).toUpperCase() + sport.substring(1));
 
             // Execute the prepared statement
             prepared.execute();
