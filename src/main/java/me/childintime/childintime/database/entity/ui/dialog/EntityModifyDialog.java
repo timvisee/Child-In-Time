@@ -716,11 +716,15 @@ public class EntityModifyDialog extends JDialog {
 
             // Update the field
             try {
-                if(this.source != null)
+                if(this.source != null) {
+                    // Do not set the value for password fields
+                    if(fieldType.getExtendedDataType().equals(DataTypeExtended.PASSWORD_HASH))
+                        continue;
+
                     // Fetch the field from the source if the entity is modified
                     field.setValue(this.source.getField(fieldType));
-                else
 
+                } else
                     // Clear the field if the entity is newly created
                     field.clear();
 
