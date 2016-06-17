@@ -82,6 +82,15 @@ public class DatabaseConnector {
         // Create the connection and explicitly save it
         this.connection = DriverManager.getConnection(database.getDatabaseConnectionUrl());
 
+        // Prepare the SQLite database
+        if(getDialect().equals(DatabaseDialect.SQLITE)) {
+            // Show a status message
+            System.out.println("Preparing new SQLite database connection...");
+
+            // Enable foreign keys
+            this.connection.createStatement().execute("PRAGMA foreign_keys=ON");
+        }
+
         // Return the connection
         return this.connection;
     }
