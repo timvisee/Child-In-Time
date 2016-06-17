@@ -246,8 +246,9 @@ public class ProgressDialog extends JDialog {
         // Set the status label
         this.statusLabel.setText(status);
 
-        // Force repaint
-        this.repaint();
+        // Force a repaint
+        revalidate();
+        forceRepaint();
 
         // Print the status to the console
         System.out.println("Status: " + status);
@@ -293,6 +294,10 @@ public class ProgressDialog extends JDialog {
         // Update the value
         this.progressValue = progressValue;
 
+        // Force repaint
+        if(getContentPane() instanceof JComponent)
+            ((JComponent) getContentPane()).paintImmediately(((JComponent) getContentPane()).getVisibleRect());
+
         // Set the progress bar value
         this.progressBar.setValue(progressValue);
     }
@@ -324,5 +329,14 @@ public class ProgressDialog extends JDialog {
 
         // Set the progress bar maximum
         this.progressBar.setMaximum(progressMax);
+    }
+
+    /**
+     * Force a repaint.
+     */
+    public void forceRepaint() {
+        // Repaint the content pane
+        if(getContentPane() instanceof JComponent)
+            ((JComponent) getContentPane()).paintImmediately(((JComponent) getContentPane()).getVisibleRect());
     }
 }

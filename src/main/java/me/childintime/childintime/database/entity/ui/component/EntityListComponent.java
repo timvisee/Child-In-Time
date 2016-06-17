@@ -327,9 +327,6 @@ public class EntityListComponent extends JComponent {
                     return null;
 
                 } catch(Exception e) {
-                    // Print the stack trace
-                    e.printStackTrace();
-
                     // Return null
                     return null;
                 }
