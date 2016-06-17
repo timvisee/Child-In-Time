@@ -205,7 +205,7 @@ public class DashboardFrame extends JFrame {
 
         // Add the main label
         container.add(new JLabel("<html>" +
-                "Welcome to the " + App.APP_NAME + " dashboard.<br>"));
+                "<b>Welcome to the " + App.APP_NAME + " dashboard.</b><br>"));
 
         // Show the BMI tool if the user has permission
         if(PermissionLevel.VIEW_ANONYMOUS.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel())) {
@@ -282,14 +282,20 @@ public class DashboardFrame extends JFrame {
 
         // Create an update status label callable
         final Runnable updateStatusLabel = () -> statusLabel.setText("<html>" +
-                "Users: " + Core.getInstance().getUserManager().getEntityCount() + "<br>" +
-                "Students: " + Core.getInstance().getStudentManager().getEntityCount() + "<br>" +
-                "Teachers: " + Core.getInstance().getTeacherManager().getEntityCount() + "<br>" +
-                "Schools: " + Core.getInstance().getSchoolManager().getEntityCount() + "<br>" +
-                "Groups: " + Core.getInstance().getGroupManager().getEntityCount() + "<br>" +
-                "Measurements: " + Core.getInstance().getMeasurementManager().getEntityCount() + "<br>" +
-                "BodyStates: " + Core.getInstance().getBodyStateManager().getEntityCount() + "<br>" +
-                "Parkours: " + Core.getInstance().getParkourManager().getEntityCount() + "<br>"
+                "<b>Entities:</b><br>" +
+                Core.getInstance().getUserManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getUserManager().getEntityCount() + "<br>" +
+                Core.getInstance().getStudentManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getStudentManager().getEntityCount() + "<br>" +
+                Core.getInstance().getTeacherManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getTeacherManager().getEntityCount() + "<br>" +
+                Core.getInstance().getSchoolManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getSchoolManager().getEntityCount() + "<br>" +
+                Core.getInstance().getGroupManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getGroupManager().getEntityCount() + "<br>" +
+                Core.getInstance().getMeasurementManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getMeasurementManager().getEntityCount() + "<br>" +
+                Core.getInstance().getBodyStateManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getBodyStateManager().getEntityCount() + "<br>" +
+                Core.getInstance().getParkourManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getParkourManager().getEntityCount() + "<br>" +
+                Core.getInstance().getSportManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getSportManager().getEntityCount() + "<br>" +
+                "<br>" +
+                "<b>Couples:</b><br>" +
+                Core.getInstance().getGroupTeacherCoupleManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getGroupTeacherCoupleManager().getEntityCount() + "<br>" +
+                Core.getInstance().getStudentSportCoupleManager().getManifest().getTypeName(true, true) + ": " + Core.getInstance().getStudentSportCoupleManager().getEntityCount() + "<br>"
         );
 
         // Update the status label when the managers change
@@ -301,6 +307,9 @@ public class DashboardFrame extends JFrame {
         Core.getInstance().getMeasurementManager().addChangeListener(updateStatusLabel::run);
         Core.getInstance().getBodyStateManager().addChangeListener(updateStatusLabel::run);
         Core.getInstance().getParkourManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getSportManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getGroupTeacherCoupleManager().addChangeListener(updateStatusLabel::run);
+        Core.getInstance().getStudentSportCoupleManager().addChangeListener(updateStatusLabel::run);
 
         // Update the label for the first time
         updateStatusLabel.run();
