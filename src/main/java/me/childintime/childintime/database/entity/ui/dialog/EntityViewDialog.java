@@ -125,7 +125,6 @@ public class EntityViewDialog extends JDialog {
         });
 
         // Configure the window size
-        // FIXME: Already done?
         configureSize();
 
         // Set the window location to the system's default
@@ -184,8 +183,6 @@ public class EntityViewDialog extends JDialog {
      * Properly configure the window sizes for the current content.
      */
     private void configureSize() {
-        // TODO: Configure this method for this dialog!
-
         // Reset the sizes
         setMinimumSize(null);
         setPreferredSize(null);

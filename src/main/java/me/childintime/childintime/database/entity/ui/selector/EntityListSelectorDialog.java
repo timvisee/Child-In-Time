@@ -166,7 +166,6 @@ public class EntityListSelectorDialog extends JDialog {
         container.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
         // Create the list
-        // TODO: Define the default selected item!
         this.list = new EntityListSelectorComponent(this.manager);
 
         // Update the UI buttons when the selection changes

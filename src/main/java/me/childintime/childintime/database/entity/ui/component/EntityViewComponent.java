@@ -76,7 +76,6 @@ public class EntityViewComponent extends EntityListComponent {
                 return;
 
             // Do not execute the edit action if this component is a list selector
-            // TODO: Move this somewhere else!
             if(this instanceof EntityListSelectorComponent)
                 return;
 
@@ -116,7 +115,6 @@ public class EntityViewComponent extends EntityListComponent {
         });
 
         // Add a proper right click menu
-        // TODO: Move part of this to the base class
         getSwingTable().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -348,8 +346,6 @@ public class EntityViewComponent extends EntityListComponent {
 
         // Show the modification dialog to create a new entity
         final AbstractEntity entity = EntityModifyDialog.showCreate(getWindow(), getManager().getManifest());
-
-        // TODO: Insert the entity in the manager, instead of refreshing everything.
 
         // Refresh the manager when a new entity is created
         if(entity != null)
@@ -632,8 +628,6 @@ public class EntityViewComponent extends EntityListComponent {
 
         // Show the entity modification dialog
         EntityModifyDialog.showModify(getWindow(), reference);
-
-        // TODO: Only edit the given entity, instead of refreshing everything?
 
         // Refresh both managers
         reference.getManifest().getManagerInstance().refresh();

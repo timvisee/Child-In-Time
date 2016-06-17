@@ -203,9 +203,7 @@ public class EntityManagerComponent extends JComponent {
         buttonPanel.add(this.filtersButton);
         buttonPanel.add(this.columnsButton);
         this.refreshButton.addActionListener(e -> this.entityView.refresh());
-        // TODO: Implement this feature!
         this.filtersButton.addActionListener(e -> featureNotImplemented());
-        // TODO: Implement this feature!
         this.columnsButton.addActionListener(e -> featureNotImplemented());
 
         // Return the button panel
@@ -253,7 +251,6 @@ public class EntityManagerComponent extends JComponent {
         return SwingUtils.getComponentWindow(this);
     }
 
-    // TODO: This should be removed!
     @Deprecated
     public void featureNotImplemented() {
         JOptionPane.showMessageDialog(this, "Feature not implemented yet!", App.APP_NAME, JOptionPane.ERROR_MESSAGE);

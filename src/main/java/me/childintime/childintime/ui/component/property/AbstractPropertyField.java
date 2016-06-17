@@ -241,7 +241,6 @@ public abstract class AbstractPropertyField extends JComponent {
      * @return True if the property field is set to null.
      */
     public boolean isNull() {
-        // TODO: Only return true if null values are allowed?
         return this._null;
     }
 
@@ -255,8 +254,6 @@ public abstract class AbstractPropertyField extends JComponent {
         this._null = _null;
 
         // Update the enabled state of both components
-        // TODO: Update the clear action button state
-        //this.clearButton.setEnabled(!_null);
         this.setFocusable(_null);
 
         // Fire the null change event for all attached actions

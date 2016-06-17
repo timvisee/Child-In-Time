@@ -44,7 +44,6 @@ public class EntityListSorter extends TableRowSorter<AbstractTableModel> {
                         int i = (int) entry.getIdentifier();
 
                         // Get the corresponding entity
-                        // TODO: Are these indexes still correct when the table is sorted?
                         AbstractEntity entity = getManager().getEntities().get(i);
 
                         // Check whether couple references should be filtered

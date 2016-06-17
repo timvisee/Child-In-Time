@@ -150,7 +150,6 @@ public class GenderPropertyField extends AbstractPropertyField {
      * @return Text value, or null.
      */
     public boolean isMen() {
-        // TODO: Return null?
         return !isNull() && !this.radioButtonFemale.isSelected();
     }
 

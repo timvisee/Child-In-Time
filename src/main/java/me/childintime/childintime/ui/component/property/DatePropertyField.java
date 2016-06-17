@@ -13,8 +13,6 @@ import java.util.Date;
 
 public class DatePropertyField extends TextPropertyField implements PropertyChangeListener {
 
-    // TODO: Make sure the user doesn't manually enter a date that is out of the specified minimum/maximum range.
-
     /**
      * Swing serial version UID.
      */

@@ -457,7 +457,6 @@ public class LoginDialog extends JDialog {
         // Save the credentials to store
         saveStore();
 
-        // TODO: Return the proper result
         return true;
     }
 

@@ -211,7 +211,6 @@ public abstract class AbstractEntityManager {
     /**
      * Refresh the entities, reloading them from the database.
      */
-    // TODO: Add parameter to define what fields to fetch with the first query?
     @SuppressWarnings("unused")
     public void refresh() {
         // Clear the list of entities
