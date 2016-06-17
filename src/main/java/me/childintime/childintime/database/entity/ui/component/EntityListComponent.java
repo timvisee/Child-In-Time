@@ -713,7 +713,7 @@ public class EntityListComponent extends JComponent {
     public void resetEmptyLabel() {
         // Check whether the user has editing permissions
         if(PermissionLevel.EDIT.orBetter(Core.getInstance().getAuthenticator().getPermissionLevel()))
-            this.emptyLabel = "Right-click to add a " + manager.getManifest().getTypeName(false, true) + "...";
+            this.emptyLabel = "Right-click to add a " + manager.getManifest().getTypeName(false, false) + "...";
         else
             this.emptyLabel = "No " + manager.getManifest().getTypeName(false, true) + " to display...";
     }
