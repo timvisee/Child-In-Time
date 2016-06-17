@@ -238,9 +238,6 @@ public class EntityModifyDialog extends JDialog {
         // Create a new dialog instance
         EntityModifyDialog dialog = new EntityModifyDialog(owner, source, true);
 
-        // TODO: Is this correct?
-        // TODO: Use getters, instead of directly accessing the fields.
-
         // Return the source if the changes were discarded
         if(dialog.isDiscarded())
             return dialog.source;
@@ -279,8 +276,6 @@ public class EntityModifyDialog extends JDialog {
      * Properly configure the window sizes for the current content.
      */
     private void configureSize() {
-        // TODO: Configure this method for this dialog!
-
         // Reset the sizes
         setMinimumSize(null);
         setPreferredSize(null);

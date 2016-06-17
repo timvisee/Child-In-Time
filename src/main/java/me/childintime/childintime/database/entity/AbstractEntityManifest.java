@@ -174,8 +174,6 @@ public abstract class AbstractEntityManifest {
         // Show the modification dialog to create a new entity
         final AbstractEntity entity = EntityModifyDialog.showCreate(owner, this);
 
-        // TODO: Insert the entity in the manager, instead of refreshing everything.
-
         // Refresh the manager when a new entity is created
         if(entity != null)
             // Refresh the manager

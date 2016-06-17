@@ -141,7 +141,6 @@ public class BooleanPropertyField extends AbstractPropertyField {
      * @return Text value, or null.
      */
     public boolean getState() {
-        // TODO: Return null?
         return !isNull() && this.checkBox.isSelected();
     }
 

@@ -279,8 +279,6 @@ public abstract class AbstractEntity implements Cloneable {
         // Get the raw value
         Object raw = getField(field);
 
-        // TODO: Move these formatter to a global class!
-
         // Format the value
         switch(field.getExtendedDataType()) {
             case MILLISECONDS:
@@ -328,55 +326,7 @@ public abstract class AbstractEntity implements Cloneable {
      *
      * @return True on success, false on failure.
      */
-    // FIXME: Method not fully made yet, complete it!
     public boolean applyToDatabase() {
-//        // TODO: Loop through the cached fields that are in the hash map. (See this.cacedFields)
-//        this.cachedFields.forEach((EntityFieldsInterface, o) -> {
-//            // TODO: If the current field is an ID field, skip it and continue; to the next field in the list
-//            if(EntityFieldsInterface.getExtendedDataType().equals(DataTypeExtended.ID))
-//                return;
-//
-//            // TODO: Create a prepared statement (see line 126)
-//            //
-//            //       UPDATE: current field (See: currentField.getFieldName() )
-//            //       NEW VALUES: current field value (which is inside the this.cachedFields hash map)
-//            //       WHERE: id = getId()
-//            //
-//            //       The new value, and the ID should be a '?' in the prepared statement. Their proper values will
-//            //       be attached/set later on
-//
-//            // TODO: Attach the parameters/values to the prepared statement (attach the new value, and the ID)
-//
-//            // TODO: Execute the prepared statement, with the attached parameters
-//
-//            try {
-//                // Get the database connection
-//                final Connection connection = Core.getInstance().getDatabaseConnector().getConnection();
-//
-//                // Prepare a statement to update
-//                PreparedStatement updateStatement = connection.prepareStatement(
-//                        "UPDATE `" + getTableName() + "` " +
-//                                "SET `" + EntityFieldsInterface.getDatabaseField() + "` = ?" +
-//                                "WHERE `id` = ?"
-//                );
-//
-//                updateStatement.setObject(1, o);
-//                updateStatement.setInt(2, getId());
-//
-//                int updateCount = updateStatement.executeUpdate();
-//
-//                if(updateCount == 1)
-//                    return true;
-//
-//            } catch (Exception e) {
-//                // Print the stack trace, and return the result
-//                e.printStackTrace();
-//            }
-//        });
-//
-//        // TODO: Return true, because everything seems to be fine.
-//        return false;
-
         // Make sure the this object has any cached fields
         if(this.cachedFields.size() == 0)
             return true;
@@ -447,7 +397,6 @@ public abstract class AbstractEntity implements Cloneable {
 
                                     // Store the value in
                                     if(!(value instanceof Date))
-                                        // TODO: Does this work properly for strings
                                         dateString = dateFormat.format(dateFormat.parse(String.valueOf(value)));
                                     else
                                         // Format the date string to an ISO date
@@ -573,7 +522,6 @@ public abstract class AbstractEntity implements Cloneable {
 
                                 // Store the value in
                                 if(!(value instanceof Date))
-                                    // TODO: Does this work properly for strings
                                     dateString = dateFormat.format(dateFormat.parse(String.valueOf(value)));
                                 else
                                     // Format the date string to an ISO date
@@ -710,7 +658,6 @@ public abstract class AbstractEntity implements Cloneable {
         }
 
         // Create a new hash map, and put it into the cloned object
-        // TODO: Should we properly clone all hash map entries?
         clone.setCachedFields(new HashMap<>(this.cachedFields));
 
         // Return the cloned object
@@ -830,7 +777,6 @@ public abstract class AbstractEntity implements Cloneable {
      *
      * @return True if the cache is equal, false if not.
      */
-    // TODO: This doesn't always seem to work. (Maybe because the ID field is included?)
     public boolean isCacheEqual(AbstractEntity other) {
         // Compare the ID
         if(getId() != other.getId())

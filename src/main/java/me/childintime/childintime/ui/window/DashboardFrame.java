@@ -339,13 +339,11 @@ public class DashboardFrame extends JFrame {
 
         // Create the change user action
         MenuItem changeUserAction = new MenuItem("Change user...");
-        // TODO: An action placeholder is used, assign a proper action!
         changeUserAction.addActionListener(e -> restart());
         dashboardMenu.add(changeUserAction);
 
         // Create the change database action
         MenuItem changeDatabaseAction = new MenuItem("Change database...");
-        // TODO: An action placeholder is used, assign a proper action!
         changeDatabaseAction.addActionListener(e -> restart());
         dashboardMenu.add(changeDatabaseAction);
         dashboardMenu.addSeparator();
@@ -539,7 +537,6 @@ public class DashboardFrame extends JFrame {
     /**
      * Refresh all managers.
      */
-    // TODO: Improve this method!
     private void refreshAll() {
         // Store the visibility state of the progress dialog
         final boolean progressDialogVisible = Core.getInstance().getProgressDialog().isVisible();
@@ -547,7 +544,6 @@ public class DashboardFrame extends JFrame {
         // Show the progress dialog and set the state
         Core.getInstance().getProgressDialog().setVisible(true);
         Core.getInstance().getProgressDialog().setStatus("Refreshing...");
-        // TODO: Show a progress bar!
 
         // Refresh all managers
         Core.getInstance().getStudentManager().refresh();
@@ -576,7 +572,6 @@ public class DashboardFrame extends JFrame {
     /**
      * Restart the application.
      */
-    // TODO: Properly restart, don't just destroy and reinitialize!
     private void restart() {
         // Dispose the current frame
         dispose();

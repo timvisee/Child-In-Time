@@ -20,7 +20,6 @@ public class UserHelper {
      * @return User entity manager.
      */
     private static AbstractEntityManager getUserEntityManager() {
-        // TODO: Make sure this stuff is initialized!
         return Core.getInstance().getUserManager();
     }
 
@@ -54,7 +53,6 @@ public class UserHelper {
             final String passwordHash = HashUtil.hash(password);
 
             // Create a prepared statement to authenticate the user credentials\
-            // TODO: Select the permission level field here
             final PreparedStatement authStatement = databaseConnector.prepareStatement("SELECT" +
                     "   `" + UserFields.ID.getDatabaseField() + "`," +
                     "   `" + UserFields.PERMISSION_LEVEL.getDatabaseField() + "` " +

@@ -246,8 +246,6 @@ public class Core {
             return;
         }
 
-        // TODO: Load defaults if a databases configuration doesn't exist
-
         // Initialize and load the database manager
         this.progressDialog.setStatus("Loading database configuration...");
         this.databaseManager = new DatabaseManager();
@@ -270,7 +268,6 @@ public class Core {
         this.progressDialog.setVisible(true);
 
         // Set up the database connection
-        // TODO: Clean this stuff up!
         this.databaseConnector = new DatabaseConnector(workingDatabase);
 
         try {
@@ -298,7 +295,7 @@ public class Core {
         // Hide the progress dialog
         this.progressDialog.setVisible(false);
 
-        // TODO: Show a proper dashboard here, instead of this demo window!
+        // Show the dashboard
         DashboardFrame dashboard = new DashboardFrame();
         dashboard.setVisible(true);
     }
@@ -336,7 +333,6 @@ public class Core {
             this.progressDialog.setStatus("Saving configuration...");
 
             // Save the configuration
-            // TODO: Handle errors!
             getConfig().save();
         }
 

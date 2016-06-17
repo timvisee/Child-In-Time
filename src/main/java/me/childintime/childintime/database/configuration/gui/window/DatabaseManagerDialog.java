@@ -374,12 +374,9 @@ public class DatabaseManagerDialog extends JDialog {
             AbstractDatabase database = (AbstractDatabase) entity;
 
             // Make sure the database is successfully configured
-            if(!database.isConfigured()) {
+            if(!database.isConfigured())
                 // Edit the selected database
                 DatabaseModifyDialog.showModify(progressDialog, database);
-
-                // TODO: Update the selected database!
-            }
 
             // Show a message if it's still not configured properly
             if(!database.isConfigured()) {

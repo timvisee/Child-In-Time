@@ -112,7 +112,6 @@ public class ProgressDialog extends JDialog {
      * @param title Progress dialog title.
      * @param showCancelButton True to show the cancel button, false if not.
      */
-    // TODO: Duplicate constructor?
     public ProgressDialog(Dialog owner, String title, boolean showCancelButton) {
         // Construct the super class
         super(owner, title);

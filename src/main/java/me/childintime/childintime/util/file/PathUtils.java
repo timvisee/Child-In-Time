@@ -16,8 +16,6 @@ public class PathUtils {
      * @return True if the path is valid, false if not.
      */
     public static boolean isValidPath(String path) {
-        // TODO: Is this indeed true, does the file not need to exist?
-
         // Validate the path
         try {
             // Try to parse the given path as string representation into a path instance
@@ -42,7 +40,6 @@ public class PathUtils {
      *
      * @return The relative path.
      */
-    // TODO: Update the docs for this method!
     public static String getRelativePath(String targetPath, String basePath, String pathSeparator) {
         // Normalize the paths
         String normalizedTargetPath = FilenameUtils.normalizeNoEndSeparator(targetPath);
@@ -115,8 +112,10 @@ public class PathUtils {
         return relative.toString();
     }
 
-    // TODO: Is this required?
-    static class PathResolutionException extends RuntimeException {
+    /**
+     * Path resolution exception.
+     */
+    private static class PathResolutionException extends RuntimeException {
         PathResolutionException(String msg) {
             super(msg);
         }

@@ -1,18 +1,22 @@
 package me.childintime.childintime.util.file;
 
-import java.io.File;
-
 import me.childintime.childintime.util.Platform;
 
+import java.io.File;
+
 public class DirectoryUtils {
-	
-	// TODO: Windows, use global data storage location
-	// TODO: Return proper locations for Linux, Mac OS X and other file systems
-	
+
+    /**
+     * Get the application data directory.
+     *
+     * @return Application data directory.
+     */
 	public static File getAppDataDirectory() {
+        // Get the systems home directory
         String homeDir = System.getProperty("user.home", ".");
         File workingDir;
 
+        // Determine the directory
         switch (Platform.getPlatform()) {
         case WINDOWS:
             String applicationData = System.getenv("APPDATA");
@@ -34,8 +38,8 @@ public class DirectoryUtils {
         default:
             workingDir = new File(homeDir);
         }
-        
+
+        // Return the working directory
         return workingDir;
     }
-
 }

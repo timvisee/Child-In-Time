@@ -1,10 +1,10 @@
 package me.childintime.childintime.database.configuration.gui.window;
 
 import me.childintime.childintime.App;
-import me.childintime.childintime.database.configuration.gui.propertypanel.AbstractDatabasePropertyPanel;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.database.configuration.AbstractDatabase;
 import me.childintime.childintime.database.configuration.IntegratedDatabase;
+import me.childintime.childintime.database.configuration.gui.propertypanel.AbstractDatabasePropertyPanel;
 import me.childintime.childintime.util.Platform;
 import me.childintime.childintime.util.swing.ProgressDialog;
 
@@ -131,10 +131,6 @@ public class DatabaseModifyDialog extends JDialog {
             public void windowDeactivated(WindowEvent e) { }
         });
 
-        // Configure the window size
-        // FIXME: Already done?
-        //configureSize();
-
         // Set the window location to the system's default
         this.setLocationByPlatform(true);
         this.setLocationRelativeTo(owner);
@@ -233,7 +229,6 @@ public class DatabaseModifyDialog extends JDialog {
         c.gridy = 0;
         c.gridwidth = 2;
         c.insets = new Insets(0, 0, 16, 8);
-        // TODO: Show edit or create label!
         container.add(new JLabel("Edit database."), c);
 
         // Create and add the name label
@@ -285,8 +280,8 @@ public class DatabaseModifyDialog extends JDialog {
                     this.databases[selectedType.getIndex()] = selectedType.getTypeClass().getDeclaredConstructor(AbstractDatabase.class).newInstance(this.source);
 
                 } catch(InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+                    // Print the stack trace
                     ex.printStackTrace();
-                    // TODO: Show an error message
                 }
 
             // Update the database property panel
@@ -458,11 +453,6 @@ public class DatabaseModifyDialog extends JDialog {
         // Select the proper database type
         this.databaseTypeBox.setSelectedItem(database.getType());
 
-        // TODO: Update the properties window
-
-        // Pack the frame
-        //pack();
-
         // Force the whole frame to repaint, to prevent graphical artifacts on some operating systems
         this.repaint();
     }
@@ -482,13 +472,13 @@ public class DatabaseModifyDialog extends JDialog {
 
         // Reset the property panel if a different property panel should be shown
         if(!propertyPanelClass.isInstance(this.propertyPanel)) {
-            // Instantiate the property panel for the new database type
             try {
+                // Instantiate the property panel for the new database type
                 this.propertyPanel = selectedType.getPropertyPanelClass().newInstance();
 
             } catch (InstantiationException | IllegalAccessException ex) {
+                // Show a stack trace
                 ex.printStackTrace();
-                // TODO: Show an error message
             }
 
             // Build and update the property panel
@@ -515,14 +505,12 @@ public class DatabaseModifyDialog extends JDialog {
     public boolean applyChanges() {
         // Make sure the database isn't null
         if(this.getDatabase() == null)
-            // TODO: Create database instance to apply to?
             return false;
 
         // Apply the name
         this.getDatabase().setName(this.databaseNameField.getText());
 
         // Make sure the database type corresponds to the current type
-        // TODO: Should we 'apply' it instead of returning false
         if(!this.currentType.equals(this.databaseTypeBox.getSelectedItem()))
             return false;
 
@@ -546,8 +534,6 @@ public class DatabaseModifyDialog extends JDialog {
      * Close the frame. Ask whether the user wants to save the changes.
      */
     public void closeFrame() {
-        // TODO: Stop the closing process, when we fail!
-
         // Only ask to save if there are any unsaved changes
         if(hasUnsavedChanges()) {
             // Ask whether the user wants to save the questions

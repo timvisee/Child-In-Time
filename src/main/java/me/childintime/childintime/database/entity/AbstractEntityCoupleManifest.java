@@ -68,7 +68,6 @@ public abstract class AbstractEntityCoupleManifest extends AbstractEntityManifes
             }
 
             // Remove the manifest of the current entity
-            // TODO: Make sure this works!
             manifests.remove(entityManifest);
 
             // Make sure a manifest is left
