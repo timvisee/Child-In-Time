@@ -54,7 +54,7 @@ public class App {
     /**
      * Define whether debug mode is enabled.
      */
-    public static final boolean APP_DEBUG = false;
+    public static final boolean APP_DEBUG = true;
 
     /**
      * Define whether to clean the application environment on startup to ensure a fresh application instance is started.
