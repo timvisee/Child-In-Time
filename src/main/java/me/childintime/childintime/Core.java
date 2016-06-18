@@ -234,7 +234,7 @@ public class Core {
         try {
             // Quit the application if the preparation failed
             if(!new InitialSetup(this.progressDialog).setup()) {
-                destroy();
+                destroy(true);
                 return;
             }
 
@@ -249,7 +249,7 @@ public class Core {
                     App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
             // Destroy
-            destroy();
+            destroy(true);
             return;
         }
 
@@ -266,7 +266,7 @@ public class Core {
             JOptionPane.showMessageDialog(null, "Failed to load application configuration.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
             // Destroy the core
-            destroy();
+            destroy(true);
             return;
         }
 
@@ -284,7 +284,7 @@ public class Core {
         // Make sure the login succeeded
         if(workingDatabase == null) {
             // Destroy the core
-            destroy();
+            destroy(true);
             return;
         }
 
@@ -309,7 +309,7 @@ public class Core {
             JOptionPane.showMessageDialog(null, "Failed to connect to the application database.", App.APP_NAME, JOptionPane.ERROR_MESSAGE);
 
             // Destroy the core
-            destroy();
+            destroy(true);
             return;
         }
 
@@ -327,8 +327,10 @@ public class Core {
     /**
      * Destroy the instance after it has been initialized.
      * This safely closes and destroy all IO handles, and initialized instances.
+     *
+     * @param forceQuit True to force quit.
      */
-    public void destroy() {
+    public void destroy(boolean forceQuit) {
         // Show a status message
         System.out.println("Destroying application core...");
 
@@ -368,7 +370,8 @@ public class Core {
         System.out.println("The application core has been destroyed.");
 
         // Force quit the application
-        System.exit(0);
+        if(forceQuit)
+            System.exit(1);
     }
 
     /**

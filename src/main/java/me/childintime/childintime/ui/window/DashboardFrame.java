@@ -84,7 +84,7 @@ public class DashboardFrame extends JFrame {
                 dispose();
 
                 // Destroy the core
-                Core.getInstance().destroy();
+                Core.getInstance().destroy(true);
             }
 
             @Override
@@ -601,7 +601,7 @@ public class DashboardFrame extends JFrame {
         dispose();
 
         // Destroy the core
-        Core.getInstance().destroy();
+        Core.getInstance().destroy(false);
 
         // Initialize the core again
         Core.getInstance().init();
@@ -615,6 +615,6 @@ public class DashboardFrame extends JFrame {
         dispose();
 
         // Destroy the application core
-        Core.getInstance().destroy();
+        Core.getInstance().destroy(true);
     }
 }
