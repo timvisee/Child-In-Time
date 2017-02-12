@@ -24,7 +24,7 @@
 
 package me.childintime.childintime.database.configuration;
 
-import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
+import com.timvisee.yamlwrapper.ConfigurationSection;
 import me.childintime.childintime.database.DatabaseDialect;
 import me.childintime.childintime.database.DatabaseType;
 import me.childintime.childintime.util.swing.ProgressDialog;

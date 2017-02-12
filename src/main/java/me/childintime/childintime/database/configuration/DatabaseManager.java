@@ -24,8 +24,8 @@
 
 package me.childintime.childintime.database.configuration;
 
-import com.timvisee.yamlwrapper.configuration.ConfigurationSection;
-import com.timvisee.yamlwrapper.configuration.YamlConfiguration;
+import com.timvisee.yamlwrapper.ConfigurationSection;
+import com.timvisee.yamlwrapper.YamlConfiguration;
 import me.childintime.childintime.App;
 
 import java.io.File;
@@ -147,7 +147,7 @@ public class DatabaseManager {
         }
 
         // Load the configuration
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        final YamlConfiguration config = YamlConfiguration.loadFromFile(file);
 
         // Get the databases section
         ConfigurationSection databasesSection = config.getSection("databases");

@@ -24,7 +24,7 @@
 
 package me.childintime.childintime.config;
 
-import com.timvisee.yamlwrapper.configuration.YamlConfiguration;
+import com.timvisee.yamlwrapper.YamlConfiguration;
 import me.childintime.childintime.util.time.Profiler;
 
 import java.io.File;
@@ -132,7 +132,7 @@ public class Config {
         }
 
         // Load the configuration file and make sure it's valid
-        if((this.config = YamlConfiguration.loadConfiguration(this.configFile)) == null) {
+        if((this.config = YamlConfiguration.loadFromFile(this.configFile)) == null) {
             // Show a status message
             System.out.println("Failed to load configuration file.");
 

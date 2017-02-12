@@ -85,7 +85,24 @@
         </plugins>
     </build>
 
+    <repositories>
+
+        <!-- Xephi repository -->
+        <repository>
+            <id>xephi-repo</id>
+            <url>http://ci.xephi.fr/plugin/repository/everything/</url>
+        </repository>
+
+    </repositories>
+
     <dependencies>
+
+        <!-- YAML wrapper library -->
+        <dependency>
+            <groupId>com.timvisee</groupId>
+            <artifactId>yamlwrapper</artifactId>
+            <version>1.1.1</version>
+        </dependency>
 
         <!-- MySQL JDBC connector -->
         <dependency>
@@ -106,13 +123,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
-        </dependency>
-
-        <!-- YAML library -->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.17</version>
         </dependency>
 
         <!-- JUnit library -->
