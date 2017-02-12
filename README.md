@@ -8,5 +8,8 @@ This application aims to take away those struggles, and provide the teachers a
 way to keep the data in one centralized place. This way, the teachers have more
 time to give the students special care, or prepare better lessons.
 
-# Build
+## Build
 All builds are available at: [Child in Time builds](https://circleci.com/gh/nathanbakhuijzen/Child-In-Time)
+
+## License
+This project is licensed under the GNU GPL-3.0 license. Check out the [LICENSE](LICENSE) file for more information.
